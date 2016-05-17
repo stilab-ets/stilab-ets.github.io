@@ -16,6 +16,7 @@
 
 </script>
 
+
 </head>
 <body>
 <div id="header">
@@ -26,12 +27,12 @@
 	<div id="navigation">
 		<ul>
 			<li><div align="center"><a href="index.html" class="first">Home</a></div></li>
-			<li><a href="research.html"><strong>Research</strong></a></li>
+			<li><a href="research.html">Research</a></li>
 			<li><a href="publications.html">Publications</a></li>
 			<li><a href="awards.html">Awards and Distinctions</a></li>
             <li><a href="service.html">Service</strong></a></li>
             <li><a href="links.html">Links</a></li>
-            <li><a href="personal.html">Personal</a></li>
+            <li><a href="personal.html"><strong>Personal</strong></a></li>
 		</ul>
 	</div>
 </div>
@@ -41,45 +42,48 @@
 			<div class="box1">
                 <p>&nbsp;</p>
               <blockquote>
-                <h1>Research</h1>
+                <h1>Personal</h1>
               </blockquote>
 <blockquote>
           <p>&nbsp;&nbsp;
-          </p>
-                <h2>Research interests</h2>
-             
-          <ul>
-                    <li>Search-based Software Engineering</li>
-                    <li>Software Maintenance and Evolution<br />
-                    </li>
-                    <li>Refactoring and Re-engineering</li>
-                    <li>Service-Oriented Computing</li>
-                    <li>Model-Driven Software Engineering</li>
-          </ul>
-               
-          <br><br>
-          <h2>Research collaborators</h2>
-          <p>I am fortunate to  work and collaborate with  outstanding researchers from various areas in the international level, including: </p>
-          <p>&nbsp;</p>
-          
-          
-      <table width="200" border="1">
-  <tr>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
-</table>
+                  </p>
+                <h2></h2>
+<br><br><br>   
+
+<div class="w3-content" style="max-width:800px;position:relative">
+
+<img class="mySlides" src="images/minis/SEL-Osaka.JPG" style="width:100%">
+<img class="mySlides" src="images/minis/UdeM.jpg" style="width:100%">
+<img class="mySlides" src="images/minis/MST.JPG" style="width:100%">
+<img class="mySlides" src="images/minis/excellence-award.jpg" style="width:100%">
+<img class="mySlides" src="images/minis/withHouari.jpg" style="width:100%">
+
+<a class="w3-btn-floating" style="position:absolute;top:45%;left:0" onclick="plusDivs(-1)">❮</a>
+<a class="w3-btn-floating" style="position:absolute;top:45%;right:0" onclick="plusDivs(1)">❯</a>
+
+</div>
+
+<script>
+var slideIndex = 1;
+showDivs(slideIndex);
+
+function plusDivs(n) {
+  showDivs(slideIndex += n);
+}
+
+function showDivs(n) {
+  var i;
+  var x = document.getElementsByClassName("mySlides");
+  if (n > x.length) {slideIndex = 1}    
+  if (n < 1) {slideIndex = x.length} ;
+  for (i = 0; i < x.length; i++) {
+     x[i].style.display = "none";  
+  }
+  x[slideIndex-1].style.display = "block";  
+}
+</script>
 
 
-
-          
- <br><br><br>   
               </blockquote>
           </div>
 		</div>
