@@ -1,14 +1,14 @@
 # main links links
 main:
 
-  - title: "Teaching"
-    url: /teaching/
-
-  - title: "Students"
-    url: /students/
+  - title: "My Students"
+    url: /members/
 
   - title: "Research"
     url: /research/
+    
+   - title: "Teaching"
+    url: /teaching/
 
   - title: "Publications"
     url: /publications/
