@@ -1,17 +1,17 @@
 # main links links
 main:
 
-  - title: "Teaching"
-    url: /teaching/
-
+  - title: "Research"
+    url: /research/
+    
   - title: "Members"
     url: /members/
 
-  - title: "Research"
-    url: /research/
-
   - title: "Publications"
     url: /publications/
+    
+  - title: "Teaching"
+    url: /teaching/
 
   - title: "Awards"
     url: /awards/
