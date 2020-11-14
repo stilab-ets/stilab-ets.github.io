@@ -1,26 +1,20 @@
 # main links links
 main:
 
-  - title: "Research"
-    url: /research/
-    
-  - title: "Members"
-    url: /members/
-
-  - title: "Publications"
-    url: /publications/
-    
   - title: "Teaching"
     url: /teaching/
 
-  - title: "Awards"
-    url: /awards/
+  - title: "Students"
+    url: /students/
 
-  - title: "Service"
-    url: /service/
-    
-  - title: "Links"
-    url: /links/
-    
-   - title: "Other"
-    url: /other/
+  - title: "Research"
+    url: /research/
+
+  - title: "Publications"
+    url: /publications/
+
+  - title: "My CV"
+    url: /cv/
+
+  - title: "Agenda"
+    url: /agenda/
