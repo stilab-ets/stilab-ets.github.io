@@ -57,7 +57,7 @@ yandex_site_verification :
 
 # Social Sharing
 twitter:
-  username               : petitroll
+  username               : ouniali
 facebook:
   username               :
   app_id                 :
@@ -80,7 +80,7 @@ analytics:
 
 # Site Author
 author:
-  name             : "Associate Professor of Computer Science"
+  name             : "Ali Ouni, Associate Professor of Computer Science"
   avatar           : "profile.png"
   employer         : "ETS Montreal, University of Quebec"
   bio              : "Great things never come from comfort zone."
