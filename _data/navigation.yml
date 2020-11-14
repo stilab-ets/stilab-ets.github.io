@@ -4,8 +4,8 @@ main:
   - title: "Teaching"
     url: /teaching/
 
-  - title: "Students"
-    url: /students/
+  - title: "Members"
+    url: /members/
 
   - title: "Research"
     url: /research/
@@ -13,8 +13,14 @@ main:
   - title: "Publications"
     url: /publications/
 
-  - title: "CV"
-    url: /cv/
+  - title: "Awards"
+    url: /awards/
 
-  - title: "Agenda"
-    url: /agenda/
+  - title: "Service"
+    url: /service/
+    
+  - title: "Links"
+    url: /links/
+    
+   - title: "Other"
+    url: /other/
