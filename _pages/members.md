@@ -17,11 +17,11 @@ author_profile: true
 
 
 ## Alumni
- - [Francener Alezy](https://github.com/alezyy), MSc 2020, Now senior software developer.
- - [Miguel Gonzales Hernandez](https://www.linkedin.com/in/miguel-gonzales-805801131/), MSc 2020, Now software analyst.
- - [Yacine Thabet](https://www.linkedin.com/in/yacine-thabet/?originalSubdomain=ca), MSc 2019, Now PhD student in France.
- - [Moataz Chouchen](https://www.linkedin.com/in/moataz-chouchen/), MSc 2019, Now PhD student at ETS Montreal
- - [Safouane Bani](https://ca.linkedin.com/in/safouen-bani-1a1665106), MSc 2019, Now software developer.
+ - [Francener Alezy] (https://github.com/alezyy), MSc 2020, Now senior software developer.
+ - [Miguel Gonzales Hernandez] (https://www.linkedin.com/in/miguel-gonzales-805801131/), MSc 2020, Now software analyst.
+ - [Yacine Thabet] (https://www.linkedin.com/in/yacine-thabet/?originalSubdomain=ca), MSc 2019, Now PhD student in France.
+ - [Moataz Chouchen] (https://www.linkedin.com/in/moataz-chouchen/), MSc 2019, Now PhD student at ETS Montreal
+ - [Safouane Bani] (https://ca.linkedin.com/in/safouen-bani-1a1665106), MSc 2019, Now software developer.
  - [Sabrine Boukharata](https://www.linkedin.com/in/sabrine-boukharata-aa452396/?originalSubdomain=tn), MSc, 2019. 
   
 
