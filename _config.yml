@@ -7,7 +7,7 @@
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Ali Ouni"
+title                    : "Software Engineering and Intelligence (SEI) Lab"
 title_separator          : "-"
 name                     : "Ali Ouni"
 description              : &description "personal description"
@@ -84,7 +84,7 @@ author:
   avatar           : "profile.png"
   employer         : "ETS Montreal, University of Quebec"
   bio              : "Great things never come from comfort zone."
-  location         : "1100, rue Notre-Dame Ouest"
+  location         : "1100 rue Notre-Dame Ouest, Montreal"
   office           : "Office A-4483"
   googleMaps       : "https://goo.gl/maps/2f5XgoPswsP2"
   googlescholar    : "https://scholar.google.ca/citations?user=RHH5rtcAAAAJ&hl=en"
