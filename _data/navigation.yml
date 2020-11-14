@@ -2,7 +2,7 @@
 main:
 
   - title: "My Students"
-    url: /members/
+    url: /students/
 
   - title: "Research"
     url: /research/
