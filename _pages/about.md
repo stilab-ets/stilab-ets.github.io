@@ -15,8 +15,8 @@ comment:
 
 Ali Ouni is an Associate Professor in 
 the [Department of Software Engineering and IT](https://www.etsmtl.ca/ets/gouvernance/decanats-et-departements/departement-genie-logiciel-ti) 
-at [Ecole de technologie superieure](https://www.etsmtl.ca/en/home) (ETS), University of Quebec. 
-He is the founder of the [Applied Software Engineering and Intelligence (ASEI) Lab](https://ouniali.github.io). 
+at [Ecole de technologie superieure](https://www.etsmtl.ca/en/home) (ETS), University of Quebec, where he leads the 
+the [Applied Software Engineering and Intelligence (ASEI) Lab](https://ouniali.github.io), since 2017. 
 He received his Ph.D. degree in computer science from [University of Montreal](https://www.umontreal.ca/en/) in 2014. 
 Before joining ETS Montreal, he has been an assistant professor at [Osaka University](https://www.osaka-u.ac.jp/en), Japan, and [UAE University](https://www.uaeu.ac.ae/en/). 
 For his exceptional Ph.D. research productivity, he was awarded the Excellence Award from the University of Montreal. 
@@ -24,6 +24,10 @@ He has served as a visiting researcher at [Missouri University of Science and Te
 His research interests are in software engineering including software maintenance and evolution, refactoring of software systems, 
 software quality, service-oriented computing, and the application of artificial intelligence techniques to software engineering. 
 He served as a program commitee member and reviewer in several journals and conferences. He is a member of the IEEE.
+
+
+# Applied Software Engineering and Intelligence (ASEI) Lab
+
 
 
 ### Looking for Students!
