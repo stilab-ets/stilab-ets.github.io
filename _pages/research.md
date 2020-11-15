@@ -6,7 +6,7 @@ redirect_from:
   - /resume
 ---
 
-#### [under construction]
+### [Page under construction]
 The ASEI Lab conduct research on software engineering to design, develop, and evaluate tools and techniques that 
 help software developers build better software by automating different tasks during the life cycle of a software system by analyzing its code and its development process.
 In particular, we focus on software refactoring, quality assurance, changes recommendation, third-party library reuse,
