@@ -26,8 +26,9 @@ software quality, service-oriented computing, and the application of artificial 
 He served as a program commitee member and reviewer in several journals and conferences. He is a member of the IEEE.
 
 
-# Applied Software Engineering and Intelligence (ASEI) Lab
-
+## Applied Software Engineering and Intelligence (ASEI) Lab
+The ASEI Lab uses artificial intelligence techniques (machine learning, metaheuristics, deep learning), 
+data analytics, and empirical approaches to address various problems related to software engineering.
 
 
 ### Looking for Students!

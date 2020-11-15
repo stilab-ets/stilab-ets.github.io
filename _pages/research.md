@@ -6,7 +6,11 @@ redirect_from:
   - /resume
 ---
 
+#### [under construction]
+The ASEI Lab conduct research on software engineering to design, develop, and evaluate tools and techniques that 
+help software developers build better software by automating different tasks during the life cycle of a software system by analyzing its code and its development process.
+In particular, we focus on software refactoring, quality assurance, changes recommendation, third-party library reuse,
+  
 
-I do software research. My students and I create tools and techniques that help developers build better software—by automatically testing, analyzing, and debugging its code and its development process.
-
-Our approaches have proven quite influential in academia and industry. My Curriculum Vitae lists the most important achievements.
+Our approaches have proven quite influential in academia and industry. 
+My Curriculum Vitae lists the most important achievements.
