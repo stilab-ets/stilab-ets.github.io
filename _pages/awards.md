@@ -1,7 +1,7 @@
 ---
 title: "Awards and Distinctions"
 permalink: /awards/
-author_profile: false
+author_profile: true
 ---
 
 {% include base_path %}
