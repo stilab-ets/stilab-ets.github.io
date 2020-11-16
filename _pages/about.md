@@ -12,8 +12,12 @@ comment:
 
 ---
 
-Welcome to the Applied Software Engineering and Intelligence (ASEI) Lab. 
-ASEI Lab is part of the department of Software Engineering and IT at [ETS Montreal](https://www.etsmtl.ca/), University of Quebec.
+ <span style="color:blue"> Software Technology and Intelligence (STI) Research Lab text</span>
+
+
+
+Welcome to the Software Technology and Intelligence (STI) Research Lab. 
+STI Lab is part of the department of Software Engineering and IT at [ETS Montreal](https://www.etsmtl.ca/), University of Quebec.
 
 [ETS Montreal](https://www.etsmtl.ca/) is specialized in applied research and teaching in engineering and technology transfer, and ranked 1st in Quebec and 2nd in Canada for the total number of engineering diplomas awarded annually. 
 
@@ -33,17 +37,19 @@ software quality, service-oriented computing, and the application of artificial 
 He served as a program commitee member and reviewer in several journals and conferences. He is a member of the IEEE.
 
 
-## Applied Software Engineering and Intelligence (ASEI) Lab.
-The main mission of the ASEI Lab is to design, develop, evaluate and deploy techniques and solutions to solve software engineering problems
-in order to to help software practitioners improve their software systems more effectively and efficiently. In particular, the ASEI Lab uses various artificial intelligence 
-techniques (machine learning, metaheuristics, deep learning), data analytics and empirical approaches to address various problems related to:
+## Software Technology and Intelligence (STI) Research Lab
+The main mission of the STI Research Lab is to design, develop, evaluate and deploy techniques and solutions to solve software engineering problems
+in order to to help software practitioners improve their software systems more effectively and efficiently. In particular, the STI Lab uses various artificial intelligence 
+techniques (machine learning, metaheuristics, deep learning), data analytics and empirical approaches to address various problems in software engineering. 
+We a specific expertise and interest in following topics:
 
+* Automating Software Development Using Artificial Intelligence
+* Search Based Software Engineering
 * Software Maintenance and Evolution
-* Software refactoring
+* Software Refactoring
 * Software Quality Assurance
 * Technical Debt
 * Third-party Software Library Reuse
-* Recommendation Systems in Software Engineering
 * Global Software Engineering
 
 
@@ -51,8 +57,9 @@ techniques (machine learning, metaheuristics, deep learning), data analytics and
 
 ### Looking for Students!
 
-The ASEI Lab am always looking for motivated and hard working PhD, Masters, and undergraduate students to work on challenging topics on software maintenance and evolution.
+The STI Research Lab is always looking for motivated and hard working PhD, Masters, and undergraduate students to work on challenging topics on software maintenance and evolution.
 For more details, please see my research interests and my [current](https://ouniali.github.io/research/) and [previous work](https://ouniali.github.io/publications/). 
+
 If you are excited and motivated to work on related topics, then send me an email with your CV, achievements, publications (if any), and a brief note explaining why you want to join my research team. 
 I would be happy also to discuss other well thought-out research ideas!
 
