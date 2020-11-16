@@ -6,7 +6,7 @@ author_profile: true
 
 ## Current
 
-![Student](images/logo.png)
+![STI Lab](images/logo.png)
 
   - Nuri Almarimi, PhD, 2018 - current
   - Islem Saidani, PhD, 2019 - current
@@ -15,7 +15,7 @@ author_profile: true
   - Narjes Bessghaier, PhD, 2020 - current
   - Oumayma Hamdi, MSc, 2019 - current
   - Ilyas Chahid, M.Ing., 2020- current
-  - Aurélien Jefferson Olongo Onana Noah, M.Ing, 2020- ...
+  - Aurélien Jefferson Olongo Onana Noah, M.Ing, 2020- current
 
 
 ## Alumni
