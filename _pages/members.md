@@ -6,7 +6,7 @@ author_profile: true
 
 ## Current
 
-![Nuri Almarimi](images/member.png)
+![Student](images/member.png)
 
   - Nuri Almarimi, PhD, 2018 - current
   - Islem Saidani, PhD, 2019 - current
