@@ -12,7 +12,7 @@ comment:
 
 ---
 
- <span style="color:blue"> Software Technology and Intelligence (STI) Research Lab text</span>
+![STI Lab](images/logo.png)
 
 
 
