@@ -7,7 +7,7 @@
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Applied Software Engineering and Intelligence (ASEI) Lab"
+title                    : "Software Technology and Intelligence (STI) Research Lab"
 title_separator          : "-"
 name                     : "Ali Ouni"
 description              : &description "personal description"
