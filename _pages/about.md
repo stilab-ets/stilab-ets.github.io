@@ -27,7 +27,7 @@ STI Lab is part of the department of Software Engineering and IT at [ETS Montrea
 Ali Ouni is an Associate Professor in 
 the [Department of Software Engineering and IT](https://www.etsmtl.ca/ets/gouvernance/decanats-et-departements/departement-genie-logiciel-ti) 
 at [Ecole de technologie superieure](https://www.etsmtl.ca/en/home) (ETS), University of Quebec, where he leads the 
-the [Software Technology and Intelligence (STI) Research Lab](https://ouniali.github.io), since 2017. 
+[Software Technology and Intelligence (STI) Research Lab](https://ouniali.github.io), since 2017. 
 He received his Ph.D. degree in computer science from [University of Montreal](https://www.umontreal.ca/en/) in 2014. 
 Before joining ETS Montreal, he has been an assistant professor at [Osaka University](https://www.osaka-u.ac.jp/en), Japan, and [UAE University](https://www.uaeu.ac.ae/en/). 
 For his exceptional Ph.D. research productivity, he was awarded the Excellence Award from the University of Montreal. 
@@ -43,7 +43,7 @@ The main goal of the STI Research Lab is to design, develop, evaluate and deploy
 in order to to help software practitioners improve their software systems more effectively and efficiently. In particular, the STI Lab uses various Artificial Intelligence 
 (machine learning, metaheuristics, deep learning) and Data Science (data mining, data analysis, knowledge extraction, statistics) techniques to address various problems 
 in software engineering. 
-We a specific interest and expertise in the following topics:
+We have a specific interest and expertise in the following topics:
 
 * Automating Software Development Using Artificial Intelligence
 * Search Based Software Engineering

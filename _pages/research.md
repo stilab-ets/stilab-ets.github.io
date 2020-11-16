@@ -11,7 +11,7 @@ help software developers build better software by automating different tasks dur
 In particular, the STI Research Lab uses various Artificial Intelligence 
 (machine learning, metaheuristics, deep learning) and Data Science (data mining, data analysis, knowledge extraction, statistics) techniques to address various problems 
 in software engineering. 
-We a specific interest and expertise in the following topics:
+We have a specific interest and expertise in the following topics:
 
 * Automating Software Development Using Artificial Intelligence
 * Search Based Software Engineering
