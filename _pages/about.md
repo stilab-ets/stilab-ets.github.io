@@ -43,7 +43,7 @@ The main goal of the STI Research Lab is to design, develop, evaluate and deploy
 in order to to help software practitioners improve their software systems more effectively and efficiently. In particular, the STI Lab uses various Artificial Intelligence 
 (machine learning, metaheuristics, deep learning) and Data Science (data mining, data analysis, knowledge extraction, statistics) techniques to address various problems 
 in software engineering. 
-We a specific interest and expertise in following topics:
+We a specific interest and expertise in the following topics:
 
 * Automating Software Development Using Artificial Intelligence
 * Search Based Software Engineering
