@@ -55,8 +55,8 @@ We a specific interest and expertise in following topics:
 
 
 The mission of the STI Research Lab includes:
-* Design, develop, deploy, and evaluate techniques, methods and tools to support software practitioners in developing and evolving complex software systems.
-* Prepare students to leading positions in academia and in software industry.
+* Designing, developing, deploying, and evaluating techniques, methods and tools to support software practitioners in developing and evolving complex software systems.
+* Preparing students to leading positions in academia and in software industry.
 
 
 ### <span style="color:red">Looking for Students!</span>
