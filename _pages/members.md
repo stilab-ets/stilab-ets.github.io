@@ -6,11 +6,7 @@ author_profile: true
 
 ## Current
 
-![Nuri Almarimi](images/20-512.webp)|![Nuri Almarimi](images/20-512.webp)|![Nuri Almarimi](images/20-512.webp)
---|--|--
-ee|ff|gg
---|--|--
-ee|ff|gg
+![Nuri Almarimi](images/20-512.webp)
 
   - Nuri Almarimi, PhD, 2018 - current
   - Islem Saidani, PhD, 2019 - current
