@@ -59,7 +59,7 @@ The mission of the STI Research Lab includes:
 * Prepare students to leading positions in academia and in software industry.
 
 
-### Looking for Students!
+### <span style="color:blue">Looking for Students!</span>
 
 The STI Research Lab is always looking for motivated and hard working PhD, Masters, and undergraduate students to work on challenging topics on software maintenance and evolution.
 For more details, please see my research interests and my [current](https://ouniali.github.io/research/) and [previous work](https://ouniali.github.io/publications/). 
