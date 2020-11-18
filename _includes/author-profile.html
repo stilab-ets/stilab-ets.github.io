@@ -39,8 +39,10 @@
       {% if author.email %}
         <li><a href="mailto:{{ author.email }}"><i class="fa fa-fw fa-envelope-o" aria-hidden="true"></i> {{ site.data.ui-text[site.locale].email_label | default: "Email" }}</a></li>
       {% endif %}
-      </ul>
-      <p />
+	  {% if author.phone %}
+        <li><i class="fa fa-map-signs" aria-hidden="true"></i> {{ author.phone }}</li>
+      {% endif %}
+      
       <ul class="author__urls social-icons">
 
       {% if author.twitter %}
@@ -61,5 +63,6 @@
 
 
     </ul>
+	<p />
   </div>
 </div>
