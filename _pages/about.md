@@ -62,7 +62,7 @@ The mission of the STI Research Lab includes:
 ### <span style="color:red">Looking for Students!</span>
 
 The STI Research Lab is always looking for motivated and hard working PhD, Masters, and undergraduate students to work on challenging topics on software maintenance and evolution.
-For more details, please see my research interests and our [current](https://ouniali.github.io/research/) and [previous work](https://ouniali.github.io/publications/). 
+For more details, please see the STI Lab's research interests and [current](https://ouniali.github.io/research/) and [previous work](https://ouniali.github.io/publications/). 
 
 If you are excited and motivated to work on related topics, then send an email to Dr. Ali Ouni (ali.ouni@etsmtl.ca) with your CV, achievements, publications (if any), and a brief note explaining why you want to join my research team. 
 I would be happy also to discuss other well thought-out research ideas!
