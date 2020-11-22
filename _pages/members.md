@@ -22,7 +22,7 @@ author_profile: true
  - [Francener Alezy](https://github.com/alezyy), M.Ing. 2020, Now senior software developer.
  - [Miguel Gonzales Hernandez](https://www.linkedin.com/in/miguel-gonzales-805801131/), M.Ing. 2020, Now software analyst.
  - [Yacine Thabet](https://www.linkedin.com/in/yacine-thabet/?originalSubdomain=ca), M.Ing. 2019, Now PhD student in France.
- - [Moataz Chouchen](https://www.linkedin.com/in/moataz-chouchen/), M.Ing. 2019, Now PhD student at ETS Montreal
+ - [Moataz Chouchen](https://www.linkedin.com/in/moataz-chouchen/), M.Sc. 2019, Now PhD student at ETS Montreal
  - [Safouane Bani](https://ca.linkedin.com/in/safouen-bani-1a1665106), M.Ing. 2019, Now software developer.
  - [Sabrine Boukharata](https://www.linkedin.com/in/sabrine-boukharata-aa452396/?originalSubdomain=tn), MSc, 2019. 
   
