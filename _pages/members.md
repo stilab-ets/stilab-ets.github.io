@@ -3,24 +3,24 @@ title: "Members"
 permalink: /members/
 author_profile: true
 ---
-## Professors
+### Professors
 - Ali Ouni
 
-## Current PhD students
+### Current PhD students
   - Nuri Almarimi, PhD, 2018 - current
   - Islem Saidani, PhD, 2019 - current
   - Marwa Daagi, PhD, 2017 - current
   - Moataz Chouchen, PhD, 2020 - current
   - Narjes Bessghaier, PhD, 2020 - current
   
-## Current Masters students  
+### Current Masters students  
   - Oumayma Hamdi, MSc, 2019 - current
   - Ilyas Chahid, M.Ing., 2020- current
   - Aurélien Jefferson Olongo Onana Noah, M.Ing., 2020- current
   - Richardson Alexandre, M.Ing., 2021- current
 
 
-## Alumni
+### Alumni
  - [Francener Alezy](https://github.com/alezyy), M.Ing. 2020, Now senior software developer.
  - [Miguel Gonzales Hernandez](https://www.linkedin.com/in/miguel-gonzales-805801131/), M.Ing. 2020, Now software analyst.
  - [Yacine Thabet](https://www.linkedin.com/in/yacine-thabet/?originalSubdomain=ca), M.Ing. 2019, Now PhD student.
