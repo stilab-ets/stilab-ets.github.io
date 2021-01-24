@@ -27,6 +27,7 @@ author_profile: true
  - [Moataz Chouchen](https://www.linkedin.com/in/moataz-chouchen/), M.Sc. 2019, Now PhD student at ETS Montreal
  - [Safouane Bani](https://ca.linkedin.com/in/safouen-bani-1a1665106), M.Ing. 2019, Now software developer.
  - [Sabrine Boukharata](https://www.linkedin.com/in/sabrine-boukharata-aa452396/?originalSubdomain=tn), MSc, 2019. 
+ - [Bechir Jebali](), M.Ing. 2019, Now software analyst at the Ministry of Immigration, Francisation and Integration of Quebec (MIDI).
   
 
 
