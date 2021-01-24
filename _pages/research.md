@@ -5,7 +5,7 @@ author_profile: true
 
 ---
 
-### [Page under construction]
+
 The STI Research Lab conducts research in software engineering to design, develop, and evaluate tools and techniques that 
 help software developers build better software by automating different tasks during the life cycle of a software system by analyzing its code and its development process.
 In particular, the STI Research Lab uses various Artificial Intelligence 
