@@ -14,7 +14,7 @@ author_profile: true
 
 ### Current Masters students  
 
-Wilfried Nkouekam Mbouga
+- Wilfried Nkouekam Mbouga, M.Ing., 2022 - current
 - Francener Alezy, M.Sc., 2021 - current
 - Yassine Rabbouh, M.Ing., 2022 - current
 - Hinda Abassi, M.Ing., 2022 - current
