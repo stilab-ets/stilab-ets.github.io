@@ -43,6 +43,7 @@ author_profile: true
 - [Safouane Bani](https://ca.linkedin.com/in/safouen-bani-1a1665106), M.Ing. 2019, Now Web designer at [8P Design](https://www.8p-design.com/en/montreal-web-agency).
 - [Sabrine Boukharata](https://ca.linkedin.com/in/sabrine-boukharata-aa452396), MSc, 2019. Now Software Analyst at [GIRO](https://www.giro.ca/en-ca/)
 - [Bechir Jebali](https://ouniali.github.io/members/), M.Ing. 2019, Now software analyst at the [Ministry of MIDI, Quebec](https://www.quebec.ca/immigration).
+- [Naoya Ujihara](https://ouniali.github.io/members/), M.Eng., 2016. Now Software analyst at [NTT Japan](https://group.ntt/en/)
   
 
 
