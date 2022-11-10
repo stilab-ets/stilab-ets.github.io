@@ -31,7 +31,7 @@ author_profile: true
 - [Mahar Benmesbah](https://ca.linkedin.com/in/mahar-benmesbah-5a4b10155), M.Ing., 2020. Now Software engineer at [Berger-Levrault North America](https://www.berger-levrault.com/ca/en/)
 - [Massiwen Akrour](https://ca.linkedin.com/in/massiwen-akrour-88078b120), M.Ing., 2021. Now Software engineer at [Intact Insurance](https://www.intact.ca/qc/en/personal-insurance.html)
 - [Moulay Taieb Alaoui Harouni](https://ca.linkedin.com/in/moulay-taieb-alaoui-harouni-a6b8a719), M.Ing., 2021. Now Data Engineer at [Bombardier](https://bombardier.com/)
-- [Soufiane Alami](https://ca.linkedin.com/in/soufiane-el-alami), M.Ing., 2021. Now Software Analyst at [Desjardin](https://www.desjardins.com/)
+- [Soufiane Alami](https://ca.linkedin.com/in/soufiane-el-alami), M.Ing., 2021. Now Software Analyst at [Desjardins](https://www.desjardins.com/)
 - [Mustapha Felfoul](https://ca.linkedin.com/in/mustapha-younes-felfoul-54a00a179), M.Ing., 2022. Now Software analyst at [Purkinje](https://purkinje.com/)
 - [Richardson Alexandre](https://ca.linkedin.com/in/richardson-alexandre-m-eng-b4a1a566?trk=people_directory), M.Ing., 2022. Now Full Stack Developer at [Ordigraphe inc.](https://ordigraphe.com/about/)
 - [Oumayma Hamdi](https://ca.linkedin.com/in/oumayma-hamdi-109646146), MSc., 2021. Now Software engineer at [ALTEN Canada](https://www.alten.ca/en/)
