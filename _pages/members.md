@@ -20,7 +20,8 @@ author_profile: true
 - Hinda Abassi, M.Ing., 2022 - current
 
 ### Alumni
-
+- [Islem Saidani](https://ca.linkedin.com/in/islemsaidani), PhD, 2022. Now Data engineer at [LGS, an IBM Company](https://www.lgs.com/home.html)
+- [Marwa Daagi](https://www.researchgate.net/profile/Marwa-Daaji), PhD, 2021. Now Research associate at [University of Tunis El Manar](http://www.utm.rnu.tn/utm/fr/)
 - [Lea Charara](https://ca.linkedin.com/in/leacharara), M.Ing., 2022. Now Full Stack Developer at [Hubelia](https://www.hubelia.com/home)
 - [Mohamad Kredly](https://ca.linkedin.com/in/mohamad-kredly/fr), M.Ing., 2022
 - [Abdelkerim Haroun Ibrahim](https://ouniali.github.io/members/), M.Ing., 2022. Now software engineer at [ABB Canada](https://new.abb.com/ca/fr)
@@ -31,8 +32,6 @@ author_profile: true
 - [Moulay Taieb Alaoui Harouni](https://ca.linkedin.com/in/moulay-taieb-alaoui-harouni-a6b8a719), M.Ing., 2021. Now Data Engineer at [Bombardier](https://bombardier.com/)
 - [Soufiane Alami](https://ca.linkedin.com/in/soufiane-el-alami), M.Ing., 2021. Now Software Analyst at [Desjardin](https://www.desjardins.com/)
 - [Mustapha Felfoul](https://ca.linkedin.com/in/mustapha-younes-felfoul-54a00a179), M.Ing., 2022. Now Software analyst at [Purkinje](https://purkinje.com/)
-- [Islem Saidani](https://ca.linkedin.com/in/islemsaidani), PhD, 2022. Now Data engineer at [LGS, an IBM Company](https://www.lgs.com/home.html)
-- [Marwa Daagi](https://www.researchgate.net/profile/Marwa-Daaji), PhD, 2021. Now Research associate at [University of Tunis El Manar](http://www.utm.rnu.tn/utm/fr/)
 - [Richardson Alexandre](https://ca.linkedin.com/in/richardson-alexandre-m-eng-b4a1a566?trk=people_directory), M.Ing., 2022. Now Full Stack Developer at [Ordigraphe inc.](https://ordigraphe.com/about/)
 - [Oumayma Hamdi](https://ca.linkedin.com/in/oumayma-hamdi-109646146), MSc., 2021. Now Software engineer at [ALTEN Canada](https://www.alten.ca/en/)
 - [Ilyas Chahid](https://ca.linkedin.com/in/ilyas-chahid-15709613b), M.Ing., 2021. Now Full Stack developer at [Koolskools](http://www.koolskoools.com )
