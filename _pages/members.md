@@ -15,13 +15,14 @@ author_profile: true
 ### Current Masters students  
 
 - Wilfried Nkouekam Mbouga, M.Ing., 2022 - current
+- Jack Rayane Djapa Tchagwo, M.Ing., 2022 - current
 - Francener Alezy, M.Sc., 2021 - current
 - Yassine Rabbouh, M.Ing., 2022 - current
 - Hinda Abassi, M.Ing., 2022 - current
 
 ### Alumni
 - [Islem Saidani](https://ca.linkedin.com/in/islemsaidani), PhD, 2022. Now Data engineer at [LGS, an IBM Company](https://www.lgs.com/home.html)
-- [Marwa Daagi](https://www.researchgate.net/profile/Marwa-Daaji), PhD, 2021. Now Research associate at [University of Tunis El Manar](http://www.utm.rnu.tn/utm/fr/)
+- [Marwa Daagi](https://www.researchgate.net/profile/Marwa-Daaji), PhD, 2021. Now Lecturer at [University of Tunis El Manar](http://www.utm.rnu.tn/utm/fr/)
 - [Lea Charara](https://ca.linkedin.com/in/leacharara), M.Ing., 2022. Now Full Stack Developer at [Hubelia](https://www.hubelia.com/home)
 - [Mohamad Kredly](https://ca.linkedin.com/in/mohamad-kredly/fr), M.Ing., 2022
 - [Abdelkerim Haroun Ibrahim](https://ouniali.github.io/members/), M.Ing., 2022. Now software engineer at [ABB Canada](https://new.abb.com/ca/fr)
