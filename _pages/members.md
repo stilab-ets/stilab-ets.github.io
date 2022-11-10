@@ -34,7 +34,7 @@ author_profile: true
 - [Islem Saidani](https://ca.linkedin.com/in/islemsaidani), PhD, 2022. Now Data engineer at [LGS, an IBM Company](https://www.lgs.com/home.html)
 - [Marwa Daagi](https://www.researchgate.net/profile/Marwa-Daaji), PhD, 2021. Now Research associate at [University of Tunis El Manar](http://www.utm.rnu.tn/utm/fr/)
 - [Richardson Alexandre](https://ca.linkedin.com/in/richardson-alexandre-m-eng-b4a1a566?trk=people_directory), M.Ing., 2022. Now Full Stack Developer at [Ordigraphe inc.](https://ordigraphe.com/about/)
-- [Oumayma Hamdi]([Junior Java Developer](https://ca.linkedin.com/in/oumayma-hamdi-109646146)), MSc., 2021. Now Software engineer at [ALTEN Canada](https://www.alten.ca/en/)
+- [Oumayma Hamdi](https://ca.linkedin.com/in/oumayma-hamdi-109646146), MSc., 2021. Now Software engineer at [ALTEN Canada](https://www.alten.ca/en/)
 - [Ilyas Chahid](https://ca.linkedin.com/in/ilyas-chahid-15709613b), M.Ing., 2021. Now Full Stack developer at [Koolskools](http://www.koolskoools.com )
 - [Aurélien Jefferson Olongo Onana Noah](https://ouniali.github.io/members/), M.Ing., 2021.
 - [Francener Alezy](https://github.com/alezyy), M.Ing. 2020, Now senior software developer.
