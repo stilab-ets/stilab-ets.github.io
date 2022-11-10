@@ -36,13 +36,13 @@ author_profile: true
 - [Oumayma Hamdi](https://ca.linkedin.com/in/oumayma-hamdi-109646146), MSc., 2021. Now Software engineer at [ALTEN Canada](https://www.alten.ca/en/)
 - [Ilyas Chahid](https://ca.linkedin.com/in/ilyas-chahid-15709613b), M.Ing., 2021. Now Full Stack developer at [Koolskools](http://www.koolskoools.com )
 - [Aurélien Jefferson Olongo Onana Noah](https://ouniali.github.io/members/), M.Ing., 2021.
-- [Francener Alezy](https://github.com/alezyy), M.Ing. 2020, Now senior software developer.
-- [Miguel Gonzales Hernandez](https://www.linkedin.com/in/miguel-gonzales-805801131/), M.Ing. 2020. Now software analyst.
+- [Francener Alezy](https://github.com/alezyy), M.Ing. 2020, Now Senior Software Web Developer at [Cubeler Business Hub](https://www.cubeler.com/en-ca/)
+- [Miguel Gonzales Hernandez](https://www.linkedin.com/in/miguel-gonzales-805801131/), M.Ing. 2020. Now software analyst at [TELUS](https://www.telus.com/en/health).
 - [Yacine Thabet](https://www.linkedin.com/in/yacine-thabet/?originalSubdomain=ca), M.Ing. 2019, Now PhD student.
 - [Moataz Chouchen](https://www.linkedin.com/in/moataz-chouchen/), M.Sc. 2019, Now PhD student at ETS Montreal
-- [Safouane Bani](https://ca.linkedin.com/in/safouen-bani-1a1665106), M.Ing. 2019, Now software developer.
-- [Sabrine Boukharata](https://www.linkedin.com/in/sabrine-boukharata-aa452396/?originalSubdomain=tn), MSc, 2019. 
-- [Bechir Jebali](https://ouniali.github.io/members/), M.Ing. 2019, Now software analyst at the Ministry of MIDI, Quebec.
+- [Safouane Bani](https://ca.linkedin.com/in/safouen-bani-1a1665106), M.Ing. 2019, Now Web designer at [8P Design](https://www.8p-design.com/en/montreal-web-agency).
+- [Sabrine Boukharata](https://ca.linkedin.com/in/sabrine-boukharata-aa452396), MSc, 2019. Now Software Analyst at [GIRO](https://www.giro.ca/en-ca/)
+- [Bechir Jebali](https://ouniali.github.io/members/), M.Ing. 2019, Now software analyst at the [Ministry of MIDI, Quebec](https://www.quebec.ca/immigration).
   
 
 
