@@ -12,7 +12,7 @@ author_profile: true
 
 ## Research Excellence Awards
 * [**Early Career Research Ecellence Award**](https://www.etsmtl.ca/ets/a-propos/prix-et-distinctions), [ETS Montreal](https://www.etsmtl.ca/), 2021.
-* **PhD Outstanding Research Award**, FESP, University of Montreal, February 2014. The highest University honor that PhD students engaged in research can receive.
+* **PhD Outstanding Research Award**, FESP, University of Montreal, 2014. The highest University honor that PhD students engaged in research can receive.
 * **PhD Research Excellence Award**, [J. Armand Bombardier Foundation](https://www.fondationbombardier.ca/en/), Canada, 2014.
 * **Outstanding Graduate student excellence award**, [Department of Computer Science andOperations Research (DIRO)](http://diro.umontreal.ca/accueil/), [University of Montreal](https://www.umontreal.ca/), 2013. The highest departmental Award for excellent graduate students.
 * **Excellence Doctoral Scholarship Award**, [MESR](http://www.mesrst.tn/anglais/index.htm), Government of Tunisia (2011-2014).
