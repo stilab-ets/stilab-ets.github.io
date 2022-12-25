@@ -28,7 +28,7 @@ Ali Ouni is an Associate Professor in
 the [Department of Software Engineering and IT](https://www.etsmtl.ca/ets/gouvernance/decanats-et-departements/departement-genie-logiciel-ti) 
 at [Ecole de technologie superieure](https://www.etsmtl.ca/en/home) (ETS), University of Quebec, where he leads the 
 [Software Technology and Intelligence (STI) Research Lab](https://ouniali.github.io), since 2017. 
-He received his Ph.D. degree in computer science from [University of Montreal](https://www.umontreal.ca/en/) in 2015. 
+He received his Ph.D. degree in computer science from [University of Montreal](https://www.umontreal.ca/en/) in 2014. 
 Before joining ETS Montreal, he has been an assistant professor at [Osaka University](https://www.osaka-u.ac.jp/en), Japan, and [UAE University](https://www.uaeu.ac.ae/en/). 
 For his exceptional Ph.D. research productivity, he was awarded the and the [Research Ecellence Award-emerging researcher](https://www.etsmtl.ca/ets/a-propos/prix-et-distinctions) from ETS Montreal in 2021, and the Excellence Award from the University of Montreal in 2014. 
 He has served as a visiting researcher at [Missouri University of Science and Technology](https://www.mst.edu/), and [University of Michigan](https://umdearborn.edu/), in 2013 and 2014 respectively. 
