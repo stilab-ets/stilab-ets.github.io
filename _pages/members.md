@@ -7,6 +7,7 @@ author_profile: true
 - Ali Ouni
 
 ### Current PhD students
+  - Mahi Begoug, PhD, 2023 - current
   - Mohamed Amine Batoun, PhD, 2022 - current
   - Moataz Chouchen, PhD, 2020 - current
   - Narjes Bessghaier, PhD, 2020 - current
@@ -14,15 +15,18 @@ author_profile: true
 
 ### Current Masters students  
 
-- Wilfried Nkouekam Mbouga, M.Ing., 2022 - current
+- Chemseddine Mebarki, M.Ing., 2023 - current
+- Nathan Babaka Kinalendele, M.Ing., 2023 - current
 - Jack Rayane Djapa Tchagwo, M.Ing., 2022 - current
-- Francener Alezy, M.Sc., 2021 - current
 - Yassine Rabbouh, M.Ing., 2022 - current
-- Hinda Abassi, M.Ing., 2022 - current
+- Francener Alezy, M.Sc., 2021 - current
+
 
 ### Alumni
 - [Islem Saidani](https://ca.linkedin.com/in/islemsaidani), PhD, 2022. Now Data engineer at [LGS, an IBM Company](https://www.lgs.com/home.html)
 - [Marwa Daagi](https://www.researchgate.net/profile/Marwa-Daaji), PhD, 2021. Now Lecturer at [University of Tunis El Manar](http://www.utm.rnu.tn/utm/fr/)
+- Wilfried Nkouekam Mbouga, M.Ing., 2022
+- Hinda Abassi, M.Ing., 2022
 - [Lea Charara](https://ca.linkedin.com/in/leacharara), M.Ing., 2022. Now Full Stack Developer at [Hubelia](https://www.hubelia.com/home)
 - [Mohamad Kredly](https://ca.linkedin.com/in/mohamad-kredly/fr), M.Ing., 2022
 - [Abdelkerim Haroun Ibrahim](https://ouniali.github.io/members/), M.Ing., 2022. Now software engineer at [ABB Canada](https://new.abb.com/ca/fr)
@@ -46,6 +50,3 @@ author_profile: true
 - [Bechir Jebali](https://ouniali.github.io/members/), M.Ing. 2019, Now software analyst at the [Ministry of MIDI, Quebec](https://www.quebec.ca/immigration).
 - [Naoya Ujihara](https://ouniali.github.io/members/), M.Eng., 2016. Now Software analyst at [NTT Japan](https://group.ntt/en/)
   
-
-
-
