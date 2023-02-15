@@ -83,7 +83,7 @@ libraries?
 - [ ] AND and THEN are the same so you should not be saying "and then" just like what I did in the previous point ;)
 - [ ] Remember the burden is on the writer not on the reviewer — any CS person should be able to grasp your paper.
 
-#### Some LaTeX tips (your co-authors will thank you):
+#### 4. Some LaTeX tips (your co-authors will thank you):
 - [ ] Writing a paper in Word is not an option.
 - [ ] If you decide to use Overleaf (my ideal choice), make sure that the source code of your paper is available once you start working with others. Not everyone likes the online editors. This will be needed later as source files should compile in the journal submission system
 - [ ] Check that your paper is in the right conference/journal style!
