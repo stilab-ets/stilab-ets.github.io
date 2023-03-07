@@ -16,8 +16,8 @@ comment:
 
 
 
-Welcome to the Software Technology and Intelligence (STI) Research Lab. 
-STI Lab is part of the department of Software Engineering and IT at [ETS Montreal](https://www.etsmtl.ca/), University of Quebec.
+Welcome to the Software Technology and Intelligence Research Lab (STIL). 
+STIL Lab is part of the department of Software Engineering and IT at [ETS Montreal](https://www.etsmtl.ca/), University of Quebec.
 
 [ETS Montreal](https://www.etsmtl.ca/) is specialized in applied research and teaching in engineering and technology transfer, and ranked 1st in Quebec and 2nd in Canada for the total number of engineering diplomas awarded annually. 
 
