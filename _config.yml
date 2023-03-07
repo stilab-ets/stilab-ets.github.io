@@ -7,9 +7,9 @@
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Software Technology and Intelligence (STI) Research Lab"
+title                    : "Software Technology and Intelligence Research Lab (STIL)"
 title_separator          : "-"
-name                     : "Ali Ouni, P.Eng., Ph.D."
+name                     : "Ali Ouni, Eng., Ph.D."
 description              : &description "personal description"
 url                      : https://ouniali.github.io
 baseurl                  : ""
