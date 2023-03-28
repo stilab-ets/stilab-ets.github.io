@@ -22,7 +22,7 @@ author_profile: true
 - Francener Alezy, M.Sc., 2021 - current
 
 
-### Alumni
+### Former students
 - [Islem Saidani](https://ca.linkedin.com/in/islemsaidani), PhD, 2022. Now Data engineer at [LGS, an IBM Company](https://www.lgs.com/home.html)
 - [Marwa Daagi](https://www.researchgate.net/profile/Marwa-Daaji), PhD, 2021. Now Lecturer at [University of Tunis El Manar](http://www.utm.rnu.tn/utm/fr/)
 - [Wilfried Nkouekam Mbouga](https://cm.linkedin.com/in/wilfried-nkouekam-b1a628156), M.Ing., 2022. Now Software Engineer at [Famic Technologies](https://www.famictech.com/en/)
