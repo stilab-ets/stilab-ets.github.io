@@ -21,6 +21,12 @@ author_profile: true
 - Yassine Rabbouh, M.Ing., 2022 - current
 - Francener Alezy, M.Sc., 2021 - current
 
+### Visiting intern students  
+
+- Farah Hachicha, M.Sc., Summer 2023
+- Jouhaina Nasri, M.Sc. Summer 2023
+- Jasem Khelifi, Undergad, Summer 2023
+- Fatma Beji, Undergad, Summer 2023
 
 ### Former students
 - [Islem Saidani](https://ca.linkedin.com/in/islemsaidani), PhD, 2022. Now Data engineer at [LGS, an IBM Company](https://www.lgs.com/home.html)
