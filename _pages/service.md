@@ -8,7 +8,10 @@ author_profile: true
 
 
 ### 2023
+- Program Co-chair for [31st IEEE International Conference on Program Comprehension (ICPC)](https://conf.researchr.org/home/icpc-2023), Journal-first Track, 2023.
 - Program Committee for [ACM Joint European Software Engineering Conference and Symposium on the Foundations of Software Engineering (ESEC/FSE'23)](https://conf.researchr.org/home/fse-2023)
+- Program Committee for [38th IEEE/ACM International Conference on Automated Software Engineering (ASE'23)](https://conf.researchr.org/home/ase-2023), NIER Track, 2023
+- Program Committee for [16th International Conference on Cooperative and Human Aspects of Software Engineering (CHASE'23)](https://conf.researchr.org/home/chase-2023), RR Track, 2023.
 - Program Committee for [ACM/IEEE International Conference on Software Engineering (ICSE'23)](https://conf.researchr.org/home/icse-2023), SEET Track
 - Program Committee for [IEEE Mining Software Repositories Conference (MSR'23)](https://conf.researchr.org/home/msr-2023), Registered Reports Track
 - Program Committee for [IEEE International Conference on Web Services (ICWS'23)](https://conferences.computer.org/icws/2023/)
@@ -17,6 +20,7 @@ author_profile: true
 - Program Committee for [IEEE International Conference on Software Analysis, Evolution and Reengineering (SANER'23)](https://saner2023.must.edu.mo/), NIER Track
 
 ### 2022
+- Program Co-chair for [9th IEEE/ACM International Conference on Mobile Software Engineering & and Systems (MOBILESoft)](https://conf.researchr.org/home/mobilesoft-2022), Tool Demos Track, 2022
 - Program Committee for [International Conference on Mining Software Repositories (MSR'22)](https://conf.researchr.org/home/msr-2022), Registered Report Track
 - Program Committee for [16th ACM/IEEE International Conference on Global Software Engineering (ICGSE'22)](https://resources.sei.cmu.edu/news-events/events/icssp/)
 - Program Committee for [29th IEEE International Conference on Software Analysis, Evolution and Reengineering (SANER'22)](https://saner2022.uom.gr/)
@@ -35,6 +39,7 @@ author_profile: true
 - Program Committee for IEEE International Conference on Program Comprehension (ICPC'21) ERA Track
 
 ### 2020
+- Program Co-chair, [International Conference on Software  and Systems Reuse (ICSR)](https://icsr2020.wordpress.com/), Doctoral Symposium, 2020.
 - Program Committee for IEEE/ACM Automated Software Engineering Conference (ASE'20), Late Breaking Result Track
 - Program Committee for International Conference on Decision Aid Sciences and Application (DASA'20)
 - Program Committee for 14th International Conference on Innovations in Information Technology (IIT'20)
@@ -47,6 +52,7 @@ author_profile: true
 - Program Committee for IEEE International Conference on Services Computing (SCC'20)
 
 ### 2019
+- Publicity co-chair for [International Symposium on Search Based Software Engineering (SSBSE)](http://ssbse19.mines-albi.fr/), 2019.
 - Program Committee for IEEE International Workshop on Software Engineering Intelligence (SEI'19)
 - Program Committee for 19th IEEE Int. Working Conf. on Source Code Analysis and Manipulation (SCAM'19), Engineering Track
 - Program Committee for 23rd International Computer Science and Engineering Conference (ICSEC'19)
@@ -54,16 +60,20 @@ author_profile: true
 - Program Committee for IEEE International Conference on Web Services (ICWS'19)
 
 ### 2018
+- General Chair of the 2nd [International Workshop on Refactoring (IWoR 2018)](https://iwor.github.io/iwor2018/), co-located with ASE 2018
 - Program Committee for IEEE 13th International Conference on Innovations in Information Technology (IIT'18)
 - Program Committee for ACM Genetic and Evolutionary Computation Conference (GECCO'18)
 - Program Committee for International Conference on Advanced Service Computing (SERVICE COMPUTATION'18)
 
 ### 2017
+- Program Committee co-chair of the [9th IEEE International Conference on Management of Digital EcoSystems (MEDES)](https://dblp.org/db/conf/medes/medes2017.html) 2017
 - Program Committee for IEEE Working Conference on Software Visualization (VISSOFT'17), NIER track, and Tool track
 - Program Committee for ACM Genetic and Evolutionary Computation Conference (GECCO'17)
 - Program Committee for International Conference on Software Analysis, Evolution, and Reengineering (SANER'17), Tool Track
 
 ### 2016
+- Founder and General Chair of the [International Workshop on Refactoring (IWoR 2016)](https://iwor.github.io/iwor2016/), co-located with ASE 2016
+- Program Committee Chair of [International Symposium on Search Based Software Engineering (SSBSE)](https://ssbse.info/2016/), PhD Track, 2016
 - Program Committee for ACM Genetic and Evolutionary Computation Conference (GECCO'16)
 - Program Committee for International Conference on Software Analysis, Evolution, and Reengineering (SANER'16), Tool Track
 - Program Committee for International Symposium on Search Based Software Engineering (SSBSE'16)
