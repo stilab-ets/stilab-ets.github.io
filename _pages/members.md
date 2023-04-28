@@ -24,7 +24,7 @@ author_profile: true
 ### Visiting intern students  
 
 - Farah Hachicha, M.Sc., Summer 2023
-- Jouhaina Nasri, M.Sc. Summer 2023
+- Jouhaina Nasri, M.Sc., Summer 2023
 - Jasem Khelifi, Undergad, Summer 2023
 - Fatma Beji, Undergad, Summer 2023
 
