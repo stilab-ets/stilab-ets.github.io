@@ -24,10 +24,9 @@ STIL Lab is part of the department of Software Engineering and IT at [ETS Montre
 
 ## About me
 
-Ali Ouni is an Associate Professor in 
-the [Department of Software Engineering and IT](https://www.etsmtl.ca/ets/gouvernance/decanats-et-departements/departement-genie-logiciel-ti) 
+Ali Ouni is a Professor in the [Department of Software Engineering and IT](https://www.etsmtl.ca/ets/gouvernance/decanats-et-departements/departement-genie-logiciel-ti) 
 at [Ecole de technologie superieure](https://www.etsmtl.ca/en/home) (ETS), University of Quebec, where he leads the 
-[Software Technology and Intelligence Research Lab (STIL)](https://ouniali.github.io), since 2017. He is the recipient of the [Research Ecellence Award-Emerging Researcher](https://www.etsmtl.ca/nouvelles/2021/excellence-emergent/) from ÉTS Montreal in 2021. He received his Ph.D. degree in computer science from [University of Montreal](https://www.umontreal.ca/en/) in 2014. 
+[Software Technology and Intelligence Research Lab (STIL)](https://ouniali.github.io), since 2017. He is the recipient of the [Research Ecellence Award (Releve) of the University of Quebec](https://reseau.uquebec.ca/fr/a-propos/prix-et-distinctions/prix-dexcellence) in 2023, and the [Research Ecellence Award-Emerging Researcher](https://www.etsmtl.ca/nouvelles/2021/excellence-emergent/) from ÉTS Montreal in 2021. He received his Ph.D. degree in computer science from [University of Montreal](https://www.umontreal.ca/en/). 
 Before joining ETS Montreal, he has been an assistant professor at [Osaka University](https://www.osaka-u.ac.jp/en), Japan, and [UAE University](https://www.uaeu.ac.ae/en/). 
 For his exceptional Ph.D. research productivity, he was awarded the and the [Research Ecellence Award-emerging researcher](https://www.etsmtl.ca/ets/a-propos/prix-et-distinctions) from ETS Montreal in 2021, and the Excellence Award from the University of Montreal in 2014. 
 He has served as a visiting researcher at [Missouri University of Science and Technology](https://www.mst.edu/), and [University of Michigan](https://umdearborn.edu/), in 2013 and 2014 respectively. 
@@ -36,7 +35,7 @@ software quality, service-oriented computing, and the application of artificial 
 He served as a program commitee member and reviewer in several journals and conferences. He is the receiptient of seven Best Paper Awards ([ICSOC 2022](https://icsoc2022.spilab.es/), [MSR 2021](https://conf.researchr.org/home/msr-2021) Mining Track, [ICGSE 2020](https://conf.researchr.org/home/icgse-2020), [ICSR 2020](https://icsr2020.wordpress.com/), [IWoR 2019](https://iwor.github.io/iwor2019/organization/), [Energies 2018](https://www.mdpi.com/journal/energies/awards/621), [ICWS 2016](https://www.computer.org/csdl/proceedings/icws/2016/12OmNyQ7G5O)) and the 10-Year Most Influential Paper Award at [ICPC 2021](https://conf.researchr.org/home/icpc-2021). He is a member of the IEEE.
 
 
-## Software Technology and Intelligence (STI) Research Lab
+## Software Technology and Intelligence Lab (STIL)
 
 The main goal of the STI Research Lab is to design, develop, evaluate and deploy techniques and solutions to solve software engineering problems
 in order to to help software practitioners improve their software systems more effectively and efficiently. In particular, the STI Lab uses various Artificial Intelligence 
