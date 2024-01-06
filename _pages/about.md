@@ -12,7 +12,7 @@ comment:
 
 ---
 
-![STIL Lab](images/logo.png)
+
 
 
 
