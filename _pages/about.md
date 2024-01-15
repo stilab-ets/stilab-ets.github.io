@@ -24,7 +24,7 @@ STIL Lab is part of the department of Software Engineering and IT at [ETS Montre
 
 ## About me
 
-Ali Ouni is a Professor in the [Department of Software Engineering and IT](https://www.etsmtl.ca/ets/gouvernance/decanats-et-departements/departement-genie-logiciel-ti) 
+Ali Ouni is an Associate Professor in the [Department of Software Engineering and IT](https://www.etsmtl.ca/ets/gouvernance/decanats-et-departements/departement-genie-logiciel-ti) 
 at [Ecole de technologie superieure](https://www.etsmtl.ca/en/home) (ETS), University of Quebec, where he leads the 
 [Software Technology and Intelligence Research Lab (STIL)](https://ouniali.github.io), since 2017. He is the recipient of the [Research Ecellence Award (Releve) of the University of Quebec](https://reseau.uquebec.ca/fr/a-propos/prix-et-distinctions/prix-dexcellence) in 2023, and the [Research Ecellence Award-Emerging Researcher](https://www.etsmtl.ca/nouvelles/2021/excellence-emergent/) from ÉTS Montreal in 2021. He received his Ph.D. degree in computer science from [University of Montreal](https://www.umontreal.ca/en/). 
 Before joining ETS Montreal, he has been an assistant professor at [Osaka University](https://www.osaka-u.ac.jp/en), Japan, and [UAE University](https://www.uaeu.ac.ae/en/). 
