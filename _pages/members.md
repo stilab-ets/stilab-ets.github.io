@@ -30,7 +30,7 @@ author_profile: true
 ### Former students
  - [Nuri Almarimi](https://ca.linkedin.com/in/nuri-almarimi-0936116b), PhD, 2023. Now Postdoctoral researcher at the [University of Saskatchewan](https://www.usask.ca/). 
 - [Islem Saidani](https://ca.linkedin.com/in/islemsaidani), PhD, 2022. Now Data engineer at [LGS, an IBM Company](https://www.lgs.com/home.html)
-- [Marwa Daagi](https://www.researchgate.net/profile/Marwa-Daaji), PhD, 2021. Now Lecturer at [University of Tunis El Manar](http://www.utm.rnu.tn/utm/fr/)
+- [Marwa Daagi](https://www.researchgate.net/profile/Marwa-Daaji), PhD, 2021. Now Assistant Professor at [CESI engineering school](https://www.cesi.fr/), Pau, France.
 - [Wilfried Nkouekam Mbouga](https://cm.linkedin.com/in/wilfried-nkouekam-b1a628156), M.Ing., 2022. Now Software Engineer at [Famic Technologies](https://www.famictech.com/en/)
 - [Hinda Abassi](https://ca.linkedin.com/in/hinda-abassi), M.Ing., 2022. 
 - [Lea Charara](https://ca.linkedin.com/in/leacharara), M.Ing., 2022. Now Full Stack Developer at [Hubelia](https://www.hubelia.com/home)
