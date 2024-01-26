@@ -29,7 +29,7 @@ author_profile: true
 * **Best Paper Award**, [ACM International Conference on Mining Software Repositories (MSR)](https://conf.researchr.org/home/msr-2022) 2022, Mining Challenge track.
 * **Best Paper Award Finalist**, [19th International Conference on Software and Systems Reuse (ICSR)](https://icsr2020.wordpress.com/), 2020.
 *  **ACM SIGSOFT Best Paper Award**, the [15th ACM/IEEE International Conference on Global Software Engineering (ICGSE)](https://conf.researchr.org/home/icgse-2020), 2020.  [Paper](https://dl.acm.org/doi/10.1145/3372787.3390439).
-* [**Best Paper Award** of the Journal of Energies](https://www.mdpi.com/journal/energies/awards/621), 2019. [Paper](https://www.mdpi.com/1996-1073/11/7/1636).
+* **Best Paper Award**,  [Journal of Energies](https://www.mdpi.com/journal/energies/awards/621), 2019. [Paper](https://www.mdpi.com/1996-1073/11/7/1636).
 * **Best Paper Award**, the [IEEEInternational Workshop on Refactoring (IWoR@ICSE)](https://iwor.github.io/iwor2019/), 2019.
 * **Best Paper Award Runner-up**, [IEEE International Conference on Web Services (ICWS)](https://www.computer.org/csdl/proceedings/icws/2016/12OmNyQ7G5O), 2016. [Paper](https://ieeexplore.ieee.org/document/7557989).
 
