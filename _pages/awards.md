@@ -11,6 +11,7 @@ author_profile: true
 * **Ranked among TOP-3 researchers in the field of search-based software refactoring**. Thaina Mariani, Silvia Regina Vergilio, [A systematic review on search-based refactoring](http://dx.doi.org/10.1016/j.infsof.2016.11.00), Journal of Information and Software Technology (IST), Elsevier, 2016.
 
 ## Research Excellence Awards
+* **CS-Can/Info-Can Outstanding Early Career Computer Science Researcher Award**, Canada’s national Computer Science academic organization ([CS-Can/Info-Can)](https://cscan-infocan.ca/), 2023
 * [**Research Ecellence Award (Releve) of the University of Quebec**](https://reseau.uquebec.ca/fr/a-propos/prix-et-distinctions/prix-dexcellence), 2023. Award from all disciplines in natural sciences, engineering, and health sciences.
 * [**Early Career Research Ecellence Award**](https://www.etsmtl.ca/ets/a-propos/prix-et-distinctions), [ETS Montreal](https://www.etsmtl.ca/), 2021.
 * **PhD Outstanding Research Award**, FESP, University of Montreal, 2014. The highest University honor that PhD students engaged in research can receive.
