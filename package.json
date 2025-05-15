@@ -1,0 +1,33 @@
+{
+  "name": "research-lab-platform",
+  "version": "0.1.0",
+  "description": "Plateforme web pour un laboratoire de recherche en génie logiciel.",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "build": "tsc",
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "lint": "eslint . --ext .ts,.tsx",
+    "test": "jest"
+  },
+  "keywords": [
+    "research",
+    "lab",
+    "typescript",
+    "science",
+    "platform"
+  ],
+  "author": "Labo de Génie Logiciel",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "typescript": "^5.4.0",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "eslint": "^8.57.0",
+    "jest": "^29.7.0",
+    "@types/jest": "^29.5.5"
+  }
+}
