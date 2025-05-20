@@ -1,0 +1,46 @@
+# .render.yaml
+
+services:
+  - type: web
+    name: django-backend
+    env: python
+    path: backend
+    buildCommand: "pip install -r ../requirements.txt"
+    startCommand: "gunicorn backend.wsgi:application --bind 0.0.0.0:$PORT"
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DB_NAME
+        fromDatabase:
+          name: postgres
+          property: databaseName
+      - key: DB_USER
+        fromDatabase:
+          name: postgres
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: postgres
+          property: password
+      - key: DB_HOST
+        fromDatabase:
+          name: postgres
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: postgres
+          property: port
+
+  - type: static
+    name: vue-frontend
+    env: node
+    path: .
+    buildCommand: "npm install && npm run build"
+    staticPublishPath: "dist"
+    # (optionnel) si tu veux custom domain ou redirect
+
+databases:
+  - name: postgres
+    plan: free

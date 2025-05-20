@@ -1,5 +1,51 @@
-.qodo
-.vscode
-.idea
-node_modules
+# === Python / Django ===
+# Virtual environment
+backend/venv/
+# Python cache
+*.pyc
+__pycache__/
+# Environnement
+*.env
+.env.*
+# Django migrations
+backend/**/migrations/
+!backend/**/migrations/__init__.py
+# SQLite (si jamais)
+*.sqlite3
+# Logs
+*.log
+
+# === Node / Vue / Vite ===
+# Node modules et lock (tu as lock en repo, mais node_modules à ignorer)
+node_modules/
+# Build output
+dist/
+frontend/dist/
+# Vite cache
+.vite/
+# npm logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# === IDE / Editor ===
+# VSCode
+.vscode/
+# JetBrains
+.idea/
+# Mac
+.DS_Store
+# Windows
+Thumbs.db
+
+# === Static files ===
+# Django collectstatic
+backend/staticfiles/
+
+# === Misc ===
+# System files
+*.swp
+*.swo
 package-lock.json
+.qodo
