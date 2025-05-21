@@ -1,0 +1,134 @@
+@startuml FullUXResearchWebsite
+
+title UX Component Architecture – Research Group Frontend
+
+' ================= NAVBAR ===================
+package "Navbar" {
+  [Navbar] --> [Logo]
+  [Navbar] --> [NavLinks]
+  [NavLinks] --> [Link: People]
+  [NavLinks] --> [Link: Publications]
+  [NavLinks] --> [Link: Research]
+  [NavLinks] --> [Link: Events]
+  [NavLinks] --> [Link: Teaching]
+  [NavLinks] --> [Link: MSc Projects]
+  [NavLinks] --> [Link: Vacancies]
+  [NavLinks] --> [Link: Awards]
+  [Navbar] --> [GitHub / LinkedIn Icons]
+  [Navbar] --> [LanguageSwitcher]
+}
+
+' ================= PEOPLE PAGE ===================
+package "PeoplePage" {
+  [PeopleHeader]
+  [SearchBar]
+  [DomainFilterDropdown]
+  [PeopleGrid]
+  [ResearcherCard]
+
+  [PeopleGrid] --> [ResearcherCard]
+  [ResearcherCard] --> [NameAndTitle]
+  [ResearcherCard] --> [Photo]
+  [ResearcherCard] --> [ResearchDomains]
+  [ResearcherCard] --> [ContactLinks]
+  [ResearcherCard] --> [AwardsIcons]
+  [ResearcherCard] --> [DetailModalTrigger]
+}
+
+[DetailModalTrigger] --> [ResearcherModal]
+package "ResearcherModal" {
+  [Biography]
+  [ListOfPublications]
+  [ListOfCoursesTaught]
+  [LinkToGitHubClassroom]
+}
+
+[ListOfPublications] --> [PublicationCard (small)]
+
+' ================= PUBLICATIONS PAGE ===================
+package "PublicationsPage" {
+  [PublicationsHeader]
+  [SearchInput]
+  [YearFilter]
+  [AuthorFilter]
+  [TypeFilter]
+  [PublicationsGrid]
+}
+
+[PublicationsGrid] --> [PublicationCard (detailed)]
+[PublicationCard (detailed)] --> [Title, Authors, Venue, Year, PDF/DOI Links]
+[PublicationCard (detailed)] --> [LinkedResearcherCard (hover)]
+
+' ================= RESEARCH PAGE ===================
+package "ResearchPage" {
+  [ResearchOverview]
+  [ResearchAreaAccordion]
+  [FeaturedProjects]
+  [ProjectCard]
+}
+
+[ResearchAreaAccordion] --> [ResearchDomainSection]
+[ResearchDomainSection] --> [ProjectCard]
+[ProjectCard] --> [ProjectTitle, ShortDesc, LeadResearcher]
+
+' ================= EVENTS PAGE ===================
+package "EventsPage" {
+  [UpcomingEvents]
+  [PastEvents]
+  [EventCard]
+  [FilterByType/Year]
+}
+
+[EventCard] --> [EventTitle, Speaker, Date, Tags]
+
+' ================= TEACHING PAGE ===================
+package "TeachingPage" {
+  [TeachingOverview]
+  [CourseList]
+  [CourseCard]
+}
+
+[CourseCard] --> [CourseTitle, Instructor, Semester, Level, Description]
+
+' ================= MSc PROJECTS PAGE ===================
+package "MScProjectsPage" {
+  [AvailableProjectsList]
+  [StudentInterestForm]
+  [SupervisorCard]
+  [FilterByDomain/Supervisor]
+}
+
+[AvailableProjectsList] --> [ProjectProposalCard]
+[ProjectProposalCard] --> [Title, Abstract, SupervisorLink, StatusBadge]
+
+' ================= VACANCIES PAGE ===================
+package "VacanciesPage" {
+  [VacancyList]
+  [FilterByType]
+  [VacancyCard]
+}
+
+[VacancyCard] --> [Title, Type (PhD/Postdoc/etc), Deadline, ApplyLink]
+
+' ================= SHARED COMPONENTS ===================
+package "SharedComponents" {
+  [ModalWrapper]
+  [FilterDropdown]
+  [SearchInput]
+  [Card]
+  [Badge]
+  [Avatar]
+  [TagList]
+  [GridLayout]
+  [MarkdownRenderer]
+  [ToastNotification]
+}
+
+' === Component reuse examples
+[PeopleGrid] --> [GridLayout]
+[ResearcherCard] --> [Avatar]
+[ResearcherCard] --> [Card]
+[ResearcherCard] --> [TagList]
+[PublicationCard (detailed)] --> [Badge]
+
+@enduml
