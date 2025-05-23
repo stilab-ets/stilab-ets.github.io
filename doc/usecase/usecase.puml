@@ -14,7 +14,6 @@ rectangle "Système de gestion du labo" {
   usecase "CU05 - Authentification et gestion de session" as CU05
   usecase "CU06 - Gérer son profil personnel" as CU06
   usecase "CU07 - Recherche et filtrage de contenu" as CU07
-  usecase "CU08 - Affichage public du site" as CU08
 }
 
 Membre --> CU01
@@ -25,6 +24,5 @@ Membre --> CU05
 Membre --> CU06
 Membre --> CU07
 Visiteur --> CU07
-Visiteur --> CU08
 
 @enduml
