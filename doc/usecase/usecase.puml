@@ -1,0 +1,30 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "AC-01 : Membre / Chercheur" as Membre
+actor "AC-02 : Visiteur" as Visiteur
+
+rectangle "Système de gestion du labo" {
+  
+  usecase "CU01 - Gérer les membres du laboratoire" as CU01
+  usecase "CU02 - Gérer les projets de recherche" as CU02
+  usecase "CU03 - Gérer les publications" as CU03
+  usecase "CU04 - Gérer les actualités et événements" as CU04
+  usecase "CU05 - Authentification et gestion de session" as CU05
+  usecase "CU06 - Gérer son profil personnel" as CU06
+  usecase "CU07 - Recherche et filtrage de contenu" as CU07
+  usecase "CU08 - Affichage public du site" as CU08
+}
+
+Membre --> CU01
+Membre --> CU02
+Membre --> CU03
+Membre --> CU04
+Membre --> CU05
+Membre --> CU06
+Membre --> CU07
+Visiteur --> CU07
+Visiteur --> CU08
+
+@enduml
