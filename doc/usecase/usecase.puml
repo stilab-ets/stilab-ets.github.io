@@ -4,6 +4,7 @@ skinparam packageStyle rectangle
 
 actor "AC-01 : Membre / Chercheur" as Membre
 actor "AC-02 : Visiteur" as Visiteur
+actor "AC-03 : Administrateur" as Admin
 
 rectangle "Système de gestion du labo" {
   
@@ -16,13 +17,16 @@ rectangle "Système de gestion du labo" {
   usecase "CU07 - Recherche et filtrage de contenu" as CU07
 }
 
-Membre --> CU01
-Membre --> CU02
+Admin --> CU01
+Admin --> CU02
 Membre --> CU03
-Membre --> CU04
+Admin --> CU04
 Membre --> CU05
+Admin --> CU05
 Membre --> CU06
+Admin --> CU06
 Membre --> CU07
 Visiteur --> CU07
+Admin --> CU07
 
 @enduml
