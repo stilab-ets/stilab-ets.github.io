@@ -37,7 +37,7 @@ const toggleMobileMenu = () => {
       </div>
       <div class="flex w-full justify-end items-center xl:justify-center xl:w-11/12 py-3">
         <div class="flex">
-          <NavItems :items="navigationItems" :currentPage="currentPage" />
+          <NavItems :items="navigationItems" :currentPage="currentPage" @navigate="setCurrentPage" />
         </div>
 
         <div class="flex justify-end items-center xl:hidden">
@@ -47,7 +47,7 @@ const toggleMobileMenu = () => {
     </div>
 
     <div v-if="mobileMenuOpen" class="xl:hidden bg-white border-t border-gray-200">
-      <NavItems :items="navigationItems" :currentPage="currentPage" isMobile />
+      <NavItems :items="navigationItems" :currentPage="currentPage" isMobile @navigate="setCurrentPage" />
     </div>
   </nav>
 </template>
