@@ -3,15 +3,12 @@
 
 title Architecture de l'application Web du projet PFE-025
 
-node "Vercel (Hébergement Frontend)" {
-    node "Application Frontend" as FE {
-        component "Vue.js\nTailwindCSS" as Vue
-    }
-}
-
 node "Render (Hébergement Backend)" {
     node "Application Backend" as BE {
         component "Django REST API" as Django
+    }
+    node "Application Frontend" as FE {
+        component "Vue.js\nTailwindCSS" as Vue
     }
 
     database "Base de données PostgreSQL" as DB
