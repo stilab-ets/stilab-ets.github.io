@@ -38,6 +38,9 @@
       ],
       "@/home/*": [
         "./src/components/home/*"
+      ],
+      "@/people/*": [
+        "./src/components/people/*"
       ]
     },
     /* Vue specific */

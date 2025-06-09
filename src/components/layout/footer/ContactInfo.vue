@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import { useLanguage } from '@/composables/useLanguage'
+
+// Access translation system for footer content
+const { t } = useLanguage()
+
 // Contact information configuration - centralized for easy updates
 interface ContactDetail {
   id: string
@@ -43,7 +48,7 @@ const formatContactContent = (content: string, type: string): string => {
 
 <template>
   <div>
-    <h3 class="text-lg font-semibold mb-6">Contact</h3>
+    <h3 class="text-lg font-semibold mb-6">{{ t.footer.contact.title }}</h3>
     <address class="not-italic">
       <ul class="space-y-3 text-gray-300">
         <li v-for="detail in contactDetails" :key="detail.id" class="flex items-start space-x-2">

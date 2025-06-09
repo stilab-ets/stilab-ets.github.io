@@ -1,3 +1,10 @@
+<script setup lang="ts">
+import { useLanguage } from '@/composables/useLanguage'
+
+// Access translation system for footer content
+const { t } = useLanguage()
+</script>
+
 <template>
   <div class="md:col-span-2">
     <!-- Lab branding section with logo and title -->
@@ -7,15 +14,14 @@
         <span class="text-white font-bold">🧪</span>
       </div>
       <div>
-        <h3 class="text-xl font-semibold">STIL</h3>
-        <p class="text-sm text-gray-300">Software Technology and Intelligence Research Lab</p>
+        <h3 class="text-xl font-semibold">{{ t.footer.labInfo.labName }}</h3>
+        <p class="text-sm text-gray-300">{{ t.footer.labInfo.labFullName }}</p>
       </div>
     </div>
     
     <!-- Lab description -->
     <p class="text-gray-300 mb-6 leading-relaxed">
-      Laboratoire de recherche dédié à l'innovation en génie logiciel,
-      intelligence artificielle et technologies de pointe.
+      {{ t.footer.labInfo.description }}
     </p>
     
     <!-- Social media links -->

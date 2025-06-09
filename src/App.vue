@@ -13,7 +13,7 @@ import ResearchAreasPreview from '@/home/ResearchAreasPreview.vue'
 import QuickLinks from '@/home/QuickLinks.vue'
 
 // Page components
-import PeoplePage from './components/PeoplePage.vue'
+import PeoplePage from '@/people/PeoplePage.vue'
 import PublicationsPage from './components/PublicationsPage.vue'
 import ResearchPage from './components/ResearchPage.vue'
 import EventsPage from './components/EventsPage.vue'

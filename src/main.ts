@@ -3,17 +3,17 @@ import App from './App.vue'
 import './assets/style.css'
 
 // Layout components
-import Header from './components/layout/Header.vue'
-import Footer from './components/layout/Footer.vue'
+import Header from '@/layout/Header.vue'
+import Footer from '@/layout/Footer.vue'
 
 // Home page components
-import Hero from './components/home/Hero.vue'
-import StatsSection from './components/home/StatsSection.vue'
-import ResearchAreasPreview from './components/home/ResearchAreasPreview.vue'
-import QuickLinks from './components/home/QuickLinks.vue'
+import Hero from '@/home/Hero.vue'
+import StatsSection from '@/home/StatsSection.vue'
+import ResearchAreasPreview from '@/home/ResearchAreasPreview.vue'
+import QuickLinks from '@/home/QuickLinks.vue'
 
 // Page components
-import PeoplePage from './components/PeoplePage.vue'
+import PeoplePage from '@/people/PeoplePage.vue'
 import PublicationsPage from './components/PublicationsPage.vue'
 import ResearchPage from './components/ResearchPage.vue'
 import EventsPage from './components/EventsPage.vue'
