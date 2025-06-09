@@ -12,7 +12,7 @@ const setCurrentPage = (page: string) => {
   <div class="bg-white text-gray-900">
     <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
       <div class="max-w-4xl mx-auto text-center">
-        <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold mb-6 sm:mb-8">
+        <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold mb-6 sm:mb-8">
           Software Technology & <span class="text-[#08a4d4]">Intelligence</span>
         </h1>
         <p class="text-lg sm:text-xl md:text-2xl mb-8 sm:mb-10 text-gray-900 leading-relaxed max-w-3xl mx-auto">
