@@ -1,17 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import LogoButton from './header/LogoButton.vue'
 import NavItems from './header/NavItems.vue'
 import MobileMenuToggle from './header/MobileMenuToggle.vue'
 import LanguageToggle from './header/LanguageToggle.vue'
 
-interface NavItem {
-  id: string
-  label: string
-  icon: string
-}
-
-// Updated interface for localized navigation items
 interface LocalizedNavItem {
   id: string
   label: string
@@ -26,13 +19,24 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'setCurrentPage', page: string): void
-  (e: 'languageChanged', language: string): void  // Add language change emit
+  (e: 'languageChanged', language: string): void
 }>()
 
+// Internal reactive state for current page
+const internalCurrentPage = ref(props.currentPage)
 const mobileMenuOpen = ref(false)
 
+// Watch for prop changes and update internal state
+watch(() => props.currentPage, (newPage) => {
+  internalCurrentPage.value = newPage
+}, { immediate: true })
+
 const setCurrentPage = (page: string) => {
+  // Update internal state immediately for responsive UI
+  internalCurrentPage.value = page
+  // Emit to parent
   emit('setCurrentPage', page)
+  // Close mobile menu
   mobileMenuOpen.value = false
 }
 
@@ -40,7 +44,6 @@ const toggleMobileMenu = () => {
   mobileMenuOpen.value = !mobileMenuOpen.value
 }
 
-// Handle language changes from the language toggle component
 const handleLanguageChange = (language: string) => {
   emit('languageChanged', language)
 }
@@ -49,21 +52,23 @@ const handleLanguageChange = (language: string) => {
 <template>
   <nav class="shadow-md sticky top-0 z-50 w-full bg-white opacity-100">
     <div class="flex mx-auto px-4">
-      <!-- Left section: Logo - maintains existing position -->
+      <!-- Left section: Logo -->
       <div class="flex">
         <LogoButton @navigate="setCurrentPage" />
       </div>
       
       <!-- Center section: Main navigation and right utilities -->
-      <!-- This restructuring creates proper space distribution -->
       <div class="flex w-full justify-between items-center xl:justify-center xl:w-11/12 py-3">
         <!-- Main navigation items - centered on larger screens -->
         <div class="flex">
-          <NavItems :items="navigationItems" :currentPage="currentPage" @navigate="setCurrentPage" />
+          <NavItems 
+            :items="navigationItems" 
+            :currentPage="internalCurrentPage" 
+            @navigate="setCurrentPage" 
+          />
         </div>
         
         <!-- Right section: Language toggle and mobile menu -->
-        <!-- This creates a balanced layout with utilities on the right -->
         <div class="flex items-center space-x-2">
           <!-- Language toggle - visible on all screen sizes -->
           <LanguageToggle 
@@ -79,9 +84,14 @@ const handleLanguageChange = (language: string) => {
       </div>
     </div>
     
-    <!-- Mobile navigation dropdown - includes language info when needed -->
+    <!-- Mobile navigation dropdown -->
     <div v-if="mobileMenuOpen" class="xl:hidden bg-white border-t border-gray-200">
-      <NavItems :items="navigationItems" :currentPage="currentPage" isMobile @navigate="setCurrentPage" />
+      <NavItems 
+        :items="navigationItems" 
+        :currentPage="internalCurrentPage" 
+        isMobile 
+        @navigate="setCurrentPage" 
+      />
     </div>
   </nav>
 </template>
