@@ -24,10 +24,17 @@ const availableLanguages: Language[] = [
   }
 ]
 
-// Props to receive current language from parent
-const props = defineProps<{
+// Props to receive current language from parent and mobile mode
+interface Props {
   currentLanguage?: string
-}>()
+  isMobile?: boolean
+  showLabels?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  isMobile: false,
+  showLabels: false
+})
 
 // Emit language change events to parent component
 const emit = defineEmits<(e: 'languageChanged', language: string) => void>()
@@ -36,13 +43,11 @@ const emit = defineEmits<(e: 'languageChanged', language: string) => void>()
 const isDropdownOpen = ref(false)
 
 // Computed property to find current language object
-// This makes it easy to display current language info in the toggle button
 const currentLang = computed(() => {
   return availableLanguages.find(lang => lang.code === props.currentLanguage) || availableLanguages[0]
 })
 
 // Computed property to get available languages (excluding current)
-// This keeps the dropdown clean by not showing the currently selected language
 const otherLanguages = computed(() => {
   return availableLanguages.filter(lang => lang.code !== props.currentLanguage)
 })
@@ -62,10 +67,40 @@ const toggleDropdown = () => {
 const closeDropdown = () => {
   isDropdownOpen.value = false
 }
+
+// Mobile mode: render as simple buttons instead of dropdown
+const handleMobileLanguageChange = (languageCode: string) => {
+  emit('languageChanged', languageCode)
+}
 </script>
 
 <template>
-  <div class="relative" @blur="closeDropdown">
+  <!-- Mobile Layout: Simple toggle buttons -->
+  <div v-if="isMobile" class="px-4 py-3 border-t border-gray-200">
+    <div class="flex items-center justify-between">
+      <span class="text-sm font-medium text-gray-700">Langue / Language</span>
+      <div class="flex space-x-2">
+        <button
+          v-for="language in availableLanguages"
+          :key="language.code"
+          @click="handleMobileLanguageChange(language.code)"
+          :class="[
+            'flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:cursor-pointer',
+            language.code === currentLanguage
+              ? 'bg-[#08a4d4] text-white'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          ]"
+          :aria-label="language.ariaLabel"
+        >
+          <span class="text-base" aria-hidden="true">{{ language.flag }}</span>
+          <span v-if="showLabels" class="uppercase tracking-wide">{{ language.code }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Desktop Layout: Dropdown -->
+  <div v-else class="relative" @blur="closeDropdown">
     <!-- Main language toggle button - displays current language -->
     <button
       @click="toggleDropdown"
