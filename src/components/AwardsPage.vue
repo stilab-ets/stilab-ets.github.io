@@ -255,7 +255,7 @@ const getAwardCategory = (title: string): string => {
           </div>
 
           <!-- Awards for this year -->
-          <div class="ml-16 grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="ml-16 flex flex-col gap-6">
             <div v-for="awardData in yearGroup.awards" :key="`${awardData.member}-${awardData.award.id}`"
               class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 p-6 relative">
               <!-- Award Card -->

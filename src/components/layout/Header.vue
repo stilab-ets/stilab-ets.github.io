@@ -30,7 +30,7 @@ const toggleMobileMenu = () => {
 </script>
 
 <template>
-  <nav class="shadow-md sticky top-0 z-50 w-full">
+  <nav class="shadow-md sticky top-0 z-50 w-full" style="background-color: var(--color-primary)">
     <div class="flex mx-auto px-4">
       <div class="flex">
         <LogoButton @navigate="setCurrentPage" />

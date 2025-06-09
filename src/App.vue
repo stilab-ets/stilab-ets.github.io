@@ -26,15 +26,15 @@ const currentPage = ref('home')
 
 // Navigation items
 const navigationItems = [
-  { id: 'home', label: 'Accueil', icon: '🏠' },
-  { id: 'people', label: 'Équipe', icon: '👥' },
-  { id: 'research', label: 'Recherche', icon: '🔬' },
-  { id: 'publications', label: 'Publications', icon: '📚' },
-  { id: 'teaching', label: 'Enseignement', icon: '🎓' },
-  { id: 'events', label: 'Événements', icon: '📅' },
-  { id: 'projects', label: 'Projets M2', icon: '🎯' },
-  { id: 'vacancies', label: 'Recrutements', icon: '💼' },
-  { id: 'awards', label: 'Prix', icon: '🏆' }
+  { id: 'home', label: 'Accueil', icon: '' },
+  { id: 'people', label: 'Équipe', icon: '' },
+  { id: 'research', label: 'Recherche', icon: '' },
+  { id: 'publications', label: 'Publications', icon: '' },
+  { id: 'teaching', label: 'Enseignement', icon: '' },
+  { id: 'events', label: 'Événements', icon: '' },
+  { id: 'projects', label: 'Projets M2', icon: '' },
+  { id: 'vacancies', label: 'Recrutements', icon: '' },
+  { id: 'awards', label: 'Prix', icon: '' }
 ]
 
 // Methods
