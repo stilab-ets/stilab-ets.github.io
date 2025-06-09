@@ -30,6 +30,9 @@
       "@/composables/*": [
         "./src/composables/*"
       ],
+      "@/data/*": [
+        "./src/data/*"
+      ],
       "@/ui/*": [
         "./src/components/ui/*"
       ],
@@ -41,6 +44,27 @@
       ],
       "@/people/*": [
         "./src/components/people/*"
+      ],
+      "@/awards/*": [
+        "./src/components/awards/*"
+      ],
+      "@/vacancies/*": [
+        "./src/components/vacancies/*"
+      ],
+      "@/projects/*": [
+        "./src/components/projects/*"
+      ],
+      "@/events/*": [
+        "./src/components/events/*"
+      ],
+      "@/teaching/*": [
+        "./src/components/teaching/*"
+      ],
+      "@/research/*": [
+        "./src/components/research/*"
+      ],
+      "@/publications/*": [
+        "./src/components/publications/*"
       ]
     },
     /* Vue specific */

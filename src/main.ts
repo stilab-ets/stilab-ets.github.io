@@ -14,13 +14,13 @@ import QuickLinks from '@/home/QuickLinks.vue'
 
 // Page components
 import PeoplePage from '@/people/PeoplePage.vue'
-import PublicationsPage from './components/PublicationsPage.vue'
-import ResearchPage from './components/ResearchPage.vue'
-import EventsPage from './components/EventsPage.vue'
-import TeachingPage from './components/TeachingPage.vue'
-import MScProjectsPage from './components/MScProjectsPage.vue'
-import VacanciesPage from './components/VacanciesPage.vue'
-import AwardsPage from './components/AwardsPage.vue'
+import PublicationsPage from '@/publications/PublicationsPage.vue'
+import ResearchPage from '@/reseach/ResearchPage.vue'
+import EventsPage from '@/events/EventsPage.vue'
+import TeachingPage from '@/teaching/TeachingPage.vue'
+import MScProjectsPage from '@/projects/MScProjectsPage.vue'
+import VacanciesPage from '@/vacancies/VacanciesPage.vue'
+import AwardsPage from '@/awards/AwardsPage.vue'
 
 // Create Vue application
 const app = createApp(App)

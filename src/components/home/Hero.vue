@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { useLanguage } from '../../composables/useLanguage'
+import { useLanguage } from '@/composables/useLanguage'
+import stilLogo from "@/assets/stil-logo.png"
 
 // Get language utilities for localization
 const { t, currentLanguage } = useLanguage()
@@ -111,8 +112,12 @@ const navigateToPage = (page: string) => {
               <div class="relative bg-white rounded-2xl shadow-2xl p-8 lg:p-12">
                 <!-- Lab logo/branding -->
                 <div class="text-center mb-8">
-                  <div class="w-20 h-20 bg-gradient-to-br from-[#08a4d4] to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <span class="text-3xl text-white">🧪</span>
+                  <div class="w-48 h-32 rounded-2xl flex items-center justify-center mx-auto">
+                    <img
+                      :src="stilLogo"
+                      alt="STIL company logo"
+                      aria-describedby="stil-logo-desc"
+                    />
                   </div>
                   <h3 class="text-2xl font-bold text-gray-900">STIL</h3>
                   <p class="text-sm text-gray-600 mt-1">

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useLanguage } from '@/composables/useLanguage'
+import stilLogo from '@/assets/stil-logo-white.png';
 
 // Access translation system for footer content
 const { t } = useLanguage()
@@ -8,14 +9,19 @@ const { t } = useLanguage()
 <template>
   <div class="md:col-span-2">
     <!-- Lab branding section with logo and title -->
-    <div class="flex items-center space-x-3 mb-6">
+    <div class="flex items-center w-full mb-6">
       <div
-        class="w-10 h-10 bg-gradient-to-br from-[#08a4d4] to-blue-600 rounded-lg flex items-center justify-center">
-        <span class="text-white font-bold">🧪</span>
-      </div>
-      <div>
-        <h3 class="text-xl font-semibold">{{ t.footer.labInfo.labName }}</h3>
-        <p class="text-sm text-gray-300">{{ t.footer.labInfo.labFullName }}</p>
+        class="rounded-lg flex items-center justify-center">
+        <img
+          :src="stilLogo"
+          class="w-32"
+          alt="STIL company logo"
+          aria-describedby="stil-logo-desc"
+        />
+        <div class="block">
+          <h3 class="text-xl font-semibold">{{ t.footer.labInfo.labName }}</h3>
+          <p class="text-sm text-gray-300">{{ t.footer.labInfo.labFullName }}</p>
+        </div>
       </div>
     </div>
     

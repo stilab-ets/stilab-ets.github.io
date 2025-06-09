@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
 import { useLanguage } from "@/composables/useLanguage"
+import { useNavigation } from "@/composables/useNavigation"
 
 // Layout components
 import Header from '@/layout/Header.vue'
@@ -12,17 +13,16 @@ import StatsSection from '@/home/StatsSection.vue'
 import ResearchAreasPreview from '@/home/ResearchAreasPreview.vue'
 import QuickLinks from '@/home/QuickLinks.vue'
 
-// Page components
 import PeoplePage from '@/people/PeoplePage.vue'
-import PublicationsPage from './components/PublicationsPage.vue'
-import ResearchPage from './components/ResearchPage.vue'
-import EventsPage from './components/EventsPage.vue'
-import TeachingPage from './components/TeachingPage.vue'
-import MScProjectsPage from './components/MScProjectsPage.vue'
-import VacanciesPage from './components/VacanciesPage.vue'
-import AwardsPage from './components/AwardsPage.vue'
+import PublicationsPage from '@/publications/PublicationsPage.vue'
+import ResearchPage from '@/reseach/ResearchPage.vue'
+import EventsPage from '@/events/EventsPage.vue'
+import TeachingPage from '@/teaching/TeachingPage.vue'
+import MScProjectsPage from '@/projects/MScProjectsPage.vue'
+import VacanciesPage from '@/vacancies/VacanciesPage.vue'
+import AwardsPage from '@/awards/AwardsPage.vue'
 
-// Initialize language management system
+// Initialize systems
 const { 
   currentLanguage, 
   t, 
@@ -30,8 +30,11 @@ const {
   setLanguage, 
 } = useLanguage()
 
-// Navigation state management
-const currentPage = ref('home')
+const { 
+  currentPage, 
+  navigateToPage, 
+  initializeNavigation 
+} = useNavigation()
 
 // Laboratory statistics with reactive formatting
 const labStats = computed(() => ({
@@ -41,60 +44,26 @@ const labStats = computed(() => ({
   awards: { value: 6, label: t.value.stats.awards }
 }))
 
-// Navigation methods
-const setCurrentPage = (page: string) => {
-  currentPage.value = page
-  window.scrollTo({ top: 0, behavior: 'smooth' })
-}
-
 // Language change handler
 const handleLanguageChange = (language: string) => {
   setLanguage(language as 'en' | 'fr')
 }
 
-// Page title management based on current page and language
-const updatePageTitle = () => {
-  const baseTitle = currentLanguage.value === 'en' 
-    ? 'STIL - Laboratoire de Recherche'
-    : 'STIL - Research Laboratory'
-  
-  if (currentPage.value === 'home') {
-    document.title = baseTitle
-    return
-  }
-  
-  const currentNav = localizedNavigationItems.value.find(item => item.id === currentPage.value)
-  if (currentNav) {
-    document.title = `${currentNav.label} - ${baseTitle}`
-  }
-}
+// Initialize navigation and cleanup
+let cleanupNavigation: (() => void) | null = null
 
-// Store unwatch functions for cleanup
-let unwatchPage: (() => void) | null = null
-let unwatchLanguage: (() => void) | null = null
-
-// Initialize page metadata and set up watchers
 onMounted(() => {
+  // Initialize navigation system
+  cleanupNavigation = initializeNavigation()
+  
   // Set initial document language
   document.documentElement.lang = currentLanguage.value
-  updatePageTitle()
-  
-  // Watch for page changes and update title
-  unwatchPage = watch(currentPage, () => {
-    updatePageTitle()
-  })
-  
-  // Watch for language changes and update document attributes + title
-  unwatchLanguage = watch(currentLanguage, (newLang) => {
-    document.documentElement.lang = newLang
-    updatePageTitle()
-  })
 })
 
-// Cleanup watchers when component unmounts
 onUnmounted(() => {
-  if (unwatchPage) unwatchPage()
-  if (unwatchLanguage) unwatchLanguage()
+  if (cleanupNavigation) {
+    cleanupNavigation()
+  }
 })
 </script>
 
@@ -105,7 +74,7 @@ onUnmounted(() => {
       :current-page="currentPage" 
       :navigation-items="localizedNavigationItems"
       :current-language="currentLanguage"
-      @set-current-page="setCurrentPage"
+      @set-current-page="navigateToPage"
       @language-changed="handleLanguageChange"
     />
     
@@ -114,7 +83,7 @@ onUnmounted(() => {
       <!-- Homepage -->
       <div v-if="currentPage === 'home'">
         <!-- Hero Section -->
-        <Hero @set-current-page="setCurrentPage" />
+        <Hero @set-current-page="navigateToPage" />
         
         <!-- Stats Section with localized labels -->
         <StatsSection :lab-stats="labStats" />
@@ -123,11 +92,10 @@ onUnmounted(() => {
         <ResearchAreasPreview />
         
         <!-- Quick Links -->
-        <QuickLinks @set-current-page="setCurrentPage" />
+        <QuickLinks @set-current-page="navigateToPage" />
       </div>
       
       <!-- Dynamic Page Components -->
-      <!-- Each page component will receive language context through provide/inject -->
       <PeoplePage v-else-if="currentPage === 'people'" />
       <PublicationsPage v-else-if="currentPage === 'publications'" />
       <ResearchPage v-else-if="currentPage === 'research'" />
@@ -139,6 +107,6 @@ onUnmounted(() => {
     </main>
     
     <!-- Footer with language support -->
-    <Footer @set-current-page="setCurrentPage" />
+    <Footer @set-current-page="navigateToPage" />
   </div>
 </template>

@@ -6,6 +6,13 @@ import { FooterTranslations, footerTranslations } from './footer.translate'
 import { PersonTranslations, personTranslations } from './person.translate'
 import { QuickLinksTranslations, quickLinksTranslations } from './quickLinks.translate'
 import { ResearchAreasTranslations, researchAreasTranslations } from './researchAreas.translate'
+import { AwardsTranslations, awardsTranslations } from './awards.translate'
+import { EventsTranslations, eventsTranslations } from './events.translate'
+import { PublicationsTranslations, publicationsTranslations } from './publications.translate'
+import { ResearchTranslations, researchTranslations } from './research.translate'
+import { TeachingTranslations, teachingTranslations } from './teaching.translate'
+import { ProjectsTranslations, projectsTranslations } from './projects.translate'
+import { VacanciesTranslations, vacanciesTranslations } from './vacancies.translate'
 
 export type LanguageCode = 'en' | 'fr'
 
@@ -18,6 +25,13 @@ export interface Translations {
   person: PersonTranslations
   quickLinks: QuickLinksTranslations
   researchAreas: ResearchAreasTranslations
+  awards: AwardsTranslations
+  events: EventsTranslations
+  publications: PublicationsTranslations
+  research: ResearchTranslations
+  teaching: TeachingTranslations
+  projects: ProjectsTranslations
+  vacancies: VacanciesTranslations
 }
 
 export const translations: Record<LanguageCode, Translations> = {
@@ -29,7 +43,14 @@ export const translations: Record<LanguageCode, Translations> = {
     footer: footerTranslations.fr,
     person: personTranslations.fr,
     quickLinks: quickLinksTranslations.fr,
-    researchAreas: researchAreasTranslations.fr
+    researchAreas: researchAreasTranslations.fr,
+    awards: awardsTranslations.fr,
+    events: eventsTranslations.fr,
+    publications: publicationsTranslations.fr,
+    research: researchTranslations.fr,
+    teaching: teachingTranslations.fr,
+    projects: projectsTranslations.fr,
+    vacancies: vacanciesTranslations.fr
   },
   en: {
     navigation: navigationTranslations.en,
@@ -39,7 +60,14 @@ export const translations: Record<LanguageCode, Translations> = {
     footer: footerTranslations.en,
     person: personTranslations.en,
     quickLinks: quickLinksTranslations.en,
-    researchAreas: researchAreasTranslations.en
+    researchAreas: researchAreasTranslations.en,
+    awards: awardsTranslations.en,
+    events: eventsTranslations.en,
+    publications: publicationsTranslations.en,
+    research: researchTranslations.en,
+    teaching: teachingTranslations.en,
+    projects: projectsTranslations.en,
+    vacancies: vacanciesTranslations.en
   }
 }
 
