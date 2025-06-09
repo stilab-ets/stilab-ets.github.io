@@ -11,8 +11,8 @@ import EmptyState from '@/ui/EmptyState.vue'
 // Events components
 import EventCard from './EventCard.vue'
 
-// Mock data (this would come from a proper data source)
-interface Event {
+// Interface matching EventCard's AcademicEvent
+interface AcademicEvent {
   id: string;
   title: string;
   speaker?: string;
@@ -28,7 +28,7 @@ interface Event {
   currentRegistrations?: number;
 }
 
-const mockEvents: Event[] = [
+const mockEvents: AcademicEvent[] = [
   {
     id: 'e1',
     title: 'Séminaire: AI in Software Engineering - Current Trends and Future Directions',
@@ -214,7 +214,7 @@ const emptyStateConfig = computed(() => {
         <div class="mt-4 flex justify-center">
           <div class="flex border border-gray-300 rounded-md">
             <button @click="viewMode = 'upcoming'" :class="[
-              'px-4 py-2 text-sm font-medium rounded-l-md',
+              'px-4 py-2 text-sm font-medium rounded-l-md hover:cursor-pointer',
               viewMode === 'upcoming'
                 ? 'bg-[#08a4d4] text-white'
                 : 'bg-white text-gray-700 hover:bg-gray-50'
@@ -222,7 +222,7 @@ const emptyStateConfig = computed(() => {
               {{ t.events.filters.upcoming }} ({{ filteredUpcomingEvents.length }})
             </button>
             <button @click="viewMode = 'past'" :class="[
-              'px-4 py-2 text-sm font-medium border-l border-gray-300 rounded-r-md',
+              'px-4 py-2 text-sm font-medium border-l border-gray-300 rounded-r-md hover:cursor-pointer',
               viewMode === 'past'
                 ? 'bg-[#08a4d4] text-white'
                 : 'bg-white text-gray-700 hover:bg-gray-50'
@@ -249,7 +249,7 @@ const emptyStateConfig = computed(() => {
           <EventCard
             v-for="event in currentEvents"
             :key="event.id"
-            :event="event"
+            :event-data="event"
             :is-past="viewMode === 'past'"
           />
         </div>

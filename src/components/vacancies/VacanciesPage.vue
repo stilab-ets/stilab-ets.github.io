@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
-import { mockVacancies, type Vacancy } from '@/data/mockPublications'
+import { mockVacancies } from '@/data/mockPublications'
 
 // UI Components
 import PageHeader from '@/ui/PageHeader.vue'

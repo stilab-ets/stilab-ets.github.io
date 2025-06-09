@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { useLanguage } from '@/composables/useLanguage'
+import { useBrowserUtils } from '@/composables/useBrowserUtils';
 import Card from '@/ui/Card.vue'
 import Button from '@/ui/Button.vue'
 
-interface Event {
+const { openUrl } = useBrowserUtils()
+
+interface AcademicEvent {
   id: string;
   title: string;
   speaker?: string;
@@ -20,15 +23,15 @@ interface Event {
 }
 
 interface Props {
-  event: Event
+  eventData: AcademicEvent
   isPast?: boolean
 }
 
 const props = defineProps<Props>()
 const { t } = useLanguage()
 
-const getTypeColor = (type: Event['type']) => {
-  const colors: Record<Event['type'], string> = {
+const getTypeColor = (type: AcademicEvent['type']) => {
+  const colors: Record<AcademicEvent['type'], string> = {
     seminar: 'bg-blue-100 text-blue-800',
     workshop: 'bg-green-100 text-green-800',
     conference: 'bg-purple-100 text-purple-800',
@@ -40,10 +43,12 @@ const getTypeColor = (type: Event['type']) => {
   return colors[type] || 'bg-gray-100 text-gray-800'
 }
 
-const getTypeLabel = (type: Event['type']) => {
+const getTypeLabel = (type: AcademicEvent['type']) => {
   const typeKey = type as keyof typeof t.value.events.eventTypes
   return t.value.events.eventTypes[typeKey] || type
 }
+
+const openRegistrationLink = () => openUrl(props.eventData.registrationUrl!)
 
 const formatDate = (dateString: string) => {
   const date = new Date(dateString)
@@ -56,13 +61,13 @@ const formatDate = (dateString: string) => {
 }
 
 const isCapacityNearFull = () => {
-  return props.event.capacity && props.event.currentRegistrations && 
-         (props.event.currentRegistrations / props.event.capacity) > 0.8
+  return props.eventData.capacity && props.eventData.currentRegistrations && 
+         (props.eventData.currentRegistrations / props.eventData.capacity) > 0.8
 }
 
 const isCapacityFull = () => {
-  return props.event.capacity && props.event.currentRegistrations && 
-         props.event.currentRegistrations >= props.event.capacity
+  return props.eventData.capacity && props.eventData.currentRegistrations && 
+         props.eventData.currentRegistrations >= props.eventData.capacity
 }
 </script>
 
@@ -74,11 +79,11 @@ const isCapacityFull = () => {
         <div class="flex items-center mb-2">
           <span :class="[
             'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mr-3',
-            getTypeColor(event.type)
+            getTypeColor(eventData.type)
           ]">
-            {{ getTypeLabel(event.type) }}
+            {{ getTypeLabel(eventData.type) }}
           </span>
-          <span v-if="!isPast && event.registrationUrl" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+          <span v-if="!isPast && eventData.registrationUrl" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
             {{ t.events.eventCard.registrationOpen }}
           </span>
           <span v-if="!isPast && isCapacityNearFull()" 
@@ -86,57 +91,57 @@ const isCapacityFull = () => {
             {{ t.events.eventCard.limitedSeats }}
           </span>
         </div>
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ event.title }}</h3>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ eventData.title }}</h3>
         <div class="flex items-center text-sm text-gray-600 space-x-4">
           <div class="flex items-center">
             <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
-            {{ formatDate(event.date) }}
+            {{ formatDate(eventData.date) }}
           </div>
-          <div v-if="event.time" class="flex items-center">
+          <div v-if="eventData.time" class="flex items-center">
             <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            {{ event.time }}
+            {{ eventData.time }}
           </div>
           <div class="flex items-center">
             <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
-            {{ event.location }}
+            {{ eventData.location }}
           </div>
         </div>
       </div>
     </div>
 
     <!-- Speaker -->
-    <div v-if="event.speaker" class="mb-4">
+    <div v-if="eventData.speaker" class="mb-4">
       <p class="text-sm text-gray-600">
-        <span class="font-medium">{{ t.events.eventCard.speaker }}:</span> {{ event.speaker }}
+        <span class="font-medium">{{ t.events.eventCard.speaker }}:</span> {{ eventData.speaker }}
       </p>
     </div>
 
     <!-- Capacity info for upcoming events -->
-    <div v-if="!isPast && event.capacity && event.currentRegistrations" class="mb-4">
+    <div v-if="!isPast && eventData.capacity && eventData.currentRegistrations" class="mb-4">
       <div class="flex items-center justify-between text-sm text-gray-600 mb-2">
         <span>{{ t.events.eventCard.registrations }}</span>
-        <span>{{ event.currentRegistrations }} / {{ event.capacity }}</span>
+        <span>{{ eventData.currentRegistrations }} / {{ eventData.capacity }}</span>
       </div>
       <div class="w-full bg-gray-200 rounded-full h-2">
-        <div class="bg-[#08a4d4] h-2 rounded-full" :style="{ width: (event.currentRegistrations / event.capacity * 100) + '%' }"></div>
+        <div class="bg-[#08a4d4] h-2 rounded-full" :style="{ width: (eventData.currentRegistrations / eventData.capacity * 100) + '%' }"></div>
       </div>
     </div>
 
     <!-- Description -->
-    <p class="text-gray-700 mb-4 leading-relaxed">{{ event.description }}</p>
+    <p class="text-gray-700 mb-4 leading-relaxed">{{ eventData.description }}</p>
 
     <!-- Tags -->
-    <div v-if="event.tags.length > 0" class="mb-4">
+    <div v-if="eventData.tags.length > 0" class="mb-4">
       <div class="flex flex-wrap gap-2">
         <span
-          v-for="tag in event.tags"
+          v-for="tag in eventData.tags"
           :key="tag"
           class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
         >
@@ -146,11 +151,12 @@ const isCapacityFull = () => {
     </div>
 
     <!-- Registration Button -->
-    <div v-if="!isPast && event.registrationUrl" class="mt-4">
+    <div v-if="!isPast && eventData.registrationUrl" class="mt-4">
       <Button
         :variant="isCapacityFull() ? 'secondary' : 'primary'"
         :disabled="!!isCapacityFull()"
-        @click="() => window.open(event.registrationUrl, '_blank')"
+        @click="openRegistrationLink"
+        class="hover:cursor-pointer"
       >
         {{ isCapacityFull() ? t.events.eventCard.full : t.events.eventCard.register }}
         <svg v-if="!isCapacityFull()" class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

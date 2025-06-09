@@ -15,10 +15,10 @@ import QuickLinks from '@/home/QuickLinks.vue'
 
 import PeoplePage from '@/people/PeoplePage.vue'
 import PublicationsPage from '@/publications/PublicationsPage.vue'
-import ResearchPage from '@/reseach/ResearchPage.vue'
+import ResearchPage from '@/research/ResearchPage.vue'
 import EventsPage from '@/events/EventsPage.vue'
 import TeachingPage from '@/teaching/TeachingPage.vue'
-import MScProjectsPage from '@/projects/MScProjectsPage.vue'
+import ProjectPage from '@/projects/ProjectPage.vue'
 import VacanciesPage from '@/vacancies/VacanciesPage.vue'
 import AwardsPage from '@/awards/AwardsPage.vue'
 
@@ -101,7 +101,7 @@ onUnmounted(() => {
       <ResearchPage v-else-if="currentPage === 'research'" />
       <EventsPage v-else-if="currentPage === 'events'" />
       <TeachingPage v-else-if="currentPage === 'teaching'" />
-      <MScProjectsPage v-else-if="currentPage === 'projects'" />
+      <ProjectPage v-else-if="currentPage === 'projects'" />
       <VacanciesPage v-else-if="currentPage === 'vacancies'" />
       <AwardsPage v-else-if="currentPage === 'awards'" />
     </main>

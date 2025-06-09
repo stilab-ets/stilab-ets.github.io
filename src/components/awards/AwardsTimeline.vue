@@ -59,11 +59,11 @@ const getAwardCategory = (title: string): string => {
 </script>
 
 <template>
-  <div class="space-y-8">
+  <div class="space-y-6">
     <!-- Year Group -->
-    <div v-for="yearGroup in groupedAwards" :key="yearGroup.year" class="relative">
+    <div v-for="yearGroup in groupedAwards" :key="yearGroup.year" class="relative bg-white rounded-xl p-4 shadow hover:shadow-md transition-shadow hover:cursor-pointer">
       <!-- Year Header -->
-      <div class="flex items-center mb-6">
+      <div class="flex items-center mb-2">
         <div
           class="flex items-center justify-center w-12 h-12 bg-[#08a4d4] rounded-full text-white font-bold text-lg">
           {{ yearGroup.year }}
@@ -76,11 +76,11 @@ const getAwardCategory = (title: string): string => {
       </div>
 
       <!-- Awards for this year -->
-      <div class="ml-16 grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="ml-12 grid grid-cols-1 gap-2">
         <div v-for="awardData in yearGroup.awards" :key="`${awardData.member}-${awardData.award.id}`"
-          class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 p-6 relative">
+          class="bg-white rounded-lg duration-200 p-6 relative">
           <!-- Award Card -->
-          <div class="flex items-start">
+          <div class="flex items-start w-full">
             <!-- Award Icon -->
             <div class="flex-shrink-0 mr-4">
               <div

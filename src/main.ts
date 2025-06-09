@@ -15,10 +15,10 @@ import QuickLinks from '@/home/QuickLinks.vue'
 // Page components
 import PeoplePage from '@/people/PeoplePage.vue'
 import PublicationsPage from '@/publications/PublicationsPage.vue'
-import ResearchPage from '@/reseach/ResearchPage.vue'
+import ResearchPage from '@/research/ResearchPage.vue'
 import EventsPage from '@/events/EventsPage.vue'
 import TeachingPage from '@/teaching/TeachingPage.vue'
-import MScProjectsPage from '@/projects/MScProjectsPage.vue'
+import ProjectPage from '@/projects/ProjectPage.vue'
 import VacanciesPage from '@/vacancies/VacanciesPage.vue'
 import AwardsPage from '@/awards/AwardsPage.vue'
 
@@ -41,7 +41,7 @@ app.component('PublicationsPage', PublicationsPage)
 app.component('ResearchPage', ResearchPage)
 app.component('EventsPage', EventsPage)
 app.component('TeachingPage', TeachingPage)
-app.component('MScProjectsPage', MScProjectsPage)
+app.component('ProjectPage', ProjectPage)
 app.component('VacanciesPage', VacanciesPage)
 app.component('AwardsPage', AwardsPage)
 

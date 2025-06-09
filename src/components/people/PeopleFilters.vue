@@ -63,10 +63,10 @@ const getResultsText = (count: number) => {
           id="domain-filter" 
           :value="selectedDomain"
           @change="$emit('update:selectedDomain', ($event.target as HTMLSelectElement).value)"
-          class="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4]"
+          class="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] hover:cursor-pointer"
         >
           <option value="">{{ t.person.search.allDomains }}</option>
-          <option v-for="domain in researchDomains" :key="domain" :value="domain">
+          <option v-for="domain in researchDomains" :key="domain" :value="domain" class="flex hover:cursor-pointer">
             {{ domain }}
           </option>
         </select>
@@ -81,12 +81,12 @@ const getResultsText = (count: number) => {
           id="status-filter" 
           :value="selectedStatus"
           @change="$emit('update:selectedStatus', ($event.target as HTMLSelectElement).value)"
-          class="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4]"
+          class="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] hover:cursor-pointer"
         >
-          <option value="">{{ t.person.search.allStatuses }}</option>
-          <option value="active">{{ t.person.search.active }}</option>
-          <option value="alumni">{{ t.person.search.alumni }}</option>
-          <option value="visitor">{{ t.person.search.visitors }}</option>
+          <option class="flex hover:cursor-pointer" value="">{{ t.person.search.allStatuses }}</option>
+          <option class="flex hover:cursor-pointer" value="active">{{ t.person.search.active }}</option>
+          <option class="flex hover:cursor-pointer" value="alumni">{{ t.person.search.alumni }}</option>
+          <option class="flex hover:cursor-pointer" value="visitor">{{ t.person.search.visitors }}</option>
         </select>
       </div>
     </div>

@@ -64,7 +64,7 @@ defineEmits<Emits>()
           :id="`${filter.id}-filter`"
           :value="filter.value"
           @change="$emit('updateFilter', filter.id, ($event.target as HTMLSelectElement).value)"
-          class="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4]"
+          class="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] hover:cursor-pointer"
         >
           <option v-for="option in filter.options" :key="option.value" :value="option.value">
             {{ option.label }}

@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { useLanguage } from '@/composables/useLanguage'
+import { useBrowserUtils } from '@/composables/useBrowserUtils'
 import type { Vacancy } from '@/data/mockPublications'
 import Card from '@/ui/Card.vue'
 import Button from '@/ui/Button.vue'
+
+const { openUrl } = useBrowserUtils()
 
 interface Props {
   vacancy: Vacancy
@@ -76,6 +79,10 @@ const shareVacancy = () => {
       alert('Lien copié dans le presse-papiers!')
     })
   }
+}
+
+const applyToVacancy = () => {
+  openUrl(props.vacancy.applyUrl)
 }
 </script>
 
@@ -188,14 +195,14 @@ const shareVacancy = () => {
         </span>
       </div>
       <div class="flex space-x-3">
-        <Button variant="outline" size="sm" @click="shareVacancy">
+        <Button variant="outline" size="sm" @click="shareVacancy" class="hover:cursor-pointer">
           <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
           </svg>
           {{ t.vacancies.vacancyCard.share }}
         </Button>
-        <Button @click="() => window.open(vacancy.applyUrl, '_blank')">>
+        <Button @click="applyToVacancy" class="hover:cursor-pointer">
           {{ t.vacancies.vacancyCard.apply }}
           <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

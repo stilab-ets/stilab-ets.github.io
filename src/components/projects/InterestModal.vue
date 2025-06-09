@@ -65,7 +65,7 @@ const submitInterest = () => {
       <!-- Modal Header -->
       <div class="flex items-center justify-between pb-4 border-b">
         <h2 class="text-xl font-bold text-gray-900">{{ t.projects.interestModal.title }}</h2>
-        <Button variant="ghost" size="sm" @click="closeModal">
+        <Button variant="ghost" size="sm" @click="closeModal" class="hover:cursor-pointer">
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
@@ -138,10 +138,10 @@ const submitInterest = () => {
           </div>
 
           <div class="flex justify-end space-x-3 pt-4">
-            <Button type="button" variant="outline" @click="closeModal">
+            <Button type="button" variant="outline" @click="closeModal" class="hover:cursor-pointer">
               {{ t.projects.interestModal.cancel }}
             </Button>
-            <Button type="submit">
+            <Button type="submit" class="hover:cursor-pointer">
               {{ t.projects.interestModal.submit }}
             </Button>
           </div>
