@@ -1,15 +1,25 @@
 <script setup lang="ts">
-// Props
+import { useLanguage } from '@/composables/useLanguage'
+
+// Props interface matching the data structure from App.vue
+interface StatItem {
+  value: number
+  label: string
+}
+
 interface Props {
   labStats: {
-    members: number
-    publications: number
-    projects: number
-    awards: number
+    members: StatItem
+    publications: StatItem
+    projects: StatItem
+    awards: StatItem
   }
 }
 
 defineProps<Props>()
+
+// Access translation system for the section title
+const { t } = useLanguage()
 </script>
 
 <template>
@@ -17,32 +27,40 @@ defineProps<Props>()
     <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="max-w-6xl mx-auto">
         <h2 class="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-8 sm:mb-12">
-          Le laboratoire en chiffres
+          {{ t.stats.sectionTitle }}
         </h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
           <div class="text-center">
             <div class="text-3xl sm:text-4xl md:text-5xl font-bold text-[#08a4d4] mb-2 sm:mb-3">
-              {{ labStats.members }}+
+              {{ labStats.members.value }}+
             </div>
-            <div class="text-gray-600 text-sm sm:text-base lg:text-lg">Membres de l'équipe</div>
+            <div class="text-gray-600 text-sm sm:text-base lg:text-lg">
+              {{ labStats.members.label }}
+            </div>
           </div>
           <div class="text-center">
             <div class="text-3xl sm:text-4xl md:text-5xl font-bold text-[#08a4d4] mb-2 sm:mb-3">
-              {{ labStats.publications }}+
+              {{ labStats.publications.value }}+
             </div>
-            <div class="text-gray-600 text-sm sm:text-base lg:text-lg">Publications</div>
+            <div class="text-gray-600 text-sm sm:text-base lg:text-lg">
+              {{ labStats.publications.label }}
+            </div>
           </div>
           <div class="text-center">
             <div class="text-3xl sm:text-4xl md:text-5xl font-bold text-[#08a4d4] mb-2 sm:mb-3">
-              {{ labStats.projects }}+
+              {{ labStats.projects.value }}+
             </div>
-            <div class="text-gray-600 text-sm sm:text-base lg:text-lg">Projets actifs</div>
+            <div class="text-gray-600 text-sm sm:text-base lg:text-lg">
+              {{ labStats.projects.label }}
+            </div>
           </div>
           <div class="text-center">
             <div class="text-3xl sm:text-4xl md:text-5xl font-bold text-[#08a4d4] mb-2 sm:mb-3">
-              {{ labStats.awards }}+
+              {{ labStats.awards.value }}+
             </div>
-            <div class="text-gray-600 text-sm sm:text-base lg:text-lg">Prix reçus</div>
+            <div class="text-gray-600 text-sm sm:text-base lg:text-lg">
+              {{ labStats.awards.label }}
+            </div>
           </div>
         </div>
       </div>

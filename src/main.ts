@@ -3,24 +3,24 @@ import App from './App.vue'
 import './assets/style.css'
 
 // Layout components
-import Header from './components/layout/Header.vue'
-import Footer from './components/layout/Footer.vue'
+import Header from '@/layout/Header.vue'
+import Footer from '@/layout/Footer.vue'
 
 // Home page components
-import Hero from './components/home/Hero.vue'
-import StatsSection from './components/home/StatsSection.vue'
-import ResearchAreasPreview from './components/home/ResearchAreasPreview.vue'
-import QuickLinks from './components/home/QuickLinks.vue'
+import Hero from '@/home/Hero.vue'
+import StatsSection from '@/home/StatsSection.vue'
+import ResearchAreasPreview from '@/home/ResearchAreasPreview.vue'
+import QuickLinks from '@/home/QuickLinks.vue'
 
 // Page components
-import PeoplePage from './components/PeoplePage.vue'
-import PublicationsPage from './components/PublicationsPage.vue'
-import ResearchPage from './components/ResearchPage.vue'
-import EventsPage from './components/EventsPage.vue'
-import TeachingPage from './components/TeachingPage.vue'
-import MScProjectsPage from './components/MScProjectsPage.vue'
-import VacanciesPage from './components/VacanciesPage.vue'
-import AwardsPage from './components/AwardsPage.vue'
+import PeoplePage from '@/people/PeoplePage.vue'
+import PublicationsPage from '@/publications/PublicationsPage.vue'
+import ResearchPage from '@/research/ResearchPage.vue'
+import EventsPage from '@/events/EventsPage.vue'
+import TeachingPage from '@/teaching/TeachingPage.vue'
+import ProjectPage from '@/projects/ProjectPage.vue'
+import VacanciesPage from '@/vacancies/VacanciesPage.vue'
+import AwardsPage from '@/awards/AwardsPage.vue'
 
 // Create Vue application
 const app = createApp(App)
@@ -41,7 +41,7 @@ app.component('PublicationsPage', PublicationsPage)
 app.component('ResearchPage', ResearchPage)
 app.component('EventsPage', EventsPage)
 app.component('TeachingPage', TeachingPage)
-app.component('MScProjectsPage', MScProjectsPage)
+app.component('ProjectPage', ProjectPage)
 app.component('VacanciesPage', VacanciesPage)
 app.component('AwardsPage', AwardsPage)
 

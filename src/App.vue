@@ -1,91 +1,112 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
+import { useLanguage } from "@/composables/useLanguage"
+import { useNavigation } from "@/composables/useNavigation"
 
 // Layout components
-import Header from './components/layout/Header.vue'
-import Footer from './components/layout/Footer.vue'
+import Header from '@/layout/Header.vue'
+import Footer from '@/layout/Footer.vue'
 
 // Home page components
-import Hero from './components/home/Hero.vue'
-import StatsSection from './components/home/StatsSection.vue'
-import ResearchAreasPreview from './components/home/ResearchAreasPreview.vue'
-import QuickLinks from './components/home/QuickLinks.vue'
+import Hero from '@/home/Hero.vue'
+import StatsSection from '@/home/StatsSection.vue'
+import ResearchAreasPreview from '@/home/ResearchAreasPreview.vue'
+import QuickLinks from '@/home/QuickLinks.vue'
 
-// Page components
-import PeoplePage from './components/PeoplePage.vue'
-import PublicationsPage from './components/PublicationsPage.vue'
-import ResearchPage from './components/ResearchPage.vue'
-import EventsPage from './components/EventsPage.vue'
-import TeachingPage from './components/TeachingPage.vue'
-import MScProjectsPage from './components/MScProjectsPage.vue'
-import VacanciesPage from './components/VacanciesPage.vue'
-import AwardsPage from './components/AwardsPage.vue'
+import PeoplePage from '@/people/PeoplePage.vue'
+import PublicationsPage from '@/publications/PublicationsPage.vue'
+import ResearchPage from '@/research/ResearchPage.vue'
+import EventsPage from '@/events/EventsPage.vue'
+import TeachingPage from '@/teaching/TeachingPage.vue'
+import ProjectPage from '@/projects/ProjectPage.vue'
+import VacanciesPage from '@/vacancies/VacanciesPage.vue'
+import AwardsPage from '@/awards/AwardsPage.vue'
 
-// Navigation state
-const currentPage = ref('home')
+// Initialize systems
+const { 
+  currentLanguage, 
+  t, 
+  localizedNavigationItems, 
+  setLanguage, 
+} = useLanguage()
 
-// Navigation items
-const navigationItems = [
-  { id: 'home', label: 'Accueil', icon: '' },
-  { id: 'people', label: 'Équipe', icon: '' },
-  { id: 'research', label: 'Recherche', icon: '' },
-  { id: 'publications', label: 'Publications', icon: '' },
-  { id: 'teaching', label: 'Enseignement', icon: '' },
-  { id: 'events', label: 'Événements', icon: '' },
-  { id: 'projects', label: 'Projets M2', icon: '' },
-  { id: 'vacancies', label: 'Recrutements', icon: '' },
-  { id: 'awards', label: 'Prix', icon: '' }
-]
+const { 
+  currentPage, 
+  navigateToPage, 
+  initializeNavigation 
+} = useNavigation()
 
-// Methods
-const setCurrentPage = (page: string) => {
-  currentPage.value = page
-  window.scrollTo({ top: 0, behavior: 'smooth' })
+// Laboratory statistics with reactive formatting
+const labStats = computed(() => ({
+  members: { value: 12, label: t.value.stats.members },
+  publications: { value: 45, label: t.value.stats.publications },
+  projects: { value: 8, label: t.value.stats.projects },
+  awards: { value: 6, label: t.value.stats.awards }
+}))
+
+// Language change handler
+const handleLanguageChange = (language: string) => {
+  setLanguage(language as 'en' | 'fr')
 }
 
-// Stats for homepage
-const labStats = {
-  members: 12,
-  publications: 45,
-  projects: 8,
-  awards: 6
-}
+// Initialize navigation and cleanup
+let cleanupNavigation: (() => void) | null = null
+
+onMounted(() => {
+  // Initialize navigation system
+  cleanupNavigation = initializeNavigation()
+  
+  // Set initial document language
+  document.documentElement.lang = currentLanguage.value
+})
+
+onUnmounted(() => {
+  if (cleanupNavigation) {
+    cleanupNavigation()
+  }
+})
 </script>
 
 <template>
   <div class="min-h-screen bg-gray-50">
-    <!-- Header -->
-    <Header :current-page="currentPage" :navigation-items="navigationItems" @set-current-page="setCurrentPage" />
-
+    <!-- Header with language support -->
+    <Header 
+      :current-page="currentPage" 
+      :navigation-items="localizedNavigationItems"
+      :current-language="currentLanguage"
+      @set-current-page="navigateToPage"
+      @language-changed="handleLanguageChange"
+    />
+    
     <!-- Main Content -->
     <main>
       <!-- Homepage -->
       <div v-if="currentPage === 'home'">
         <!-- Hero Section -->
-        <Hero @set-current-page="setCurrentPage" />
-
-        <!-- Stats Section -->
+        <Hero @set-current-page="navigateToPage" />
+        
+        <!-- Stats Section with localized labels -->
         <StatsSection :lab-stats="labStats" />
-
+        
         <!-- Research Areas Preview -->
         <ResearchAreasPreview />
-
+        
         <!-- Quick Links -->
-        <QuickLinks @set-current-page="setCurrentPage" />
+        <QuickLinks @set-current-page="navigateToPage" />
       </div>
-
+      
       <!-- Dynamic Page Components -->
       <PeoplePage v-else-if="currentPage === 'people'" />
       <PublicationsPage v-else-if="currentPage === 'publications'" />
       <ResearchPage v-else-if="currentPage === 'research'" />
       <EventsPage v-else-if="currentPage === 'events'" />
       <TeachingPage v-else-if="currentPage === 'teaching'" />
-      <MScProjectsPage v-else-if="currentPage === 'projects'" />
+      <ProjectPage v-else-if="currentPage === 'projects'" />
       <VacanciesPage v-else-if="currentPage === 'vacancies'" />
       <AwardsPage v-else-if="currentPage === 'awards'" />
     </main>
-
-    <!-- Footer -->
-    <Footer @set-current-page="setCurrentPage" />
+    
+    <!-- Footer with language support -->
+    <Footer @set-current-page="navigateToPage" />
   </div>
 </template>

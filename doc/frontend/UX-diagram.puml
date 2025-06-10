@@ -91,7 +91,7 @@ package "TeachingPage" {
 [CourseCard] --> [CourseTitle, Instructor, Semester, Level, Description]
 
 ' ================= MSc PROJECTS PAGE ===================
-package "MScProjectsPage" {
+package "ProjectPage" {
   [AvailableProjectsList]
   [StudentInterestForm]
   [SupervisorCard]
