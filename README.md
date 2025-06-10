@@ -14,8 +14,8 @@ Afin de créer un environnement de dévelopement local conteneurisé, il faut:
 2. Créer un fichier `.env` et y ajouter les variables d'environnement suivantes:
 
 ```yaml
-POSTGRES_USER=CHANGEZ_MOI
-POSTGRES_PASSWORD=CHANGEZ_MOI
+DB_USER=CHANGEZ_MOI
+DB_PASSWORD=CHANGEZ_MOI
 ```
 
 3. Utiliser la commande `docker compose up`.

@@ -1,6 +1,7 @@
 # === Python / Django ===
 # Virtual environment
 backend/venv/
+.venv
 # Python cache
 *.pyc
 __pycache__/
