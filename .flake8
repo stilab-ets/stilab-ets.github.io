@@ -13,3 +13,4 @@ exclude =
     dist,
     *.vue,
     *.js
+    */__init__.py
