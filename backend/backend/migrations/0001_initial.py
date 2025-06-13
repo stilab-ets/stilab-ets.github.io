@@ -45,7 +45,7 @@ class Migration(migrations.Migration):
                 ),
                 ("citekey", models.CharField(max_length=255)),
                 ("title", models.CharField(blank=True, max_length=255, null=True)),
-                ("author", models.CharField(blank=True, max_length=2000, null=True)),
+                ("author", models.CharField(blank=True, max_length=3000, null=True)),
                 ("journal", models.CharField(blank=True, max_length=255, null=True)),
                 ("booktitle", models.CharField(blank=True, max_length=255, null=True)),
                 ("publisher", models.CharField(blank=True, max_length=255, null=True)),

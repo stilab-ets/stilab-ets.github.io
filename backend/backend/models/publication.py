@@ -25,7 +25,7 @@ class Publication(models.Model):
     citekey = models.CharField(max_length=255)
 
     title = models.CharField(max_length=255, null=True, blank=True)
-    author = models.CharField(max_length=2000, null=True, blank=True)
+    author = models.CharField(max_length=3000, null=True, blank=True)
     journal = models.CharField(max_length=255, null=True, blank=True)
     booktitle = models.CharField(max_length=255, null=True, blank=True)
     publisher = models.CharField(max_length=255, null=True, blank=True)
