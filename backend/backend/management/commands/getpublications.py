@@ -1,3 +1,4 @@
+import logging
 import string
 import time
 
@@ -7,6 +8,8 @@ from scholarly import ProxyGenerator, scholarly
 
 from backend.models import Publication
 from backend.services.publication_generator_service import PublicationGeneratorService
+
+logger = logging.getLogger(__name__)
 
 ALL_AUTHORS = [
     "Ali Ouni",
@@ -89,30 +92,36 @@ class Command(BaseCommand):
 
         blocked_by_google = False
         for author in authors:
+            logger.info(f"Gathering publications for {author}...")
             try:
                 publications = self.get_all_openalex_publications(author)
             except ValueError:
-                print(f"Unable to retieve any publications for {author}")
+                logger.info(f"Unable to retieve any publications for {author}. Skipping...")
                 continue
             for publication in publications:
                 publication_id = publication["id"]
-
+                logger.info(f"Creating publication for '{publication["title"]}'")
                 try:
                     obj = Publication.objects.get(id=publication_id)
                     if obj.is_approved:
-                        print(f"The publication '{publication["title"]}' is already in the database and is approved... Skipping.")
+                        logger.info(f"The publication '{publication["title"]}' is already in the database and is approved. Skipping...")
                         continue
+                    else:
+                        logger.info(f"The publication '{publication["title"]}' is already in the database but is not approved. Trying to update...")
                 except Publication.DoesNotExist:
-                    pass  # Creating new publication
+                    logger.info(f"The publication '{publication["title"]}' is not in the database. Creating new publication...")
+                    pass
 
                 pub_gen = PublicationGeneratorService()
                 if skip_google_scholar:
+                    logger.info("Getting publication data from OpenAlex...")
                     publication_tuple = pub_gen.generate_openalex_publication(publication)
 
                 elif not blocked_by_google:
                     self._set_up_scholarly()
                     publication_cleaned_title = self._clean_title(publication["title"])
                     try:
+                        logger.info("Getting publication data from Google Scholar...")
                         pub = scholarly.search_pubs(publication_cleaned_title)
                         p = scholarly.fill(next(pub))
 
@@ -122,39 +131,41 @@ class Command(BaseCommand):
 
                         publication_tuple(pub_gen.generate_google_scholar_publication(p["bib"]))
                         time.sleep(3)  # Longer wait to not get blocked by google
-                    except Exception as e:
-                        if e == "Cannot Fetch from Google Scholar.":
-                            print("Cannot Fetch from Google Scholar.")
-                            print("Falling back to OpenAlex API.")
-                            print("Some data may be incomplete or missing.")
-                            blocked_by_google = True
-                            # Fall back to openalex
-                            skip_google_scholar = True
+                    except Exception:
+                        logger.error("Cannot Fetch from Google Scholar.")
+                        logger.warning("Falling back to OpenAlex API.")
+                        logger.warning("Some data may be incomplete or missing.")
+
+                        # Fall back to openalex
+                        blocked_by_google = True
+                        skip_google_scholar = True
+                        publication_tuple = pub_gen.generate_openalex_publication(publication)
                 try:
                     obj, created = Publication.objects.update_or_create(
                         id=publication_id,
                         defaults={
-                            "entrytype": publication_tuple[0] or None,
-                            "citekey": publication_tuple[1] or None,
-                            "title": publication_tuple[2].get("title") or None,
-                            "author": publication_tuple[2].get("author") or None,
-                            "journal": publication_tuple[2].get("journal") or None,
-                            "booktitle": publication_tuple[2].get("booktitle") or None,
-                            "publisher": publication_tuple[2].get("publisher") or None,
-                            "year": publication_tuple[2].get("year") or None,
-                            "volume": publication_tuple[2].get("volume") or None,
-                            "number": publication_tuple[2].get("number") or None,
-                            "pages": publication_tuple[2].get("pages") or None,
-                            "url": publication_tuple[2].get("url") or None,
+                            "entrytype": publication_tuple[0] if publication_tuple else None,
+                            "citekey": publication_tuple[1] if publication_tuple else None,
+                            "title": publication_tuple[2].get("title") if publication_tuple else None,
+                            "author": publication_tuple[2].get("author") if publication_tuple else None,
+                            "journal": publication_tuple[2].get("journal") if publication_tuple else None,
+                            "booktitle": publication_tuple[2].get("booktitle") if publication_tuple else None,
+                            "publisher": publication_tuple[2].get("publisher") if publication_tuple else None,
+                            "year": publication_tuple[2].get("year") if publication_tuple else None,
+                            "volume": publication_tuple[2].get("volume") if publication_tuple else None,
+                            "number": publication_tuple[2].get("number") if publication_tuple else None,
+                            "pages": publication_tuple[2].get("pages") if publication_tuple else None,
+                            "url": publication_tuple[2].get("url") if publication_tuple else None,
                             "is_approved": False,
                         },
                     )
                 except Exception as e:
-                    print(f"Error creating the publication '{publication_tuple[2].get("title")}' - {e}")
+                    logger.error(f"Error creating the publication '{publication["title"]}' - {e}")
+                    continue
                 if created:
-                    print(f"Publication '{publication_tuple[2].get("title")}' created")
+                    logger.info(f"Publication '{publication["title"]}' created")
                 else:
-                    print(f"Publication titled - '{publication_tuple[2].get("title")}' was already in the database")
+                    logger.info(f"Publication titled - '{publication["title"]}' was already in the database")
 
     def get_all_openalex_publications(self, author_name):
         """Gather all publications of the author with the OpenAlex API. The results may be incomplete."""
@@ -164,17 +175,17 @@ class Command(BaseCommand):
         authors = res.json().get("results", [])
         if not authors:
             error = f"Unable to find author '{author_name}' with the OpenAlex API."
-            print(error)
+            logger.error(error)
             raise ValueError(error)
 
         author_id = authors[0]["id"]
-        print(f"Found author: {authors[0]['display_name']} — {author_id}")
+        logger.info(f"Found author: {authors[0]['display_name']} — {author_id}")
 
         # Get all the author's publications available with the OpenAlex API
         publications_url = "https://api.openalex.org/works"
         cursor = "*"
         all_works = []
-
+        logger.info("Fetching publications...")
         while True:
             params = {
                 "filter": f"author.id:{author_id}",
@@ -190,8 +201,9 @@ class Command(BaseCommand):
             if not cursor:
                 break
 
-            print(f"Fetched {len(all_works)} / {data['meta']['count']}")
+            logger.info(f"Fetched {len(all_works)} / {data['meta']['count']} publications...")
 
             time.sleep(1)  # Wait to not get blocked by OpenAlex
 
+        logger.info(f"Successfully fetched {len(all_works)} publications")
         return all_works
