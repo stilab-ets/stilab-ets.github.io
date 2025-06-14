@@ -46,7 +46,7 @@ LOGGING = {
     "root": {"handlers": ["console", "file"], "level": LOG_LEVEL},
     "loggers": {
         "django": {
-            "handlers": ["file"],
+            "handlers": ["console", "file"],
             "level": LOG_LEVEL,
             "propagate": False,
         },
