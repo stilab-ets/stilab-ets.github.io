@@ -16,6 +16,7 @@ pre-commit install # To install some pre-commit hooks to help with code quality
 
 ```yaml
 DJANGO_DEBUG=True
+DJANGO_LOG_LEVEL=DEBUG # Options are DEBUG, INFO, WARNING, ERROR and CRITICAL
 
 DB_USER=CHANGE_ME
 DB_PASSWORD=CHANGE_ME
