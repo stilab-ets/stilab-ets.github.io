@@ -1,15 +1,13 @@
 # === Python / Django ===
 # Virtual environment
 backend/venv/
+.venv
 # Python cache
 *.pyc
 __pycache__/
 # Environnement
 *.env
 .env.*
-# Django migrations
-backend/**/migrations/
-!backend/**/migrations/__init__.py
 # SQLite (si jamais)
 *.sqlite3
 # Logs

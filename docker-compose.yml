@@ -1,11 +1,24 @@
 services:
+    backend:
+        build:
+            context: .
+            dockerfile: backend/DOCKERFILE
+        command: python manage.py runserver 0.0.0.0:8000
+        ports:
+            - "8000:8000"
+        volumes:
+            - ./backend:/app
+        env_file:
+            - .env
+        depends_on:
+            - db
     db:
         image: postgres:17.5
         container_name: postgres
         restart: always
         environment:
-            POSTGRES_USER: ${POSTGRES_USER}
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
             POSTGRES_DB: postgres
         volumes:
             - postgres_data:/var/lib/postgresql/data
