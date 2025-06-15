@@ -3,18 +3,8 @@ name: Frontend CI pipeline
 on:
     push:
         branches: ["**"]
-        paths:
-            - "src/**"
-            - "tests/**"
-            - "package.json"
-            - "package-lock.json"
     pull_request:
         branches: ["**"]
-        paths:
-            - "src/**"
-            - "tests/**"
-            - "package.json"
-            - "package-lock.json"
     workflow_dispatch:
 
 jobs:

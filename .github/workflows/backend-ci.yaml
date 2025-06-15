@@ -3,14 +3,8 @@ name: Backend CI pipeline
 on:
     push:
         branches: ["**"]
-        paths:
-            - "backend/**"
-            - "requirements.txt"
     pull_request:
         branches: ["**"]
-        paths:
-            - "backend/**"
-            - "requirements.txt"
     workflow_dispatch:
 
 jobs:
