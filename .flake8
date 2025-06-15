@@ -8,7 +8,6 @@ exclude =
     env,
     .env,
     node_modules,
-    migrations,
     static,
     dist,
     *.vue,
