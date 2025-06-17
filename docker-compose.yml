@@ -1,0 +1,41 @@
+services:
+    backend:
+        build:
+            context: .
+            dockerfile: backend/DOCKERFILE
+        command: python manage.py runserver 0.0.0.0:8000
+        ports:
+            - "8000:8000"
+        volumes:
+            - ./backend:/app
+        env_file:
+            - .env
+        depends_on:
+            - db
+    db:
+        image: postgres:17.5
+        container_name: postgres
+        restart: always
+        environment:
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_DB: postgres
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        ports:
+            - "5432:5432"
+
+    pgadmin:
+        image: dpage/pgadmin4
+        container_name: pgadmin
+        restart: always
+        environment:
+            PGADMIN_DEFAULT_EMAIL: admin@admin.com
+            PGADMIN_DEFAULT_PASSWORD: admin123
+        ports:
+            - "5050:80"
+        depends_on:
+            - db
+
+volumes:
+    postgres_data:

@@ -1,0 +1,43 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "AC-01 : Membre / Chercheur" as Membre
+actor "AC-02 : Visiteur" as Visiteur
+actor "AC-03 : Administrateur" as Admin
+
+Admin -|> Membre
+
+rectangle "Système de gestion du labo" {
+  
+  usecase "CU01 - Gérer les membres du laboratoire" as CU01
+  usecase "CU02 - Gérer les projets de recherche" as CU02
+  usecase "CU03 - Gérer les publications" as CU03
+  usecase "CU04 - Gérer les actualités et événements" as CU04
+  usecase "CU05 - Authentification et gestion de session" as CU05
+  usecase "CU06 - Gérer son profil personnel" as CU06
+  usecase "CU07 - Recherche et filtrage de contenu" as CU07
+}
+
+' Admin-specific use cases
+Admin --> CU01
+Admin --> CU02
+Admin --> CU04
+
+' Admin does everything Membre does (explicitly)
+Admin --> CU03
+Admin --> CU05
+Admin --> CU06
+Admin --> CU07
+
+' Membre use cases
+Membre --> CU03
+Membre --> CU05
+Membre --> CU06
+Membre --> CU07
+
+Visiteur --> CU07
+
+CU06 ..|> CU05 : <<extend>>
+
+@enduml

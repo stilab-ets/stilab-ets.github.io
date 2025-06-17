@@ -1,0 +1,20 @@
+@startuml
+!define RECTANGLE class
+
+title Architecture de l'application Web du projet PFE-025
+
+node "Render (Hébergement Backend)" {
+    node "Application Backend" as BE {
+        component "Django REST API" as Django
+    }
+    node "Application Frontend" as FE {
+        component "Vue.js\nTailwindCSS" as Vue
+    }
+
+    database "Base de données PostgreSQL" as DB
+}
+
+Vue --> Django : Requêtes HTTP\n(Axios / Fetch)
+Django --> DB : Requêtes SQL\n(ORM Django)
+
+@enduml
