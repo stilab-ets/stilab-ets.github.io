@@ -1,4 +1,4 @@
-# 🧪 Research Lab Web Platform
+# 🧪 STIL Lab Web Platform
 
 Une plateforme web interactive pour centraliser, gérer et valoriser les activités scientifiques d’un laboratoire de recherche en génie logiciel.
 
@@ -6,7 +6,24 @@ Une plateforme web interactive pour centraliser, gérer et valoriser les activit
 
 Ce projet vise à concevoir et développer un site web structuré pour un laboratoire de recherche. L’objectif est de centraliser les informations clés du laboratoire et d’en faciliter la gestion et la diffusion, tant en interne qu’à destination de la communauté scientifique et industrielle.
 
-## Environnement de développement
+## Installation
+### Environnement de développement (Frontend)
+
+1. Installer les dépendences nécessaires
+```sh
+npm install
+```
+2. Démarrer l'application
+```sh
+npm run dev
+```
+L'application est disponible localement sur http://localhost:5173/   
+3. Exécuter les tests unitaires avec couverture de tests
+```sh
+npm run test
+```
+
+### Environnement de développement (Backend)
 
 Afin de créer un environnement de dévelopement local conteneurisé, il faut:
 
@@ -14,8 +31,14 @@ Afin de créer un environnement de dévelopement local conteneurisé, il faut:
 2. Créer un fichier `.env` et y ajouter les variables d'environnement suivantes:
 
 ```yaml
-DB_USER=CHANGEZ_MOI
-DB_PASSWORD=CHANGEZ_MOI
+DJANGO_DEBUG=True
+DJANGO_LOG_LEVEL=DEBUG # Options are DEBUG, INFO, WARNING, ERROR and CRITICAL
+
+DB_USER=CHANGE_ME
+DB_PASSWORD=CHANGE_ME
+DB_HOST=db
+DB_PORT=5432
+DB_NAME=postgres
 ```
 
 3. Utiliser la commande `docker compose up`.
@@ -27,7 +50,8 @@ Les identifiants de connexion à pgAdmin sont:
 Utilisateur: `admin@admin.com`
 Mot de passe: `admin123`
 
-## 🚀 Fonctionnalités clés (prévisionnelles)
+## Informations supplémentaires
+### 🚀 Fonctionnalités clés (prévisionnelles)
 
 -   🔬 Gestion des **projets de recherche** (en cours / terminés) avec objectifs, participants, etc.
 -   👩‍🔬 Répertoire des **chercheurs** (professeurs, doctorants, étudiants), spécialités, affiliations.
@@ -37,20 +61,20 @@ Mot de passe: `admin123`
 -   🛠️ **Dashboard d’administration** pour la gestion des utilisateurs et des contenus.
 -   🧩 Évolutif : les étudiants et utilisateurs peuvent proposer de nouvelles fonctionnalités.
 
-## 🏗️ Stack technologique envisagée
+### 🏗️ Stack technologique
 
 | Layer            | Technologie possible                  |
 | ---------------- | ------------------------------------- |
-| Frontend         | React + TypeScript                    |
-| Backend          | Node.js / Express (ou NestJS)         |
+| Frontend         | VueJS + TypeScript                    |
+| Backend          | Python, Django         |
 | Authentification | JWT, OAuth, ou Firebase Auth          |
-| Base de données  | PostgreSQL / MongoDB                  |
-| DevOps           | Docker, GitHub Actions, Vercel/Render |
-| Tests            | Jest, Playwright, ESLint              |
+| Base de données  | PostgreSQL                 |
+| DevOps           | Docker, GitHub Actions, Render |
+| Tests            | Vitest, Playwright, ESLint              |
 
 > Un choix raisonné des technologies sera réalisé au cours du projet en fonction des besoins, des performances attendues, de la sécurité et des coûts.
 
-## 📁 Structure prévue du projet
+### 📁 Structure prévue du projet
 
 ```bash
 src/
@@ -66,7 +90,7 @@ src/
 └─ resources/
 ```
 
-🧪 Qualité & DevOps
+### 🧪 Qualité & DevOps
 
     CI/CD avec GitHub Actions
 
@@ -76,7 +100,7 @@ src/
 
     Documentation du code et de l'architecture
 
-📄 Licence
+### 📄 Licence
 
 Ce projet est sous licence [MIT](LICENSE.txt).
 
