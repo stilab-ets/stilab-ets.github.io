@@ -1,0 +1,107 @@
+@startuml
+!define primary_key(x) <b>x</b>
+!define foreign_key(x) <u>x</u>
+
+entity Member {
+  primary_key(id): UUID
+  first_name: VARCHAR
+  last_name: VARCHAR
+  role: VARCHAR
+  email: VARCHAR
+  phone: VARCHAR
+  biography: TEXT
+  research_domain: VARCHAR
+  image_url: TEXT
+  github_url: TEXT
+  linkedin_url: TEXT
+  personal_website: TEXT
+  user_id: UUID
+}
+
+entity User {
+  primary_key(id): UUID
+  username: VARCHAR
+  password_hash: TEXT
+  email: VARCHAR
+  role: VARCHAR  // "admin" or "member"
+  is_active: BOOLEAN
+}
+
+entity ResearchProject {
+  primary_key(id): UUID
+  title: VARCHAR
+  start_date: DATE
+  end_date: DATE
+  description: TEXT
+}
+
+entity ProjectParticipant {
+  primary_key(id): UUID
+  foreign_key(project_id): UUID
+  foreign_key(member_id): UUID
+}
+
+entity Publication {
+  primary_key(id): UUID
+  entry_type: VARCHAR
+  cite_key: VARCHAR
+  title: TEXT
+  journal: VARCHAR
+  booktitle: VARCHAR
+  publisher: VARCHAR
+  year: INTEGER
+  volume: VARCHAR
+  number: VARCHAR
+  pages: VARCHAR
+  url: TEXT
+  is_approved: BOOLEAN
+}
+
+entity Author {
+  primary_key(id): UUID
+  first_name: VARCHAR
+  last_name: VARCHAR
+}
+
+entity PublicationAuthor {
+  primary_key(id): UUID
+  foreign_key(publication_id): UUID
+  foreign_key(author_id): UUID
+}
+
+entity Event {
+  primary_key(id): UUID
+  title: VARCHAR
+  domain: VARCHAR
+  date: DATE
+  description: TEXT
+}
+
+entity EventParticipant {
+  primary_key(id): UUID
+  foreign_key(event_id): UUID
+  foreign_key(member_id): UUID
+}
+
+entity Award {
+  primary_key(id): UUID
+  title: VARCHAR
+  url: TEXT
+}
+
+entity AwardRecipient {
+  primary_key(id): UUID
+  foreign_key(award_id): UUID
+  foreign_key(member_id): UUID
+}
+
+User ||--o{ Member : owns >
+ResearchProject ||--o{ ProjectParticipant : has >
+Member ||--o{ ProjectParticipant : participates >
+Event ||--o{ EventParticipant : has >
+Member ||--o{ EventParticipant : attends >
+Award ||--o{ AwardRecipient : has >
+Member ||--o{ AwardRecipient : receives >
+Publication ||--o{ PublicationAuthor : includes >
+Author ||--o{ PublicationAuthor : writes >
+@enduml
