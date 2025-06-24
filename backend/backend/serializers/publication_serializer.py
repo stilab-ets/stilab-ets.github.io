@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from ..models.publication import Publication
 
+
 class PublicationSerializer(serializers.ModelSerializer):
     bibtex = serializers.SerializerMethodField()
 
@@ -26,4 +27,3 @@ class PublicationSerializer(serializers.ModelSerializer):
 
     def get_bibtex(self, obj):
         return str(obj)
-
