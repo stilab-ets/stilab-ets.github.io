@@ -26,3 +26,4 @@ class PublicationSerializer(serializers.ModelSerializer):
 
     def get_bibtex(self, obj):
         return str(obj)
+

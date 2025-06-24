@@ -9,3 +9,4 @@ class PublicationListAPI(APIView):
         publications = Publication.objects.all()
         serializer = PublicationSerializer(publications, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
