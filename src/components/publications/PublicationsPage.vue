@@ -103,8 +103,6 @@ const sortedPublications = computed(() => {
       return sorted.sort((a, b) => (b.year ?? 0) - (a.year ?? 0))
     case 'year-asc':
       return sorted.sort((a, b) => (a.year ?? 0) - (b.year ?? 0))
-    case 'citations-desc':
-      return sorted.sort((a, b) => (b.citations ?? 0) - (a.citations ?? 0))
     case 'title-asc':
       return sorted.sort((a, b) => (a.title ?? '').localeCompare(b.title ?? ''))
     default:
