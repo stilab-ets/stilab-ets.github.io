@@ -29,6 +29,8 @@ export interface PublicationsTranslations {
     authors: string
     citations: string
     citation: string
+    showBibtex: string
+    hideBibtex: string
   }
   results: {
     publication: string
@@ -76,7 +78,9 @@ export const publicationsTranslations = {
     publicationCard: {
       authors: 'Auteurs',
       citations: 'citations',
-      citation: 'citation'
+      citation: 'citation',
+      showBibtex: 'Afficher BibTeX',
+      hideBibtex: 'Cacher BibTeX'
     },
     results: {
       publication: 'publication',
@@ -122,7 +126,9 @@ export const publicationsTranslations = {
     publicationCard: {
       authors: 'Authors',
       citations: 'citations',
-      citation: 'citation'
+      citation: 'citation',
+      showBibtex: 'Show BibTeX',
+      hideBibtex: 'Hide BibTeX'
     },
     results: {
       publication: 'publication',

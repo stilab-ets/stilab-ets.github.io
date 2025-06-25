@@ -54,6 +54,7 @@ LOGGING = {
 }
 
 INSTALLED_APPS = [
+    "corsheaders",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -66,6 +67,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -96,6 +99,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 # Autoriser le front (ajuste domain si besoin)
 CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
     os.getenv("FRONTEND_URL", "https://ton-domaine-frontend.onrender.com"),
 ]
 

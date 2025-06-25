@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import axios from 'axios'
 import { useLanguage } from '@/composables/useLanguage'
-import { mockPublications, type Publication } from '@/data/mockPublications'
 
 // UI Components
 import PageHeader from '@/components/ui/PageHeader.vue'
@@ -12,56 +12,42 @@ import EmptyState from '@/components/ui/EmptyState.vue'
 import PublicationCard from './PublicationCard.vue'
 import PublicationSortOptions from './PublicationSortOptions.vue'
 
-// Language and translations
 const { t } = useLanguage()
 
 // State
+const publications = ref<Array<any>>([]) // will hold fetched publications
 const searchQuery = ref('')
 const selectedYear = ref('')
 const selectedType = ref('')
 const sortBy = ref('year-desc')
 
-// Computed
-const availableYears = computed(() => {
-  const years = [...new Set(mockPublications.map(p => p.year))].sort((a, b) => b - a)
-  return years
-})
-
-const filteredPublications = computed(() => {
-  return mockPublications.filter(publication => {
-    const matchesSearch = !searchQuery.value ||
-      publication.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      publication.authors.some(author =>
-        author.toLowerCase().includes(searchQuery.value.toLowerCase())
-      ) ||
-      publication.venue.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      publication.abstract.toLowerCase().includes(searchQuery.value.toLowerCase())
-
-    const matchesYear = !selectedYear.value ||
-      publication.year.toString() === selectedYear.value
-
-    const matchesType = !selectedType.value ||
-      publication.type === selectedType.value
-
-    return matchesSearch && matchesYear && matchesType
-  })
-})
-
-const sortedPublications = computed(() => {
-  const sorted = [...filteredPublications.value]
-
-  switch (sortBy.value) {
-    case 'year-desc':
-      return sorted.sort((a, b) => b.year - a.year)
-    case 'year-asc':
-      return sorted.sort((a, b) => a.year - b.year)
-    case 'citations-desc':
-      return sorted.sort((a, b) => b.citations - a.citations)
-    case 'title-asc':
-      return sorted.sort((a, b) => a.title.localeCompare(b.title))
-    default:
-      return sorted
+// Fetch publications on mount
+onMounted(async () => {
+  try {
+    const response = await axios.get('http://localhost:8000/api/publications/')
+    publications.value = response.data
+  } catch (error) {
+    console.error('Failed to fetch publications:', error)
+    publications.value = []
   }
+})
+
+// Compute available years for filter dropdown
+const availableYears = computed(() => {
+  const yearsSet = new Set<number>()
+  publications.value.forEach(pub => {
+    if (pub.year) yearsSet.add(pub.year)
+  })
+  return Array.from(yearsSet).sort((a, b) => b - a)
+})
+
+// Compute unique entrytypes dynamically for type filter dropdown
+const availableEntryTypes = computed(() => {
+  const typesSet = new Set<string>()
+  publications.value.forEach(pub => {
+    if (pub.entrytype) typesSet.add(pub.entrytype)
+  })
+  return Array.from(typesSet).sort()
 })
 
 // Filters configuration
@@ -81,35 +67,66 @@ const filters = computed(() => [
     value: selectedType.value,
     options: [
       { value: '', label: t.value.publications.filters.allTypes },
-      { value: 'journal', label: t.value.publications.publicationTypes.journal },
-      { value: 'conference', label: t.value.publications.publicationTypes.conference },
-      { value: 'workshop', label: t.value.publications.publicationTypes.workshop },
-      { value: 'thesis', label: t.value.publications.publicationTypes.thesis },
-      { value: 'book', label: t.value.publications.publicationTypes.book }
+      ...availableEntryTypes.value.map(type => ({ value: type, label: type }))
     ]
   }
 ])
 
-// Results text
-const resultsText = computed(() => {
-  const count = filteredPublications.value.length
-  if (count === 0) return `0 ${t.value.publications.results.publication} ${t.value.publications.results.found}`
-  if (count === 1) return `1 ${t.value.publications.results.publication} ${t.value.publications.results.found}`
-  return `${count} ${t.value.publications.results.publications} ${t.value.publications.results.found}s`
+// Filtered publications based on search, year, and entrytype
+const filteredPublications = computed(() => {
+  return publications.value.filter(pub => {
+    // Search filter (title, authors, journal/booktitle, abstract if any)
+    const searchLower = searchQuery.value.toLowerCase()
+    const matchesSearch =
+      !searchQuery.value ||
+      pub.title?.toLowerCase().includes(searchLower) ||
+      pub.author?.toLowerCase().includes(searchLower) ||
+      (pub.journal && pub.journal.toLowerCase().includes(searchLower)) ||
+      (pub.booktitle && pub.booktitle.toLowerCase().includes(searchLower))
+
+    // Year filter
+    const matchesYear = !selectedYear.value || pub.year?.toString() === selectedYear.value
+
+    // Type filter (entrytype)
+    const matchesType = !selectedType.value || pub.entrytype === selectedType.value
+
+    return matchesSearch && matchesYear && matchesType
+  })
 })
 
-// Methods
-const updateFilter = (filterId: string, value: string) => {
-  switch (filterId) {
-    case 'year':
-      selectedYear.value = value
-      break
-    case 'type':
-      selectedType.value = value
-      break
+// Sorted publications
+const sortedPublications = computed(() => {
+  const sorted = [...filteredPublications.value]
+
+  switch (sortBy.value) {
+    case 'year-desc':
+      return sorted.sort((a, b) => (b.year ?? 0) - (a.year ?? 0))
+    case 'year-asc':
+      return sorted.sort((a, b) => (a.year ?? 0) - (b.year ?? 0))
+    case 'citations-desc':
+      return sorted.sort((a, b) => (b.citations ?? 0) - (a.citations ?? 0))
+    case 'title-asc':
+      return sorted.sort((a, b) => (a.title ?? '').localeCompare(b.title ?? ''))
+    default:
+      return sorted
   }
+})
+
+// Results text (you can customize for pluralization)
+const resultsText = computed(() => {
+  const count = filteredPublications.value.length
+  if (count === 0) return `0 ${t.value.publications.results.publications} ${t.value.publications.results.found}`
+  if (count === 1) return `1 ${t.value.publications.results.publication} ${t.value.publications.results.found}`
+  return `${count} ${t.value.publications.results.publications} ${t.value.publications.results.found}`
+})
+
+// Update filter handler
+const updateFilter = (filterId: string, value: string) => {
+  if (filterId === 'year') selectedYear.value = value
+  if (filterId === 'type') selectedType.value = value
 }
 
+// When author is clicked in card, filter by that author
 const filterByAuthor = (author: string) => {
   searchQuery.value = author
 }
