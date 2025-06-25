@@ -31,7 +31,6 @@ const updateSort = (value: string) => {
       >
         <option value="year-desc">{{ t.publications.sorting.yearDesc }}</option>
         <option value="year-asc">{{ t.publications.sorting.yearAsc }}</option>
-        <option value="citations-desc">{{ t.publications.sorting.citationsDesc }}</option>
         <option value="title-asc">{{ t.publications.sorting.titleAsc }}</option>
       </select>
     </div>

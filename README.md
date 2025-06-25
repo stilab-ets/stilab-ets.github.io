@@ -1,34 +1,38 @@
 # 🧪 STIL Lab Web Platform
 
-Une plateforme web interactive pour centraliser, gérer et valoriser les activités scientifiques d’un laboratoire de recherche en génie logiciel.
+An interactive web platform to centralize, manage, and showcase the scientific activities of a software engineering research laboratory.
 
-## 🎯 Objectif du projet
+## 🎯 Project Objective
 
-Ce projet vise à concevoir et développer un site web structuré pour un laboratoire de recherche. L’objectif est de centraliser les informations clés du laboratoire et d’en faciliter la gestion et la diffusion, tant en interne qu’à destination de la communauté scientifique et industrielle.
+This project aims to design and develop a structured website for a research laboratory. The goal is to centralize the lab’s key information and facilitate its management and dissemination, both internally and to the scientific and industrial community.
 
 ## Installation
-### Environnement de développement (Frontend)
 
-1. Installer les dépendences nécessaires
+### Development Environment (Frontend)
+
+1. Install the required dependencies:
 ```sh
 npm install
 ```
-2. Démarrer l'application
+
+2. Start the application:
 ```sh
 npm run dev
 ```
-L'application est disponible localement sur http://localhost:5173/   
-3. Exécuter les tests unitaires avec couverture de tests
+The application will be available locally at http://localhost:5173/
+
+3. Run unit tests with coverage:
 ```sh
 npm run test
 ```
 
-### Environnement de développement (Backend)
+### Development Environment (Backend)
 
-Afin de créer un environnement de dévelopement local conteneurisé, il faut:
+To create a containerized local development environment:
 
-1. Installer [Docker](https://www.docker.com/products/docker-desktop/).
-2. Créer un fichier `.env` et y ajouter les variables d'environnement suivantes:
+1. Install [Docker](https://www.docker.com/products/docker-desktop).
+
+2. Create a `.env` file and add the following environment variables:
 
 ```yaml
 DJANGO_DEBUG=True
@@ -41,40 +45,45 @@ DB_PORT=5432
 DB_NAME=postgres
 ```
 
-3. Utiliser la commande `docker compose up`.
+3. Use the command:
+```sh
+docker compose build
+docker compose up [--build] [-d] # --build to skip the first command, -d to run in detached mode
+```
 
-La base de données sera disponible au `localhost:5432` et pgAdmin au `localhost:5050`.
+The database will be available at `localhost:5432` and pgAdmin at `localhost:5050`.
 
-Les identifiants de connexion à pgAdmin sont:
+pgAdmin login credentials:
 
-Utilisateur: `admin@admin.com`
-Mot de passe: `admin123`
+User: `admin@admin.com`  
+Password: `admin123`
 
-## Informations supplémentaires
-### 🚀 Fonctionnalités clés (prévisionnelles)
+## Additional Information
 
--   🔬 Gestion des **projets de recherche** (en cours / terminés) avec objectifs, participants, etc.
--   👩‍🔬 Répertoire des **chercheurs** (professeurs, doctorants, étudiants), spécialités, affiliations.
--   👤 Système d’**authentification** et gestion des **profils utilisateurs**.
--   📚 Administration des **publications scientifiques** (articles, thèses, conférences, etc.).
--   📰 Publication de **nouvelles et événements** : workshops, séminaires, prix, recrutements.
--   🛠️ **Dashboard d’administration** pour la gestion des utilisateurs et des contenus.
--   🧩 Évolutif : les étudiants et utilisateurs peuvent proposer de nouvelles fonctionnalités.
+### 🚀 Key Features (Planned)
 
-### 🏗️ Stack technologique
+- 🔬 Management of **research projects** (ongoing / completed) with goals, participants, etc.
+- 👩‍🔬 Directory of **researchers** (professors, PhD students, interns), expertise, affiliations.
+- 👤 **Authentication system** and user **profile management**.
+- 📚 Administration of **scientific publications** (articles, theses, conferences, etc.).
+- 📰 Posting of **news and events**: workshops, seminars, awards, recruitment.
+- 🛠️ **Admin dashboard** for user and content management.
+- 🧩 Scalable: students and users can propose new features.
 
-| Layer            | Technologie possible                  |
-| ---------------- | ------------------------------------- |
-| Frontend         | VueJS + TypeScript                    |
-| Backend          | Python, Django         |
-| Authentification | JWT, OAuth, ou Firebase Auth          |
-| Base de données  | PostgreSQL                 |
-| DevOps           | Docker, GitHub Actions, Render |
-| Tests            | Vitest, Playwright, ESLint              |
+### 🏗️ Technology Stack
 
-> Un choix raisonné des technologies sera réalisé au cours du projet en fonction des besoins, des performances attendues, de la sécurité et des coûts.
+| Layer            | Possible Technology                  |
+| ---------------- | ------------------------------------ |
+| Frontend         | VueJS + TypeScript                   |
+| Backend          | Python, Django                       |
+| Authentication   | JWT, OAuth, or Firebase Auth         |
+| Database         | PostgreSQL                           |
+| DevOps           | Docker, GitHub Actions, Render       |
+| Testing          | Vitest, Playwright, ESLint           |
 
-### 📁 Structure prévue du projet
+> A reasoned choice of technologies will be made during the project based on needs, expected performance, security, and costs.
+
+### 📁 Planned Project Structure
 
 ```bash
 src/
@@ -90,18 +99,15 @@ src/
 └─ resources/
 ```
 
-### 🧪 Qualité & DevOps
+### 🧪 Quality & DevOps
 
-    CI/CD avec GitHub Actions
+- CI/CD with GitHub Actions  
+- Automated test coverage  
+- Compliance with security best practices (auth, data, access)  
+- Code and architecture documentation  
 
-    Couverture de tests automatisée
+### 📄 License
 
-    Suivi des bonnes pratiques de sécurité (auth, données, accès)
+This project is licensed under the [MIT License](LICENSE.txt).
 
-    Documentation du code et de l'architecture
-
-### 📄 Licence
-
-Ce projet est sous licence [MIT](LICENSE.txt).
-
-✨ Ce projet est amené à évoluer. Les membres de l'équipe sont encouragés à proposer de nouvelles idées ou fonctionnalités.
+✨ This project is evolving. Team members are encouraged to propose new ideas or features.
