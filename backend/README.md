@@ -37,6 +37,10 @@ docker compose up [--build] [-d] # --build to skip the first command, -d to run 
 ```bash
 docker compose exec backend python manage.py migrate
 docker compose exec backend python manage.py createsuperuser
+
+# To create new migrations 
+docker compose exec backend python manage.py makemigrations --name migration_name 
+
 ```
 
 5. Synchronise publications:
