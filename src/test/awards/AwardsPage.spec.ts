@@ -1,14 +1,14 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 
-import AwardsPage from '../../src/components/awards/AwardsPage.vue'
+import AwardsPage from '../../components/awards/AwardsPage.vue'
 
-import PageHeader from '../../src/components/ui/PageHeader.vue'
-import SearchAndFilters from '../../src/components/ui/SearchAndFilters.vue'
-import StatisticsGrid from '../../src/components/ui/StatisticsGrid.vue'
-import EmptyState from '../../src/components/ui/EmptyState.vue'
-import AwardsTimeline from '../../src/components/awards/AwardsTimeline.vue'
-import NotableAchievements from '../../src/components/awards/NotableAchievements.vue'
+import PageHeader from '../../components/ui/PageHeader.vue'
+import SearchAndFilters from '../../components/ui/SearchAndFilters.vue'
+import StatisticsGrid from '../../components/ui/StatisticsGrid.vue'
+import EmptyState from '../../components/ui/EmptyState.vue'
+import AwardsTimeline from '../../components/awards/AwardsTimeline.vue'
+import NotableAchievements from '../../components/awards/NotableAchievements.vue'
 
 describe('AwardsPage.vue', () => {
   it('renders core UI components', () => {

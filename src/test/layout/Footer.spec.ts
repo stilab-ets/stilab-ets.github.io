@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 
-import Footer from '../../src/components/layout/Footer.vue'
+import Footer from '../../components/layout/Footer.vue'
 
 describe('Footer.vue', () => {
   it('renders all main child components', () => {

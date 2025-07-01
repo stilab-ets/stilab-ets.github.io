@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
-import EventsPage from '../../src/components/events/EventsPage.vue'
+import EventsPage from '../../components/events/EventsPage.vue'
 
 describe('EventsPage.vue', () => {
   it('renders the main UI components', () => {

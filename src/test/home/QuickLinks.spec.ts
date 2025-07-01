@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import QuickLinks from '../../src/components/home/QuickLinks.vue'
+import QuickLinks from '../../components/home/QuickLinks.vue'
 import { describe, it, expect } from 'vitest'
 
 describe('QuickLinks.vue', () => {

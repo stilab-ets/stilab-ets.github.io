@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import ResearchAreas from '../../src/components/home/ResearchAreasPreview.vue'
+import ResearchAreas from '../../components/home/ResearchAreasPreview.vue'
 import { describe, it, expect } from 'vitest'
 
 describe('ResearchAreas.vue', () => {

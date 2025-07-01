@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 
-import ResearchPage from '../../src/components/research/ResearchPage.vue'
+import ResearchPage from '../../components/research/ResearchPage.vue'
 
 describe('ResearchPage.vue', () => {
   it('renders PageHeader with correct props', () => {

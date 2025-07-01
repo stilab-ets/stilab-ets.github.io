@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import HeroSection from '../../src/components/home/Hero.vue'
+import HeroSection from '../../components/home/Hero.vue'
 import { describe, it, expect } from 'vitest'
 
 

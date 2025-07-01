@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
-import TeachingPage from '../../src/components/teaching/TeachingPage.vue'
+import TeachingPage from '../../components/teaching/TeachingPage.vue'
 
 describe('TeachingPage.vue', () => {
   it('renders PageHeader, StatisticsGrid and SearchAndFilters components', () => {

@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi } from 'vitest'
 import axios from 'axios'
 
-import PublicationsPage from '../../src/components/publications/PublicationsPage.vue'
+import PublicationsPage from '../../components/publications/PublicationsPage.vue'
 
 // Mock axios
 vi.mock('axios')

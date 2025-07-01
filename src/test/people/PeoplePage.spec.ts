@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 
-import PeoplePage from '../../src/components/people/PeoplePage.vue'
+import PeoplePage from '../../components/people/PeoplePage.vue'
 
 describe('PeoplePage.vue', () => {
   it('renders main heading and subtitle', () => {

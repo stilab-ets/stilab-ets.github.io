@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
-import Header from '../../src/components/layout/Header.vue'
+import Header from '../../components/layout/Header.vue'
 
 describe('Header.vue', () => {
   const navigationItems = [

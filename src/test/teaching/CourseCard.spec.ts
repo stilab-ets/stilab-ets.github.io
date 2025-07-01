@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
-import CourseCard from '../../src/components/teaching/CourseCard.vue'
-import Card from '../../src/components/ui/Card.vue'
-import Button from '../../src/components/ui/Button.vue'
+import CourseCard from '../../components/teaching/CourseCard.vue'
+import Card from '../../components/ui/Card.vue'
+import Button from '../../components/ui/Button.vue'
 import { describe, it, expect } from 'vitest'
 
 const courseMock = {

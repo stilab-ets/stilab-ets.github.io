@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
-import EventCard from '../../src/components/events/EventCard.vue'
-import Card from '../../src/components/ui/Card.vue'
-import Button from '../../src/components/ui/Button.vue'
+import EventCard from '../../components/events/EventCard.vue'
+import Card from '../../components/ui/Card.vue'
+import Button from '../../components/ui/Button.vue'
 import { describe, it, expect } from 'vitest'
 
 const mockEventData = {

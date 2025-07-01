@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import VacanciesPage from '../../src/components/vacancies/VacanciesPage.vue'
+import VacanciesPage from '../../components/vacancies/VacanciesPage.vue'
 import { describe, it, expect } from 'vitest'
 
 describe('VacanciesPage.vue', () => {

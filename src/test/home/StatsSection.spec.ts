@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import StatsSection from '../../src/components/home/StatsSection.vue'
+import StatsSection from '../../components/home/StatsSection.vue'
 import { describe, it, expect } from 'vitest'
 
 describe('StatsSection.vue', () => {
