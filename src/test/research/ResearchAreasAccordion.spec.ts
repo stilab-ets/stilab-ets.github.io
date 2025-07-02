@@ -24,7 +24,12 @@ describe('ResearchAreas.vue', () => {
       id: 'p1',
       title: 'AI Project',
       description: 'Research in AI',
-      leadResearcher: 'Dr. Smith'
+      leadResearcher: 'Dr. Smith',
+      participants: ['Dr. Smith', 'Jane Doe'],
+      startDate: '2024-01-01',
+      status: 'active' as 'active' | 'completed',
+      domains: ['Artificial Intelligence'],
+      domain: 'Artificial Intelligence'
     }
   ]
 
@@ -53,14 +58,11 @@ describe('ResearchAreas.vue', () => {
       }
     })
 
-    // Initially closed
     expect(wrapper.findComponent({ name: 'Card' }).exists()).toBe(false)
 
-    // Open the first accordion
     await wrapper.findAll('button')[0].trigger('click')
     expect(wrapper.findComponent({ name: 'Card' }).exists()).toBe(true)
 
-    // Close the same accordion
     await wrapper.findAll('button')[0].trigger('click')
     expect(wrapper.findComponent({ name: 'Card' }).exists()).toBe(false)
   })
@@ -73,7 +75,7 @@ describe('ResearchAreas.vue', () => {
       }
     })
 
-    await wrapper.findAll('button')[0].trigger('click') // Open AI section
+    await wrapper.findAll('button')[0].trigger('click')
     const cards = wrapper.findAllComponents({ name: 'Card' })
     expect(cards.length).toBe(mockProjects.length)
   })
@@ -86,8 +88,8 @@ describe('ResearchAreas.vue', () => {
       }
     })
 
-    await wrapper.findAll('button')[1].trigger('click') // Open Robotics (empty)
+    await wrapper.findAll('button')[1].trigger('click')
     expect(wrapper.findComponent({ name: 'Card' }).exists()).toBe(false)
-    expect(wrapper.text()).toContain('No active projects') // Optional: safe since mocked
+    expect(wrapper.text()).toContain('No active projects')
   })
 })

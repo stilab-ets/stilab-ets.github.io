@@ -64,7 +64,6 @@ describe('UserProfile.vue', () => {
 
     await wrapper.find('button[aria-haspopup="true"]').trigger('click')
 
-    // Click the first menu item button
     const menuButtons = wrapper.findAll('[role="menuitem"]')
     await menuButtons[0].trigger('click')
 

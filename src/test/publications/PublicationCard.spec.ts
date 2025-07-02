@@ -50,7 +50,6 @@ describe('PublicationCard.vue', () => {
     const btn = wrapper.findComponent({ name: 'Button' })
     expect(btn.exists()).toBe(true)
 
-    // Mock window.open
     const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null)
 
     await btn.trigger('click')

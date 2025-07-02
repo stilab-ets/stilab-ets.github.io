@@ -87,10 +87,8 @@ it('updates filters via SearchAndFilters @update-filter event', async () => {
   mockedAxios.get.mockResolvedValue({ data: samplePublications })
   const wrapper = mount(PublicationsPage)
   await wrapper.findComponent({ name: 'SearchAndFilters' }).vm.$nextTick()
-  // Simulate filter change
   await wrapper.findComponent({ name: 'SearchAndFilters' }).vm.$emit('update-filter', 'year', '2022')
   await wrapper.vm.$nextTick()
-  // Now only 1 publication should be shown
   const cards = wrapper.findAllComponents({ name: 'PublicationCard' })
   expect(cards.length).toBe(1)
   expect(cards[0].props('publication').year).toBe(2022)
@@ -100,7 +98,6 @@ it('updates searchQuery via SearchAndFilters @update:search-query event', async 
   mockedAxios.get.mockResolvedValue({ data: samplePublications })
   const wrapper = mount(PublicationsPage)
   await wrapper.findComponent({ name: 'SearchAndFilters' }).vm.$nextTick()
-  // Simulate search input
   await wrapper.findComponent({ name: 'SearchAndFilters' }).vm.$emit('update:search-query', 'Another')
   await wrapper.vm.$nextTick()
   const cards = wrapper.findAllComponents({ name: 'PublicationCard' })
@@ -112,7 +109,6 @@ it('updates sortBy via PublicationSortOptions v-model', async () => {
   mockedAxios.get.mockResolvedValue({ data: samplePublications })
   const wrapper = mount(PublicationsPage)
   await wrapper.findComponent({ name: 'PublicationSortOptions' }).vm.$nextTick()
-  // Simulate sort change
   await wrapper.findComponent({ name: 'PublicationSortOptions' }).vm.$emit('update:sort-by', 'title-asc')
   await wrapper.vm.$nextTick()
   const cards = wrapper.findAllComponents({ name: 'PublicationCard' })
@@ -125,11 +121,9 @@ it('filters by author when PublicationCard emits filter-by-author', async () => 
   const wrapper = mount(PublicationsPage)
   await wrapper.vm.$nextTick()
   await wrapper.vm.$nextTick()
-  // Simulate author click on first card
   const card = wrapper.findAllComponents({ name: 'PublicationCard' })[1]
   await card.vm.$emit('filter-by-author', 'Author Three')
   await wrapper.vm.$nextTick()
-  // Now only the publication with Author Three should be shown
   const cards = wrapper.findAllComponents({ name: 'PublicationCard' })
   expect(cards.length).toBe(1)
   expect(cards[0].props('publication').author).toContain('Author Three')
@@ -139,7 +133,6 @@ it('shows EmptyState when filters exclude all publications', async () => {
   mockedAxios.get.mockResolvedValue({ data: samplePublications })
   const wrapper = mount(PublicationsPage)
   await wrapper.findComponent({ name: 'SearchAndFilters' }).vm.$nextTick()
-  // Simulate filter to a year not present
   await wrapper.findComponent({ name: 'SearchAndFilters' }).vm.$emit('update-filter', 'year', '1999')
   await wrapper.vm.$nextTick()
   const emptyState = wrapper.findComponent({ name: 'EmptyState' })

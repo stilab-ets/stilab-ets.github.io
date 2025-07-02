@@ -11,11 +11,9 @@ describe('LanguageSwitcher.vue', () => {
       }
     })
 
-    // There should be 2 buttons (for fr and en)
     const buttons = wrapper.findAll('button')
     expect(buttons.length).toBe(2)
 
-    // One button should have bg-[#08a4d4] class indicating active language
     const activeButton = buttons.find(btn => btn.classes().includes('bg-[#08a4d4]'))
     expect(activeButton).toBeTruthy()
     expect(activeButton?.text()).toContain('🇫🇷')
@@ -30,7 +28,6 @@ describe('LanguageSwitcher.vue', () => {
     })
 
     const buttons = wrapper.findAll('button')
-    // Click on English button (assumed second)
     await buttons[1].trigger('click')
 
     expect(wrapper.emitted('languageChanged')).toBeTruthy()
@@ -58,15 +55,12 @@ describe('LanguageSwitcher.vue', () => {
       }
     })
 
-    // Open dropdown
     await wrapper.find('button[aria-haspopup="true"]').trigger('click')
 
-    // There should be only one other language: 'en'
     const options = wrapper.findAll('[role="menuitem"]')
     expect(options.length).toBe(1)
     expect(options[0].text()).toContain('English')
 
-    // Click on English option
     await options[0].trigger('click')
 
     expect(wrapper.emitted('languageChanged')).toBeTruthy()
