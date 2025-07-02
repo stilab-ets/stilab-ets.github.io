@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useLanguage } from "@/composables/useLanguage"
 import { useNavigation } from "@/composables/useNavigation"
 
@@ -13,6 +13,7 @@ import StatsSection from '@/home/StatsSection.vue'
 import ResearchAreasPreview from '@/home/ResearchAreasPreview.vue'
 import QuickLinks from '@/home/QuickLinks.vue'
 
+// Page components
 import PeoplePage from '@/people/PeoplePage.vue'
 import PublicationsPage from '@/publications/PublicationsPage.vue'
 import ResearchPage from '@/research/ResearchPage.vue'
@@ -22,19 +23,32 @@ import ProjectPage from '@/projects/ProjectPage.vue'
 import VacanciesPage from '@/vacancies/VacanciesPage.vue'
 import AwardsPage from '@/awards/AwardsPage.vue'
 
+// Auth components
+import LoginForm from '@/auth/LoginForm.vue'
+import RegisterForm from '@/auth/RegisterForm.vue'
+
+// Form components
+import PublicationForm from '@/forms/PublicationForm.vue'
+import EventForm from '@/forms/EventForm.vue'
+import ProjectForm from '@/forms/ProjectForm.vue'
+
+// Authentication state
+const isAuthenticated = ref(true)
+const currentUser = ref(null)
+
 // Initialize systems
-const { 
-  currentLanguage, 
-  t, 
-  localizedNavigationItems, 
-  setLanguage, 
+const {
+  currentLanguage,
+  t,
+  localizedNavigationItems,
+  setLanguage,
 } = useLanguage()
 
-const { 
-  currentPage, 
-  navigateToPage, 
-  initializeNavigation 
-} = useNavigation()
+const navigation = useNavigation()
+
+const currentPage = navigation.currentPage
+const navigateToPage = navigation.navigateToPage
+const initializeNavigation = navigation.initializeNavigation
 
 // Laboratory statistics with reactive formatting
 const labStats = computed(() => ({
@@ -44,19 +58,55 @@ const labStats = computed(() => ({
   awards: { value: 6, label: t.value.stats.awards }
 }))
 
+// Authentication handlers
+const handleLogin = (userData: any) => {
+  isAuthenticated.value = true
+  currentUser.value = userData
+  navigateToPage('home')
+}
+
+const handleLogout = () => {
+  isAuthenticated.value = false
+  currentUser.value = null
+  navigateToPage('home')
+}
+
+const handleRegistration = (userData: any) => {
+  // Handle successful registration
+  navigateToPage('login')
+}
+
 // Language change handler
 const handleLanguageChange = (language: string) => {
   setLanguage(language as 'en' | 'fr')
+}
+
+// Form submission handlers
+const handlePublicationSubmit = (publicationData: any) => {
+  console.log('Publication submitted:', publicationData)
+  navigateToPage('publications')
+}
+
+const handleEventSubmit = (eventData: any) => {
+  console.log('Event submitted:', eventData)
+  navigateToPage('events')
+}
+
+const handleProjectSubmit = (projectData: any) => {
+  console.log('Project submitted:', projectData)
+  navigateToPage('projects')
+}
+
+const handleInvitationSubmit = (invitationData: any) => {
+  console.log('Invitation submitted:', invitationData)
+  navigateToPage('people')
 }
 
 // Initialize navigation and cleanup
 let cleanupNavigation: (() => void) | null = null
 
 onMounted(() => {
-  // Initialize navigation system
   cleanupNavigation = initializeNavigation()
-  
-  // Set initial document language
   document.documentElement.lang = currentLanguage.value
 })
 
@@ -69,33 +119,60 @@ onUnmounted(() => {
 
 <template>
   <div class="min-h-screen bg-gray-50">
-    <!-- Header with language support -->
-    <Header 
-      :current-page="currentPage" 
+    <!-- Header with authentication support -->
+    <Header
+      :current-page="currentPage"
       :navigation-items="localizedNavigationItems"
       :current-language="currentLanguage"
+      :user="currentUser"
       @set-current-page="navigateToPage"
       @language-changed="handleLanguageChange"
+      @logout="handleLogout"
     />
-    
+   
     <!-- Main Content -->
     <main>
+      <!-- Authentication Pages -->
+      <LoginForm 
+        v-if="currentPage === 'login'"
+        @login-success="handleLogin"
+        @navigate="navigateToPage"
+      />
+      
+      <RegisterForm 
+        v-else-if="currentPage === 'register'"
+        @registration-success="handleRegistration"
+        @navigate="navigateToPage"
+      />
+
+      <!-- Form Pages (Protected Routes) -->
+      <PublicationForm 
+        v-else-if="currentPage === 'publication-form' && isAuthenticated"
+        @submit="handlePublicationSubmit"
+        @cancel="() => navigateToPage('publications')"
+      />
+      
+      <EventForm 
+        v-else-if="currentPage === 'event-form' && isAuthenticated"
+        @submit="handleEventSubmit"
+        @cancel="() => navigateToPage('events')"
+      />
+      
+      <ProjectForm 
+        v-else-if="currentPage === 'project-form' && isAuthenticated"
+        @submit="handleProjectSubmit"
+        @cancel="() => navigateToPage('projects')"
+      />
+      
       <!-- Homepage -->
-      <div v-if="currentPage === 'home'">
-        <!-- Hero Section -->
+      <div v-else-if="currentPage === 'home'">
         <Hero @set-current-page="navigateToPage" />
-        
-        <!-- Stats Section with localized labels -->
         <StatsSection :lab-stats="labStats" />
-        
-        <!-- Research Areas Preview -->
         <ResearchAreasPreview />
-        
-        <!-- Quick Links -->
         <QuickLinks @set-current-page="navigateToPage" />
       </div>
-      
-      <!-- Dynamic Page Components -->
+     
+      <!-- Page Components -->
       <PeoplePage v-else-if="currentPage === 'people'" />
       <PublicationsPage v-else-if="currentPage === 'publications'" />
       <ResearchPage v-else-if="currentPage === 'research'" />
@@ -104,9 +181,24 @@ onUnmounted(() => {
       <ProjectPage v-else-if="currentPage === 'projects'" />
       <VacanciesPage v-else-if="currentPage === 'vacancies'" />
       <AwardsPage v-else-if="currentPage === 'awards'" />
+
+      <!-- Redirect to login for protected routes -->
+      <div v-else-if="!isAuthenticated && ['publication-form', 'event-form', 'project-form', 'invitation-form'].includes(currentPage)" 
+           class="min-h-screen flex items-center justify-center">
+        <div class="text-center">
+          <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ t.auth.login.title }}</h2>
+          <p class="text-gray-600 mb-6">{{ t.auth.login.subtitle }}</p>
+          <button 
+            @click="navigateToPage('login')"
+            class="btn-primary"
+          >
+            {{ t.auth.login.form.submit }}
+          </button>
+        </div>
+      </div>
     </main>
-    
-    <!-- Footer with language support -->
+   
+    <!-- Footer -->
     <Footer @set-current-page="navigateToPage" />
   </div>
 </template>

@@ -65,6 +65,15 @@
       ],
       "@/publications/*": [
         "./src/components/publications/*"
+      ],
+      "@/forms/*": [
+        "./src/components/forms/*"
+      ],
+      "@/auth/*": [
+        "./src/components/auth/*"
+      ],
+      "@/middleware/*": [
+        "./src/middleware/*"
       ]
     },
     /* Vue specific */

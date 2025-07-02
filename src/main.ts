@@ -22,6 +22,23 @@ import ProjectPage from '@/projects/ProjectPage.vue'
 import VacanciesPage from '@/vacancies/VacanciesPage.vue'
 import AwardsPage from '@/awards/AwardsPage.vue'
 
+// Authentication components
+import LoginForm from '@/auth/LoginForm.vue'
+import RegisterForm from '@/auth/RegisterForm.vue'
+
+// Form components
+import PublicationForm from '@/forms/PublicationForm.vue'
+import EventForm from '@/forms/EventForm.vue'
+import ProjectForm from '@/forms/ProjectForm.vue'
+
+// UI components
+import Card from '@/ui/Card.vue'
+import Button from '@/ui/Button.vue'
+import PageHeader from '@/ui/PageHeader.vue'
+import SearchAndFilters from '@/ui/SearchAndFilters.vue'
+import StatisticsGrid from '@/ui/StatisticsGrid.vue'
+import EmptyState from '@/ui/EmptyState.vue'
+
 // Create Vue application
 const app = createApp(App)
 
@@ -44,6 +61,23 @@ app.component('TeachingPage', TeachingPage)
 app.component('ProjectPage', ProjectPage)
 app.component('VacanciesPage', VacanciesPage)
 app.component('AwardsPage', AwardsPage)
+
+// Register authentication components globally
+app.component('LoginForm', LoginForm)
+app.component('RegisterForm', RegisterForm)
+
+// Register form components globally
+app.component('PublicationForm', PublicationForm)
+app.component('EventForm', EventForm)
+app.component('ProjectForm', ProjectForm)
+
+// Register UI components globally
+app.component('Card', Card)
+app.component('Button', Button)
+app.component('PageHeader', PageHeader)
+app.component('SearchAndFilters', SearchAndFilters)
+app.component('StatisticsGrid', StatisticsGrid)
+app.component('EmptyState', EmptyState)
 
 // Mount the application
 app.mount('#app')
