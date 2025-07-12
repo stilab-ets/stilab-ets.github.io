@@ -30,6 +30,13 @@ import RegisterForm from '@/auth/RegisterForm.vue'
 import PublicationForm from '@/forms/PublicationForm.vue'
 import EventForm from '@/forms/EventForm.vue'
 import ProjectForm from '@/forms/ProjectForm.vue'
+import MemberForm from '@/forms/MemberForm.vue'
+import ResearchForm from '@/forms/ResearchForm.vue'
+import TeachingForm from '@/forms/TeachingForm.vue'
+import AwardForm from '@/forms/AwardForm.vue'
+import VacancyForm from '@/forms/VacancyForm.vue'
+import UserSettingsForm from '@/forms/UserSettingsForm.vue'
+import AdminManagementForm from '@/forms/AdminManagementForm.vue'
 
 // UI components
 import Card from '@/ui/Card.vue'
@@ -70,6 +77,13 @@ app.component('RegisterForm', RegisterForm)
 app.component('PublicationForm', PublicationForm)
 app.component('EventForm', EventForm)
 app.component('ProjectForm', ProjectForm)
+app.component('MemberForm', MemberForm)
+app.component('ResearchForm', ResearchForm)
+app.component('TeachingForm', TeachingForm)
+app.component('AwardForm', AwardForm)
+app.component('VacancyForm', VacancyForm)
+app.component('UserSettingsForm', UserSettingsForm)
+app.component('AdminManagementForm', AdminManagementForm)
 
 // Register UI components globally
 app.component('Card', Card)
