@@ -25,11 +25,14 @@ class PublicationGeneratorService:
 
     def _reorder_author_name(self, author_name):
         """Reorders the authors name to be the familly name first. Assumes the author's first name is only the first name in the string"""
-        split_author_name = author_name.split(" ")
+        if not author_name or len(author_name) == 0 or author_name.isspace():
+            return ""
+
+        split_author_name = author_name.strip().split(" ")
         if len(split_author_name) >= 2:
-            return f"{' '.join(split_author_name[1:])}, {split_author_name[0]}"
+            return f"{' '.join(split_author_name[1:]).strip()}, {split_author_name[0].strip()}"
         else:
-            return split_author_name[0]
+            return split_author_name[0].strip()
 
     def _clean_title(self, publication_title):
         """Remove any illegal characters from the publication's title"""
@@ -107,6 +110,20 @@ class PublicationGeneratorService:
         if {"author", "title", "journal", "year"}.issubset(keys):
             return "article"
 
+        if (
+            {"author", "title", "publisher", "year", "chapter"}.issubset(keys)
+            or {"author", "title", "publisher", "year", "pages"}.issubset(keys)
+            or {"editor", "title", "publisher", "year", "chapter"}.issubset(keys)
+            or {"editor", "title", "publisher", "year", "pages"}.issubset(keys)
+        ):
+            return "inbook"
+
+        if {"author", "title", "booktitle", "publisher", "year"}.issubset(keys):
+            return "incollection"
+
+        if {"author", "title", "booktitle", "year"}.issubset(keys):
+            return "inproceedings"
+
         if {"author", "title", "publisher", "year"}.issubset(keys) or {
             "editor",
             "title",
@@ -115,12 +132,6 @@ class PublicationGeneratorService:
         }.issubset(keys):
             return "book"
 
-        if {"author", "title", "booktitle", "publisher", "year"}.issubset(keys):
-            return "incollection"
-
-        if {"author", "title", "booktitle", "year"}.issubset(keys):
-            return "inproceedings"
-
         if {"editor", "title", "year"}.issubset(keys) and not {
             "author",
             "journal",
@@ -128,14 +139,6 @@ class PublicationGeneratorService:
             "publisher",
         }.intersection(keys):
             return "proceedings"
-
-        if (
-            {"author", "title", "publisher", "year", "chapter"}.issubset(keys)
-            or {"author", "title", "publisher", "year", "pages"}.issubset(keys)
-            or {"editor", "title", "publisher", "year", "chapter"}.issubset(keys)
-            or {"editor", "title", "publisher", "year", "pages"}.issubset(keys)
-        ):
-            return "inbook"
 
         if {"author", "title", "school", "year"}.issubset(keys):
             return "phdthesis"
@@ -196,13 +199,15 @@ class PublicationGeneratorService:
             "near",
         }
 
-        year = self.fields["year"] or "n.d."
+        year = self.fields.get("year", None)
+        if (year and year.isspace()) or not year:
+            year = "n.d."
 
-        name_field = self.fields["author"] or "Anonymous"
-        last_name = name_field.split(" and ")[0].strip().split(" ")[0].replace(",", "")
+        name_field = self.fields.get("author", None)
+        last_name = name_field.split(" and ")[0].strip().split(" ")[0].replace(",", "") if name_field else "anonymous"
 
-        first_title_word = "Untitled"
-        if self.fields["title"]:
+        first_title_word = "untitled"
+        if self.fields.get("title", None):
 
             # Finds all words in the title
             words = re.findall(r"\b\w+\b", self.fields["title"])
