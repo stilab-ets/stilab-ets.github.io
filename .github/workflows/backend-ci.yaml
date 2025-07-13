@@ -72,8 +72,6 @@ jobs:
               run: |
                   python backend/manage.py migrate
 
-            - name: Run tests
+            - name: Run tests with coverage
               run: |
-                  python backend/manage.py test
-
-            # TODO: Pipeline needs to fail if code coverage < 60%
+                  pytest --cov=backend --cov-report=term --cov-fail-under=60 --cov-config=.coveragerc

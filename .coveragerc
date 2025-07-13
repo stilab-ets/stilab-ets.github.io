@@ -1,0 +1,18 @@
+[run]
+branch = True
+source = backend
+
+[report]
+include = backend/*
+omit =
+    */test/*
+    */migrations/*
+    */__init__.py
+    backend\manage.py 
+    backend\config\*
+    backend\backend\models\*
+    backend\backend\admin\*
+include_namespace_packages = true
+show_missing = True
+skip_empty = true
+
