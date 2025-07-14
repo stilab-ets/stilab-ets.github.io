@@ -1,6 +1,6 @@
 import { adminManagementFormTranslations, AdminManagementFormTranslations } from './forms.adminManagement.translate'
 import { awardsFormTranslations, AwardsFormTranslations } from './forms.awards.translate'
-import { eventsFormTranslations, EventsFormTranslations } from './forms.event.translate'
+import { eventsFormTranslations, EventsFormTranslations } from './forms.events.translate'
 import { memberFormTranslations, MemberFormTranslations } from './forms.member.translate'
 import { projectFormTranslations, ProjectFormTranslations } from './forms.project.translate'
 import { publicationFormTranslations, PublicationFormTranslations } from './forms.publication.translate'

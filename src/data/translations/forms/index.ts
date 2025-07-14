@@ -1,6 +1,6 @@
 export * from './forms.adminManagement.translate';
 export * from './forms.awards.translate';
-export * from './forms.event.translate';
+export * from './forms.events.translate';
 export * from './forms.member.translate';
 export * from './forms.project.translate';
 export * from './forms.publication.translate';
