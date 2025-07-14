@@ -122,7 +122,7 @@ export const userSettingsFormTranslations: Record<'fr' | 'en', UserSettingsFormT
       privacy: 'Confidentialité',
       notifications: 'Notifications',
       preferences: 'Préférences',
-      security: undefined
+      security: "Sécurité"
     },
     form: {
       firstName: 'Prénom',
@@ -176,11 +176,11 @@ export const userSettingsFormTranslations: Record<'fr' | 'en', UserSettingsFormT
       saving: 'Enregistrement...',
       deleteAccount: 'Supprimer le compte',
       confirmDelete: 'Confirmer la suppression',
-      office: undefined,
-      researchDomains: undefined,
-      profilePhoto: undefined,
-      notifications: undefined,
-      browserNotifications: undefined
+      office: "Bureau",
+      researchDomains: "Domaine de recherche",
+      profilePhoto: "Photo de profil",
+      notifications: "Notifications",
+      browserNotifications: "Notification du navigateur"
     },
     languages: {
       french: 'Français',
@@ -218,7 +218,7 @@ export const userSettingsFormTranslations: Record<'fr' | 'en', UserSettingsFormT
       photoUploadFailed: 'Échec du téléchargement de la photo',
       passwordChangeFailed: 'Échec du changement de mot de passe',
       deleteAccountFailed: 'Échec de la suppression du compte',
-      updateFailed: ""
+      updateFailed: "Échec de la mise à jour"
     },
     success: {
       profileUpdated: 'Profil mis à jour avec succès',
@@ -235,7 +235,7 @@ export const userSettingsFormTranslations: Record<'fr' | 'en', UserSettingsFormT
       privacy: 'Privacy',
       notifications: 'Notifications',
       preferences: 'Preferences',
-      security: undefined
+      security: "Security"
     },
     form: {
       firstName: 'First Name',
@@ -289,11 +289,11 @@ export const userSettingsFormTranslations: Record<'fr' | 'en', UserSettingsFormT
       saving: 'Saving...',
       deleteAccount: 'Delete Account',
       confirmDelete: 'Confirm Deletion',
-      office: undefined,
-      researchDomains: undefined,
-      profilePhoto: undefined,
-      notifications: undefined,
-      browserNotifications: undefined
+      office: "Office",
+      researchDomains: "Research domains",
+      profilePhoto: "Profile picture",
+      notifications: "Notifications",
+      browserNotifications: "Browser notifications"
     },
     languages: {
       french: 'French',
@@ -331,7 +331,7 @@ export const userSettingsFormTranslations: Record<'fr' | 'en', UserSettingsFormT
       photoUploadFailed: 'Failed to upload photo',
       passwordChangeFailed: 'Failed to change password',
       deleteAccountFailed: 'Failed to delete account',
-      updateFailed: ""
+      updateFailed: "Failed to update"
     },
     success: {
       profileUpdated: 'Profile updated successfully',

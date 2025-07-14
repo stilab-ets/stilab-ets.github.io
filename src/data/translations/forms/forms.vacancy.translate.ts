@@ -1,19 +1,17 @@
 export interface VacancyFormTranslations {
-  types: any
   titleEdit: string
   titleCreate: string
   subtitle: string
   sections: {
-    timeline: any
-    compensation: any
     basic: string
     details: string
     requirements: string
     conditions: string
     application: string
+    timeline: string
+    compensation: string
   }
   form: {
-    deadline: any
     title: string
     titlePlaceholder: string
     type: string
@@ -64,10 +62,21 @@ export interface VacancyFormTranslations {
     internalNotesPlaceholder: string
     published: string
     featured: string
+    deadline: string
     cancel: string
     create: string
     update: string
     submitting: string
+  }
+  types: {
+    phd: string
+    postdoc: string
+    researcher: string
+    engineer: string
+    intern: string
+    visiting: string
+    technician: string
+    admin: string
   }
   positionTypes: {
     phd: string
@@ -80,8 +89,6 @@ export interface VacancyFormTranslations {
     admin: string
   }
   domains: {
-    distributedSystems: any
-    blockchain: any
     softwareArchitecture: string
     artificialIntelligence: string
     cybersecurity: string
@@ -90,6 +97,8 @@ export interface VacancyFormTranslations {
     softwareTesting: string
     softwareMaintenance: string
     humanComputerInteraction: string
+    distributedSystems: string
+    blockchain: string
   }
   applicationMethods: {
     online: string
@@ -112,8 +121,6 @@ export interface VacancyFormTranslations {
     urgent: string
   }
   validation: {
-    durationRequired: string
-    applyUrlInvalid: string
     titleRequired: string
     typeRequired: string
     descriptionRequired: string
@@ -122,10 +129,12 @@ export interface VacancyFormTranslations {
     domainRequired: string
     locationRequired: string
     startDateRequired: string
+    durationRequired: string
     deadlineRequired: string
     deadlineAfterToday: string
     applicationMethodRequired: string
     applyUrlRequired: string
+    applyUrlInvalid: string
     contactEmailRequired: string
     emailInvalid: string
     urlInvalid: string
@@ -148,8 +157,8 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       requirements: 'Exigences',
       conditions: 'Conditions',
       application: 'Candidature',
-      timeline: undefined,
-      compensation: undefined
+      timeline: 'Planning',
+      compensation: 'Rémunération'
     },
     form: {
       title: 'Titre du poste',
@@ -202,11 +211,21 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       internalNotesPlaceholder: 'Notes pour l\'équipe RH...',
       published: 'Publié',
       featured: 'Mise en avant',
+      deadline: 'Date limite',
       cancel: 'Annuler',
       create: 'Créer',
       update: 'Mettre à jour',
-      submitting: 'En cours...',
-      deadline: undefined
+      submitting: 'En cours...'
+    },
+    types: {
+      phd: 'Doctorat',
+      postdoc: 'Post-doctorat',
+      researcher: 'Chercheur',
+      engineer: 'Ingénieur',
+      intern: 'Stage',
+      visiting: 'Chercheur invité',
+      technician: 'Technicien',
+      admin: 'Administratif'
     },
     positionTypes: {
       phd: 'Doctorat',
@@ -227,8 +246,8 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       softwareTesting: 'Tests logiciels',
       softwareMaintenance: 'Maintenance logicielle',
       humanComputerInteraction: 'Interaction homme-machine',
-      distributedSystems: undefined,
-      blockchain: undefined
+      distributedSystems: 'Systèmes distribués',
+      blockchain: 'Blockchain'
     },
     applicationMethods: {
       online: 'Candidature en ligne',
@@ -259,22 +278,21 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       domainRequired: 'Le domaine est requis',
       locationRequired: 'Le lieu est requis',
       startDateRequired: 'La date de début est requise',
+      durationRequired: 'La durée est requise',
       deadlineRequired: 'La date limite est requise',
       deadlineAfterToday: 'La date limite doit être future',
       applicationMethodRequired: 'La méthode de candidature est requise',
       applyUrlRequired: 'L\'URL de candidature est requise',
+      applyUrlInvalid: 'URL de candidature invalide',
       contactEmailRequired: 'L\'email de contact est requis',
       emailInvalid: 'Format d\'email invalide',
       urlInvalid: 'URL invalide',
       phoneInvalid: 'Format de téléphone invalide',
-      statusRequired: 'Le statut est requis',
-      durationRequired: "",
-      applyUrlInvalid: ""
+      statusRequired: 'Le statut est requis'
     },
     errors: {
       submitFailed: 'Échec de la soumission'
-    },
-    types: undefined
+    }
   },
   en: {
     titleEdit: 'Edit Job Offer',
@@ -286,8 +304,8 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       requirements: 'Requirements',
       conditions: 'Conditions',
       application: 'Application',
-      timeline: undefined,
-      compensation: undefined
+      timeline: 'Timeline',
+      compensation: 'Compensation'
     },
     form: {
       title: 'Position Title',
@@ -340,11 +358,21 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       internalNotesPlaceholder: 'Notes for HR team...',
       published: 'Published',
       featured: 'Featured',
+      deadline: 'Deadline',
       cancel: 'Cancel',
       create: 'Create',
       update: 'Update',
-      submitting: 'Submitting...',
-      deadline: undefined
+      submitting: 'Submitting...'
+    },
+    types: {
+      phd: 'PhD',
+      postdoc: 'Post-doc',
+      researcher: 'Researcher',
+      engineer: 'Engineer',
+      intern: 'Internship',
+      visiting: 'Visiting Researcher',
+      technician: 'Technician',
+      admin: 'Administrative'
     },
     positionTypes: {
       phd: 'PhD',
@@ -365,8 +393,8 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       softwareTesting: 'Software Testing',
       softwareMaintenance: 'Software Maintenance',
       humanComputerInteraction: 'Human-Computer Interaction',
-      distributedSystems: undefined,
-      blockchain: undefined
+      distributedSystems: 'Distributed Systems',
+      blockchain: 'Blockchain'
     },
     applicationMethods: {
       online: 'Online Application',
@@ -397,21 +425,20 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       domainRequired: 'Domain is required',
       locationRequired: 'Location is required',
       startDateRequired: 'Start date is required',
+      durationRequired: 'Duration is required',
       deadlineRequired: 'Deadline is required',
       deadlineAfterToday: 'Deadline must be in the future',
       applicationMethodRequired: 'Application method is required',
       applyUrlRequired: 'Application URL is required',
+      applyUrlInvalid: 'Invalid application URL',
       contactEmailRequired: 'Contact email is required',
       emailInvalid: 'Invalid email format',
       urlInvalid: 'Invalid URL',
       phoneInvalid: 'Invalid phone format',
-      statusRequired: 'Status is required',
-      durationRequired: "",
-      applyUrlInvalid: ""
+      statusRequired: 'Status is required'
     },
     errors: {
       submitFailed: 'Failed to submit'
-    },
-    types: undefined
+    }
   }
 } as const

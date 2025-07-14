@@ -1,30 +1,53 @@
 export interface AdminManagementFormTranslations {
-  title: any
-  form: any
-  contentManagement: any
+  title: string
   titleEdit: string
   titleCreate: string
   subtitle: string
   sections: {
-    users: any
-    system: any
-    content: any
     userManagement: string
     rolePermissions: string
     systemSettings: string
     security: string
     maintenance: string
+    users: string
+    system: string
+    content: string
   }
-  userManagement: {
-    searchPlaceholder: string | undefined
-    allRoles: any
-    allStatuses: any
-    editUser: any
-    deleteUser: any
-    confirmDelete: any
-    deleteConfirmMessage: any
+  form: {
+    labName: string
+    labDescription: string
+    contactEmail: string
+    contactPhone: string
+    address: string
+    maintenanceMode: string
+    enableRegistration: string
+    requireApproval: string
+    saving: string
+    save: string
+    cancel: string
+  }
+  contentManagement: {
     title: string
     subtitle: string
+    pendingReviews: string
+    approveContent: string
+    rejectContent: string
+    moderateComments: string
+    pendingPublications: string
+    approve: string
+    reject: string
+    pendingEvents: string
+  }
+  userManagement: {
+    title: string
+    subtitle: string
+    searchPlaceholder: string
+    allRoles: string
+    allStatuses: string
+    editUser: string
+    deleteUser: string
+    confirmDelete: string
+    deleteConfirmMessage: string
     form: {
       firstName: string
       firstNamePlaceholder: string
@@ -274,13 +297,45 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       systemSettings: 'Paramètres système',
       security: 'Sécurité',
       maintenance: 'Maintenance',
-      users: undefined,
-      system: undefined,
-      content: undefined
+      users: 'Utilisateurs',
+      system: 'Système',
+      content: 'Contenu'
+    },
+    form: {
+      labName: 'Nom du laboratoire',
+      labDescription: 'Description du laboratoire',
+      contactEmail: 'Email de contact',
+      contactPhone: 'Téléphone de contact',
+      address: 'Adresse',
+      maintenanceMode: 'Mode maintenance',
+      enableRegistration: 'Autoriser les inscriptions',
+      requireApproval: 'Approbation requise',
+      saving: "Sauvegarde en cours...",
+      save: "Sauvegarder",
+      cancel: "Annuler"
+    },
+    contentManagement: {
+      title: 'Gestion du contenu',
+      subtitle: 'Modérez et approuvez le contenu',
+      pendingReviews: 'En attente de révision',
+      approveContent: 'Approuver le contenu',
+      rejectContent: 'Rejeter le contenu',
+      moderateComments: 'Modérer les commentaires',
+      pendingPublications: "Publication en attente",
+      approve: "Approuver",
+      reject: "Rejeter",
+      pendingEvents: "Évenement en attente"
     },
     userManagement: {
       title: 'Gestion des utilisateurs',
       subtitle: 'Gérez les comptes utilisateurs et leurs accès',
+      searchPlaceholder: 'Rechercher un utilisateur...',
+      allRoles: 'Tous les rôles',
+      allStatuses: 'Tous les statuts',
+      editUser: 'Modifier l\'utilisateur',
+      deleteUser: 'Supprimer l\'utilisateur',
+      confirmDelete: 'Confirmer la suppression',
+      deleteConfirmMessage: 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?',
       form: {
         firstName: 'Prénom',
         firstNamePlaceholder: 'Prénom de l\'utilisateur',
@@ -324,14 +379,7 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
         suspendedUsers: 'Utilisateurs suspendus',
         pendingUsers: 'En attente',
         searchPlaceholder: 'Rechercher un utilisateur...'
-      },
-      searchPlaceholder: undefined,
-      allRoles: undefined,
-      allStatuses: undefined,
-      editUser: undefined,
-      deleteUser: undefined,
-      confirmDelete: undefined,
-      deleteConfirmMessage: undefined
+      }
     },
     rolePermissions: {
       title: 'Rôles et permissions',
@@ -402,14 +450,14 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
         downloadBackup: 'Télécharger la sauvegarde',
         scheduleBackup: 'Programmer une sauvegarde'
       },
-      labName: undefined,
-      labDescription: undefined,
-      contactEmail: undefined,
-      contactPhone: undefined,
-      address: undefined,
-      maintenanceMode: undefined,
-      enableRegistration: undefined,
-      requireApproval: undefined
+      labName: "Nom du laboratoire",
+      labDescription: "Description du laboratoire",
+      contactEmail: "Email",
+      contactPhone: "Téléphone",
+      address: "Adresse",
+      maintenanceMode: "Mode maintenance",
+      enableRegistration: "Activer les inscriptions",
+      requireApproval: "Requiert une approbation"
     },
     security: {
       title: 'Sécurité',
@@ -465,6 +513,8 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       }
     },
     validation: {
+      labNameRequired: 'Le nom du laboratoire est requis',
+      contactEmailInvalid: 'Format d\'email de contact invalide',
       firstNameRequired: 'Le prénom est requis',
       lastNameRequired: 'Le nom est requis',
       emailRequired: 'L\'email est requis',
@@ -480,11 +530,11 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       sessionTimeoutInvalid: 'Délai d\'expiration invalide',
       passwordExpiryInvalid: 'Délai d\'expiration invalide',
       maxLoginAttemptsInvalid: 'Nombre de tentatives invalide',
-      lockoutDurationInvalid: 'Durée de verrouillage invalide',
-      labNameRequired: "",
-      contactEmailInvalid: ""
+      lockoutDurationInvalid: 'Durée de verrouillage invalide'
     },
     errors: {
+      updateFailed: 'Échec de la mise à jour',
+      deleteFailed: 'Échec de la suppression',
       saveUserFailed: 'Échec de l\'enregistrement de l\'utilisateur',
       deleteUserFailed: 'Échec de la suppression de l\'utilisateur',
       saveRoleFailed: 'Échec de l\'enregistrement du rôle',
@@ -494,11 +544,11 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       restoreFailed: 'Échec de la restauration',
       clearCacheFailed: 'Échec du vidage du cache',
       systemUpdateFailed: 'Échec de la mise à jour',
-      loadDataFailed: 'Échec du chargement des données',
-      updateFailed: "",
-      deleteFailed: ""
+      loadDataFailed: 'Échec du chargement des données'
     },
     success: {
+      settingsUpdated: 'Paramètres mis à jour avec succès',
+      contentApproved: 'Contenu approuvé avec succès',
       userCreated: 'Utilisateur créé avec succès',
       userUpdated: 'Utilisateur mis à jour avec succès',
       userDeleted: 'Utilisateur supprimé avec succès',
@@ -511,9 +561,7 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       cacheCleared: 'Cache vidé avec succès',
       systemUpdated: 'Système mis à jour avec succès',
       invitationSent: 'Invitation envoyée avec succès',
-      passwordReset: 'Mot de passe réinitialisé avec succès',
-      settingsUpdated: "",
-      contentApproved: ""
+      passwordReset: 'Mot de passe réinitialisé avec succès'
     },
     confirmations: {
       deleteUser: 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?',
@@ -524,9 +572,7 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       restoreBackup: 'Êtes-vous sûr de vouloir restaurer cette sauvegarde ?',
       systemUpdate: 'Êtes-vous sûr de vouloir mettre à jour le système ?'
     },
-    title: undefined,
-    form: undefined,
-    contentManagement: undefined
+    title: "Titre"
   },
   en: {
     titleEdit: 'Admin Management',
@@ -538,13 +584,45 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       systemSettings: 'System Settings',
       security: 'Security',
       maintenance: 'Maintenance',
-      users: undefined,
-      system: undefined,
-      content: undefined
+      users: 'Users',
+      system: 'System',
+      content: 'Content'
+    },
+    form: {
+      labName: 'Laboratory Name',
+      labDescription: 'Laboratory Description',
+      contactEmail: 'Contact Email',
+      contactPhone: 'Contact Phone',
+      address: 'Address',
+      maintenanceMode: 'Maintenance Mode',
+      enableRegistration: 'Enable Registration',
+      requireApproval: 'Require Approval',
+      saving: "Saving...",
+      save: "Save",
+      cancel: "Cancel"
+    },
+    contentManagement: {
+      title: 'Content Management',
+      subtitle: 'Moderate and approve content',
+      pendingReviews: 'Pending Reviews',
+      approveContent: 'Approve Content',
+      rejectContent: 'Reject Content',
+      moderateComments: 'Moderate Comments',
+      pendingPublications: "Pending Publication",
+      approve: "Approve",
+      reject: "Reject",
+      pendingEvents: "Pending Event"
     },
     userManagement: {
       title: 'User Management',
       subtitle: 'Manage user accounts and their access',
+      searchPlaceholder: 'Search users...',
+      allRoles: 'All Roles',
+      allStatuses: 'All Statuses',
+      editUser: 'Edit User',
+      deleteUser: 'Delete User',
+      confirmDelete: 'Confirm Deletion',
+      deleteConfirmMessage: 'Are you sure you want to delete this user?',
       form: {
         firstName: 'First Name',
         firstNamePlaceholder: 'User first name',
@@ -588,14 +666,7 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
         suspendedUsers: 'Suspended Users',
         pendingUsers: 'Pending',
         searchPlaceholder: 'Search users...'
-      },
-      searchPlaceholder: undefined,
-      allRoles: undefined,
-      allStatuses: undefined,
-      editUser: undefined,
-      deleteUser: undefined,
-      confirmDelete: undefined,
-      deleteConfirmMessage: undefined
+      }
     },
     rolePermissions: {
       title: 'Roles & Permissions',
@@ -666,14 +737,14 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
         downloadBackup: 'Download Backup',
         scheduleBackup: 'Schedule Backup'
       },
-      labName: undefined,
-      labDescription: undefined,
-      contactEmail: undefined,
-      contactPhone: undefined,
-      address: undefined,
-      maintenanceMode: undefined,
-      enableRegistration: undefined,
-      requireApproval: undefined
+      labName: "Laboratory name",
+      labDescription: "Laboratory description",
+      contactEmail: "Email",
+      contactPhone: "Phone",
+      address: "Address",
+      maintenanceMode: "Maintenance mode",
+      enableRegistration: "Enable registration",
+      requireApproval: "Require approval"
     },
     security: {
       title: 'Security',
@@ -729,6 +800,8 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       }
     },
     validation: {
+      labNameRequired: 'Laboratory name is required',
+      contactEmailInvalid: 'Invalid contact email format',
       firstNameRequired: 'First name is required',
       lastNameRequired: 'Last name is required',
       emailRequired: 'Email is required',
@@ -744,11 +817,11 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       sessionTimeoutInvalid: 'Invalid session timeout',
       passwordExpiryInvalid: 'Invalid password expiry',
       maxLoginAttemptsInvalid: 'Invalid login attempts',
-      lockoutDurationInvalid: 'Invalid lockout duration',
-      labNameRequired: "",
-      contactEmailInvalid: ""
+      lockoutDurationInvalid: 'Invalid lockout duration'
     },
     errors: {
+      updateFailed: 'Failed to update',
+      deleteFailed: 'Failed to delete',
       saveUserFailed: 'Failed to save user',
       deleteUserFailed: 'Failed to delete user',
       saveRoleFailed: 'Failed to save role',
@@ -758,11 +831,11 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       restoreFailed: 'Restore failed',
       clearCacheFailed: 'Failed to clear cache',
       systemUpdateFailed: 'System update failed',
-      loadDataFailed: 'Failed to load data',
-      updateFailed: "",
-      deleteFailed: ""
+      loadDataFailed: 'Failed to load data'
     },
     success: {
+      settingsUpdated: 'Settings updated successfully',
+      contentApproved: 'Content approved successfully',
       userCreated: 'User created successfully',
       userUpdated: 'User updated successfully',
       userDeleted: 'User deleted successfully',
@@ -775,9 +848,7 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       cacheCleared: 'Cache cleared successfully',
       systemUpdated: 'System updated successfully',
       invitationSent: 'Invitation sent successfully',
-      passwordReset: 'Password reset successfully',
-      settingsUpdated: "",
-      contentApproved: ""
+      passwordReset: 'Password reset successfully'
     },
     confirmations: {
       deleteUser: 'Are you sure you want to delete this user?',
@@ -788,8 +859,6 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       restoreBackup: 'Are you sure you want to restore this backup?',
       systemUpdate: 'Are you sure you want to update the system?'
     },
-    title: undefined,
-    form: undefined,
-    contentManagement: undefined
+    title: "Title"
   }
 } as const

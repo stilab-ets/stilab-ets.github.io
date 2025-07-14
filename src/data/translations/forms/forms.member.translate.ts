@@ -3,7 +3,8 @@ export interface MemberFormTranslations {
   titleCreate: string
   subtitle: string
   sections: {
-    [x: string]: any
+    academic: any
+    additional: any
     personal: string
     professional: string
     contact: string
@@ -11,9 +12,6 @@ export interface MemberFormTranslations {
     research: string
   }
   form: {
-    profilePhoto: any
-    department: any
-    departmentPlaceholder: string | undefined
     firstName: string
     firstNamePlaceholder: string
     lastName: string
@@ -47,6 +45,9 @@ export interface MemberFormTranslations {
     removePhoto: string
     joinDate: string
     leaveDate: string
+    profilePhoto: string
+    department: string
+    departmentPlaceholder: string
     cancel: string
     create: string
     update: string
@@ -97,7 +98,9 @@ export const memberFormTranslations: Record<'fr' | 'en', MemberFormTranslations>
       professional: 'Informations professionnelles',
       contact: 'Contact',
       links: 'Liens externes',
-      research: 'Recherche'
+      research: 'Recherche',
+      academic: 'Académique',
+      additional: 'Additionnelles'
     },
     form: {
       firstName: 'Prénom',
@@ -133,13 +136,13 @@ export const memberFormTranslations: Record<'fr' | 'en', MemberFormTranslations>
       removePhoto: 'Supprimer la photo',
       joinDate: 'Date d\'arrivée',
       leaveDate: 'Date de départ',
+      profilePhoto: 'Photo de profil',
+      department: 'Département',
+      departmentPlaceholder: 'Département de rattachement',
       cancel: 'Annuler',
       create: 'Créer',
       update: 'Mettre à jour',
-      submitting: 'En cours...',
-      profilePhoto: undefined,
-      department: undefined,
-      departmentPlaceholder: undefined
+      submitting: 'En cours...'
     },
     roles: {
       professor: 'Professeur',
@@ -157,6 +160,7 @@ export const memberFormTranslations: Record<'fr' | 'en', MemberFormTranslations>
       visitor: 'Visiteur'
     },
     validation: {
+      titleRequired: 'Le titre est requis',
       firstNameRequired: 'Le prénom est requis',
       lastNameRequired: 'Le nom est requis',
       emailRequired: 'L\'email est requis',
@@ -167,8 +171,7 @@ export const memberFormTranslations: Record<'fr' | 'en', MemberFormTranslations>
       urlInvalid: 'URL invalide',
       orcidInvalid: 'Format ORCID invalide',
       joinDateRequired: 'La date d\'arrivée est requise',
-      leaveDateAfterJoin: 'La date de départ doit être après l\'arrivée',
-      titleRequired: ""
+      leaveDateAfterJoin: 'La date de départ doit être après l\'arrivée'
     },
     errors: {
       submitFailed: 'Échec de la soumission',
@@ -184,7 +187,9 @@ export const memberFormTranslations: Record<'fr' | 'en', MemberFormTranslations>
       professional: 'Professional Information',
       contact: 'Contact',
       links: 'External Links',
-      research: 'Research'
+      research: 'Research',
+      academic: "Academic",
+      additional: "Additionnal"
     },
     form: {
       firstName: 'First Name',
@@ -220,13 +225,13 @@ export const memberFormTranslations: Record<'fr' | 'en', MemberFormTranslations>
       removePhoto: 'Remove Photo',
       joinDate: 'Join Date',
       leaveDate: 'Leave Date',
+      profilePhoto: 'Profile Photo',
+      department: 'Department',
+      departmentPlaceholder: 'Department affiliation',
       cancel: 'Cancel',
       create: 'Create',
       update: 'Update',
-      submitting: 'Submitting...',
-      profilePhoto: undefined,
-      department: undefined,
-      departmentPlaceholder: undefined
+      submitting: 'Submitting...'
     },
     roles: {
       professor: 'Professor',
@@ -244,6 +249,7 @@ export const memberFormTranslations: Record<'fr' | 'en', MemberFormTranslations>
       visitor: 'Visitor'
     },
     validation: {
+      titleRequired: 'Title is required',
       firstNameRequired: 'First name is required',
       lastNameRequired: 'Last name is required',
       emailRequired: 'Email is required',
@@ -254,8 +260,7 @@ export const memberFormTranslations: Record<'fr' | 'en', MemberFormTranslations>
       urlInvalid: 'Invalid URL',
       orcidInvalid: 'Invalid ORCID format',
       joinDateRequired: 'Join date is required',
-      leaveDateAfterJoin: 'Leave date must be after join date',
-      titleRequired: ""
+      leaveDateAfterJoin: 'Leave date must be after join date'
     },
     errors: {
       submitFailed: 'Failed to submit',

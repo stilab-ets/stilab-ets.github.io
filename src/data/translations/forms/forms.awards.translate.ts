@@ -9,8 +9,6 @@ export interface AwardsFormTranslations {
     recognition: string
   }
   form: {
-    urlPlaceholder: string | undefined
-    url: any
     title: string
     titlePlaceholder: string
     category: string
@@ -47,6 +45,8 @@ export interface AwardsFormTranslations {
     notes: string
     notesPlaceholder: string
     featured: string
+    url: string
+    urlPlaceholder: string
     cancel: string
     create: string
     update: string
@@ -141,12 +141,12 @@ export const awardsFormTranslations: Record<'fr' | 'en', AwardsFormTranslations>
       notes: 'Notes',
       notesPlaceholder: 'Notes internes...',
       featured: 'Mise en avant',
+      url: 'URL',
+      urlPlaceholder: 'https://...',
       cancel: 'Annuler',
       create: 'Créer',
       update: 'Mettre à jour',
-      submitting: 'En cours...',
-      urlPlaceholder: '',
-      url: ''
+      submitting: 'En cours...'
     },
     categories: {
       publication: 'Publication',
@@ -235,12 +235,12 @@ export const awardsFormTranslations: Record<'fr' | 'en', AwardsFormTranslations>
       notes: 'Notes',
       notesPlaceholder: 'Internal notes...',
       featured: 'Featured',
+      url: 'URL',
+      urlPlaceholder: 'https://...',
       cancel: 'Cancel',
       create: 'Create',
       update: 'Update',
-      submitting: 'Submitting...',
-      urlPlaceholder: undefined,
-      url: undefined
+      submitting: 'Submitting...'
     },
     categories: {
       publication: 'Publication',

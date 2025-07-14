@@ -10,7 +10,6 @@ export interface TeachingFormTranslations {
     resources: string
   }
   form: {
-    semesterPlaceholder: string | undefined
     title: string
     titlePlaceholder: string
     code: string
@@ -21,6 +20,7 @@ export interface TeachingFormTranslations {
     selectCoInstructors: string
     semester: string
     selectSemester: string
+    semesterPlaceholder: string
     level: string
     selectLevel: string
     credits: string
@@ -130,6 +130,7 @@ export const teachingFormTranslations: Record<'fr' | 'en', TeachingFormTranslati
       selectCoInstructors: 'Sélectionnez les co-enseignants',
       semester: 'Semestre',
       selectSemester: 'Sélectionnez le semestre',
+      semesterPlaceholder: 'Automne 2024',
       level: 'Niveau',
       selectLevel: 'Sélectionnez le niveau',
       credits: 'Crédits ECTS',
@@ -170,8 +171,7 @@ export const teachingFormTranslations: Record<'fr' | 'en', TeachingFormTranslati
       cancel: 'Annuler',
       create: 'Créer',
       update: 'Mettre à jour',
-      submitting: 'En cours...',
-      semesterPlaceholder: undefined
+      submitting: 'En cours...'
     },
     levels: {
       undergraduate: 'Licence',
@@ -238,6 +238,7 @@ export const teachingFormTranslations: Record<'fr' | 'en', TeachingFormTranslati
       selectCoInstructors: 'Select co-instructors',
       semester: 'Semester',
       selectSemester: 'Select semester',
+      semesterPlaceholder: 'Fall 2024',
       level: 'Level',
       selectLevel: 'Select level',
       credits: 'Credits',
@@ -278,8 +279,7 @@ export const teachingFormTranslations: Record<'fr' | 'en', TeachingFormTranslati
       cancel: 'Cancel',
       create: 'Create',
       update: 'Update',
-      submitting: 'Submitting...',
-      semesterPlaceholder: undefined
+      submitting: 'Submitting...'
     },
     levels: {
       undergraduate: 'Undergraduate',
