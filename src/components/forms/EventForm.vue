@@ -332,7 +332,7 @@ onMounted(() => {
                   @click="removeTag(index)"
                   class="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full text-blue-400 hover:bg-blue-200 hover:text-blue-600"
                 >
-                  x
+                  ×
                 </button>
               </span>
             </div>
@@ -496,7 +496,7 @@ onMounted(() => {
           @click="handleCancel"
           :disabled="isSubmitting"
         >
-          {{ t.forms?.events?.form?.cancel || 'Cancel' }}
+          {{ t.forms.events?.form?.cancel || 'Cancel' }}
         </Button>
         <Button
           type="submit"
@@ -504,10 +504,10 @@ onMounted(() => {
           :disabled="isSubmitting"
         >
           {{ isSubmitting 
-            ? (t.forms?.events?.form?.submitting || 'Submitting...') 
+            ? (t.forms.events?.form?.submitting || 'Submitting...') 
             : (props.isEditing 
-              ? (t.forms?.events?.form?.update || 'Update') 
-              : (t.forms?.events?.form?.create || 'Create')
+              ? (t.forms.events?.form?.update || 'Update') 
+              : (t.forms.events?.form?.create || 'Create')
             ) 
           }}
         </Button>
