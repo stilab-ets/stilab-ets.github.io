@@ -69,35 +69,35 @@ const validateForm = (): boolean => {
   errors.value = {}
   
   if (!formData.value.title) {
-    errors.value.title = t.value.forms.events.validation.titleRequired
+    errors.value.title = t.value?.forms?.events?.validation?.titleRequired || 'Title is required'
   }
   
   if (!formData.value.type) {
-    errors.value.type = t.value.forms.events.validation.typeRequired
+    errors.value.type = t.value?.forms?.events?.validation?.typeRequired || 'Type is required'
   }
   
   if (!formData.value.date) {
-    errors.value.date = t.value.forms.events.validation.dateRequired
+    errors.value.date = t.value?.forms?.events?.validation?.dateRequired || 'Date is required'
   } else {
     const eventDate = new Date(formData.value.date)
     if (eventDate < new Date()) {
-      errors.value.date = t.value.forms.events.validation.dateInPast
+      errors.value.date = t.value?.forms?.events?.validation?.dateInPast || 'Date cannot be in the past'
     }
   }
   
   if (!formData.value.location) {
-    errors.value.location = t.value.forms.events.validation.locationRequired
+    errors.value.location = t.value?.forms?.events?.validation?.locationRequired || 'Location is required'
   }
   
   if (!formData.value.description) {
-    errors.value.description = t.value.forms.events.validation.descriptionRequired
+    errors.value.description = t.value?.forms?.events?.validation?.descriptionRequired || 'Description is required'
   }
   
   if (formData.value.registrationRequired && formData.value.registrationDeadline) {
     const deadline = new Date(formData.value.registrationDeadline)
     const eventDate = new Date(formData.value.date)
     if (deadline >= eventDate) {
-      errors.value.registrationDeadline = t.value.forms.events.validation.deadlineAfterEvent
+      errors.value.registrationDeadline = t.value?.forms?.events?.validation?.deadlineAfterEvent || 'Deadline must be before the event date'
     }
   }
   
@@ -146,8 +146,8 @@ const handleCancel = () => {
 // Page title
 const pageTitle = computed(() => {
   return props.isEditing 
-    ? t.value.forms.events?.titleEdit || 'Edit Event'
-    : t.value.forms.events?.titleCreate || 'Create Event'
+    ? t.value?.forms?.events?.titleEdit || 'Edit Event'
+    : t.value?.forms?.events?.titleCreate || 'Create Event'
 })
 
 onMounted(() => {
@@ -162,7 +162,7 @@ onMounted(() => {
   <div class="max-w-4xl mx-auto p-6">
     <div class="mb-8">
       <h1 class="text-3xl font-bold text-gray-900">{{ pageTitle }}</h1>
-      <p class="mt-2 text-gray-600">{{ t.forms.events?.subtitle || 'Fill in the event details' }}</p>
+      <p class="mt-2 text-gray-600">{{ t.forms?.events?.subtitle || 'Fill in the event details' }}</p>
     </div>
 
     <form @submit.prevent="handleSubmit" class="space-y-8">
@@ -174,13 +174,13 @@ onMounted(() => {
           <!-- Title -->
           <div class="md:col-span-2">
             <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.forms.events?.form?.title || 'Title' }}
+              {{ t.forms?.events?.form?.title || 'Title' }}
             </label>
             <input
               id="title"
               v-model="formData.title"
               type="text"
-              :placeholder="t.forms.events?.form?.titlePlaceholder || 'Enter a title'"
+              :placeholder="t.forms?.events?.form?.titlePlaceholder || 'Enter a title'"
               class="input-field"
               :class="{ 'input-error': errors.title }"
             />
@@ -190,7 +190,7 @@ onMounted(() => {
           <!-- Type -->
           <div>
             <label for="type" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.forms.events?.form?.type || 'Type' }}
+              {{ t.forms?.events?.form?.type || 'Type' }}
             </label>
             <select
               id="type"
@@ -198,14 +198,14 @@ onMounted(() => {
               class="select-field"
               :class="{ 'input-error': errors.type }"
             >
-              <option value="">{{ t.forms.events?.form?.selectType || 'Select a type' }}</option>
-              <option value="seminar">{{ t.forms.events?.eventTypes?.seminar || 'Seminar' }}</option>
-              <option value="workshop">{{ t.forms.events?.eventTypes?.workshop || 'Workshop' }}</option>
-              <option value="conference">{{ t.forms.events?.eventTypes?.conference || 'Conference' }}</option>
-              <option value="defense">{{ t.forms.events?.eventTypes?.defense || 'Defense' }}</option>
-              <option value="meeting">{{ t.forms.events?.eventTypes?.meeting || 'Meeting' }}</option>
-              <option value="colloquium">{{ t.forms.events?.eventTypes?.colloquium || 'Colloquium' }}</option>
-              <option value="masterclass">{{ t.forms.events?.eventTypes?.masterclass || 'Masterclass' }}</option>
+              <option value="">{{ t.forms?.events?.form?.selectType || 'Select a type' }}</option>
+              <option value="seminar">{{ t.forms?.events?.eventTypes?.seminar || 'Seminar' }}</option>
+              <option value="workshop">{{ t.forms?.events?.eventTypes?.workshop || 'Workshop' }}</option>
+              <option value="conference">{{ t.forms?.events?.eventTypes?.conference || 'Conference' }}</option>
+              <option value="defense">{{ t.forms?.events?.eventTypes?.defense || 'Defense' }}</option>
+              <option value="meeting">{{ t.forms?.events?.eventTypes?.meeting || 'Meeting' }}</option>
+              <option value="colloquium">{{ t.forms?.events?.eventTypes?.colloquium || 'Colloquium' }}</option>
+              <option value="masterclass">{{ t.forms?.events?.eventTypes?.masterclass || 'Masterclass' }}</option>
             </select>
             <p v-if="errors.type" class="error-message">{{ errors.type }}</p>
           </div>
@@ -213,13 +213,13 @@ onMounted(() => {
           <!-- Speaker -->
           <div>
             <label for="speaker" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.forms.events?.form?.speaker || 'Speaker' }}
+              {{ t.forms?.events?.form?.speaker || 'Speaker' }}
             </label>
             <input
               id="speaker"
               v-model="formData.speaker"
               type="text"
-              :placeholder="t.forms.events?.form?.speakerPlaceholder || 'Optional speaker name'"
+              :placeholder="t.forms?.events?.form?.speakerPlaceholder || 'Optional speaker name'"
               class="input-field"
             />
           </div>
@@ -227,7 +227,7 @@ onMounted(() => {
           <!-- Date -->
           <div>
             <label for="date" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.forms.events?.form?.date || 'Date' }}
+              {{ t.forms?.events?.form?.date || 'Date' }}
             </label>
             <input
               id="date"
@@ -242,7 +242,7 @@ onMounted(() => {
           <!-- Time -->
           <div>
             <label for="time" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.forms.events?.form?.time || 'Time' }}
+              {{ t.forms?.events?.form?.time || 'Time' }}
             </label>
             <input
               id="time"
@@ -255,33 +255,33 @@ onMounted(() => {
           <!-- Duration -->
           <div>
             <label for="duration" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.forms.events?.form?.duration || 'Duration' }}
+              {{ t.forms?.events?.form?.duration || 'Duration' }}
             </label>
             <select
               id="duration"
               v-model="formData.duration"
               class="select-field"
             >
-              <option value="">{{ t.forms.events?.form?.selectDuration || 'Select duration' }}</option>
-              <option value="30">30 {{ t.forms.events?.form?.minutes || 'minutes' }}</option>
-              <option value="60">1 {{ t.forms.events?.form?.hour || 'hour' }}</option>
-              <option value="90">1.5 {{ t.forms.events?.form?.hours || 'hours' }}</option>
-              <option value="120">2 {{ t.forms.events?.form?.hours || 'hours' }}</option>
-              <option value="180">3 {{ t.forms.events?.form?.hours || 'hours' }}</option>
-              <option value="full-day">{{ t.forms.events?.form?.fullDay || 'Full Day' }}</option>
+              <option value="">{{ t.forms?.events?.form?.selectDuration || 'Select duration' }}</option>
+              <option value="30">30 {{ t.forms?.events?.form?.minutes || 'minutes' }}</option>
+              <option value="60">1 {{ t.forms?.events?.form?.hour || 'hour' }}</option>
+              <option value="90">1.5 {{ t.forms?.events?.form?.hours || 'hours' }}</option>
+              <option value="120">2 {{ t.forms?.events?.form?.hours || 'hours' }}</option>
+              <option value="180">3 {{ t.forms?.events?.form?.hours || 'hours' }}</option>
+              <option value="full-day">{{ t.forms?.events?.form?.fullDay || 'Full Day' }}</option>
             </select>
           </div>
 
           <!-- Location -->
           <div>
             <label for="location" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.forms.events?.form?.location || 'Location' }}
+              {{ t.forms?.events?.form?.location || 'Location' }}
             </label>
             <input
               id="location"
               v-model="formData.location"
               type="text"
-              :placeholder="t.forms.events?.form?.locationPlaceholder || 'Enter the location'"
+              :placeholder="t.forms?.events?.form?.locationPlaceholder || 'Enter the location'"
               class="input-field"
               :class="{ 'input-error': errors.location }"
             />
@@ -292,13 +292,13 @@ onMounted(() => {
         <!-- Description -->
         <div class="mt-6">
           <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
-            {{ t.forms.events?.form?.description || 'Description' }}
+            {{ t.forms?.events?.form?.description || 'Description' }}
           </label>
           <textarea
             id="description"
             v-model="formData.description"
             rows="4"
-            :placeholder="t.forms.events?.form?.descriptionPlaceholder || 'Enter a description'"
+            :placeholder="t.forms?.events?.form?.descriptionPlaceholder || 'Enter a description'"
             class="input-field"
             :class="{ 'input-error': errors.description }"
           ></textarea>
@@ -308,18 +308,18 @@ onMounted(() => {
         <!-- Tags -->
         <div class="mt-6">
           <label for="tags" class="block text-sm font-medium text-gray-700 mb-2">
-            {{ t.forms.events?.form?.tags || 'Tags' }}
+            {{ t.forms?.events?.form?.tags || 'Tags' }}
           </label>
           <div class="space-y-2">
             <input
               id="tagInput"
               v-model="tagInput"
               type="text"
-              :placeholder="t.forms.events?.form?.tagsPlaceholder || 'Press enter to add a tag'"
+              :placeholder="t.forms?.events?.form?.tagsPlaceholder || 'Press enter to add a tag'"
               class="input-field"
               @keydown="handleTagKeydown"
             />
-            <p class="text-sm text-gray-500">{{ t.forms.events?.form?.tagsHelp || 'Use keywords to help categorize your event.' }}</p>
+            <p class="text-sm text-gray-500">{{ t.forms?.events?.form?.tagsHelp || 'Use keywords to help categorize your event.' }}</p>
             <div v-if="formData.tags.length > 0" class="flex flex-wrap gap-2">
               <span
                 v-for="(tag, index) in formData.tags"
@@ -348,13 +348,13 @@ onMounted(() => {
           <!-- Meeting URL -->
           <div>
             <label for="meetingUrl" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.forms.events?.form?.meetingUrl || 'Meeting URL' }}
+              {{ t.forms?.events?.form?.meetingUrl || 'Meeting URL' }}
             </label>
             <input
               id="meetingUrl"
               v-model="formData.meetingUrl"
               type="url"
-              :placeholder="t.forms.events?.form?.meetingUrlPlaceholder || 'https://...'"
+              :placeholder="t.forms?.events?.form?.meetingUrlPlaceholder || 'https://...'"
               class="input-field"
             />
           </div>
@@ -362,13 +362,13 @@ onMounted(() => {
           <!-- Recording URL -->
           <div>
             <label for="recordingUrl" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.forms.events?.form?.recordingUrl || 'Recording URL' }}
+              {{ t.forms?.events?.form?.recordingUrl || 'Recording URL' }}
             </label>
             <input
               id="recordingUrl"
               v-model="formData.recordingUrl"
               type="url"
-              :placeholder="t.forms.events?.form?.recordingUrlPlaceholder || 'https://...'"
+              :placeholder="t.forms?.events?.form?.recordingUrlPlaceholder || 'https://...'"
               class="input-field"
             />
           </div>
@@ -378,7 +378,7 @@ onMounted(() => {
       <!-- Registration -->
       <div class="bg-white p-6 rounded-lg border border-gray-200">
         <h2 class="text-xl font-semibold text-gray-900 mb-4">
-          {{ t.forms.events?.registration?.title || 'Registration' }}
+          {{ t.forms?.events?.registration?.title || 'Registration' }}
         </h2>
         
         <!-- Registration Required -->
@@ -390,7 +390,7 @@ onMounted(() => {
               class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
             <span class="ml-2 text-sm text-gray-700">
-              {{ t.forms.events?.registration?.required || 'Requires registration' }}
+              {{ t.forms?.events?.registration?.required || 'Requires registration' }}
             </span>
           </label>
         </div>
@@ -399,14 +399,14 @@ onMounted(() => {
           <!-- Capacity -->
           <div>
             <label for="capacity" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.forms.events?.registration?.capacity || 'Capacity' }}
+              {{ t.forms?.events?.registration?.capacity || 'Capacity' }}
             </label>
             <input
               id="capacity"
               v-model.number="formData.capacity"
               type="number"
               min="1"
-              :placeholder="t.forms.events?.registration?.capacityPlaceholder || 'Max participants'"
+              :placeholder="t.forms?.events?.registration?.capacityPlaceholder || 'Max participants'"
               class="input-field"
             />
           </div>
@@ -414,7 +414,7 @@ onMounted(() => {
           <!-- Registration Deadline -->
           <div>
             <label for="registrationDeadline" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.forms.events?.registration?.deadline || 'Registration deadline' }}
+              {{ t.forms?.events?.registration?.deadline || 'Registration deadline' }}
             </label>
             <input
               id="registrationDeadline"
@@ -429,17 +429,17 @@ onMounted(() => {
           <!-- Registration URL -->
           <div class="md:col-span-2">
             <label for="registrationUrl" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.forms.events?.registration?.url || 'Registration URL' }}
+              {{ t.forms?.events?.registration?.url || 'Registration URL' }}
             </label>
             <input
               id="registrationUrl"
               v-model="formData.registrationUrl"
               type="url"
-              :placeholder="t.forms.events?.registration?.urlPlaceholder || 'https://register.com'"
+              :placeholder="t.forms?.events?.registration?.urlPlaceholder || 'https://register.com'"
               class="input-field"
             />
             <p class="mt-1 text-sm text-gray-500">
-              {{ t.forms.events?.registration?.urlHelp || 'Optional link for registration.' }}
+              {{ t.forms?.events?.registration?.urlHelp || 'Optional link for registration.' }}
             </p>
           </div>
         </div>
@@ -448,7 +448,7 @@ onMounted(() => {
       <!-- Visibility -->
       <div class="bg-white p-6 rounded-lg border border-gray-200">
         <h2 class="text-xl font-semibold text-gray-900 mb-4">
-          {{ t.forms.events?.visibility?.title || 'Visibility' }}
+          {{ t.forms?.events?.visibility?.title || 'Visibility' }}
         </h2>
         
         <div class="space-y-3">
@@ -460,7 +460,7 @@ onMounted(() => {
               class="text-blue-600 focus:ring-blue-500"
             />
             <span class="ml-2 text-sm text-gray-700">
-              {{ t.forms.events?.visibility?.public || 'Public' }}
+              {{ t.forms?.events?.visibility?.public || 'Public' }}
             </span>
           </label>
           <label class="flex items-center">
@@ -471,7 +471,7 @@ onMounted(() => {
               class="text-blue-600 focus:ring-blue-500"
             />
             <span class="ml-2 text-sm text-gray-700">
-              {{ t.forms.events?.visibility?.internal || 'Internal' }}
+              {{ t.forms?.events?.visibility?.internal || 'Internal' }}
             </span>
           </label>
           <label class="flex items-center">
@@ -482,7 +482,7 @@ onMounted(() => {
               class="text-blue-600 focus:ring-blue-500"
             />
             <span class="ml-2 text-sm text-gray-700">
-              {{ t.forms.events?.visibility?.private || 'Private' }}
+              {{ t.forms?.events?.visibility?.private || 'Private' }}
             </span>
           </label>
         </div>
