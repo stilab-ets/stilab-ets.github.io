@@ -38,7 +38,7 @@ const mockEvents: AcademicEvent[] = [
     location: 'Amphithéâtre A, Bâtiment Informatique',
     type: 'seminar',
     description: 'Présentation des dernières avancées en intelligence artificielle appliquée au génie logiciel, avec discussion sur les perspectives futures et les défis technologiques.',
-    registrationUrl: 'https://events.univ.fr/register/ai-seminar',
+    registrationUrl: 'https://event.univ.fr/register/ai-seminar',
     tags: ['AI', 'machine learning', 'software engineering'],
     isUpcoming: true,
     capacity: 150,
@@ -53,7 +53,7 @@ const mockEvents: AcademicEvent[] = [
     location: 'Salle de conférence B12',
     type: 'workshop',
     description: 'Atelier pratique sur les bonnes pratiques de sécurité lors du développement d\'applications blockchain.',
-    registrationUrl: 'https://events.univ.fr/register/blockchain-workshop',
+    registrationUrl: 'https://event.univ.fr/register/blockchain-workshop',
     tags: ['blockchain', 'security', 'hands-on'],
     isUpcoming: true,
     capacity: 30,
@@ -118,36 +118,36 @@ const totalRegistrations = computed(() => {
 
 // Statistics
 const statistics = computed(() => [
-  { value: upcomingEventsCount.value, label: t.value.events.statistics.upcomingEvents },
-  { value: totalRegistrations.value, label: t.value.events.statistics.registrations },
-  { value: mockEvents.length, label: t.value.events.statistics.totalEvents }
+  { value: upcomingEventsCount.value, label: t.value.event.statistics.upcomingEvents },
+  { value: totalRegistrations.value, label: t.value.event.statistics.registrations },
+  { value: mockEvents.length, label: t.value.event.statistics.totalEvents }
 ])
 
 // Filters configuration
 const filters = computed(() => [
   {
     id: 'type',
-    label: t.value.events.filters.eventType,
+    label: t.value.event.filters.eventType,
     value: selectedType.value,
     options: [
-      { value: '', label: t.value.events.filters.allTypes },
-      { value: 'seminar', label: t.value.events.eventTypes.seminar },
-      { value: 'workshop', label: t.value.events.eventTypes.workshop },
-      { value: 'conference', label: t.value.events.eventTypes.conference },
-      { value: 'defense', label: t.value.events.eventTypes.defense },
-      { value: 'meeting', label: t.value.events.eventTypes.meeting },
-      { value: 'colloquium', label: t.value.events.eventTypes.colloquium },
-      { value: 'masterclass', label: t.value.events.eventTypes.masterclass }
+      { value: '', label: t.value.event.filters.allTypes },
+      { value: 'seminar', label: t.value.event.eventTypes.seminar },
+      { value: 'workshop', label: t.value.event.eventTypes.workshop },
+      { value: 'conference', label: t.value.event.eventTypes.conference },
+      { value: 'defense', label: t.value.event.eventTypes.defense },
+      { value: 'meeting', label: t.value.event.eventTypes.meeting },
+      { value: 'colloquium', label: t.value.event.eventTypes.colloquium },
+      { value: 'masterclass', label: t.value.event.eventTypes.masterclass }
     ]
   },
   {
     id: 'period',
-    label: t.value.events.filters.period,
+    label: t.value.event.filters.period,
     value: selectedPeriod.value,
     options: [
-      { value: 'all', label: t.value.events.filters.all },
-      { value: 'upcoming', label: t.value.events.filters.upcoming },
-      { value: 'past', label: t.value.events.filters.past }
+      { value: 'all', label: t.value.event.filters.all },
+      { value: 'upcoming', label: t.value.event.filters.upcoming },
+      { value: 'past', label: t.value.event.filters.past }
     ]
   }
 ])
@@ -169,19 +169,19 @@ const currentEvents = computed(() => {
 })
 
 const currentEventsTitle = computed(() => {
-  return viewMode.value === 'upcoming' ? t.value.events.sections.upcomingEvents : t.value.events.sections.pastEvents
+  return viewMode.value === 'upcoming' ? t.value.event.sections.upcomingEvents : t.value.event.sections.pastEvents
 })
 
 const emptyStateConfig = computed(() => {
   if (viewMode.value === 'upcoming') {
     return {
-      title: t.value.events.empty.noUpcoming,
-      message: t.value.events.empty.noUpcomingMessage
+      title: t.value.event.empty.noUpcoming,
+      message: t.value.event.empty.noUpcomingMessage
     }
   } else {
     return {
-      title: t.value.events.empty.noPast,
-      message: t.value.events.empty.noPastMessage
+      title: t.value.event.empty.noPast,
+      message: t.value.event.empty.noPastMessage
     }
   }
 })
@@ -191,8 +191,8 @@ const emptyStateConfig = computed(() => {
   <div class="min-h-screen bg-gray-50">
     <!-- Page Header -->
     <PageHeader 
-      :title="t.events.pageTitle"
-      :subtitle="t.events.pageSubtitle"
+      :title="t.event.pageTitle"
+      :subtitle="t.event.pageSubtitle"
       highlight-word="Événements"
     />
 
@@ -219,7 +219,7 @@ const emptyStateConfig = computed(() => {
                 ? 'bg-[#08a4d4] text-white'
                 : 'bg-white text-gray-700 hover:bg-gray-50'
             ]">
-              {{ t.events.filters.upcoming }} ({{ filteredUpcomingEvents.length }})
+              {{ t.event.filters.upcoming }} ({{ filteredUpcomingEvents.length }})
             </button>
             <button @click="viewMode = 'past'" :class="[
               'px-4 py-2 text-sm font-medium border-l border-gray-300 rounded-r-md hover:cursor-pointer',
@@ -227,7 +227,7 @@ const emptyStateConfig = computed(() => {
                 ? 'bg-[#08a4d4] text-white'
                 : 'bg-white text-gray-700 hover:bg-gray-50'
             ]">
-              {{ t.events.filters.past }} ({{ filteredPastEvents.length }})
+              {{ t.event.filters.past }} ({{ filteredPastEvents.length }})
             </button>
           </div>
         </div>
