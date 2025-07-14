@@ -1,8 +1,11 @@
 export interface VacancyFormTranslations {
+  types: any
   titleEdit: string
   titleCreate: string
   subtitle: string
   sections: {
+    timeline: any
+    compensation: any
     basic: string
     details: string
     requirements: string
@@ -10,6 +13,7 @@ export interface VacancyFormTranslations {
     application: string
   }
   form: {
+    deadline: any
     title: string
     titlePlaceholder: string
     type: string
@@ -76,6 +80,8 @@ export interface VacancyFormTranslations {
     admin: string
   }
   domains: {
+    distributedSystems: any
+    blockchain: any
     softwareArchitecture: string
     artificialIntelligence: string
     cybersecurity: string
@@ -106,6 +112,8 @@ export interface VacancyFormTranslations {
     urgent: string
   }
   validation: {
+    durationRequired: string
+    applyUrlInvalid: string
     titleRequired: string
     typeRequired: string
     descriptionRequired: string
@@ -139,7 +147,9 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       details: 'Détails du poste',
       requirements: 'Exigences',
       conditions: 'Conditions',
-      application: 'Candidature'
+      application: 'Candidature',
+      timeline: undefined,
+      compensation: undefined
     },
     form: {
       title: 'Titre du poste',
@@ -195,7 +205,8 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       cancel: 'Annuler',
       create: 'Créer',
       update: 'Mettre à jour',
-      submitting: 'En cours...'
+      submitting: 'En cours...',
+      deadline: undefined
     },
     positionTypes: {
       phd: 'Doctorat',
@@ -215,7 +226,9 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       cloudComputing: 'Cloud computing',
       softwareTesting: 'Tests logiciels',
       softwareMaintenance: 'Maintenance logicielle',
-      humanComputerInteraction: 'Interaction homme-machine'
+      humanComputerInteraction: 'Interaction homme-machine',
+      distributedSystems: undefined,
+      blockchain: undefined
     },
     applicationMethods: {
       online: 'Candidature en ligne',
@@ -254,11 +267,14 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       emailInvalid: 'Format d\'email invalide',
       urlInvalid: 'URL invalide',
       phoneInvalid: 'Format de téléphone invalide',
-      statusRequired: 'Le statut est requis'
+      statusRequired: 'Le statut est requis',
+      durationRequired: "",
+      applyUrlInvalid: ""
     },
     errors: {
       submitFailed: 'Échec de la soumission'
-    }
+    },
+    types: undefined
   },
   en: {
     titleEdit: 'Edit Job Offer',
@@ -269,7 +285,9 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       details: 'Position Details',
       requirements: 'Requirements',
       conditions: 'Conditions',
-      application: 'Application'
+      application: 'Application',
+      timeline: undefined,
+      compensation: undefined
     },
     form: {
       title: 'Position Title',
@@ -325,7 +343,8 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       cancel: 'Cancel',
       create: 'Create',
       update: 'Update',
-      submitting: 'Submitting...'
+      submitting: 'Submitting...',
+      deadline: undefined
     },
     positionTypes: {
       phd: 'PhD',
@@ -345,7 +364,9 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       cloudComputing: 'Cloud Computing',
       softwareTesting: 'Software Testing',
       softwareMaintenance: 'Software Maintenance',
-      humanComputerInteraction: 'Human-Computer Interaction'
+      humanComputerInteraction: 'Human-Computer Interaction',
+      distributedSystems: undefined,
+      blockchain: undefined
     },
     applicationMethods: {
       online: 'Online Application',
@@ -384,10 +405,13 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       emailInvalid: 'Invalid email format',
       urlInvalid: 'Invalid URL',
       phoneInvalid: 'Invalid phone format',
-      statusRequired: 'Status is required'
+      statusRequired: 'Status is required',
+      durationRequired: "",
+      applyUrlInvalid: ""
     },
     errors: {
       submitFailed: 'Failed to submit'
-    }
+    },
+    types: undefined
   }
 } as const

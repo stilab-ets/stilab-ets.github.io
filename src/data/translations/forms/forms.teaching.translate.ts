@@ -10,6 +10,7 @@ export interface TeachingFormTranslations {
     resources: string
   }
   form: {
+    semesterPlaceholder: string | undefined
     title: string
     titlePlaceholder: string
     code: string
@@ -169,7 +170,8 @@ export const teachingFormTranslations: Record<'fr' | 'en', TeachingFormTranslati
       cancel: 'Annuler',
       create: 'Créer',
       update: 'Mettre à jour',
-      submitting: 'En cours...'
+      submitting: 'En cours...',
+      semesterPlaceholder: undefined
     },
     levels: {
       undergraduate: 'Licence',
@@ -276,7 +278,8 @@ export const teachingFormTranslations: Record<'fr' | 'en', TeachingFormTranslati
       cancel: 'Cancel',
       create: 'Create',
       update: 'Update',
-      submitting: 'Submitting...'
+      submitting: 'Submitting...',
+      semesterPlaceholder: undefined
     },
     levels: {
       undergraduate: 'Undergraduate',

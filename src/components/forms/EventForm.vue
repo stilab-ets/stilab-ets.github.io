@@ -37,7 +37,7 @@ const emit = defineEmits<{
 }>()
 
 const { t: translations } = useLanguage()
-const t = computed(() => translations.value.forms.event)
+const t = computed(() => translations.value.forms.events)
 
 const form = reactive<EventForm>({
   title: '',

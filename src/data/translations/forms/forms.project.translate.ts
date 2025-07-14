@@ -11,6 +11,8 @@ export interface ProjectFormTranslations {
     additional: string
   }
   form: {
+    abstract: any
+    abstractPlaceholder: string | undefined
     projectType: string
     selectProjectType: string
     title: string
@@ -53,6 +55,11 @@ export interface ProjectFormTranslations {
     internal: string
   }
   domains: {
+    machineLearning: any
+    distributedSystems: any
+    blockchain: any
+    uiUx: any
+    dataScience: any
     softwareArchitecture: string
     artificialIntelligence: string
     cybersecurity: string
@@ -136,7 +143,9 @@ export const projectFormTranslations: Record<'fr' | 'en', ProjectFormTranslation
       cancel: 'Annuler',
       create: 'Créer',
       update: 'Mettre à jour',
-      submitting: 'En cours...'
+      submitting: 'En cours...',
+      abstract: undefined,
+      abstractPlaceholder: undefined
     },
     projectTypes: {
       research: 'Projet de recherche',
@@ -152,7 +161,12 @@ export const projectFormTranslations: Record<'fr' | 'en', ProjectFormTranslation
       cloudComputing: 'Cloud computing',
       softwareTesting: 'Tests logiciels',
       softwareMaintenance: 'Maintenance logicielle',
-      humanComputerInteraction: 'Interaction homme-machine'
+      humanComputerInteraction: 'Interaction homme-machine',
+      machineLearning: undefined,
+      distributedSystems: undefined,
+      blockchain: undefined,
+      uiUx: undefined,
+      dataScience: undefined
     },
     difficulties: {
       beginner: 'Débutant',
@@ -226,7 +240,9 @@ export const projectFormTranslations: Record<'fr' | 'en', ProjectFormTranslation
       cancel: 'Cancel',
       create: 'Create',
       update: 'Update',
-      submitting: 'Submitting...'
+      submitting: 'Submitting...',
+      abstract: undefined,
+      abstractPlaceholder: undefined
     },
     projectTypes: {
       research: 'Research Project',
@@ -242,7 +258,12 @@ export const projectFormTranslations: Record<'fr' | 'en', ProjectFormTranslation
       cloudComputing: 'Cloud Computing',
       softwareTesting: 'Software Testing',
       softwareMaintenance: 'Software Maintenance',
-      humanComputerInteraction: 'Human-Computer Interaction'
+      humanComputerInteraction: 'Human-Computer Interaction',
+      machineLearning: undefined,
+      distributedSystems: undefined,
+      blockchain: undefined,
+      uiUx: undefined,
+      dataScience: undefined
     },
     difficulties: {
       beginner: 'Beginner',

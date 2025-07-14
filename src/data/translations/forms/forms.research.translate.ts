@@ -3,6 +3,8 @@ export interface ResearchFormTranslations {
   titleCreate: string
   subtitle: string
   sections: {
+    description: any
+    timeline: any
     basic: string
     details: string
     team: string
@@ -10,6 +12,12 @@ export interface ResearchFormTranslations {
     outcomes: string
   }
   form: {
+    leader: any
+    selectLeader: any
+    funding: any
+    fundingPlaceholder: string | undefined
+    githubUrl: any
+    websiteUrl: any
     title: string
     titlePlaceholder: string
     domain: string
@@ -52,6 +60,8 @@ export interface ResearchFormTranslations {
     submitting: string
   }
   domains: {
+    distributedSystems: any
+    blockchain: any
     softwareArchitecture: string
     artificialIntelligence: string
     cybersecurity: string
@@ -62,6 +72,7 @@ export interface ResearchFormTranslations {
     humanComputerInteraction: string
   }
   statuses: {
+    planned: any
     proposal: string
     approved: string
     active: string
@@ -76,6 +87,7 @@ export interface ResearchFormTranslations {
     critical: string
   }
   validation: {
+    leaderRequired: string
     titleRequired: string
     domainRequired: string
     descriptionRequired: string
@@ -101,7 +113,9 @@ export const researchFormTranslations: Record<'fr' | 'en', ResearchFormTranslati
       details: 'Détails de la recherche',
       team: 'Équipe de recherche',
       resources: 'Ressources',
-      outcomes: 'Résultats attendus'
+      outcomes: 'Résultats attendus',
+      description: undefined,
+      timeline: undefined
     },
     form: {
       title: 'Titre',
@@ -143,7 +157,13 @@ export const researchFormTranslations: Record<'fr' | 'en', ResearchFormTranslati
       cancel: 'Annuler',
       create: 'Créer',
       update: 'Mettre à jour',
-      submitting: 'En cours...'
+      submitting: 'En cours...',
+      leader: undefined,
+      selectLeader: undefined,
+      funding: undefined,
+      fundingPlaceholder: undefined,
+      githubUrl: undefined,
+      websiteUrl: undefined
     },
     domains: {
       softwareArchitecture: 'Architecture logicielle',
@@ -153,7 +173,9 @@ export const researchFormTranslations: Record<'fr' | 'en', ResearchFormTranslati
       cloudComputing: 'Cloud computing',
       softwareTesting: 'Tests logiciels',
       softwareMaintenance: 'Maintenance logicielle',
-      humanComputerInteraction: 'Interaction homme-machine'
+      humanComputerInteraction: 'Interaction homme-machine',
+      distributedSystems: undefined,
+      blockchain: undefined
     },
     statuses: {
       proposal: 'Proposition',
@@ -161,7 +183,8 @@ export const researchFormTranslations: Record<'fr' | 'en', ResearchFormTranslati
       active: 'Actif',
       completed: 'Terminé',
       suspended: 'Suspendu',
-      cancelled: 'Annulé'
+      cancelled: 'Annulé',
+      planned: undefined
     },
     priorities: {
       low: 'Faible',
@@ -178,7 +201,8 @@ export const researchFormTranslations: Record<'fr' | 'en', ResearchFormTranslati
       startDateRequired: 'La date de début est requise',
       endDateAfterStart: 'La date de fin doit être après le début',
       budgetInvalid: 'Budget invalide',
-      statusRequired: 'Le statut est requis'
+      statusRequired: 'Le statut est requis',
+      leaderRequired: ""
     },
     errors: {
       submitFailed: 'Échec de la soumission'
@@ -193,7 +217,9 @@ export const researchFormTranslations: Record<'fr' | 'en', ResearchFormTranslati
       details: 'Research Details',
       team: 'Research Team',
       resources: 'Resources',
-      outcomes: 'Expected Outcomes'
+      outcomes: 'Expected Outcomes',
+      description: undefined,
+      timeline: undefined
     },
     form: {
       title: 'Title',
@@ -235,7 +261,13 @@ export const researchFormTranslations: Record<'fr' | 'en', ResearchFormTranslati
       cancel: 'Cancel',
       create: 'Create',
       update: 'Update',
-      submitting: 'Submitting...'
+      submitting: 'Submitting...',
+      leader: undefined,
+      selectLeader: undefined,
+      funding: undefined,
+      fundingPlaceholder: undefined,
+      githubUrl: undefined,
+      websiteUrl: undefined
     },
     domains: {
       softwareArchitecture: 'Software Architecture',
@@ -245,7 +277,9 @@ export const researchFormTranslations: Record<'fr' | 'en', ResearchFormTranslati
       cloudComputing: 'Cloud Computing',
       softwareTesting: 'Software Testing',
       softwareMaintenance: 'Software Maintenance',
-      humanComputerInteraction: 'Human-Computer Interaction'
+      humanComputerInteraction: 'Human-Computer Interaction',
+      distributedSystems: undefined,
+      blockchain: undefined
     },
     statuses: {
       proposal: 'Proposal',
@@ -253,7 +287,8 @@ export const researchFormTranslations: Record<'fr' | 'en', ResearchFormTranslati
       active: 'Active',
       completed: 'Completed',
       suspended: 'Suspended',
-      cancelled: 'Cancelled'
+      cancelled: 'Cancelled',
+      planned: undefined
     },
     priorities: {
       low: 'Low',
@@ -270,7 +305,8 @@ export const researchFormTranslations: Record<'fr' | 'en', ResearchFormTranslati
       startDateRequired: 'Start date is required',
       endDateAfterStart: 'End date must be after start date',
       budgetInvalid: 'Invalid budget',
-      statusRequired: 'Status is required'
+      statusRequired: 'Status is required',
+      leaderRequired: ""
     },
     errors: {
       submitFailed: 'Failed to submit'

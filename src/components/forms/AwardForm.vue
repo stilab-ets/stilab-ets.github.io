@@ -56,29 +56,29 @@ const validateForm = () => {
   errors.value = {}
   
   if (!formData.value.title.trim()) {
-    errors.value.title = t.value.forms.award.validation.titleRequired
+    errors.value.title = t.value.forms.awards.validation.titleRequired
   }
   
   if (!formData.value.category) {
-    errors.value.category = t.value.forms.award.validation.categoryRequired
+    errors.value.category = t.value.forms.awards.validation.categoryRequired
   }
   
   if (!formData.value.organization.trim()) {
-    errors.value.organization = t.value.forms.award.validation.organizationRequired
+    errors.value.organization = t.value.forms.awards.validation.organizationRequired
   }
   
   if (!formData.value.year) {
-    errors.value.year = t.value.forms.award.validation.yearRequired
+    errors.value.year = t.value.forms.awards.validation.yearRequired
   } else {
     const year = parseInt(formData.value.year)
     const currentYear = new Date().getFullYear()
     if (isNaN(year) || year < 1900 || year > currentYear + 5) {
-      errors.value.year = t.value.forms.award.validation.yearInvalid
+      errors.value.year = t.value.forms.awards.validation.yearInvalid
     }
   }
   
   if (!formData.value.recipient) {
-    errors.value.recipient = t.value.forms.award.validation.recipientRequired
+    errors.value.recipient = t.value.forms.awards.validation.recipientRequired
   }
   
   return Object.keys(errors.value).length === 0
@@ -94,7 +94,7 @@ const handleSubmit = async () => {
   try {
     emit('submit', { ...formData.value })
   } catch (error) {
-    generalError.value = t.value.forms.award.errors.submitFailed
+    generalError.value = t.value.forms.awards.errors.submitFailed
   } finally {
     isSubmitting.value = false
   }
@@ -106,14 +106,14 @@ const handleCancel = () => {
 
 const formTitle = computed(() => 
   props.isEditing 
-    ? t.value.forms.award.titleEdit 
-    : t.value.forms.award.titleCreate
+    ? t.value.forms.awards.titleEdit 
+    : t.value.forms.awards.titleCreate
 )
 
 const submitButtonText = computed(() =>
   props.isEditing
-    ? t.value.forms.award.form.update
-    : t.value.forms.award.form.create
+    ? t.value.forms.awards.form.update
+    : t.value.forms.awards.form.create
 )
 </script>
 
@@ -121,26 +121,26 @@ const submitButtonText = computed(() =>
   <div class="max-w-4xl mx-auto p-6">
     <div class="mb-8">
       <h1 class="text-3xl font-bold text-gray-900">{{ formTitle }}</h1>
-      <p class="text-lg text-gray-600 mt-2">{{ t.forms.award.subtitle }}</p>
+      <p class="text-lg text-gray-600 mt-2">{{ t.forms.awards.subtitle }}</p>
     </div>
 
     <form @submit.prevent="handleSubmit" class="space-y-8">
       <!-- Basic Information -->
       <Card>
         <h2 class="text-xl font-semibold text-gray-900 mb-6">
-          {{ t.forms.award.sections.basic }}
+          {{ t.forms.awards.sections.basic }}
         </h2>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="md:col-span-2">
             <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.forms.award.form.title }}
+              {{ t.forms.awards.form.title }}
             </label>
             <input
               id="title"
               v-model="formData.title"
               type="text"
-              :placeholder="t.forms.award.form.titlePlaceholder"
+              :placeholder="t.forms.awards.form.titlePlaceholder"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               :class="{ 'border-red-500': errors.title }"
             />
@@ -151,7 +151,7 @@ const submitButtonText = computed(() =>
 
           <div>
             <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.forms.award.form.category }}
+              {{ t.forms.awards.form.category }}
             </label>
             <select
               id="category"
@@ -159,13 +159,13 @@ const submitButtonText = computed(() =>
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               :class="{ 'border-red-500': errors.category }"
             >
-              <option value="">{{ t.forms.award.form.selectCategory }}</option>
-              <option value="publication">{{ t.forms.award.categories.publication }}</option>
-              <option value="research">{{ t.forms.award.categories.research }}</option>
-              <option value="teaching">{{ t.forms.award.categories.teaching }}</option>
-              <option value="service">{{ t.forms.award.categories.service }}</option>
-              <option value="career">{{ t.forms.award.categories.career }}</option>
-              <option value="excellence">{{ t.forms.award.categories.excellence }}</option>
+              <option value="">{{ t.forms.awards.form.selectCategory }}</option>
+              <option value="publication">{{ t.forms.awards.categories.publication }}</option>
+              <option value="research">{{ t.forms.awards.categories.research }}</option>
+              <option value="teaching">{{ t.forms.awards.categories.teaching }}</option>
+              <option value="service">{{ t.forms.awards.categories.service }}</option>
+              <option value="career">{{ t.forms.awards.categories.career }}</option>
+              <option value="excellence">{{ t.forms.awards.categories.excellence }}</option>
             </select>
             <p v-if="errors.category" class="text-red-600 text-sm mt-1">
               {{ errors.category }}
@@ -174,7 +174,7 @@ const submitButtonText = computed(() =>
 
           <div>
             <label for="year" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.forms.award.form.year }}
+              {{ t.forms.awards.form.year }}
             </label>
             <input
               id="year"
@@ -195,19 +195,19 @@ const submitButtonText = computed(() =>
       <!-- Award Details -->
       <Card>
         <h2 class="text-xl font-semibold text-gray-900 mb-6">
-          {{ t.forms.award.sections.details }}
+          {{ t.forms.awards.sections.details }}
         </h2>
         
         <div class="space-y-6">
           <div>
             <label for="organization" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.forms.award.form.organization }}
+              {{ t.forms.awards.form.organization }}
             </label>
             <input
               id="organization"
               v-model="formData.organization"
               type="text"
-              :placeholder="t.forms.award.form.organizationPlaceholder"
+              :placeholder="t.forms.awards.form.organizationPlaceholder"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               :class="{ 'border-red-500': errors.organization }"
             />
@@ -218,26 +218,26 @@ const submitButtonText = computed(() =>
 
           <div>
             <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.forms.award.form.description }}
+              {{ t.forms.awards.form.description }}
             </label>
             <textarea
               id="description"
               v-model="formData.description"
               rows="4"
-              :placeholder="t.forms.award.form.descriptionPlaceholder"
+              :placeholder="t.forms.awards.form.descriptionPlaceholder"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
 
           <div>
             <label for="url" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.forms.award.form.url }}
+              {{ t.forms.awards.form.url }}
             </label>
             <input
               id="url"
               v-model="formData.url"
               type="url"
-              :placeholder="t.forms.award.form.urlPlaceholder"
+              :placeholder="t.forms.awards.form.urlPlaceholder"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
@@ -247,12 +247,12 @@ const submitButtonText = computed(() =>
       <!-- Recipient Information -->
       <Card>
         <h2 class="text-xl font-semibold text-gray-900 mb-6">
-          {{ t.forms.award.sections.recipient }}
+          {{ t.forms.awards.sections.recipient }}
         </h2>
         
         <div>
           <label for="recipient" class="block text-sm font-medium text-gray-700 mb-2">
-            {{ t.forms.award.form.recipient }}
+            {{ t.forms.awards.form.recipient }}
           </label>
           <select
             id="recipient"
@@ -260,7 +260,7 @@ const submitButtonText = computed(() =>
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             :class="{ 'border-red-500': errors.recipient }"
           >
-            <option value="">{{ t.forms.award.form.selectRecipient }}</option>
+            <option value="">{{ t.forms.awards.form.selectRecipient }}</option>
             <option v-for="member in mockMembers" :key="member.id" :value="member.id">
               {{ member.name }}
             </option>
@@ -284,14 +284,14 @@ const submitButtonText = computed(() =>
           @click="handleCancel"
           :disabled="isSubmitting"
         >
-          {{ t.forms.award.form.cancel }}
+          {{ t.forms.awards.form.cancel }}
         </Button>
         
         <Button
           type="submit"
           :disabled="isSubmitting"
         >
-          {{ isSubmitting ? t.forms.award.form.submitting : submitButtonText }}
+          {{ isSubmitting ? t.forms.awards.form.submitting : submitButtonText }}
         </Button>
       </div>
     </form>

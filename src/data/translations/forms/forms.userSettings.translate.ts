@@ -2,6 +2,7 @@ export interface UserSettingsFormTranslations {
   title: string
   subtitle: string
   sections: {
+    security: any
     profile: string
     account: string
     privacy: string
@@ -9,6 +10,11 @@ export interface UserSettingsFormTranslations {
     preferences: string
   }
   form: {
+    office: any
+    researchDomains: any
+    profilePhoto: any
+    notifications: any
+    browserNotifications: any
     firstName: string
     firstNamePlaceholder: string
     lastName: string
@@ -93,6 +99,7 @@ export interface UserSettingsFormTranslations {
     orcidInvalid: string
   }
   errors: {
+    updateFailed: string
     saveFailed: string
     photoUploadFailed: string
     passwordChangeFailed: string
@@ -114,7 +121,8 @@ export const userSettingsFormTranslations: Record<'fr' | 'en', UserSettingsFormT
       account: 'Compte',
       privacy: 'Confidentialité',
       notifications: 'Notifications',
-      preferences: 'Préférences'
+      preferences: 'Préférences',
+      security: undefined
     },
     form: {
       firstName: 'Prénom',
@@ -167,7 +175,12 @@ export const userSettingsFormTranslations: Record<'fr' | 'en', UserSettingsFormT
       cancel: 'Annuler',
       saving: 'Enregistrement...',
       deleteAccount: 'Supprimer le compte',
-      confirmDelete: 'Confirmer la suppression'
+      confirmDelete: 'Confirmer la suppression',
+      office: undefined,
+      researchDomains: undefined,
+      profilePhoto: undefined,
+      notifications: undefined,
+      browserNotifications: undefined
     },
     languages: {
       french: 'Français',
@@ -204,7 +217,8 @@ export const userSettingsFormTranslations: Record<'fr' | 'en', UserSettingsFormT
       saveFailed: 'Échec de l\'enregistrement',
       photoUploadFailed: 'Échec du téléchargement de la photo',
       passwordChangeFailed: 'Échec du changement de mot de passe',
-      deleteAccountFailed: 'Échec de la suppression du compte'
+      deleteAccountFailed: 'Échec de la suppression du compte',
+      updateFailed: ""
     },
     success: {
       profileUpdated: 'Profil mis à jour avec succès',
@@ -220,7 +234,8 @@ export const userSettingsFormTranslations: Record<'fr' | 'en', UserSettingsFormT
       account: 'Account',
       privacy: 'Privacy',
       notifications: 'Notifications',
-      preferences: 'Preferences'
+      preferences: 'Preferences',
+      security: undefined
     },
     form: {
       firstName: 'First Name',
@@ -273,7 +288,12 @@ export const userSettingsFormTranslations: Record<'fr' | 'en', UserSettingsFormT
       cancel: 'Cancel',
       saving: 'Saving...',
       deleteAccount: 'Delete Account',
-      confirmDelete: 'Confirm Deletion'
+      confirmDelete: 'Confirm Deletion',
+      office: undefined,
+      researchDomains: undefined,
+      profilePhoto: undefined,
+      notifications: undefined,
+      browserNotifications: undefined
     },
     languages: {
       french: 'French',
@@ -310,7 +330,8 @@ export const userSettingsFormTranslations: Record<'fr' | 'en', UserSettingsFormT
       saveFailed: 'Failed to save',
       photoUploadFailed: 'Failed to upload photo',
       passwordChangeFailed: 'Failed to change password',
-      deleteAccountFailed: 'Failed to delete account'
+      deleteAccountFailed: 'Failed to delete account',
+      updateFailed: ""
     },
     success: {
       profileUpdated: 'Profile updated successfully',
