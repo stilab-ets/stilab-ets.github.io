@@ -1,465 +1,594 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useLanguage } from '../../composables/useLanguage'
-
-interface User {
-  id: string
-  firstName: string
-  lastName: string
-  email: string
-  role: string
-  status: 'active' | 'inactive' | 'pending'
-  lastLogin: string
-  createdAt: string
-}
-
-interface Props {
-  users?: User[]
-  selectedUserId?: string
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  users: () => []
-})
+import { useLanguage } from '@/composables/useLanguage'
+import Card from '@/components/ui/Card.vue'
+import Button from '@/components/ui/Button.vue'
 
 const emit = defineEmits<{
-  editUser: [userId: string]
+  submit: [data: Record<string, any>]
   deleteUser: [userId: string]
-  activateUser: [userId: string]
-  deactivateUser: [userId: string]
-  resendInvitation: [userId: string]
-  bulkAction: [action: string, userIds: string[]]
-  exportUsers: []
-  createUser: []
+  approveContent: [contentId: string, type: string]
+  rejectContent: [contentId: string, type: string]
 }>()
 
-const { t: translations } = useLanguage()
-const t = computed(() => translations.value.admin.management)
+const { t } = useLanguage()
 
+// Form state
+const systemSettings = ref({
+  labName: 'STIL - Software Technology and Intelligence Lab',
+  labDescription: 'Research laboratory dedicated to innovation in software engineering, artificial intelligence and cutting-edge technologies.',
+  contactEmail: 'contact@stil-lab.fr',
+  contactPhone: '+33 1 23 45 67 89',
+  address: 'Université de Recherche, Bâtiment Informatique, 123 Rue de la Science, 75000 Paris',
+  maintenanceMode: false,
+  enableRegistration: true,
+  requireApproval: true
+})
+
+const errors = ref<Record<string, string>>({})
+const isSubmitting = ref(false)
+const generalError = ref('')
+const successMessage = ref('')
+const activeSection = ref('users')
 const searchQuery = ref('')
-const statusFilter = ref('')
-const roleFilter = ref('')
-const selectedUsers = ref<string[]>([])
-const showBulkActions = ref(false)
+const selectedRole = ref('')
+const selectedStatus = ref('')
+const showDeleteModal = ref(false)
+const userToDelete = ref<any>(null)
 
-const statusOptions = [
-  { value: '', label: 'All Statuses' },
-  { value: 'active', label: 'Active' },
-  { value: 'inactive', label: 'Inactive' },
-  { value: 'pending', label: 'Pending' }
-]
+// Mock data
+const mockUsers = ref([
+  {
+    id: '1',
+    name: 'Dr. Marie Dubois',
+    email: 'marie.dubois@stil-lab.fr',
+    role: 'professor',
+    status: 'active',
+    joinDate: '2020-01-15'
+  },
+  {
+    id: '2',
+    name: 'Prof. Jean Martin',
+    email: 'jean.martin@stil-lab.fr',
+    role: 'professor',
+    status: 'active',
+    joinDate: '2019-09-01'
+  },
+  {
+    id: '3',
+    name: 'Alex Rodriguez',
+    email: 'alex.rodriguez@stil-lab.fr',
+    role: 'phd',
+    status: 'active',
+    joinDate: '2022-10-01'
+  }
+])
 
-const roleOptions = [
-  { value: '', label: 'All Roles' },
-  { value: 'professor', label: 'Professor' },
-  { value: 'researcher', label: 'Researcher' },
-  { value: 'postdoc', label: 'Post-Doc' },
-  { value: 'phd', label: 'PhD Student' },
-  { value: 'master', label: 'Master Student' },
-  { value: 'engineer', label: 'Engineer' },
-  { value: 'admin', label: 'Administrator' }
-]
+const mockPendingPublications = ref([
+  {
+    id: 'pub1',
+    title: 'Advanced Machine Learning Techniques for Software Testing',
+    author: 'Dr. Marie Dubois',
+    submittedDate: '2024-01-15'
+  },
+  {
+    id: 'pub2',
+    title: 'Blockchain Security in Distributed Systems',
+    author: 'Prof. Jean Martin',
+    submittedDate: '2024-01-10'
+  }
+])
 
-const bulkActions = [
-  { value: 'activate', label: 'Activate Selected' },
-  { value: 'deactivate', label: 'Deactivate Selected' },
-  { value: 'delete', label: 'Delete Selected' },
-  { value: 'export', label: 'Export Selected' }
-]
+const mockPendingEvents = ref([
+  {
+    id: 'event1',
+    title: 'Workshop on AI Ethics',
+    organizer: 'Dr. Sarah Chen',
+    proposedDate: '2024-02-20'
+  }
+])
 
+// Computed properties
 const filteredUsers = computed(() => {
-  return props.users.filter(user => {
-    const matchesSearch = !searchQuery.value || 
-      user.firstName.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      user.lastName.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.value.toLowerCase())
+  return mockUsers.value.filter(user => {
+    const matchesSearch = user.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+                         user.email.toLowerCase().includes(searchQuery.value.toLowerCase())
+    const matchesRole = !selectedRole.value || user.role === selectedRole.value
+    const matchesStatus = !selectedStatus.value || user.status === selectedStatus.value
     
-    const matchesStatus = !statusFilter.value || user.status === statusFilter.value
-    const matchesRole = !roleFilter.value || user.role === roleFilter.value
-    
-    return matchesSearch && matchesStatus && matchesRole
+    return matchesSearch && matchesRole && matchesStatus
   })
 })
 
-const toggleUserSelection = (userId: string) => {
-  const index = selectedUsers.value.indexOf(userId)
-  if (index > -1) {
-    selectedUsers.value.splice(index, 1)
-  } else {
-    selectedUsers.value.push(userId)
-  }
-}
-
-const toggleAllUsers = () => {
-  if (selectedUsers.value.length === filteredUsers.value.length) {
-    selectedUsers.value = []
-  } else {
-    selectedUsers.value = filteredUsers.value.map(user => user.id)
-  }
-}
-
-const executeBulkAction = (action: string) => {
-  if (selectedUsers.value.length === 0) return
+// Validation
+const validateSystemSettings = () => {
+  errors.value = {}
   
-  emit('bulkAction', action, selectedUsers.value)
-  selectedUsers.value = []
-  showBulkActions.value = false
+  if (!systemSettings.value.labName.trim()) {
+    errors.value.labName = t.value.forms.adminManagement.validation.labNameRequired
+  }
+  
+  if (systemSettings.value.contactEmail && 
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(systemSettings.value.contactEmail)) {
+    errors.value.contactEmail = t.value.forms.adminManagement.validation.contactEmailInvalid
+  }
+  
+  return Object.keys(errors.value).length === 0
 }
 
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case 'active': return 'bg-green-100 text-green-800'
-    case 'inactive': return 'bg-gray-100 text-gray-800'
-    case 'pending': return 'bg-yellow-100 text-yellow-800'
-    default: return 'bg-gray-100 text-gray-800'
+// Form submission
+const handleSubmit = async () => {
+  if (activeSection.value === 'system' && !validateSystemSettings()) return
+  
+  isSubmitting.value = true
+  generalError.value = ''
+  successMessage.value = ''
+  
+  try {
+    emit('submit', {
+      section: activeSection.value,
+      data: activeSection.value === 'system' ? systemSettings.value : {}
+    })
+    successMessage.value = t.value.forms.adminManagement.success.settingsUpdated
+  } catch (error) {
+    generalError.value = t.value.forms.adminManagement.errors.updateFailed
+  } finally {
+    isSubmitting.value = false
   }
 }
 
-const getRoleColor = (role: string) => {
-  switch (role) {
-    case 'professor': return 'bg-purple-100 text-purple-800'
-    case 'researcher': return 'bg-blue-100 text-blue-800'
-    case 'postdoc': return 'bg-indigo-100 text-indigo-800'
-    case 'phd': return 'bg-cyan-100 text-cyan-800'
-    case 'master': return 'bg-teal-100 text-teal-800'
-    case 'engineer': return 'bg-orange-100 text-orange-800'
-    case 'admin': return 'bg-red-100 text-red-800'
-    default: return 'bg-gray-100 text-gray-800'
+// User management
+const confirmDeleteUser = (user: any) => {
+  userToDelete.value = user
+  showDeleteModal.value = true
+}
+
+const deleteUser = async () => {
+  if (!userToDelete.value) return
+  
+  try {
+    emit('deleteUser', userToDelete.value.id)
+    mockUsers.value = mockUsers.value.filter(u => u.id !== userToDelete.value.id)
+    successMessage.value = t.value.forms.adminManagement.success.userDeleted
+  } catch (error) {
+    generalError.value = t.value.forms.adminManagement.errors.deleteFailed
+  } finally {
+    showDeleteModal.value = false
+    userToDelete.value = null
   }
 }
 
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  })
+// Content management
+const approveContent = (contentId: string, type: string) => {
+  emit('approveContent', contentId, type)
+  if (type === 'publication') {
+    mockPendingPublications.value = mockPendingPublications.value.filter(p => p.id !== contentId)
+  } else if (type === 'event') {
+    mockPendingEvents.value = mockPendingEvents.value.filter(e => e.id !== contentId)
+  }
+  successMessage.value = t.value.forms.adminManagement.success.contentApproved
+}
+
+const rejectContent = (contentId: string, type: string) => {
+  emit('rejectContent', contentId, type)
+  if (type === 'publication') {
+    mockPendingPublications.value = mockPendingPublications.value.filter(p => p.id !== contentId)
+  } else if (type === 'event') {
+    mockPendingEvents.value = mockPendingEvents.value.filter(e => e.id !== contentId)
+  }
 }
 </script>
 
 <template>
-  <div class="max-w-7xl mx-auto">
-    <PageHeader
-      title="User Management"
-      subtitle="Manage laboratory members, roles, and permissions"
-      highlight-word="Management"
-    />
+  <div class="max-w-6xl mx-auto p-6">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">{{ t.forms.adminManagement.title }}</h1>
+      <p class="text-lg text-gray-600 mt-2">{{ t.forms.adminManagement.subtitle }}</p>
+    </div>
 
-    <Card class="mt-8">
-      <!-- Filters and Actions -->
-      <div class="p-6 border-b border-gray-200">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
-          <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-            <!-- Search -->
-            <div class="relative">
+    <!-- Section Navigation -->
+    <div class="mb-8">
+      <nav class="flex space-x-8">
+        <button
+          type="button"
+          @click="activeSection = 'users'"
+          :class="[
+            'py-2 px-1 border-b-2 font-medium text-sm',
+            activeSection === 'users'
+              ? 'border-blue-500 text-blue-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+          ]"
+        >
+          {{ t.forms.adminManagement.sections.users }}
+        </button>
+        <button
+          type="button"
+          @click="activeSection = 'system'"
+          :class="[
+            'py-2 px-1 border-b-2 font-medium text-sm',
+            activeSection === 'system'
+              ? 'border-blue-500 text-blue-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+          ]"
+        >
+          {{ t.forms.adminManagement.sections.system }}
+        </button>
+        <button
+          type="button"
+          @click="activeSection = 'content'"
+          :class="[
+            'py-2 px-1 border-b-2 font-medium text-sm',
+            activeSection === 'content'
+              ? 'border-blue-500 text-blue-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+          ]"
+        >
+          {{ t.forms.adminManagement.sections.content }}
+        </button>
+      </nav>
+    </div>
+
+    <!-- User Management Section -->
+    <div v-if="activeSection === 'users'" class="space-y-6">
+      <Card>
+        <h2 class="text-xl font-semibold text-gray-900 mb-6">
+          {{ t.forms.adminManagement.sections.users }}
+        </h2>
+
+        <!-- User Filters -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <div>
+            <input
+              v-model="searchQuery"
+              type="text"
+              :placeholder="t.forms.adminManagement.userManagement.searchPlaceholder"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+          <div>
+            <select
+              v-model="selectedRole"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="">{{ t.forms.adminManagement.userManagement.allRoles }}</option>
+              <option value="professor">Professor</option>
+              <option value="researcher">Researcher</option>
+              <option value="phd">PhD Student</option>
+              <option value="master">Master Student</option>
+            </select>
+          </div>
+          <div>
+            <select
+              v-model="selectedStatus"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="">{{ t.forms.adminManagement.userManagement.allStatuses }}</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="alumni">Alumni</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- User List -->
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  User
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Role
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Join Date
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr v-for="user in filteredUsers" :key="user.id">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div>
+                    <div class="text-sm font-medium text-gray-900">{{ user.name }}</div>
+                    <div class="text-sm text-gray-500">{{ user.email }}</div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                    {{ user.role }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                    {{ user.status }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {{ user.joinDate }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                  <Button variant="secondary" size="sm">
+                    {{ t.forms.adminManagement.userManagement.editUser }}
+                  </Button>
+                  <Button 
+                    variant="secondary" 
+                    size="sm"
+                    @click="confirmDeleteUser(user)"
+                    class="text-red-600 hover:text-red-900"
+                  >
+                    {{ t.forms.adminManagement.userManagement.deleteUser }}
+                  </Button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </Card>
+    </div>
+
+    <!-- System Settings Section -->
+    <div v-if="activeSection === 'system'">
+      <form @submit.prevent="handleSubmit" class="space-y-8">
+        <Card>
+          <h2 class="text-xl font-semibold text-gray-900 mb-6">
+            {{ t.forms.adminManagement.sections.system }}
+          </h2>
+          
+          <div class="space-y-6">
+            <div>
+              <label for="labName" class="block text-sm font-medium text-gray-700 mb-2">
+                {{ t.forms.adminManagement.systemSettings.labName }}
+              </label>
               <input
-                v-model="searchQuery"
+                id="labName"
+                v-model="systemSettings.labName"
                 type="text"
-                placeholder="Search users..."
-                class="w-full sm:w-64 px-3 py-2 pl-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#08a4d4]"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                :class="{ 'border-red-500': errors.labName }"
               />
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+              <p v-if="errors.labName" class="text-red-600 text-sm mt-1">
+                {{ errors.labName }}
+              </p>
+            </div>
+
+            <div>
+              <label for="labDescription" class="block text-sm font-medium text-gray-700 mb-2">
+                {{ t.forms.adminManagement.systemSettings.labDescription }}
+              </label>
+              <textarea
+                id="labDescription"
+                v-model="systemSettings.labDescription"
+                rows="3"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label for="contactEmail" class="block text-sm font-medium text-gray-700 mb-2">
+                  {{ t.forms.adminManagement.systemSettings.contactEmail }}
+                </label>
+                <input
+                  id="contactEmail"
+                  v-model="systemSettings.contactEmail"
+                  type="email"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  :class="{ 'border-red-500': errors.contactEmail }"
+                />
+                <p v-if="errors.contactEmail" class="text-red-600 text-sm mt-1">
+                  {{ errors.contactEmail }}
+                </p>
+              </div>
+
+              <div>
+                <label for="contactPhone" class="block text-sm font-medium text-gray-700 mb-2">
+                  {{ t.forms.adminManagement.systemSettings.contactPhone }}
+                </label>
+                <input
+                  id="contactPhone"
+                  v-model="systemSettings.contactPhone"
+                  type="tel"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
               </div>
             </div>
 
-            <!-- Status Filter -->
-            <select
-              v-model="statusFilter"
-              class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#08a4d4]"
-            >
-              <option v-for="option in statusOptions" :key="option.value" :value="option.value">
-                {{ option.label }}
-              </option>
-            </select>
+            <div>
+              <label for="address" class="block text-sm font-medium text-gray-700 mb-2">
+                {{ t.forms.adminManagement.systemSettings.address }}
+              </label>
+              <textarea
+                id="address"
+                v-model="systemSettings.address"
+                rows="2"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
 
-            <!-- Role Filter -->
-            <select
-              v-model="roleFilter"
-              class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#08a4d4]"
-            >
-              <option v-for="option in roleOptions" :key="option.value" :value="option.value">
-                {{ option.label }}
-              </option>
-            </select>
+            <div class="space-y-4">
+              <div class="flex items-center">
+                <input
+                  id="maintenanceMode"
+                  v-model="systemSettings.maintenanceMode"
+                  type="checkbox"
+                  class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                />
+                <label for="maintenanceMode" class="ml-2 block text-sm text-gray-900">
+                  {{ t.forms.adminManagement.systemSettings.maintenanceMode }}
+                </label>
+              </div>
+
+              <div class="flex items-center">
+                <input
+                  id="enableRegistration"
+                  v-model="systemSettings.enableRegistration"
+                  type="checkbox"
+                  class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                />
+                <label for="enableRegistration" class="ml-2 block text-sm text-gray-900">
+                  {{ t.forms.adminManagement.systemSettings.enableRegistration }}
+                </label>
+              </div>
+
+              <div class="flex items-center">
+                <input
+                  id="requireApproval"
+                  v-model="systemSettings.requireApproval"
+                  type="checkbox"
+                  class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                />
+                <label for="requireApproval" class="ml-2 block text-sm text-gray-900">
+                  {{ t.forms.adminManagement.systemSettings.requireApproval }}
+                </label>
+              </div>
+            </div>
           </div>
+        </Card>
 
-          <div class="flex space-x-2">
-            <!-- Bulk Actions -->
-            <div v-if="selectedUsers.length > 0" class="relative">
+        <!-- Form Actions for System Settings -->
+        <div class="flex justify-end space-x-4">
+          <Button
+            type="submit"
+            :disabled="isSubmitting"
+          >
+            {{ isSubmitting ? t.forms.adminManagement.form.saving : t.forms.adminManagement.form.save }}
+          </Button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Content Management Section -->
+    <div v-if="activeSection === 'content'" class="space-y-6">
+      <!-- Pending Publications -->
+      <Card>
+        <h2 class="text-xl font-semibold text-gray-900 mb-6">
+          {{ t.forms.adminManagement.contentManagement.pendingPublications }}
+        </h2>
+        
+        <div v-if="mockPendingPublications.length === 0" class="text-gray-500 text-center py-8">
+          No pending publications
+        </div>
+        
+        <div v-else class="space-y-4">
+          <div
+            v-for="publication in mockPendingPublications"
+            :key="publication.id"
+            class="flex items-center justify-between p-4 border border-gray-200 rounded-lg"
+          >
+            <div>
+              <h3 class="font-medium text-gray-900">{{ publication.title }}</h3>
+              <p class="text-sm text-gray-500">{{ publication.author }} • {{ publication.submittedDate }}</p>
+            </div>
+            <div class="flex space-x-2">
               <Button
                 variant="secondary"
-                @click="showBulkActions = !showBulkActions"
+                size="sm"
+                @click="approveContent(publication.id, 'publication')"
+                class="text-green-600 hover:text-green-800"
               >
-                Bulk Actions ({{ selectedUsers.length }})
+                {{ t.forms.adminManagement.contentManagement.approve }}
               </Button>
-              <div
-                v-if="showBulkActions"
-                class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200"
+              <Button
+                variant="secondary"
+                size="sm"
+                @click="rejectContent(publication.id, 'publication')"
+                class="text-red-600 hover:text-red-800"
               >
-                <div class="py-1">
-                  <button
-                    v-for="action in bulkActions"
-                    :key="action.value"
-                    @click="executeBulkAction(action.value)"
-                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    {{ action.label }}
-                  </button>
-                </div>
-              </div>
+                {{ t.forms.adminManagement.contentManagement.reject }}
+              </Button>
             </div>
+          </div>
+        </div>
+      </Card>
 
-            <!-- Export -->
+      <!-- Pending Events -->
+      <Card>
+        <h2 class="text-xl font-semibold text-gray-900 mb-6">
+          {{ t.forms.adminManagement.contentManagement.pendingEvents }}
+        </h2>
+        
+        <div v-if="mockPendingEvents.length === 0" class="text-gray-500 text-center py-8">
+          No pending events
+        </div>
+        
+        <div v-else class="space-y-4">
+          <div
+            v-for="event in mockPendingEvents"
+            :key="event.id"
+            class="flex items-center justify-between p-4 border border-gray-200 rounded-lg"
+          >
+            <div>
+              <h3 class="font-medium text-gray-900">{{ event.title }}</h3>
+              <p class="text-sm text-gray-500">{{ event.organizer }} • {{ event.proposedDate }}</p>
+            </div>
+            <div class="flex space-x-2">
+              <Button
+                variant="secondary"
+                size="sm"
+                @click="approveContent(event.id, 'event')"
+                class="text-green-600 hover:text-green-800"
+              >
+                {{ t.forms.adminManagement.contentManagement.approve }}
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                @click="rejectContent(event.id, 'event')"
+                class="text-red-600 hover:text-red-800"
+              >
+                {{ t.forms.adminManagement.contentManagement.reject }}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Card>
+    </div>
+
+    <!-- Success Message -->
+    <div v-if="successMessage" class="bg-green-50 border border-green-200 rounded-lg p-4">
+      <p class="text-green-800">{{ successMessage }}</p>
+    </div>
+
+    <!-- Error Display -->
+    <div v-if="generalError" class="bg-red-50 border border-red-200 rounded-lg p-4">
+      <p class="text-red-800">{{ generalError }}</p>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div v-if="showDeleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+      <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+          <h3 class="text-lg font-medium text-gray-900">
+            {{ t.forms.adminManagement.userManagement.confirmDelete }}
+          </h3>
+          <div class="mt-2 px-7 py-3">
+            <p class="text-sm text-gray-500">
+              {{ t.forms.adminManagement.userManagement.deleteConfirmMessage }}
+            </p>
+          </div>
+          <div class="flex justify-center space-x-4 px-4 py-3">
             <Button
               variant="secondary"
-              @click="emit('exportUsers')"
+              @click="showDeleteModal = false"
             >
-              Export
+              {{ t.forms.adminManagement.form.cancel }}
             </Button>
-
-            <!-- Create User -->
-            <Button @click="emit('createUser')">
-              Add User
+            <Button
+              @click="deleteUser"
+              class="bg-red-600 hover:bg-red-700 text-white"
+            >
+              {{ t.forms.adminManagement.userManagement.deleteUser }}
             </Button>
           </div>
         </div>
       </div>
-
-      <!-- Users Table -->
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-6 py-3 text-left">
-                <input
-                  type="checkbox"
-                  :checked="selectedUsers.length === filteredUsers.length && filteredUsers.length > 0"
-                  :indeterminate="selectedUsers.length > 0 && selectedUsers.length < filteredUsers.length"
-                  @change="toggleAllUsers"
-                  class="h-4 w-4 text-[#08a4d4] focus:ring-[#08a4d4] border-gray-300 rounded"
-                />
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                User
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Role
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Status
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Last Login
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Created
-              </th>
-              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <tr
-              v-for="user in filteredUsers"
-              :key="user.id"
-              class="hover:bg-gray-50"
-            >
-              <td class="px-6 py-4 whitespace-nowrap">
-                <input
-                  type="checkbox"
-                  :checked="selectedUsers.includes(user.id)"
-                  @change="toggleUserSelection(user.id)"
-                  class="h-4 w-4 text-[#08a4d4] focus:ring-[#08a4d4] border-gray-300 rounded"
-                />
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="flex items-center">
-                  <div class="flex-shrink-0 h-10 w-10">
-                    <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
-                      <span class="text-sm font-medium text-gray-700">
-                        {{ user.firstName.charAt(0) }}{{ user.lastName.charAt(0) }}
-                      </span>
-                    </div>
-                  </div>
-                  <div class="ml-4">
-                    <div class="text-sm font-medium text-gray-900">
-                      {{ user.firstName }} {{ user.lastName }}
-                    </div>
-                    <div class="text-sm text-gray-500">
-                      {{ user.email }}
-                    </div>
-                  </div>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span :class="['inline-flex px-2 py-1 text-xs font-semibold rounded-full', getRoleColor(user.role)]">
-                  {{ roleOptions.find(r => r.value === user.role)?.label || user.role }}
-                </span>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span :class="['inline-flex px-2 py-1 text-xs font-semibold rounded-full', getStatusColor(user.status)]">
-                  {{ user.status }}
-                </span>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {{ user.lastLogin ? formatDate(user.lastLogin) : 'Never' }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {{ formatDate(user.createdAt) }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <div class="flex justify-end space-x-2">
-                  <button
-                    @click="emit('editUser', user.id)"
-                    class="text-[#08a4d4] hover:text-[#0692c4] text-sm"
-                  >
-                    Edit
-                  </button>
-                  
-                  <button
-                    v-if="user.status === 'active'"
-                    @click="emit('deactivateUser', user.id)"
-                    class="text-yellow-600 hover:text-yellow-800 text-sm"
-                  >
-                    Deactivate
-                  </button>
-                  
-                  <button
-                    v-if="user.status === 'inactive'"
-                    @click="emit('activateUser', user.id)"
-                    class="text-green-600 hover:text-green-800 text-sm"
-                  >
-                    Activate
-                  </button>
-                  
-                  <button
-                    v-if="user.status === 'pending'"
-                    @click="emit('resendInvitation', user.id)"
-                    class="text-blue-600 hover:text-blue-800 text-sm"
-                  >
-                    Resend
-                  </button>
-                  
-                  <button
-                    @click="emit('deleteUser', user.id)"
-                    class="text-red-600 hover:text-red-800 text-sm"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <!-- Empty State -->
-        <div v-if="filteredUsers.length === 0" class="text-center py-12">
-          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-          </svg>
-          <h3 class="mt-2 text-sm font-medium text-gray-900">No users found</h3>
-          <p class="mt-1 text-sm text-gray-500">
-            Try adjusting your search criteria or filters.
-          </p>
-        </div>
-      </div>
-
-      <!-- Pagination would go here if needed -->
-    </Card>
-
-    <!-- User Statistics -->
-    <div class="mt-8 grid grid-cols-1 md:grid-cols-4 gap-6">
-      <Card class="p-6">
-        <div class="flex items-center">
-          <div class="flex-shrink-0">
-            <div class="w-8 h-8 bg-blue-100 rounded-md flex items-center justify-center">
-              <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-              </svg>
-            </div>
-          </div>
-          <div class="ml-5 w-0 flex-1">
-            <dl>
-              <dt class="text-sm font-medium text-gray-500 truncate">
-                Total Users
-              </dt>
-              <dd class="text-lg font-medium text-gray-900">
-                {{ props.users.length }}
-              </dd>
-            </dl>
-          </div>
-        </div>
-      </Card>
-
-      <Card class="p-6">
-        <div class="flex items-center">
-          <div class="flex-shrink-0">
-            <div class="w-8 h-8 bg-green-100 rounded-md flex items-center justify-center">
-              <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-          </div>
-          <div class="ml-5 w-0 flex-1">
-            <dl>
-              <dt class="text-sm font-medium text-gray-500 truncate">
-                Active Users
-              </dt>
-              <dd class="text-lg font-medium text-gray-900">
-                {{ props.users.filter(u => u.status === 'active').length }}
-              </dd>
-            </dl>
-          </div>
-        </div>
-      </Card>
-
-      <Card class="p-6">
-        <div class="flex items-center">
-          <div class="flex-shrink-0">
-            <div class="w-8 h-8 bg-yellow-100 rounded-md flex items-center justify-center">
-              <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-          </div>
-          <div class="ml-5 w-0 flex-1">
-            <dl>
-              <dt class="text-sm font-medium text-gray-500 truncate">
-                Pending Invitations
-              </dt>
-              <dd class="text-lg font-medium text-gray-900">
-                {{ props.users.filter(u => u.status === 'pending').length }}
-              </dd>
-            </dl>
-          </div>
-        </div>
-      </Card>
-
-      <Card class="p-6">
-        <div class="flex items-center">
-          <div class="flex-shrink-0">
-            <div class="w-8 h-8 bg-purple-100 rounded-md flex items-center justify-center">
-              <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-              </svg>
-            </div>
-          </div>
-          <div class="ml-5 w-0 flex-1">
-            <dl>
-              <dt class="text-sm font-medium text-gray-500 truncate">
-                Administrators
-              </dt>
-              <dd class="text-lg font-medium text-gray-900">
-                {{ props.users.filter(u => u.role === 'admin').length }}
-              </dd>
-            </dl>
-          </div>
-        </div>
-      </Card>
     </div>
   </div>
 </template>
