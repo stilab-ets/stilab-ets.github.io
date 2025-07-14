@@ -25,8 +25,8 @@ const quickLinks = computed(() => [
   {
     page: 'events',
     icon: '📅',
-    title: t.value.quickLinks.event.title,
-    description: t.value.quickLinks.event.description,
+    title: t.value.quickLinks.events.title,
+    description: t.value.quickLinks.events.description,
     bgColor: 'bg-green-50 hover:bg-green-100'
   },
   {

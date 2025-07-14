@@ -118,36 +118,36 @@ const totalRegistrations = computed(() => {
 
 // Statistics
 const statistics = computed(() => [
-  { value: upcomingEventsCount.value, label: t.value.event.statistics.upcomingEvents },
-  { value: totalRegistrations.value, label: t.value.event.statistics.registrations },
-  { value: mockEvents.length, label: t.value.event.statistics.totalEvents }
+  { value: upcomingEventsCount.value, label: t.value.events.statistics.upcomingEvents },
+  { value: totalRegistrations.value, label: t.value.events.statistics.registrations },
+  { value: mockEvents.length, label: t.value.events.statistics.totalEvents }
 ])
 
 // Filters configuration
 const filters = computed(() => [
   {
     id: 'type',
-    label: t.value.event.filters.eventType,
+    label: t.value.events.filters.eventType,
     value: selectedType.value,
     options: [
-      { value: '', label: t.value.event.filters.allTypes },
-      { value: 'seminar', label: t.value.event.eventTypes.seminar },
-      { value: 'workshop', label: t.value.event.eventTypes.workshop },
-      { value: 'conference', label: t.value.event.eventTypes.conference },
-      { value: 'defense', label: t.value.event.eventTypes.defense },
-      { value: 'meeting', label: t.value.event.eventTypes.meeting },
-      { value: 'colloquium', label: t.value.event.eventTypes.colloquium },
-      { value: 'masterclass', label: t.value.event.eventTypes.masterclass }
+      { value: '', label: t.value.events.filters.allTypes },
+      { value: 'seminar', label: t.value.events.eventTypes.seminar },
+      { value: 'workshop', label: t.value.events.eventTypes.workshop },
+      { value: 'conference', label: t.value.events.eventTypes.conference },
+      { value: 'defense', label: t.value.events.eventTypes.defense },
+      { value: 'meeting', label: t.value.events.eventTypes.meeting },
+      { value: 'colloquium', label: t.value.events.eventTypes.colloquium },
+      { value: 'masterclass', label: t.value.events.eventTypes.masterclass }
     ]
   },
   {
     id: 'period',
-    label: t.value.event.filters.period,
+    label: t.value.events.filters.period,
     value: selectedPeriod.value,
     options: [
-      { value: 'all', label: t.value.event.filters.all },
-      { value: 'upcoming', label: t.value.event.filters.upcoming },
-      { value: 'past', label: t.value.event.filters.past }
+      { value: 'all', label: t.value.events.filters.all },
+      { value: 'upcoming', label: t.value.events.filters.upcoming },
+      { value: 'past', label: t.value.events.filters.past }
     ]
   }
 ])
@@ -169,19 +169,19 @@ const currentEvents = computed(() => {
 })
 
 const currentEventsTitle = computed(() => {
-  return viewMode.value === 'upcoming' ? t.value.event.sections.upcomingEvents : t.value.event.sections.pastEvents
+  return viewMode.value === 'upcoming' ? t.value.events.sections.upcomingEvents : t.value.events.sections.pastEvents
 })
 
 const emptyStateConfig = computed(() => {
   if (viewMode.value === 'upcoming') {
     return {
-      title: t.value.event.empty.noUpcoming,
-      message: t.value.event.empty.noUpcomingMessage
+      title: t.value.events.empty.noUpcoming,
+      message: t.value.events.empty.noUpcomingMessage
     }
   } else {
     return {
-      title: t.value.event.empty.noPast,
-      message: t.value.event.empty.noPastMessage
+      title: t.value.events.empty.noPast,
+      message: t.value.events.empty.noPastMessage
     }
   }
 })
@@ -191,8 +191,8 @@ const emptyStateConfig = computed(() => {
   <div class="min-h-screen bg-gray-50">
     <!-- Page Header -->
     <PageHeader 
-      :title="t.event.pageTitle"
-      :subtitle="t.event.pageSubtitle"
+      :title="t.events.pageTitle"
+      :subtitle="t.events.pageSubtitle"
       highlight-word="Événements"
     />
 
@@ -219,7 +219,7 @@ const emptyStateConfig = computed(() => {
                 ? 'bg-[#08a4d4] text-white'
                 : 'bg-white text-gray-700 hover:bg-gray-50'
             ]">
-              {{ t.event.filters.upcoming }} ({{ filteredUpcomingEvents.length }})
+              {{ t.events.filters.upcoming }} ({{ filteredUpcomingEvents.length }})
             </button>
             <button @click="viewMode = 'past'" :class="[
               'px-4 py-2 text-sm font-medium border-l border-gray-300 rounded-r-md hover:cursor-pointer',
@@ -227,7 +227,7 @@ const emptyStateConfig = computed(() => {
                 ? 'bg-[#08a4d4] text-white'
                 : 'bg-white text-gray-700 hover:bg-gray-50'
             ]">
-              {{ t.event.filters.past }} ({{ filteredPastEvents.length }})
+              {{ t.events.filters.past }} ({{ filteredPastEvents.length }})
             </button>
           </div>
         </div>

@@ -44,8 +44,8 @@ const getTypeColor = (type: AcademicEvent['type']) => {
 }
 
 const getTypeLabel = (type: AcademicEvent['type']) => {
-  const typeKey = type as keyof typeof t.value.event.eventTypes
-  return t.value.event.eventTypes[typeKey] || type
+  const typeKey = type as keyof typeof t.value.events.eventTypes
+  return t.value.events.eventTypes[typeKey] || type
 }
 
 const openRegistrationLink = () => openUrl(props.eventData.registrationUrl!)
@@ -84,11 +84,11 @@ const isCapacityFull = () => {
             {{ getTypeLabel(eventData.type) }}
           </span>
           <span v-if="!isPast && eventData.registrationUrl" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-            {{ t.event.eventCard.registrationOpen }}
+            {{ t.events.eventCard.registrationOpen }}
           </span>
           <span v-if="!isPast && isCapacityNearFull()" 
             class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 ml-2">
-            {{ t.event.eventCard.limitedSeats }}
+            {{ t.events.eventCard.limitedSeats }}
           </span>
         </div>
         <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ eventData.title }}</h3>
@@ -119,14 +119,14 @@ const isCapacityFull = () => {
     <!-- Speaker -->
     <div v-if="eventData.speaker" class="mb-4">
       <p class="text-sm text-gray-600">
-        <span class="font-medium">{{ t.event.eventCard.speaker }}:</span> {{ eventData.speaker }}
+        <span class="font-medium">{{ t.events.eventCard.speaker }}:</span> {{ eventData.speaker }}
       </p>
     </div>
 
     <!-- Capacity info for upcoming events -->
     <div v-if="!isPast && eventData.capacity && eventData.currentRegistrations" class="mb-4">
       <div class="flex items-center justify-between text-sm text-gray-600 mb-2">
-        <span>{{ t.event.eventCard.registrations }}</span>
+        <span>{{ t.events.eventCard.registrations }}</span>
         <span>{{ eventData.currentRegistrations }} / {{ eventData.capacity }}</span>
       </div>
       <div class="w-full bg-gray-200 rounded-full h-2">
@@ -158,7 +158,7 @@ const isCapacityFull = () => {
         @click="openRegistrationLink"
         class="hover:cursor-pointer"
       >
-        {{ isCapacityFull() ? t.event.eventCard.full : t.event.eventCard.register }}
+        {{ isCapacityFull() ? t.events.eventCard.full : t.events.eventCard.register }}
         <svg v-if="!isCapacityFull()" class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
         </svg>
