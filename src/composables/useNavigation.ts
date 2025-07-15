@@ -19,12 +19,16 @@ const validRoutes = [
   'home', 'people', 'research', 'publications', 'teaching', 
   'events', 'projects', 'vacancies', 'awards',
   'login', 'register',
-  'publication-form', 'event-form', 'project-form', 'invitation-form'
+  'publication-form', 'event-form', 'project-form', 'member-form',
+  'research-form', 'teaching-form', 'award-form', 'vacancy-form',
+  'user-settings-form', 'admin-management-form'
 ]
 
 // Protected routes that require authentication
 const protectedRoutes = [
-  'publication-form', 'event-form', 'project-form', 'invitation-form'
+  'publication-form', 'event-form', 'project-form', 'member-form',
+  'research-form', 'teaching-form', 'award-form', 'vacancy-form',
+  'user-settings-form', 'admin-management-form'
 ]
 
 // Browser history management
@@ -69,7 +73,6 @@ const initializeNavigation = () => {
 /**
  * Navigation composable for SPA routing
  */
-
 export const useNavigation = (): NavigationComposable => {
     const navigateToPage = (page: string) => {
     if (validRoutes.includes(page) && page !== currentPage.value) {

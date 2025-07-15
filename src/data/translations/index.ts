@@ -14,7 +14,7 @@ import { TeachingTranslations, teachingTranslations } from './teaching.translate
 import { ProjectsTranslations, projectsTranslations } from './projects.translate'
 import { VacanciesTranslations, vacanciesTranslations } from './vacancies.translate'
 import { authTranslations, AuthTranslations } from './auth.translate'
-import { formsTranslations, FormsTranslations } from './forms.translate'
+import { formsTranslations, FormsTranslations } from './forms'
 
 export type LanguageCode = 'en' | 'fr'
 
