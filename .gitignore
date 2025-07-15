@@ -5,6 +5,7 @@ backend/venv/
 # Python cache
 *.pyc
 __pycache__/
+.pytest_cache
 # Environnement
 *.env
 .env.*
@@ -31,6 +32,7 @@ flatten
 
 # === Coverage reports ===
 coverage/
+.coverage
 
 # === IDE / Editor ===
 # VSCode
