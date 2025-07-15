@@ -8,7 +8,7 @@ vi.mock('@/composables/useLanguage', () => ({
     t: {
       value: {
         forms: {
-          event: {
+          events: {
             titleEdit: 'Edit Event',
             titleCreate: 'Create Event',
             subtitle: 'Fill in the event details',
