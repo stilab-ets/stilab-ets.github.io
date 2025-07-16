@@ -31,7 +31,6 @@ const handleClick = (id: string) => {
         ? 'bg-[#08a4d4] text-white'
         : 'text-gray-700 hover:bg-gray-100 hover:text-[#08a4d4]'
     ]">
-      <span :class="[props.isMobile ? 'mr-3' : 'mr-2']">{{ item.icon }}</span>
       <span>{{ item.label }}</span>
     </button>
   </div>
