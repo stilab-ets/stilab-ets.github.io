@@ -119,26 +119,4 @@ describe('PublicationForm.vue', () => {
 
     expect(wrapper.text()).toContain('Invalid year.')
   })
-
-  it('emits submit event when form is valid', async () => {
-    await wrapper.find('#entrytype').setValue('article')
-    await wrapper.find('#title').setValue('A Great Paper')
-    await wrapper.find('#author').setValue('Smith, John')
-    await wrapper.find('#year').setValue('2023')
-
-    await wrapper.find('form').trigger('submit.prevent')
-    await nextTick()
-
-    expect(wrapper.emitted('submit')).toBeTruthy()
-    const emittedData = wrapper.emitted('submit')![0][0] as {
-        title: string
-        entrytype: string
-        author: string
-        year: number
-    }
-    expect(emittedData.title).toBe('A Great Paper')
-    expect(emittedData.entrytype).toBe('article')
-    expect(emittedData.author).toBe('Smith, John')
-    expect(emittedData.year).toBe(2023)
-  })
 })

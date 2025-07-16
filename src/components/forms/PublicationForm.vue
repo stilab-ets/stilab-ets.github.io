@@ -2,6 +2,7 @@
 import { ref, reactive, computed, watch } from 'vue'
 import { XCircleIcon } from 'lucide-vue-next'
 import { useLanguage } from '@/composables/useLanguage'
+import axios from 'axios'
 
 interface PublicationForm {
   entrytype: string
@@ -188,18 +189,32 @@ const parseBibtexInput = () => {
 
 const handleSubmit = async () => {
   if (!validateForm()) return
-  
+
   isSubmitting.value = true
   generalError.value = ''
-  
+
   try {
     if (!form.citekey) {
       form.citekey = generateCitekey()
     }
-    
-    emit('submit', { ...form })
-  } catch (error) {
-    generalError.value = t.value.errors.submitFailed
+
+    const payload = {
+      ...form,
+      id: form.citekey.toLowerCase(),
+    }
+
+    const response = await axios.post('http://localhost:8000/api/publications/', payload)
+
+    alert('Publication created successfully!')
+    clearForm()
+  } catch (error: any) {
+    if (error.response?.data?.error) {
+      generalError.value = error.response.data.error
+    } else if (error.response?.data) {
+      generalError.value = JSON.stringify(error.response.data)
+    } else {
+      generalError.value = 'An unexpected error occurred.'
+    }
   } finally {
     isSubmitting.value = false
   }
