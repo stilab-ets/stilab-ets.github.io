@@ -33,6 +33,7 @@ const { t } = useLanguage()
 
 const authors = props.publication.author.split(' and ')
 const showBibtex = ref(false)
+const copySuccess = ref(false)
 
 const getTypeColor = (type: string) => {
   const colors: Record<string, string> = {
@@ -57,6 +58,18 @@ const openLink = (url: string) => {
 
 const toggleBibtex = () => {
   showBibtex.value = !showBibtex.value
+}
+
+const copyBibtex = async () => {
+  try {
+    await navigator.clipboard.writeText(props.publication.bibtex)
+    copySuccess.value = true
+    setTimeout(() => {
+      copySuccess.value = false
+    }, 1500)
+  } catch (err) {
+    console.error('Failed to copy BibTeX:', err)
+  }
 }
 </script>
 
@@ -103,7 +116,7 @@ const toggleBibtex = () => {
         </div>
 
         <!-- Bibtex toggle -->
-        <div class="mb-4">
+        <div class="mb-4 flex items-center space-x-4">
           <button
             @click="toggleBibtex"
             class="text-sm text-[#08a4d4] hover:underline"
@@ -111,13 +124,24 @@ const toggleBibtex = () => {
           >
             {{ showBibtex ? t.publications.publicationCard.hideBibtex : t.publications.publicationCard.showBibtex }}
           </button>
-          <pre
+
+          <button
             v-if="showBibtex"
-            class="mt-2 p-3 bg-gray-100 rounded text-xs whitespace-pre-wrap font-mono overflow-x-auto"
+            @click="copyBibtex"
+            class="text-sm text-[#08a4d4] hover:underline"
+            type="button"
           >
-{{ publication.bibtex }}
-          </pre>
+            📋 {{ copySuccess ? t.publications.publicationCard.bibtexCopied : t.publications.publicationCard.copyBibtex }}
+          </button>
         </div>
+
+        <!-- Bibtex content -->
+        <pre
+          v-if="showBibtex"
+          class="mt-2 p-3 bg-gray-100 rounded text-xs whitespace-pre-wrap font-mono overflow-x-auto"
+        >
+{{ publication.bibtex }}
+        </pre>
       </div>
 
       <!-- Links -->

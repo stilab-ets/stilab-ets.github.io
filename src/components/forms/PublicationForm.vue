@@ -164,19 +164,16 @@ const clearForm = () => {
 const parseBibtexInput = () => {
   try {
     const bibtex = bibtexInput.value.trim()
-    
     if (!bibtex) return
-    
-    // Clear form first
+
     clearForm()
-    
-    // Parse entry type
-    const entryTypeMatch = bibtex.match(/@(\w+)\s*\{/)
+
+    const entryTypeMatch = bibtex.match(/@(\w+)\s*\{\s*([^,]+),/)
     if (entryTypeMatch) {
       form.entrytype = entryTypeMatch[1].toLowerCase()
+      form.citekey = entryTypeMatch[2].trim()
     }
-    
-    // Parse fields
+
     const fieldRegex = /(\w+)\s*=\s*\{([^}]*)\}/g
     let match: RegExpExecArray | null
 
@@ -184,13 +181,6 @@ const parseBibtexInput = () => {
       const [, field, value] = match
       updateFormField(field.toLowerCase(), value.trim())
     }
-    
-    // Auto-generate citekey if not present
-    if (!form.citekey && form.author && form.year) {
-      const firstAuthor = form.author.split(' and ')[0].split(',')[0].toLowerCase()
-      form.citekey = `${firstAuthor}${form.year}`
-    }
-    
   } catch (error) {
     console.error('BibTeX parsing error:', error)
   }
