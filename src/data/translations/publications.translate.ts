@@ -31,6 +31,8 @@ export interface PublicationsTranslations {
     citation: string
     showBibtex: string
     hideBibtex: string
+    copyBibtex?: string
+    bibtexCopied?: string
   }
   results: {
     publication: string
@@ -80,7 +82,9 @@ export const publicationsTranslations = {
       citations: 'citations',
       citation: 'citation',
       showBibtex: 'Afficher BibTeX',
-      hideBibtex: 'Cacher BibTeX'
+      hideBibtex: 'Cacher BibTeX',
+      copyBibtex: 'Copier BibTeX',
+      bibtexCopied: 'BibTeX copié dans le presse-papiers'
     },
     results: {
       publication: 'publication',
@@ -128,7 +132,9 @@ export const publicationsTranslations = {
       citations: 'citations',
       citation: 'citation',
       showBibtex: 'Show BibTeX',
-      hideBibtex: 'Hide BibTeX'
+      hideBibtex: 'Hide BibTeX',
+      copyBibtex: 'Copy BibTeX',
+      bibtexCopied: 'BibTeX copied to clipboard'
     },
     results: {
       publication: 'publication',
