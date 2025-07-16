@@ -4,7 +4,7 @@ from ..models.publication import Publication
 
 
 class PublicationSerializer(serializers.ModelSerializer):
-    bibtex = serializers.SerializerMethodField()
+    bibtex = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Publication
