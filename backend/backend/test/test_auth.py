@@ -39,6 +39,9 @@ def test_register_success(mock_member_create, mock_user_create, register_url):
         "username": "dev",
         "email": "dev@example.com",
         "password": "StrongPass123",
+        "first_name": "dev",
+        "last_name": "dev",
+        "role": "developer",
     }
 
     response = client.post(register_url, data, format="json")
@@ -67,6 +70,9 @@ def test_login_success_email(mock_user_filter, mock_authenticate, login_url):
     mock_user.username = "dev"
     mock_user.email = "dev@example.com"
     mock_user.id = "some-uuid"
+    mock_user.first_name = "dev"
+    mock_user.last_name = "dev"
+    mock_user.role = "developer"
 
     mock_authenticate.return_value = mock_user
 
@@ -89,6 +95,9 @@ def test_login_success_username(mock_user_filter, mock_authenticate, login_url):
     mock_user.username = "dev"
     mock_user.email = "dev@example.com"
     mock_user.id = "some-uuid"
+    mock_user.first_name = "dev"
+    mock_user.last_name = "dev"
+    mock_user.role = "developer"
 
     mock_authenticate.return_value = mock_user
 
