@@ -20,11 +20,16 @@ entity Member {
 
 entity User {
   primary_key(id): UUID
-  username: VARCHAR
-  password_hash: TEXT
+  password: TEXT
+  last_login: TIMESTAMP
+  is_superuser: BOOLEAN
+  username : TEXT
+  first_name: VARCHAR
+  last_name: VARCHAR
   email: VARCHAR
-  role: VARCHAR  // "admin" or "member"
+  is_staff: BOOLEAN
   is_active: BOOLEAN
+  date_joined: TIMESTAMP
 }
 
 entity ResearchProject {
