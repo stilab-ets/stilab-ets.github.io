@@ -131,6 +131,7 @@ const handleSubmit = async () => {
     // Success!
     const result = await response.json()
     alert(t.value.successRegistrationMessage)
+    window.location.href = '/login'
   } catch (error) {
     generalError.value = t.value.errors.registrationFailed
   } finally {
