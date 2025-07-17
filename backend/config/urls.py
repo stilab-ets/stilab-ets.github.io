@@ -18,9 +18,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from backend.views.auth_views import LoginView, RegisterView
 from backend.views.publication_views import PublicationListAPI
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("api/register", RegisterView.as_view(), name="register"),
+    path("api/login", LoginView.as_view(), name="login"),
     path("api/publications/", PublicationListAPI.as_view(), name="publication-list"),
 ]
