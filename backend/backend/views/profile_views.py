@@ -17,13 +17,9 @@ class ProfileView(APIView):
         return Response(serializer.data)
 
     def put(self, request):
-        [IsAuthenticated]
-
         return self.patch(request)
 
     def patch(self, request):
-        [IsAuthenticated]
-
         member = get_object_or_404(Member, user=request.user)
         serializer = MemberSerializer(member, data=request.data, partial=True)
         if serializer.is_valid():
