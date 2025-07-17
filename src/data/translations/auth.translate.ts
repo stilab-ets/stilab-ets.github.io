@@ -72,7 +72,8 @@ export interface AuthTranslations {
     }
     errors: {
       registrationFailed: string
-    }
+    },
+    successRegistrationMessage: string
   }
 }
 
@@ -151,7 +152,8 @@ export const authTranslations = {
       },
       errors: {
         registrationFailed: 'Registration failed. Please try again.'
-      }
+      },
+      successRegistrationMessage: 'Registration successful! You can now log in with your new account.'
     }
   },
   fr: {
@@ -228,7 +230,8 @@ export const authTranslations = {
       },
       errors: {
         registrationFailed: 'L\'inscription a échoué. Veuillez réessayer.'
-      }
+      },
+      successRegistrationMessage: 'Inscription réussie ! Vous pouvez maintenant vous connecter avec votre nouveau compte.'
     }
   }
 } as const

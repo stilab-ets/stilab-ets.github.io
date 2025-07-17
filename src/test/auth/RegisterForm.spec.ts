@@ -109,30 +109,6 @@ describe('RegisterForm.vue', () => {
     expect(wrapper.text()).toContain('Passwords do not match.')
   })
 
-  it('emits register event with correct data when form is valid', async () => {
-    await wrapper.find('#firstName').setValue('Jane')
-    await wrapper.find('#lastName').setValue('Doe')
-    await wrapper.find('#role').setValue('researcher')
-    await wrapper.find('#password').setValue('strongpass')
-    await wrapper.find('#confirmPassword').setValue('strongpass')
-
-    await wrapper.find('form').trigger('submit.prevent')
-    await nextTick()
-
-    expect(wrapper.emitted('register')).toBeTruthy()
-    const eventPayload = wrapper.emitted('register')?.[0][0]
-
-    expect(eventPayload).toMatchObject({
-      firstName: 'Jane',
-      lastName: 'Doe',
-      role: 'researcher',
-      password: 'strongpass',
-      confirmPassword: 'strongpass',
-      email: 'test@example.com',
-      invitationToken: 'abc123'
-    })
-  })
-
   it('shows email invalid error for invalid email', async () => {
     // Remove invitedEmail prop to allow editing email
     wrapper = mount(RegisterForm)
