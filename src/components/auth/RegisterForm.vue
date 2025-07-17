@@ -89,15 +89,48 @@ const validateForm = (): boolean => {
 
 const handleSubmit = async () => {
   if (!validateForm()) return
-  
+
   isSubmitting.value = true
   generalError.value = ''
-  
+  errors.value = {}
+
   try {
-    emit('register', { 
-      ...form,
-      invitationToken: props.invitationToken
+    const response = await fetch('http://localhost:8000/api/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: form.email.split('@')[0],
+        email: form.email,
+        password: form.password,
+        first_name: form.firstName,
+        last_name: form.lastName,
+        role: form.role,
+        phone: form.phone,
+        research_domain: form.researchDomain,
+        biography: form.biography,
+        github_url: form.githubUrl,
+        linkedin_url: form.linkedinUrl,
+        personal_website: form.personalWebsite,
+        invitationToken: props.invitationToken,
+      }),
     })
+
+    if (!response.ok) {
+      const data = await response.json()
+      if (typeof data === 'object') {
+
+        errors.value = data
+      } else {
+        generalError.value = t.value.errors.registrationFailed
+      }
+      return
+    }
+
+    // Success!
+    const result = await response.json()
+    alert(t.value.successRegistrationMessage)
   } catch (error) {
     generalError.value = t.value.errors.registrationFailed
   } finally {
