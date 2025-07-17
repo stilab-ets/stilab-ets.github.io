@@ -7,6 +7,7 @@ from backend.models import Member
 logger = logging.getLogger(__name__)
 
 # first_name,last_name,role,email,start_date,end_date
+CURRENT_PROFESSOR = []
 CURRENT_PHD = [
     "Syrine,Khelifi,PhD,,2024,",
     "Amina,Bouaziz,PhD,,2024,",
