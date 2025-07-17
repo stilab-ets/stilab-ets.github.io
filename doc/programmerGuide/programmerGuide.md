@@ -345,6 +345,91 @@ Creates a new publication.
 #### Publication already exist
  - `400 Bad Request` – A publication with this ID or citekey already exists.
 
+
+## Profile
+### `GET /api/profile`
+Get profile of the authenticated user
+
+#### Response
+- **Status:** `200`
+- **Content-Type:** `application/json`
+```json
+{
+  "id": "aa85fd2b-f6a6-4f81-bc06-89a4d866afdf",
+  "user": {
+    "id": 42,
+    "last_login": null,
+    "is_superuser": false,
+    "username": "test_user",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-07-17T00:39:13.398628Z",
+    "groups": [],
+    "user_permissions": []
+  },
+  "first_name": "dev",
+  "last_name": "dev",
+  "role": "dev",
+  "email": "dev@test.com",
+  "phone": "123-456-7890",
+  "biography": "biography...",
+  "research_domain": "",
+  "image_url": null,
+  "github_url": "https://github.com",
+  "linkedin_url": "https://www.linkedin.com/",
+  "personal_website": "https://test.com/"
+}
+```
+### `PUT /api/profile` or `PATCH /api/profile`
+Update the profile of the authenticated user, partially or fully
+#### Example Request
+
+```json
+{
+  "first_name": "dev",
+  "last_name": "dev",
+  "role": "dev",
+  "email": "dev@test.com",
+  "phone": "123-456-7890",
+  "biography": "biography...",
+  "research_domain": "",
+  "image_url": null,
+  "github_url": "https://github.com",
+  "linkedin_url": "https://www.linkedin.com/",
+  "personal_website": "https://test.com/"
+}
+```
+#### Response
+- **Status:** `200`
+- **Content-Type:** `application/json`
+```json
+{
+  "id": "aa85fd2b-f6a6-4f81-bc06-89a4d866afdf",
+  "user": {
+    "id": 42,
+    "last_login": null,
+    "is_superuser": false,
+    "username": "test_user",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-07-17T00:39:13.398628Z",
+    "groups": [],
+    "user_permissions": []
+  },
+  "first_name": "dev",
+  "last_name": "dev",
+  "role": "dev",
+  "email": "dev@test.com",
+  "phone": "123-456-7890",
+  "biography": "biography...",
+  "research_domain": "",
+  "image_url": null,
+  "github_url": "https://github.com",
+  "linkedin_url": "https://www.linkedin.com/",
+  "personal_website": "https://test.com/"
+}
+```
+
 ---
 
 ## 8. Contribution Guidelines
