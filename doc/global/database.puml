@@ -16,6 +16,7 @@ entity Member {
   linkedin_url: TEXT
   personal_website: TEXT
   user_id: UUID
+  status: VARCHAR
 }
 
 entity User {
