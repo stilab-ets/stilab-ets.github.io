@@ -72,7 +72,11 @@ Django --> DB : SQL Request\n(ORM Django)
 
 ## 4. Development Environment Setup
 
-Steps to set up the project locally.
+Steps to set up the project locally.   
+Clone the project
+```bash
+git clone https://github.com/stilab-ets/stilab-ets.github.io.git
+```
 ### Backend
 1. Install [Docker](https://www.docker.com/products/docker-desktop).
 
@@ -103,6 +107,11 @@ DB_NAME=postgres
 ```sh
 docker compose build
 docker compose up [--build] [-d] # --build to skip the first command, -d to run in detached mode
+```
+
+5. To run tests:
+```bash
+docker compose exec backend sh -c "export DJANGO_SETTINGS_MODULE=config.settings && pytest --cov=backend --cov-report=term --cov-fail-under=60 --cov-config=.coveragerc"
 ```
 
 The database will be available at `localhost:5432` and pgAdmin at `localhost:5050`. The backend app will be available at `localhost:8000`
