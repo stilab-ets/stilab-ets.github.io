@@ -19,6 +19,7 @@ from django.contrib import admin
 from django.urls import path
 
 from backend.views.auth_views import LoginView, RegisterView
+from backend.views.member_view import MemberListAPI
 from backend.views.profile_views import ProfileView
 from backend.views.publication_views import PublicationListAPI
 
@@ -28,4 +29,5 @@ urlpatterns = [
     path("api/login", LoginView.as_view(), name="login"),
     path("api/publications/", PublicationListAPI.as_view(), name="publication-list"),
     path("api/profile", ProfileView.as_view(), name="profile"),
+    path("api/members", MemberListAPI.as_view(), name="member-list"),
 ]

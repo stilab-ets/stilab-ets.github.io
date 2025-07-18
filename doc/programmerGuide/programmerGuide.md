@@ -72,7 +72,11 @@ Django --> DB : SQL Request\n(ORM Django)
 
 ## 4. Development Environment Setup
 
-Steps to set up the project locally.
+Steps to set up the project locally.   
+Clone the project
+```bash
+git clone https://github.com/stilab-ets/stilab-ets.github.io.git
+```
 ### Backend
 1. Install [Docker](https://www.docker.com/products/docker-desktop).
 
@@ -103,6 +107,11 @@ DB_NAME=postgres
 ```sh
 docker compose build
 docker compose up [--build] [-d] # --build to skip the first command, -d to run in detached mode
+```
+
+5. To run tests:
+```bash
+docker compose exec backend sh -c "export DJANGO_SETTINGS_MODULE=config.settings && pytest --cov=backend --cov-report=term --cov-fail-under=60 --cov-config=.coveragerc"
 ```
 
 The database will be available at `localhost:5432` and pgAdmin at `localhost:5050`. The backend app will be available at `localhost:8000`
@@ -170,9 +179,9 @@ src/
 ├─ test/
 │  └─ publications/
 │      ├─ index.ts
-│      ├─ PublicationCard.vue
-│      ├─ PublicationSortOptions.vue
-│      └─ PublicationsPage.vue
+│      ├─ PublicationCard.spec.ts
+│      ├─ PublicationSortOptions.spec.ts
+│      └─ PublicationsPage.spec.ts
 └
 ```
 
@@ -196,6 +205,11 @@ docker compose exec backend python manage.py makemigrations --name migration_nam
 
 ```bash
 docker compose exec backend python manage.py getpublications [--fast | -f]
+```
+
+3. Insert legacy data
+```bash
+docker compose exec backend python manage.py insert_legacy_data 
 ```
 
 ---
@@ -428,6 +442,39 @@ Update the profile of the authenticated user, partially or fully
   "linkedin_url": "https://www.linkedin.com/",
   "personal_website": "https://test.com/"
 }
+```
+
+## Members
+### `GET /api/members`
+
+Retrieves a list of all members.
+
+#### Response
+- **Status:** `200 OK`
+- **Content-Type:** `application/json`
+- **Body:** JSON array of members objects.
+
+#### Example Response
+
+```json
+[
+    {
+        "id": "547815a2-342f-4177-b4a2-f6c8e3ea3b22",
+        "user": null,
+        "first_name": "Ali",
+        "last_name": "Ouni",
+        "role": "PRO",
+        "email": "ali.ouni@etsmtl.ca",
+        "phone": null,
+        "biography": "Ali Ouni is a passionate software engineering researcher and educator. He is a Full Professor in the Department of Software Engineering and IT at École de technologie superieure (ÉTS Montréal), University of Quebec, where he leads the Software Technology and Intelligence Research Lab (STIL). He is the recipient of several prestigeous awards including the CS-Can/Info-Can Outstanding Early Career Computer Science Researcher Award, in 2023, the Research Ecellence Award (Releve) of the University of Quebec in 2023, the Research Ecellence Award-Emerging Researcher from ÉTS Montreal in 2021. He obtained his PhD degree in computer science from the University of Montreal where he was awarded the J. Armand Bombardier Research Excellence Award. Before joining ETS Montreal, he has been an assistant professor at Osaka University, Japan, and UAE University. He has served as a visiting researcher at Missouri University of Science and Technology, and University of Michigan. He has developed pioneering research work in the area of software engineering, software maintenance and evolution, software quality, and empirical software engineering. He leverages advanced artificial intelligence techniques to address challenges related to software products, processes, and stakeholders. His research work has repeatedly published in top venues in software engineering. He is the recipient of over 10 Best Paper awards at top-tier conferences (ICSOC 2024, MSR 2024 Mining Track, SIGCSE 2024, ICSOC 2022, MSR 2021 Mining Track, ICGSE 2020, ICSR 2020, IWoR 2019, Energies 2018, ICWS 2016) and has been done in collaboration with and/or adopted by major industrial software companies. He won the 10-year Most Influential Paper Award (MIP) at IEEE ICPC 2021. He is a member of the IEEE.",
+        "research_domain": null,
+        "image_url": null,
+        "github_url": null,
+        "linkedin_url": null,
+        "personal_website": null,
+        "status": "CRT"
+    }
+]
 ```
 
 ---

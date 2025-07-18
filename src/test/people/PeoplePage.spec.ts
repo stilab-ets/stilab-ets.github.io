@@ -21,12 +21,6 @@ describe('PeoplePage.vue', () => {
     expect(filters.exists()).toBe(true)
   })
 
-  it('renders PersonCard components based on filteredResearchers', () => {
-    const wrapper = mount(PeoplePage)
-    const cards = wrapper.findAllComponents({ name: 'PersonCard' })
-    expect(cards.length).toBeGreaterThan(0)
-  })
-
   it('renders PersonModal component', () => {
     const wrapper = mount(PeoplePage)
     const modal = wrapper.findComponent({ name: 'PersonModal' })

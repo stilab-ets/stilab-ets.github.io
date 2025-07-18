@@ -1,63 +1,119 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { mockResearchers, type Researcher } from '@/data/mockResearchers'
+import { ref, computed, onMounted } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
 import PersonCard from './PersonCard.vue'
 import PersonModal from './PersonModal.vue'
 import PeopleFilters from './PeopleFilters.vue'
 
+interface Member {
+  id: string
+  first_name: string
+  last_name: string
+  role: string
+  email: string | null
+  phone?: string | null
+  biography?: string | null
+  research_domain?: string | null
+  image_url?: string | null
+  github_url?: string | null
+  linkedin_url?: string | null
+  personal_website?: string | null
+  status?: string | null
+}
+
 // State
+const members = ref<Member[]>([])
 const searchQuery = ref('')
 const selectedDomain = ref('')
 const selectedStatus = ref('')
-const selectedResearcher = ref<Researcher | null>(null)
+const selectedMember = ref<Member | null>(null)
 
 // Language
 const { t } = useLanguage()
 
-// Computed
-const filteredResearchers = computed(() => {
-  return mockResearchers.filter(researcher => {
-    const matchesSearch = !searchQuery.value ||
-      researcher.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      researcher.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      researcher.researchDomains.some(domain =>
-        domain.toLowerCase().includes(searchQuery.value.toLowerCase())
-      )
+// Fetch members on mount
+const fetchMembers = async () => {
+  try {
+    const response = await fetch('http://localhost:8000/api/members')
+    if (!response.ok) throw new Error('Failed to fetch members')
+    const data = await response.json()
+    members.value = Array.isArray(data) ? data : []
+  } catch (error) {
+    console.error('Error fetching members:', error)
+  }
+}
+onMounted(fetchMembers)
 
-    const matchesDomain = !selectedDomain.value ||
-      researcher.researchDomains.includes(selectedDomain.value)
+// Dynamically get list of unique research domains
+const uniqueResearchDomains = computed(() => {
+  const domainSet = new Set<string>()
+  for (const member of members.value) {
+    if (member.research_domain) {
+      domainSet.add(member.research_domain)
+    }
+  }
+  return Array.from(domainSet).sort()
+})
 
-    const matchesStatus = !selectedStatus.value ||
-      researcher.status === selectedStatus.value
+// Filtered members based on search + filters
+const filteredMembers = computed(() => {
+  return members.value.filter((member) => {
+    const fullName = `${member.first_name} ${member.last_name}`
+    const matchesSearch =
+      !searchQuery.value ||
+      fullName.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      (member.research_domain &&
+        member.research_domain.toLowerCase().includes(searchQuery.value.toLowerCase())) ||
+      (member.role &&
+        member.role.toLowerCase().includes(searchQuery.value.toLowerCase()))
+
+    const matchesDomain =
+      !selectedDomain.value || member.research_domain === selectedDomain.value
+
+    const matchesStatus =
+      !selectedStatus.value || member.status === selectedStatus.value
 
     return matchesSearch && matchesDomain && matchesStatus
   })
 })
 
-// Methods
-const openModal = (researcher: Researcher) => {
-  selectedResearcher.value = researcher
-}
+const phdStudents = computed(() =>
+  filteredMembers.value.filter(
+    (member) => member.role?.toLowerCase() === 'phd'
+  )
+)
 
+const mStudents = computed(() =>
+  filteredMembers.value.filter(
+    (member) => member.role?.toLowerCase() === 'msc'
+  )
+)
+
+const professors = computed(() =>
+  filteredMembers.value.filter(
+    (member) => member.role?.toLowerCase() === 'pro'
+  )
+)
+
+// Modal methods
+const openModal = (member: Member) => {
+  selectedMember.value = member
+}
 const closeModal = () => {
-  selectedResearcher.value = null
+  selectedMember.value = null
 }
 </script>
 
 <template>
   <div class="min-h-screen bg-gray-50">
-    <!-- Page Header -->
     <div class="bg-white shadow-sm">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="text-center">
-          <h1 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-            <span class="text-[#08a4d4]">{{ t.person.pageTitle }}</span>
-          </h1>
-          <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-            {{ t.person.pageSubtitle }}
-          </p>
-        </div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
+        <h1 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+          <span class="text-[#08a4d4]">{{ t.person.pageTitle }}</span>
+        </h1>
+        <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+          {{ t.person.pageSubtitle }}
+        </p>
       </div>
     </div>
 
@@ -67,36 +123,61 @@ const closeModal = () => {
         v-model:search-query="searchQuery"
         v-model:selected-domain="selectedDomain"
         v-model:selected-status="selectedStatus"
-        :results-count="filteredResearchers.length"
+        :available-domains="uniqueResearchDomains"
+        :results-count="filteredMembers.length"
       />
     </div>
 
-    <!-- People Grid -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <PersonCard
-          v-for="researcher in filteredResearchers"
-          :key="researcher.id"
-          :researcher="researcher"
-          @open-modal="openModal"
-        />
-      </div>
+    <!-- Member sections -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 space-y-12">
 
-      <!-- Empty State -->
-      <div v-if="filteredResearchers.length === 0" class="text-center py-12">
-        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-        </svg>
-        <h3 class="mt-2 text-sm font-medium text-gray-900">{{ t.person.empty.title }}</h3>
-        <p class="mt-1 text-sm text-gray-500">{{ t.person.empty.message }}</p>
-      </div>
+      <!-- PHD STUDENT Section -->
+      <section>
+        <h2 class="text-2xl font-bold mb-4">{{ t.person.sections.phd }}</h2>
+        <div v-if="phdStudents.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <PersonCard
+            v-for="member in phdStudents"
+            :key="member.id"
+            :member="member"
+            @open-modal="openModal"
+          />
+        </div>
+        <p v-else class="text-gray-500">No PHD students found.</p>
+      </section>
+
+      <!-- M STUDENT Section -->
+      <section>
+        <h2 class="text-2xl font-bold mb-4">{{ t.person.sections.msc }}</h2>
+        <div v-if="mStudents.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <PersonCard
+            v-for="member in mStudents"
+            :key="member.id"
+            :member="member"
+            @open-modal="openModal"
+          />
+        </div>
+        <p v-else class="text-gray-500">No M students found.</p>
+      </section>
+
+      <!-- PROFESSOR Section -->
+      <section>
+        <h2 class="text-2xl font-bold mb-4">{{ t.person.sections.pro }}</h2>
+        <div v-if="professors.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <PersonCard
+            v-for="member in professors"
+            :key="member.id"
+            :member="member"
+            @open-modal="openModal"
+          />
+        </div>
+        <p v-else class="text-gray-500">No professors found.</p>
+      </section>
+
     </div>
 
-    <!-- Researcher Modal -->
     <PersonModal
-      :researcher="selectedResearcher"
-      :is-open="selectedResearcher !== null"
+      :member="selectedMember"
+      :is-open="selectedMember !== null"
       @close="closeModal"
     />
   </div>
