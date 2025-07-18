@@ -241,9 +241,9 @@ const handleSubmit = async () => {
               :class="{ 'border-red-500': errors.role }"
             >
               <option value="">{{ t.form.selectRole }}</option>
-              <option value="professor">{{ t.roles.professor }}</option>
+              <option value="pro">{{ t.roles.professor }}</option>
               <option value="phd">{{ t.roles.phd }}</option>
-              <option value="master">{{ t.roles.master }}</option>
+              <option value="msc">{{ t.roles.master }}</option>
             </select>
             <p v-if="errors.role" class="mt-1 text-sm text-red-600">{{ errors.role }}</p>
           </div>
