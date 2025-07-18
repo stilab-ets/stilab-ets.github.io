@@ -18,7 +18,7 @@ describe('PeoplePage.vue', () => {
   it('renders PeopleFilters component', () => {
     const wrapper = mount(PeoplePage)
     const filters = wrapper.findComponent({ name: 'PeopleFilters' })
-    expect(filters.exists()).toBe(false) // TODO : Change to true when refractored filters component is ready
+    expect(filters.exists()).toBe(true)
   })
 
   it('renders PersonModal component', () => {
