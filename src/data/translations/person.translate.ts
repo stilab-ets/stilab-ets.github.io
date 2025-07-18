@@ -36,6 +36,11 @@ export interface PersonTranslations {
     found: string
     noResults: string
   }
+  sections: {
+    phd: string
+    msc: string
+    pro: string
+  }
   empty: {
     title: string
     message: string
@@ -81,6 +86,11 @@ export const personTranslations = {
       found: 'trouvé',
       noResults: 'trouvés',
     },
+    sections: {
+      phd: 'Doctorants',
+      msc: 'Masters',
+      pro: 'Professeurs'
+    },
     empty: {
       title: 'Aucun membre trouvé',
       message: 'Essayez de modifier vos critères de recherche.'
@@ -123,6 +133,11 @@ export const personTranslations = {
       members: 'members',
       found: 'found',
       noResults: 'found',
+    },
+    sections: {
+      phd: 'PhD Students',
+      msc: 'Masters',
+      pro: 'Professors'
     },
     empty: {
       title: 'No members found',

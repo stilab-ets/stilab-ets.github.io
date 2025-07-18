@@ -77,6 +77,24 @@ const filteredMembers = computed(() => {
   })
 })
 
+const phdStudents = computed(() =>
+  filteredMembers.value.filter(
+    (member) => member.role?.toLowerCase() === 'phd'
+  )
+)
+
+const mStudents = computed(() =>
+  filteredMembers.value.filter(
+    (member) => member.role?.toLowerCase() === 'msc'
+  )
+)
+
+const professors = computed(() =>
+  filteredMembers.value.filter(
+    (member) => member.role?.toLowerCase() === 'pro'
+  )
+)
+
 // Modal methods
 const openModal = (member: Member) => {
   selectedMember.value = member
@@ -110,39 +128,51 @@ const closeModal = () => {
       />
     </div>
 
-    <!-- Member cards -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <PersonCard
-          v-for="member in filteredMembers"
-          :key="member.id"
-          :member="member"
-          @open-modal="openModal"
-        />
-      </div>
+    <!-- Member sections -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 space-y-12">
 
-      <!-- Empty state -->
-      <div v-if="filteredMembers.length === 0" class="text-center py-12">
-        <svg
-          class="mx-auto h-12 w-12 text-gray-400"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+      <!-- PHD STUDENT Section -->
+      <section>
+        <h2 class="text-2xl font-bold mb-4">{{ t.person.sections.phd }}</h2>
+        <div v-if="phdStudents.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <PersonCard
+            v-for="member in phdStudents"
+            :key="member.id"
+            :member="member"
+            @open-modal="openModal"
           />
-        </svg>
-        <h3 class="mt-2 text-sm font-medium text-gray-900">
-          {{ t.person.empty.title }}
-        </h3>
-        <p class="mt-1 text-sm text-gray-500">
-          {{ t.person.empty.message }}
-        </p>
-      </div>
+        </div>
+        <p v-else class="text-gray-500">No PHD students found.</p>
+      </section>
+
+      <!-- M STUDENT Section -->
+      <section>
+        <h2 class="text-2xl font-bold mb-4">{{ t.person.sections.msc }}</h2>
+        <div v-if="mStudents.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <PersonCard
+            v-for="member in mStudents"
+            :key="member.id"
+            :member="member"
+            @open-modal="openModal"
+          />
+        </div>
+        <p v-else class="text-gray-500">No M students found.</p>
+      </section>
+
+      <!-- PROFESSOR Section -->
+      <section>
+        <h2 class="text-2xl font-bold mb-4">{{ t.person.sections.pro }}</h2>
+        <div v-if="professors.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <PersonCard
+            v-for="member in professors"
+            :key="member.id"
+            :member="member"
+            @open-modal="openModal"
+          />
+        </div>
+        <p v-else class="text-gray-500">No professors found.</p>
+      </section>
+
     </div>
 
     <PersonModal
