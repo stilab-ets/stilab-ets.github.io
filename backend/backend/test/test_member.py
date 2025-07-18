@@ -1,9 +1,8 @@
-import pytest
-
 from django.contrib.auth.models import User
 from django.urls import reverse
-
 from rest_framework.test import APIClient
+
+import pytest
 
 from backend.models.member import Member
 
