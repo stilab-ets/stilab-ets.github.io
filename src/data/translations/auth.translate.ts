@@ -53,12 +53,8 @@ export interface AuthTranslations {
     }
     roles: {
       professor: string
-      researcher: string
-      postdoc: string
       phd: string
       master: string
-      engineer: string
-      admin: string
     }
     validation: {
       firstNameRequired: string
@@ -132,13 +128,9 @@ export const authTranslations = {
         submitting: 'Creating account...'
       },
       roles: {
-        professor: 'Professor',
-        researcher: 'Researcher',
-        postdoc: 'Post-Doctoral Researcher',
-        phd: 'PhD Student',
-        master: 'Master Student',
-        engineer: 'Research Engineer',
-        admin: 'Administrator'
+        professor: 'PRO',
+        phd: 'PHD',
+        master: 'MSC'
       },
       validation: {
         firstNameRequired: 'First name is required',
@@ -210,13 +202,9 @@ export const authTranslations = {
         submitting: 'Création du compte...'
       },
       roles: {
-        professor: 'Professeur',
-        researcher: 'Chercheur',
-        postdoc: 'Chercheur Post-Doctoral',
-        phd: 'Doctorant',
-        master: 'Étudiant Master',
-        engineer: 'Ingénieur de Recherche',
-        admin: 'Administrateur'
+        professor: 'PRO',
+        phd: 'PHD',
+        master: 'MSC'
       },
       validation: {
         firstNameRequired: 'Le prénom est requis',

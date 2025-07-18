@@ -242,12 +242,8 @@ const handleSubmit = async () => {
             >
               <option value="">{{ t.form.selectRole }}</option>
               <option value="professor">{{ t.roles.professor }}</option>
-              <option value="researcher">{{ t.roles.researcher }}</option>
-              <option value="postdoc">{{ t.roles.postdoc }}</option>
               <option value="phd">{{ t.roles.phd }}</option>
               <option value="master">{{ t.roles.master }}</option>
-              <option value="engineer">{{ t.roles.engineer }}</option>
-              <option value="admin">{{ t.roles.admin }}</option>
             </select>
             <p v-if="errors.role" class="mt-1 text-sm text-red-600">{{ errors.role }}</p>
           </div>
