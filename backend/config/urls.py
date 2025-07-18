@@ -19,9 +19,9 @@ from django.contrib import admin
 from django.urls import path
 
 from backend.views.auth_views import LoginView, RegisterView
+from backend.views.member_view import MemberListAPI
 from backend.views.profile_views import ProfileView
 from backend.views.publication_views import PublicationListAPI
-from backend.views.member_view import MemberListAPI
 
 urlpatterns = [
     path("admin/", admin.site.urls),
