@@ -2,82 +2,9 @@ import logging
 
 from django.core.management.base import BaseCommand
 
-from backend.models import Member
+from backend.models import Award, AwardRecipient, Member
 
 logger = logging.getLogger(__name__)
-
-# first_name,last_name,role,email,start_date,end_date
-CURRENT_PROFESSOR = []
-CURRENT_PHD = [
-    "Syrine,Khelifi,PhD,,2024,",
-    "Amina,Bouaziz,PhD,,2024,",
-    "Mahi,Begoug,PhD,,2023,",
-    "Mohamed,Amine Batoun,PhD,,2022,",
-    "Narjes,Bessghaier,PhD,,2020,",
-    "Jasem,Khelifi,M.Sc,,2024,",
-    "Chemseddine,Mebarki,M.Ing.,,2023,",
-    "Nathan,Babaka Kinalendele,M.Ing.,,2023,",
-    "Jack,Rayane Djapa Tchagwo,M.Ing.,,2022,",
-    "Yassine Rabbouh,M.Ing.,,2022,",
-    "Francener,Alezy,M.Sc.,,2021,",
-]
-
-# CURRENT_MASTER = [
-#
-#     "Syrine Khelifi,PhD,2024 - current",
-#     "Amina Bouaziz,PhD,2024 - current (co-supervided with Dr. Saied, Univ. Laval)",
-#     "Mahi Begoug,PhD,2023 - current",
-#     "Mohamed Amine Batoun,PhD,2022 - current (co-supervided with Dr. Sayagh)",
-#     "Narjes Bessghaier,PhD,2020 - current (co-supervided with Dr. Sayagh)",
-#     "Jasem Khelifi,M.Sc,2024 - current",
-#     "Chemseddine Mebarki,M.Ing.,2023 - current",
-#     "Nathan Babaka Kinalendele,M.Ing.,2023 - current",
-#     "Jack Rayane Djapa Tchagwo,M.Ing.,2022 - current",
-#     "Yassine Rabbouh,M.Ing.,2022 - current",
-#     "Francener Alezy,M.Sc.,2021 - current"
-# ]
-#
-#
-# CURRENT_INTERN = [
-#     "Alaa Ajjel,MSc,Summer 2024",
-#     "Nour Bousrih,MSc,Summer 2024",
-#     "Issam Oukhay,MsC,Summer 2024"
-# ]
-#
-# PAST_MEMBERS = [
-#     "Moataz Chouchen,PhD,2024, Now Assistant Professor at Concordia University",
-#     "Nuri Almarimi,PhD,2023. Now Postdoctoral researcher at the University of Saskatchewan.",
-#     "Islem Saidani,PhD,2022. Now Data engineer at LGS, an IBM Company",
-#     "Marwa Daagi,PhD,2021. Now Assistant Professor at CESI engineering school, Pau, France.",
-#     "Wilfried Nkouekam Mbouga,M.Ing.,2022. Now Software Engineer at Famic Technologies",
-#     "Hinda Abassi,M.Ing.,2022.",
-#     "Lea Charara,M.Ing.,2022. Now Full Stack Developer at Hubelia",
-#     "Mohamad Kredly,M.Ing.,2022",
-#     "Abdelkerim Haroun Ibrahim,M.Ing.,2022. Now software engineer at ABB Canada",
-#     "Bayes Diarra,M.Ing.,2021. Now Software developer at Ministère de la santé et des services sociaux (MSSS), Quebec",
-#     "Mohamed Larbi Skalli,M.Ing.,2021. Now Software developer at COGITO Coatching",
-#     "Mahar Benmesbah,M.Ing.,2020. Now Software engineer at Berger-Levrault North America",
-#     "Massiwen Akrour,M.Ing.,2021. Now Software engineer at Intact Insurance",
-#     "Moulay Taieb Alaoui Harouni,M.Ing.,2021. Now Data Engineer at Bombardier",
-#     "Soufiane Alami,M.Ing.,2021. Now Software Analyst at Desjardins",
-#     "Mustapha Felfoul,M.Ing.,2022. Now Software analyst at Purkinje",
-#     "Richardson Alexandre,M.Ing.,2022. Now Full Stack Developer at Ordigraphe inc.",
-#     "Oumayma Hamdi,MSc.,2021. Now Software engineer at ALTEN Canada",
-#     "Ilyas Chahid,M.Ing.,2021. Now Full Stack developer at Koolskools",
-#     "Aurélien Jefferson Olongo Onana Noah,M.Ing.,2021.",
-#     "Francener Alezy,M.Ing. 2020,Now Senior Software Web Developer at Cubeler Business Hub",
-#     "Miguel Gonzales Hernandez,M.Ing. 2020. Now software analyst at TELUS.",
-#     "Yacine Thabet,M.Ing. 2019,Now PhD student.",
-#     "Moataz Chouchen,M.Sc. 2019,Now PhD student at ETS Montreal",
-#     "Safouane Bani,M.Ing. 2019,Now Web designer at 8P Design.",
-#     "Sabrine Boukharata,MSc,2019. Now Software Analyst at GIRO",
-#     "Bechir Jebali,M.Ing. 2019,Now software analyst at the Ministry of MIDI, Quebec.",
-#     "Naoya Ujihara,M.Eng.,2016. Now Software analyst at NTT Japan",
-#     "Farah Hachicha,M.Sc.,Summer 2023",
-#     "Jouhaina Nasri,M.Sc.,Summer 2023",
-#     "Jasem Khelifi,Undergad,Summer 2023",
-#     "Fatma Beji,Undergad,Summer 2023"
-# ]
 
 
 class Command(BaseCommand):
@@ -85,19 +12,22 @@ class Command(BaseCommand):
         return
 
     def handle(self, *args, **options):
-        members = self.get_members(CURRENT_PHD)
+        self.insert_members()
+        self.insert_awards()
+
+    def insert_members(self):
+        members = self.get_members(MEMBERS)
         for member in members:
-            if member["email"] == "":
-                member["email"] = None
             try:
                 obj, created = Member.objects.update_or_create(
-                    email=member["email"],
+                    first_name=member["first_name"],
+                    last_name=member["last_name"],
                     defaults={
-                        "first_name": member["first_name"],
-                        "last_name": member["last_name"],
                         "role": member["role"],
+                        "status": member["status"],
+                        "email": member["email"] or None,
                         "phone": None,
-                        "biography": None,
+                        "biography": member["biography"] or None,
                         "research_domain": None,
                         "image_url": None,
                         "github_url": None,
@@ -115,18 +45,208 @@ class Command(BaseCommand):
             else:
                 logger.info(f"Member '{member}' not created")
 
+    def insert_awards(self):
+        for award in AWARDS:
+            try:
+                obj, created = Award.objects.update_or_create(
+                    title=award["title"],
+                    defaults={
+                        "url": award["url"],
+                    },
+                )
+
+            except Exception as e:
+                print(f"Error creating the award '{award}' - {e}")
+                logger.error(f"Error creating the award '{award}' - {e}")
+                continue
+            if created:
+                logger.info(f"Award '{Award}' created")
+                for recipient in award["award_recipients"]:
+                    name = recipient.strip().split(",")
+
+                    try:
+                        member = Member.objects.get(first_name=name[0].strip(), last_name=name[1].strip())
+
+                        recipient, created = AwardRecipient.objects.update_or_create(
+                            award=obj,
+                            member=member,
+                            defaults={},
+                        )
+                    except Member.DoesNotExist:
+                        continue
+                    except Exception as e:
+                        print(f"Error creating the award recipient '{recipient}' - {e}")
+                        logger.error(f"Error creating the award recipient '{recipient}'")
+                        continue
+
+            else:
+                logger.info(f"Award '{Award}' not created")
+
+    def insert_teachings(self):
+        return
+
     def get_members(self, data_strings):
-        people = []
+        members = []
         for person_string in data_strings:
-            parts = person_string.strip().split(",")
-            if len(parts) == 6:
-                person = {
-                    "first_name": parts[0],
-                    "last_name": parts[1],
-                    "role": parts[2],
-                    "email": parts[3],
-                    "start_date": parts[4],
-                    "end_date": parts[5],
-                }
-                people.append(person)
-        return people
+            parts = person_string.strip().split(",", 5)
+            member = {"first_name": parts[0], "last_name": parts[1], "role": parts[2], "email": parts[3], "status": parts[4], "biography": parts[5]}
+            members.append(member)
+        return members
+
+
+MEMBERS = [
+    "Ali,Ouni,PRO,ali.ouni@etsmtl.ca,CRT,Ali Ouni is a passionate software "
+    "engineering researcher and educator. He is a Full Professor in the "
+    "Department of Software Engineering and IT at École de technologie "
+    "superieure (ÉTS Montréal), University of Quebec, where he leads the "
+    "Software Technology and Intelligence Research Lab (STIL). He is the "
+    "recipient of several prestigeous awards including the CS-Can/Info-Can "
+    "Outstanding Early Career Computer Science Researcher Award, in 2023, the "
+    "Research Ecellence Award (Releve) of the University of Quebec in 2023, "
+    "the Research Ecellence Award-Emerging Researcher from ÉTS Montreal in "
+    "2021. He obtained his PhD degree in computer science from the University "
+    "of Montreal where he was awarded the J. Armand Bombardier Research "
+    "Excellence Award. Before joining ETS Montreal, he has been an assistant "
+    "professor at Osaka University, Japan, and UAE University. He has served "
+    "as a visiting researcher at Missouri University of Science and "
+    "Technology, and University of Michigan. He has developed pioneering "
+    "research work in the area of software engineering, software maintenance "
+    "and evolution, software quality, and empirical software engineering. He "
+    "leverages advanced artificial intelligence techniques to address "
+    "challenges related to software products, processes, and stakeholders. "
+    "His research work has repeatedly published in top venues in software "
+    "engineering. He is the recipient of over 10 Best Paper awards at "
+    "top-tier conferences (ICSOC 2024, MSR 2024 Mining Track, SIGCSE 2024, "
+    "ICSOC 2022, MSR 2021 Mining Track, ICGSE 2020, ICSR 2020, IWoR 2019, "
+    "Energies 2018, ICWS 2016) and has been done in collaboration with and/or "
+    "adopted by major industrial software companies. He won the 10-year Most "
+    "Influential Paper Award (MIP) at IEEE ICPC 2021. He is a member of the "
+    "IEEE.",
+    "Mahi,Begoug,PHD,mahi.begoug.1@ens.etsmtl.ca,CRT,",
+    "Jassem,Khelifi,PHD,jasem.khelifi.1@ens.etsmtl.ca,CRT,",
+    "Syrine,Khelifi,PHD,syrine.khelifi.1@ens.etsmtl.ca,CRT,",
+    "Issam,Oukhay,MSC,issam.oukhay.1@ens.etsmtl.ca,CRT,",
+    "Narjess,Bessghaier,PHD,,GRD,",
+    "Moataz,Chouchen,PHD,,GRD,",
+]
+
+AWARDS = [
+    {
+        "title": (
+            "Ranked among the Most Impactful and Most Active Early Stage "
+            "Researchers worldwide in Software Engineering. W. E. Wong, N. "
+            "Mittas, E. M. Arvanitou, Y. Li, A Bibliometric Assessment of "
+            "Software Engineering Scholars and Institutions (2013-2020), "
+            "Journal of Systems and Software (JSS), Elsevier, 2021."
+        ),
+        "url": "https://doi.org/10.1016/j.jss.2021.111029",
+        "award_recipients": ["Ali, Ouni"],
+    },
+    {
+        "title": (
+            "Ranked among TOP-3 researchers in the field of search-based "
+            "software refactoring. Thaina Mariani, Silvia Regina Vergilio, A "
+            "systematic review on search-based refactoring, Journal of "
+            "Information and Software Technology (IST), Elsevier, 2016."
+        ),
+        "url": "http://dx.doi.org/10.1016/j.infsof.2016.11.00",
+        "award_recipients": ["Ali, Ouni"],
+    },
+    {
+        "title": (
+            "CS-Can/Info-Can Outstanding Early Career Computer Science "
+            "Researcher Award, Canada’s national Computer Science academic "
+            "organization (CS-Can/Info-Can), 2023"
+        ),
+        "url": "https://cscan-infocan.ca/",
+        "award_recipients": ["Ali, Ouni"],
+    },
+    {
+        "title": (
+            "Research Ecellence Award (Releve) of the University of Quebec, "
+            "2023. Award from all disciplines in natural sciences, engineering, "
+            "and health sciences."
+        ),
+        "url": "https://reseau.uquebec.ca/fr/a-propos/prix-et-distinctions/prix-dexcellence",
+        "award_recipients": ["Ali, Ouni"],
+    },
+    {
+        "title": ("Early Career Research Ecellence Award, ETS Montreal, 2021."),
+        "url": "https://www.etsmtl.ca/ets/a-propos/prix-et-distinctions",
+        "award_recipients": ["Ali, Ouni"],
+    },
+    {
+        "title": (
+            "PhD Outstanding Research Award, FESP, University of Montreal, 2014. "
+            "The highest University honor that PhD students engaged in research "
+            "can receive."
+        ),
+        "url": None,
+        "award_recipients": ["Ali, Ouni"],
+    },
+    {
+        "title": ("PhD Research Excellence Award, J. Armand Bombardier Foundation, " "Canada, 2014."),
+        "url": "https://www.fondationbombardier.ca/en/",
+        "award_recipients": ["Ali, Ouni"],
+    },
+    {
+        "title": (
+            "Outstanding Graduate student excellence award, Department of "
+            "Computer Science and Operations Research (DIRO), University of "
+            "Montreal, 2013. The highest departmental Award for excellent "
+            "graduate students."
+        ),
+        "url": "http://diro.umontreal.ca/accueil/",
+        "award_recipients": ["Ali, Ouni"],
+    },
+    {
+        "title": ("Excellence Doctoral Scholarship Award, MESR, Government of Tunisia " "(2011-2014)."),
+        "url": "http://www.mesrst.tn/anglais/index.htm",
+        "award_recipients": ["Ali, Ouni"],
+    },
+    {
+        "title": ("10-Year Most Influential Paper Award at the 29th IEEE/ACM " "International Conference on Program Comprehension (ICPC) 2021."),
+        "url": "https://conf.researchr.org/home/icpc-2021",
+        "award_recipients": ["Ali, Ouni"],
+    },
+    {
+        "title": ("Best Paper Award, 55th ACM Technical Symposium on Computer Science " "Education (SIGCSE), 2024."),
+        "url": "https://sigcse2024.sigcse.org/",
+        "award_recipients": ["Ali, Ouni"],
+    },
+    {
+        "title": ("Distinguished Paper Award, 20th International Conference on " "Service-Oriented Computing (ICSOC), 2022."),
+        "url": "https://icsoc2022.spilab.es/",
+        "award_recipients": ["Ali, Ouni"],
+    },
+    {
+        "title": ("Best Paper Award, ACM International Conference on Mining Software " "Repositories (MSR) 2022, Mining Challenge track."),
+        "url": "https://conf.researchr.org/home/msr-2022",
+        "award_recipients": ["Ali, Ouni"],
+    },
+    {
+        "title": ("Best Paper Award Finalist, 19th International Conference on " "Software and Systems Reuse (ICSR), 2020."),
+        "url": "https://icsr2020.wordpress.com/",
+        "award_recipients": ["Ali, Ouni"],
+    },
+    {
+        "title": ("ACM SIGSOFT Best Paper Award, the 15th ACM/IEEE International " "Conference on Global Software Engineering (ICGSE), 2020."),
+        "url": "https://conf.researchr.org/home/icgse-2020",
+        "award_recipients": ["Ali, Ouni"],
+    },
+    {
+        "title": ("Best Paper Award, Journal of Energies, 2019."),
+        "url": "https://www.mdpi.com/journal/energies/awards/621",
+        "award_recipients": ["Ali, Ouni"],
+    },
+    {
+        "title": ("Best Paper Award, the IEEEInternational Workshop on Refactoring " "(IWoR@ICSE), 2019."),
+        "url": "https://iwor.github.io/iwor2019/",
+        "award_recipients": ["Ali, Ouni"],
+    },
+    {
+        "title": ("Best Paper Award Runner-up, IEEE International Conference on Web " "Services (ICWS), 2016."),
+        "url": "https://www.computer.org/csdl/proceedings/icws/2016/12OmNyQ7G5O",
+        "award_recipients": ["Ali, Ouni"],
+    },
+]

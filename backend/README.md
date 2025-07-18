@@ -43,7 +43,13 @@ docker compose exec backend python manage.py makemigrations --name migration_nam
 
 ```
 
-5. Synchronise publications:
+5. Insert Legacy data 
+
+```bash
+docker compose exec backend python manage.py insert_legacy_data 
+```
+
+6. Synchronise publications:
 
 ```bash
 docker compose exec backend python manage.py getpublications [--fast | -f]
