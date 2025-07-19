@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
 import { mockResearchers } from '@/data/mockResearchers'
 
@@ -13,79 +13,77 @@ import EmptyState from '@/ui/EmptyState.vue'
 import AwardsTimeline from './AwardsTimeline.vue'
 import NotableAchievements from './NotableAchievements.vue'
 
+interface AwardRecipient {
+  id: string
+  first_name: string
+  last_name: string
+  role: string
+  email: string | null
+  phone?: string | null
+  biography?: string | null
+  research_domain?: string | null
+  image_url?: string | null
+  github_url?: string | null
+  linkedin_url?: string | null
+  personal_website?: string | null
+  status?: string | null
+}
+
 // Extended award data structure
-interface AwardWithMember {
-  member: string;
-  award: {
-    id: string;
-    title: string;
-    year: number;
-    organization: string;
-    icon: string;
-  };
-  description?: string;
+interface Award {
+  recipients: AwardRecipient[];
+  id: string;
+  title: string;
+  url: string;
+  year?: number;
+  organization: string;
 }
 
 // Language and translations
 const { t } = useLanguage()
 
 // State
+const allAwards = ref<Award[]>([]);
 const selectedYear = ref('')
 const selectedOrganization = ref('')
 const selectedMember = ref('')
 const currentYear = new Date().getFullYear()
 
 // Generate all awards from researchers
-const allAwards = computed(() => {
-  const awards: AwardWithMember[] = []
-
-  mockResearchers.forEach(researcher => {
-    researcher.awards.forEach(award => {
-      awards.push({
-        member: researcher.name,
-        award: award,
-        description: generateAwardDescription(award.title, researcher.name)
-      })
-    })
-  })
-
-  return awards.sort((a, b) => b.award.year - a.award.year)
-})
-
-// Generate description for awards
-const generateAwardDescription = (title: string, memberName: string): string => {
-  const descriptions: { [key: string]: string } = {
-    'Best Paper Award': `Récompense pour l'excellence de la recherche présentée par ${memberName}.`,
-    'Excellence in Research Award': `Reconnaissance de la contribution exceptionnelle de ${memberName} à la recherche.`,
-    'Distinguished Scientist': `Titre honorifique accordé à ${memberName} pour son expertise reconnue.`,
-    'Lifetime Achievement Award': `Prix pour l'ensemble de la carrière exceptionnelle de ${memberName}.`
+const fetchAwards = async () => {
+  try {
+    const response = await fetch('http://localhost:8000/api/awards')
+    if (!response.ok) throw new Error('Failed to fetch awards')
+    const data = await response.json()
+    allAwards.value = Array.isArray(data) ? data : []
+  } catch (error) {
+    console.error('Error fetching members:', error)
   }
-
-  return descriptions[title] || `Prix décerné à ${memberName} pour ses contributions remarquables.`
 }
+onMounted(fetchAwards)
 
 // Computed properties
 const uniqueOrganizations = computed(() => {
-  return [...new Set(allAwards.value.map(a => a.award.organization))].sort()
+ return [...new Set(allAwards.value.map(a => a.organization))].sort()
 })
 
 const awardedMembers = computed(() => {
-  return [...new Set(allAwards.value.map(a => a.member))].sort()
+  return [...new Set(allAwards.value.map(a => a.recipients))].sort()
 })
 
 const availableYears = computed(() => {
-  return [...new Set(allAwards.value.map(a => a.award.year))].sort((a, b) => b - a)
+  return [...new Set(allAwards.value.map(a => a.year))].sort((a, b) => b - a)
 })
 
 const oldestAwardYear = computed(() => {
-  return Math.min(...allAwards.value.map(a => a.award.year))
+  return Math.min(...allAwards.value.map(a => a.year))
 })
 
 const filteredAwards = computed(() => {
   return allAwards.value.filter(awardData => {
-    const matchesYear = !selectedYear.value || awardData.award.year.toString() === selectedYear.value
-    const matchesOrg = !selectedOrganization.value || awardData.award.organization === selectedOrganization.value
-    const matchesMember = !selectedMember.value || awardData.member === selectedMember.value
+    const matchesYear = !selectedYear.value || awardData.year.toString() === selectedYear.value
+    const matchesOrg = !selectedOrganization.value || awardData.organization === selectedOrganization.value
+    const matchesMember = !selectedMember.value || awardData.recipients.map(x => x.first_name).includes(selectedMember.value)
 
     return matchesYear && matchesOrg && matchesMember
   })

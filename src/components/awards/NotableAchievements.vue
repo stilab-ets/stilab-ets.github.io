@@ -3,20 +3,36 @@ import { computed } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
 import Card from '@/ui/Card.vue'
 
-interface AwardWithMember {
-  member: string;
-  award: {
-    id: string;
-    title: string;
-    year: number;
-    organization: string;
-    icon: string;
-  };
-  description?: string;
+interface AwardRecipient {
+  id: string
+  first_name: string
+  last_name: string
+  role: string
+  email: string | null
+  phone?: string | null
+  biography?: string | null
+  research_domain?: string | null
+  image_url?: string | null
+  github_url?: string | null
+  linkedin_url?: string | null
+  personal_website?: string | null
+  status?: string | null
 }
 
+// Extended award data structure
+interface Award {
+  recipients: AwardRecipient[];
+  id: string;
+  title: string;
+  url: string;
+  year?: number;
+  organization: string;
+}
+
+
+
 interface Props {
-  allAwards: AwardWithMember[]
+  allAwards: Award[]
 }
 
 const props = defineProps<Props>()
@@ -25,24 +41,24 @@ const { t } = useLanguage()
 // Award statistics
 const bestPaperAwards = computed(() => {
   return props.allAwards.filter(a =>
-    a.award.title.toLowerCase().includes('best paper') ||
-    a.award.title.toLowerCase().includes('paper award')
+    a.title.toLowerCase().includes('best paper') ||
+    a.title.toLowerCase().includes('paper award')
   ).length
 })
 
 const researchExcellenceAwards = computed(() => {
   return props.allAwards.filter(a =>
-    a.award.title.toLowerCase().includes('excellence') ||
-    a.award.title.toLowerCase().includes('distinguished') ||
-    a.award.title.toLowerCase().includes('achievement')
+    a.title.toLowerCase().includes('excellence') ||
+    a.title.toLowerCase().includes('distinguished') ||
+    a.title.toLowerCase().includes('achievement')
   ).length
 })
 
 const industryAwards = computed(() => {
   return props.allAwards.filter(a =>
-    a.award.organization.toLowerCase().includes('industry') ||
-    a.award.organization.toLowerCase().includes('ieee') ||
-    a.award.organization.toLowerCase().includes('acm')
+    a.organization.toLowerCase().includes('industry') ||
+    a.organization.toLowerCase().includes('ieee') ||
+    a.organization.toLowerCase().includes('acm')
   ).length
 })
 
