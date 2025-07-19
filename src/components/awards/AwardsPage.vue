@@ -15,18 +15,20 @@ import NotableAchievements from './NotableAchievements.vue'
 
 interface AwardRecipient {
   id: string
-  first_name: string
-  last_name: string
-  role: string
-  email: string | null
-  phone?: string | null
-  biography?: string | null
-  research_domain?: string | null
-  image_url?: string | null
-  github_url?: string | null
-  linkedin_url?: string | null
-  personal_website?: string | null
-  status?: string | null
+  member: {
+    first_name: string
+    last_name: string
+    role: string
+    email: string | null
+    phone?: string | null
+    biography?: string | null
+    research_domain?: string | null
+    image_url?: string | null
+    github_url?: string | null
+    linkedin_url?: string | null
+    personal_website?: string | null
+    status?: string | null
+  }
 }
 
 // Extended award data structure
@@ -35,7 +37,7 @@ interface Award {
   id: string;
   title: string;
   url: string;
-  year?: number;
+  year: number;
   organization: string;
 }
 
@@ -68,8 +70,14 @@ const uniqueOrganizations = computed(() => {
 })
 
 const awardedMembers = computed(() => {
-  return [...new Set(allAwards.value.map(a => a.recipients))].sort()
-})
+  const allRecipients = allAwards.value.flatMap(award => award.recipients || []);
+  const unique = new Map();
+  allRecipients.forEach(recipient => {
+    const key = `${recipient.member.first_name} ${recipient.member.last_name}`;
+    if (!unique.has(key)) unique.set(key, recipient);
+  });
+  return Array.from(unique.values());
+});
 
 const availableYears = computed(() => {
   return [...new Set(allAwards.value.map(a => a.year))].sort((a, b) => b - a)
@@ -83,7 +91,12 @@ const filteredAwards = computed(() => {
   return allAwards.value.filter(awardData => {
     const matchesYear = !selectedYear.value || awardData.year.toString() === selectedYear.value
     const matchesOrg = !selectedOrganization.value || awardData.organization === selectedOrganization.value
-    const matchesMember = !selectedMember.value || awardData.recipients.map(x => x.first_name).includes(selectedMember.value)
+    const matchesMember =
+      !selectedMember.value ||
+      (awardData.recipients &&
+        awardData.recipients.some(
+          r => `${r.member.first_name} ${r.member.last_name}` === selectedMember.value
+        ));
 
     return matchesYear && matchesOrg && matchesMember
   })
@@ -123,7 +136,10 @@ const filters = computed(() => [
     value: selectedMember.value,
     options: [
       { value: '', label: t.value.awards.filters.allMembers },
-      ...awardedMembers.value.map(member => ({ value: member, label: member }))
+      ...awardedMembers.value.map(recipient => ({
+        value: `${recipient.member.first_name} ${recipient.member.last_name}`,
+        label: `${recipient.member.first_name} ${recipient.member.last_name}`
+      }))
     ]
   }
 ])

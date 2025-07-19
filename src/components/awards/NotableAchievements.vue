@@ -5,18 +5,20 @@ import Card from '@/ui/Card.vue'
 
 interface AwardRecipient {
   id: string
-  first_name: string
-  last_name: string
-  role: string
-  email: string | null
-  phone?: string | null
-  biography?: string | null
-  research_domain?: string | null
-  image_url?: string | null
-  github_url?: string | null
-  linkedin_url?: string | null
-  personal_website?: string | null
-  status?: string | null
+  member: {
+    first_name: string
+    last_name: string
+    role: string
+    email: string | null
+    phone?: string | null
+    biography?: string | null
+    research_domain?: string | null
+    image_url?: string | null
+    github_url?: string | null
+    linkedin_url?: string | null
+    personal_website?: string | null
+    status?: string | null
+  }
 }
 
 // Extended award data structure

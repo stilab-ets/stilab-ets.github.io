@@ -4,20 +4,21 @@ import { useLanguage } from '@/composables/useLanguage'
 
 interface AwardRecipient {
   id: string
-  first_name: string
-  last_name: string
-  role: string
-  email: string | null
-  phone?: string | null
-  biography?: string | null
-  research_domain?: string | null
-  image_url?: string | null
-  github_url?: string | null
-  linkedin_url?: string | null
-  personal_website?: string | null
-  status?: string | null
+  member: {
+    first_name: string
+    last_name: string
+    role: string
+    email: string | null
+    phone?: string | null
+    biography?: string | null
+    research_domain?: string | null
+    image_url?: string | null
+    github_url?: string | null
+    linkedin_url?: string | null
+    personal_website?: string | null
+    status?: string | null
+  }
 }
-
 // Extended award data structure
 interface Award {
   recipients: AwardRecipient[];
@@ -93,7 +94,7 @@ const getAwardCategory = (title: string): string => {
 
       <!-- Awards for this year -->
       <div class="ml-12 grid grid-cols-1 gap-2">
-        <div v-for="awardData in yearGroup.awards" :key="`${awardData.recipients.map(x => x.first_name).concat()}-${awardData.id}`"
+        <div v-for="awardData in yearGroup.awards" :key="`${awardData.recipients.map(x => x.member.first_name).concat()}-${awardData.id}`"
           class="bg-white rounded-lg duration-200 p-6 relative">
           <!-- Award Card -->
           <div class="flex items-start w-full">
@@ -104,14 +105,13 @@ const getAwardCategory = (title: string): string => {
               </h3>
 
               <!-- Recipient -->
-              <div v-for="recipient in awardData.recipients" :key="`${recipient.first_name}-${recipient.id}`"
-                 class="flex items-center mb-2">
+              <div v-for="recipient in awardData.recipients" :key="`${recipient.member.first_name}`" class="flex items-center mb-2">
                 <svg class="h-4 w-4 text-gray-500 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
                 <span class="text-sm font-medium text-gray-700">{{ t.awards.timeline.recipient }}:</span>
-                <span class="text-sm text-[#08a4d4] ml-1 font-medium">{{ recipient.first_name }},{{ recipient.last_name }}</span>
+                <span class="text-sm text-[#08a4d4] ml-1 font-medium">{{ recipient.member.first_name }},{{ recipient.member.last_name }}</span>
               </div>
 
               <!-- Organization -->
@@ -122,11 +122,6 @@ const getAwardCategory = (title: string): string => {
                 </svg>
                 <span class="text-sm text-gray-600">{{ awardData.organization }}</span>
               </div>
-
-              <!-- Description if available -->
-              <!-- <div v-if="awardData.description" class="mb-3">
-                <p class="text-sm text-gray-700 leading-relaxed">{{ awardData.description }}</p>
-              </div> -->
 
               <!-- Category/Type -->
               <div class="flex items-center justify-between">
