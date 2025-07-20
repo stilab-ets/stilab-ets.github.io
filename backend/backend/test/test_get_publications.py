@@ -24,6 +24,20 @@ def test_clean_title(input_title, expected_output):
     assert command._clean_title(input_title) == expected_output
 
 
+@pytest.mark.django_db
+@patch("backend.management.commands.getpublications.Member")
+def test_get_lab_members(mock_member):
+    mock_member1 = MagicMock(first_name="John", last_name="Doe")
+    mock_member2 = MagicMock(first_name="Jane", last_name="Smith")
+
+    mock_member.objects.all.return_value = [mock_member1, mock_member2]
+
+    obj = Command()
+    result = obj._get_lab_members()
+
+    assert result == ["John Doe", "Jane Smith"]
+
+
 @pytest.fixture(autouse=True)
 def disable_django_logging():
     logging.disable(logging.CRITICAL)
