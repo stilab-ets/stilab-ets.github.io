@@ -476,6 +476,52 @@ Retrieves a list of all members.
     }
 ]
 ```
+## Awards 
+### `GET /api/awards`
+
+Retrieves a list of all awards.
+
+#### Response
+- **Status:** `200 OK`
+- **Content-Type:** `application/json`
+- **Body:** JSON array of awards objects.
+
+#### Example Response
+
+```json
+[
+    {
+        "id": "eeef0365-0c3b-4176-aea6-f3b9fdde2d42",
+        "url": "http://diro.umontreal.ca/accueil/",
+        "title": "Outstanding Graduate student excellence award, ..",
+        "recipients": [
+            {
+                "id": "30cce466-bdad-472e-8c7b-6d8392d09d4d",
+                "member": {
+                    "id": "4c4f3264-7799-478c-bf5b-38701dd8e2dd",
+                    "user": null,
+                    "first_name": "Ali",
+                    "last_name": "Ouni",
+                    "role": "PRO",
+                    "email": "ali.ouni@etsmtl.ca",
+                    "phone": null,
+                    "biography": "Ali Ouni , University of Quebec .. ",
+                    "research_domain": null,
+                    "image_url": null,
+                    "github_url": null,
+                    "linkedin_url": null,
+                    "personal_website": null,
+                    "status": "CRT"
+                },
+                "award": "eeef0365-0c3b-4176-aea6-f3b9fdde2d42"
+            }
+        ],
+        "year": 2013,
+        "organization": "Department of Computer Science and Operations Research (DIRO), University of Montreal"
+    },
+```
+
+
 
 ---
 

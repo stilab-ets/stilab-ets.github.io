@@ -52,6 +52,8 @@ class Command(BaseCommand):
                     title=award["title"],
                     defaults={
                         "url": award["url"],
+                        "year": award["year"],
+                        "organization": award["organization"],
                     },
                 )
 
@@ -141,6 +143,8 @@ AWARDS = [
         ),
         "url": "https://doi.org/10.1016/j.jss.2021.111029",
         "award_recipients": ["Ali, Ouni"],
+        "year": "2021",
+        "organization": "Journal of Systems and Software (JSS)",
     },
     {
         "title": (
@@ -151,6 +155,8 @@ AWARDS = [
         ),
         "url": "http://dx.doi.org/10.1016/j.infsof.2016.11.00",
         "award_recipients": ["Ali, Ouni"],
+        "year": "2016",
+        "organization": "Journal of Information and Software Technology (IST)",
     },
     {
         "title": (
@@ -160,6 +166,8 @@ AWARDS = [
         ),
         "url": "https://cscan-infocan.ca/",
         "award_recipients": ["Ali, Ouni"],
+        "year": "2023",
+        "organization": "CS-Can/Info-Can",
     },
     {
         "title": (
@@ -169,11 +177,15 @@ AWARDS = [
         ),
         "url": "https://reseau.uquebec.ca/fr/a-propos/prix-et-distinctions/prix-dexcellence",
         "award_recipients": ["Ali, Ouni"],
+        "year": "2023",
+        "organization": "University of Quebec",
     },
     {
         "title": ("Early Career Research Ecellence Award, ETS Montreal, 2021."),
         "url": "https://www.etsmtl.ca/ets/a-propos/prix-et-distinctions",
         "award_recipients": ["Ali, Ouni"],
+        "year": "2021",
+        "organization": "ÉTS Montreal",
     },
     {
         "title": (
@@ -183,11 +195,15 @@ AWARDS = [
         ),
         "url": None,
         "award_recipients": ["Ali, Ouni"],
+        "year": "2014",
+        "organization": "FESP, University of Montreal",
     },
     {
         "title": ("PhD Research Excellence Award, J. Armand Bombardier Foundation, " "Canada, 2014."),
         "url": "https://www.fondationbombardier.ca/en/",
         "award_recipients": ["Ali, Ouni"],
+        "year": "2014",
+        "organization": "J. Armand Bombardier Foundation",
     },
     {
         "title": (
@@ -198,55 +214,77 @@ AWARDS = [
         ),
         "url": "http://diro.umontreal.ca/accueil/",
         "award_recipients": ["Ali, Ouni"],
+        "year": "2013",
+        "organization": "Department of Computer Science and Operations Research (DIRO), University of Montreal",
     },
     {
         "title": ("Excellence Doctoral Scholarship Award, MESR, Government of Tunisia " "(2011-2014)."),
         "url": "http://www.mesrst.tn/anglais/index.htm",
         "award_recipients": ["Ali, Ouni"],
+        "year": "2014",
+        "organization": "MESR, Government of Tunisia",
     },
     {
         "title": ("10-Year Most Influential Paper Award at the 29th IEEE/ACM " "International Conference on Program Comprehension (ICPC) 2021."),
         "url": "https://conf.researchr.org/home/icpc-2021",
         "award_recipients": ["Ali, Ouni"],
+        "year": "2021",
+        "organization": "IEEE/ACM International Conference on Program Comprehension (ICPC)",
     },
     {
         "title": ("Best Paper Award, 55th ACM Technical Symposium on Computer Science " "Education (SIGCSE), 2024."),
         "url": "https://sigcse2024.sigcse.org/",
         "award_recipients": ["Ali, Ouni"],
+        "year": "2024",
+        "organization": "ACM Technical Symposium on Computer Science Education (SIGCSE)",
     },
     {
         "title": ("Distinguished Paper Award, 20th International Conference on " "Service-Oriented Computing (ICSOC), 2022."),
         "url": "https://icsoc2022.spilab.es/",
         "award_recipients": ["Ali, Ouni"],
+        "year": "2022",
+        "organization": "International Conference on Service-Oriented Computing (ICSOC)",
     },
     {
         "title": ("Best Paper Award, ACM International Conference on Mining Software " "Repositories (MSR) 2022, Mining Challenge track."),
         "url": "https://conf.researchr.org/home/msr-2022",
         "award_recipients": ["Ali, Ouni"],
+        "year": "2022",
+        "organization": "ACM International Conference on Mining Software Repositories (MSR)",
     },
     {
         "title": ("Best Paper Award Finalist, 19th International Conference on " "Software and Systems Reuse (ICSR), 2020."),
         "url": "https://icsr2020.wordpress.com/",
         "award_recipients": ["Ali, Ouni"],
+        "year": "2020",
+        "organization": "International Conference on Software and Systems Reuse (ICSR)",
     },
     {
         "title": ("ACM SIGSOFT Best Paper Award, the 15th ACM/IEEE International " "Conference on Global Software Engineering (ICGSE), 2020."),
         "url": "https://conf.researchr.org/home/icgse-2020",
         "award_recipients": ["Ali, Ouni"],
+        "year": "2020",
+        "organization": "ACM/IEEE International Conference on Global Software Engineering (ICGSE)",
     },
     {
         "title": ("Best Paper Award, Journal of Energies, 2019."),
         "url": "https://www.mdpi.com/journal/energies/awards/621",
         "award_recipients": ["Ali, Ouni"],
+        "year": "2019",
+        "organization": "Journal of Energies",
     },
     {
         "title": ("Best Paper Award, the IEEEInternational Workshop on Refactoring " "(IWoR@ICSE), 2019."),
         "url": "https://iwor.github.io/iwor2019/",
         "award_recipients": ["Ali, Ouni"],
+        "year": "2019",
+        "organization": "IEEE International Workshop on Refactoring (IWoR@ICSE)",
     },
     {
         "title": ("Best Paper Award Runner-up, IEEE International Conference on Web " "Services (ICWS), 2016."),
         "url": "https://www.computer.org/csdl/proceedings/icws/2016/12OmNyQ7G5O",
         "award_recipients": ["Ali, Ouni"],
+        "year": "2016",
+        "organization": "IEEE International Conference on Web Services (ICWS)",
     },
 ]

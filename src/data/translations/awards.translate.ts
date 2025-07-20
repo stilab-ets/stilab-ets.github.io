@@ -81,7 +81,7 @@ export const awardsTranslations = {
     },
     timeline: {
       awardsIn: 'prix en',
-      recipient: 'Lauréat',
+      recipient: 'Lauréats',
       recent: 'Récent'
     },
     notable: {
@@ -130,7 +130,7 @@ export const awardsTranslations = {
     },
     timeline: {
       awardsIn: 'awards in',
-      recipient: 'Recipient',
+      recipient: 'Recipients',
       recent: 'Recent'
     },
     notable: {

@@ -14,4 +14,4 @@ class AwardSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Award
-        fields = ["id", "url", "title", "recipients"]
+        fields = ["id", "url", "title", "recipients", "year", "organization"]
