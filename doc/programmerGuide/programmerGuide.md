@@ -200,6 +200,7 @@ docker compose exec backend python manage.py createsuperuser
 # To create new migrations 
 docker compose exec backend python manage.py makemigrations --name migration_name 
 ```
+The Django admin will be available at `localhost:8000/admin` with the credentials created previously with the createsuperuser command
 
 2. Synchronise publications
 
