@@ -93,6 +93,8 @@ entity Award {
   primary_key(id): UUID
   title: VARCHAR
   url: TEXT
+  year: INTEGER
+  organization: VARCHAR
 }
 
 entity AwardRecipient {
