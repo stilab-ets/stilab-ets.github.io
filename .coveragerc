@@ -10,8 +10,8 @@ omit =
     */__init__.py
     backend\manage.py 
     backend\config\*
-    backend\backend\models\*
-    backend\backend\admin\*
+    backend\models\*
+    backend\admin\*
 include_namespace_packages = true
 show_missing = True
 skip_empty = true
