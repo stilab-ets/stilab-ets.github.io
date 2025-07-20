@@ -6,11 +6,12 @@ import requests
 from django.core.management.base import BaseCommand
 from scholarly import ProxyGenerator, scholarly
 
-from backend.models import Publication
+from backend.models import Member, Publication
 from backend.services.publication_generator_service import PublicationGeneratorService
 
 logger = logging.getLogger(__name__)
 
+# This is the list of members of STIL as of july 2025: https://ouniali.github.io/members/
 ALL_AUTHORS = [
     "Ali Ouni",
     "Syrine Khelifi",
@@ -76,6 +77,10 @@ class Command(BaseCommand):
         allowed = string.ascii_letters + string.digits + string.punctuation + string.whitespace
         return "".join(character for character in publication_title if character in allowed).strip()
 
+    def _get_lab_members(self):
+        members = Member.objects.all()
+        return [m.first_name + " " + m.last_name for m in members]
+
     def add_arguments(self, parser):
         parser.add_argument(
             "--fast",
@@ -87,8 +92,11 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         skip_google_scholar = options["fast"]
 
-        # TODO: Gather all authors from the DB instead of hard coding the list.
-        authors = ALL_AUTHORS
+        authors = self._get_lab_members()
+
+        # Fallback if there are no members registered in the database
+        if not authors:
+            authors = ALL_AUTHORS
 
         blocked_by_google = False
         for author in authors:
