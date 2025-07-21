@@ -23,6 +23,7 @@ from backend.views.awards_view import AwardsView
 from backend.views.member_view import MemberListAPI
 from backend.views.profile_views import ProfileView
 from backend.views.publication_views import PublicationListAPI
+from backend.views.run_getpublications_command_views import RunGetPublicationsCommandAPIView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -32,4 +33,5 @@ urlpatterns = [
     path("api/profile", ProfileView.as_view(), name="profile"),
     path("api/members", MemberListAPI.as_view(), name="member-list"),
     path("api/awards", AwardsView.as_view(), name="awards"),
+    path("run-getpublications-command", RunGetPublicationsCommandAPIView.as_view(), name="run-getpublications-command"),
 ]
