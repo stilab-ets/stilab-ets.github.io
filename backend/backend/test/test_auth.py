@@ -41,7 +41,7 @@ def test_register_success(mock_member_create, mock_user_create, register_url):
         "password": "StrongPass123",
         "first_name": "dev",
         "last_name": "dev",
-        "role": "developer",
+        "role": "dev",
     }
 
     response = client.post(register_url, data, format="json")

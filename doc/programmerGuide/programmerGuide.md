@@ -519,8 +519,118 @@ Retrieves a list of all awards.
         ],
         "year": 2013,
         "organization": "Department of Computer Science and Operations Research (DIRO), University of Montreal"
-    },
+    }
+]
 ```
+
+## Research Projects 
+### `GET /api/researches`
+
+Retrieves a list of all research projects.
+
+#### Response
+- **Status:** `200 OK`
+- **Content-Type:** `application/json`
+- **Body:** JSON array of research project objects.
+
+#### Example Response
+
+```json
+[
+  {
+    "id": "44eb07c7-353f-4130-b11f-1ed27cc1d579",
+    "title": "AI Research",
+    "start_date": "2025-06-14",
+    "end_date": null,
+    "description": "Deep learning models",
+    "project_url": "https://ouniali.github.io/",
+    "github_url": "https://github.com/stilab-ets/stilab-ets.github.io",
+    "participants": [
+      {
+        "id": "fb0956f9-ff37-47be-b9d5-e08e398d0ef2",
+        "first_name": "Dev1",
+        "last_name": "Dev1",
+        "email": "dev@hotmail.com",
+        "role": "phd"
+      }      
+    ],
+    "leader": {
+      "id": "132ec66d-448a-4cf2-9e1b-5d4e744c98c7",
+      "first_name": "Leader",
+      "last_name": "Leader",
+      "email": "leader@hotmail.com",
+      "role": "phd"
+    }
+  }
+]
+```
+
+### `POST /api/researches`
+
+Creates a new research projects.
+
+#### Request
+- **Content-Type:** `application/json`
+- **Body:** JSON object representing the researche.
+
+#### Minimal Example Request
+
+```json
+{
+    "title": "New reaserch project!",
+    "start_date": "2025-06-14",
+    "description": "big reaserch"
+}
+```
+
+#### Example Request with Participants
+
+```json
+{
+  "title": "New reaserch project!",
+  "start_date": "2025-06-14",
+  "description": "big reaserch",
+  "participants": [
+    {
+      "id": "78dd35aa-b9f5-4497-9131-f3f85ac30bd7"
+    },
+    {
+      "id": "30f01ad0-4710-4b20-84ec-cdd31d5a9901"
+    }
+  ]
+}
+```
+
+#### Example Request
+
+```json
+{
+  "title": "AI Research",
+  "start_date": "2025-06-14",
+  "end_date": "2025-12-01",
+  "description": "Deep learning models",
+  "project_url": "https://ouniali.github.io/",
+  "github_url": "https://github.com/stilab-ets/stilab-ets.github.io",
+  "participants": [
+    {
+      "id": "78dd35aa-b9f5-4497-9131-f3f85ac30bd7"
+    },
+    {
+      "id": "30f01ad0-4710-4b20-84ec-cdd31d5a9901"
+    }
+  ]
+}
+```
+
+#### Response
+- **Status:** `201 Created`
+- **Content-Type:** `application/json`
+- **Body:** The created research object with its unique ID, leader and participants (same as GET response).
+
+#### Error Responses
+
+- `400 Bad Request` – Invalid or missing fields in request body.
+- `500 Internal Server Error` – Server-side issue.
 
 ## Run `getpublications` Command
 
