@@ -69,7 +69,7 @@ def test_login_success_email(mock_user_filter, mock_authenticate, login_url):
     mock_user = MagicMock(spec=User)
     mock_user.username = "dev"
     mock_user.email = "dev@example.com"
-    mock_user.id = "some-uuid"
+    mock_user.id = 1
     mock_user.first_name = "dev"
     mock_user.last_name = "dev"
     mock_user.role = "developer"
@@ -94,7 +94,7 @@ def test_login_success_username(mock_user_filter, mock_authenticate, login_url):
     mock_user = MagicMock(spec=User)
     mock_user.username = "dev"
     mock_user.email = "dev@example.com"
-    mock_user.id = "some-uuid"
+    mock_user.id = 1
     mock_user.first_name = "dev"
     mock_user.last_name = "dev"
     mock_user.role = "developer"
