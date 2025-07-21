@@ -35,10 +35,13 @@ entity User {
 
 entity ResearchProject {
   primary_key(id): UUID
+  foreign_key(leader_id): UUID
   title: VARCHAR
   start_date: DATE
   end_date: DATE
   description: TEXT
+  github_url: TEXT
+  project_url: TEXT
 }
 
 entity ProjectParticipant {
@@ -112,4 +115,6 @@ Award ||--o{ AwardRecipient : has >
 Member ||--o{ AwardRecipient : receives >
 Publication ||--o{ PublicationAuthor : includes >
 Author ||--o{ PublicationAuthor : writes >
+Member ||--o{ ResearchProject : leads >
+
 @enduml

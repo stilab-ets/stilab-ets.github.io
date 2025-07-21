@@ -21,10 +21,11 @@ const selectedYear = ref('')
 const selectedType = ref('')
 const sortBy = ref('year-desc')
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 // Fetch publications on mount
 onMounted(async () => {
   try {
-    const response = await axios.get('http://localhost:8000/api/publications/')
+    const response = await axios.get(`${API_BASE_URL}/api/publications/`)
     publications.value = response.data
   } catch (error) {
     console.error('Failed to fetch publications:', error)

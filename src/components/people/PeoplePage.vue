@@ -31,10 +31,11 @@ const selectedMember = ref<Member | null>(null)
 // Language
 const { t } = useLanguage()
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 // Fetch members on mount
 const fetchMembers = async () => {
   try {
-    const response = await fetch('http://localhost:8000/api/members')
+    const response = await fetch(`${API_BASE_URL}/api/members`)
     if (!response.ok) throw new Error('Failed to fetch members')
     const data = await response.json()
     members.value = Array.isArray(data) ? data : []
