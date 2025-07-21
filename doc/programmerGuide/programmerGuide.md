@@ -522,7 +522,29 @@ Retrieves a list of all awards.
     },
 ```
 
+## Run `getpublications` Command
 
+### `POST /run-getpublications-command`
+
+Runs the `getpublications` Admin command. Authentication required (Bearer Token)
+
+#### Response
+
+-   **Status:** `202 Accepted`
+-   **Content-Type:** `application/json`
+
+```json
+{
+	"status": "started"
+}
+```
+
+#### Error Responses
+
+-   `401 Unauthorized` – User is not authorized
+-   `429 Too Many Requests` – The command is already running.
+
+---
 
 ---
 
