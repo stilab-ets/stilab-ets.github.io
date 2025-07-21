@@ -13,9 +13,11 @@ from ..serializers.auth_serializer import (
 
 class RegisterView(APIView):
     @swagger_auto_schema(
+        operation_id="Register",
         operation_description="Register as a new user and member",
         request_body=RegisterSerializer,
         responses={201: RegisterSerializer},
+        tags=["Authentication"],
     )
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
@@ -30,9 +32,11 @@ class RegisterView(APIView):
 
 class LoginView(APIView):
     @swagger_auto_schema(
+        operation_id="Login",
         operation_description="Login with username or email and password",
         request_body=LoginSerializer,
         responses={200: LoginResponseSerializer},
+        tags=["Authentication"],
     )
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
