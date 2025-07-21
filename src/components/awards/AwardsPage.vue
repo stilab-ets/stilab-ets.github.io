@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
-import { mockResearchers } from '@/data/mockResearchers'
 
 // UI Components
 import PageHeader from '@/ui/PageHeader.vue'
@@ -51,10 +50,11 @@ const selectedOrganization = ref('')
 const selectedMember = ref('')
 const currentYear = new Date().getFullYear()
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 // Generate all awards from researchers
 const fetchAwards = async () => {
   try {
-    const response = await fetch('http://localhost:8000/api/awards')
+    const response = await fetch(`${API_BASE_URL}/api/awards`)
     if (!response.ok) throw new Error('Failed to fetch awards')
     const data = await response.json()
     allAwards.value = Array.isArray(data) ? data : []

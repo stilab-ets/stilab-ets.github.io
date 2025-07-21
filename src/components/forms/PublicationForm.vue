@@ -203,7 +203,8 @@ const handleSubmit = async () => {
       id: form.citekey.toLowerCase(),
     }
 
-    const response = await axios.post('http://localhost:8000/api/publications/', payload)
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+    const response = await axios.post(`${API_BASE_URL}/api/publications/`, payload)
 
     alert('Publication created successfully!')
     clearForm()

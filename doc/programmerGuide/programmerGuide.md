@@ -101,6 +101,8 @@ DB_PASSWORD=CHANGE_ME
 DB_HOST=db
 DB_PORT=5432
 DB_NAME=postgres
+
+VITE_API_BASE_URL=http://localhost:8000
 ```
 
 4. Use the command:
