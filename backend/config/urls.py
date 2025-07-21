@@ -17,6 +17,9 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from rest_framework import permissions
 
 from backend.views.auth_views import LoginView, RegisterView
 from backend.views.awards_view import AwardsView
@@ -28,7 +31,22 @@ from backend.views.run_getpublications_command_views import (
     RunGetPublicationsCommandAPIView,
 )
 
+schema_view = get_schema_view(
+    openapi.Info(
+        title="STIL API",
+        default_version="v1",
+        license=openapi.License(name="MIT License"),
+    ),
+    public=True,
+    permission_classes=[permissions.AllowAny],
+)
+
 urlpatterns = [
+    path(
+        "swagger/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="swagger",
+    ),
     path("admin/", admin.site.urls),
     path("api/register", RegisterView.as_view(), name="register"),
     path("api/login", LoginView.as_view(), name="login"),

@@ -85,3 +85,15 @@ class LoginSerializer(serializers.Serializer):
 
         data["user"] = user
         return data
+
+
+class LoginResponseSerializer(serializers.Serializer):
+    refresh_token = serializers.CharField()
+    access_token = serializers.CharField()
+
+    class LoginUserSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = User
+            fields = ["id", "username", "email"]
+
+    user = LoginUserSerializer()
