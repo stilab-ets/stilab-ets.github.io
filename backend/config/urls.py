@@ -30,6 +30,7 @@ from backend.views.research_views import ResearchAPI
 from backend.views.run_getpublications_command_views import (
     RunGetPublicationsCommandAPIView,
 )
+from backend.views.teachings_view import TeachingsView
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -60,4 +61,5 @@ urlpatterns = [
         RunGetPublicationsCommandAPIView.as_view(),
         name="run-getpublications-command",
     ),
+    path("api/teachings", TeachingsView.as_view(), name="awards"),
 ]
