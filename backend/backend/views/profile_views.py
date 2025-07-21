@@ -1,24 +1,45 @@
 from django.shortcuts import get_object_or_404
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from ..models.member import Member
-from ..serializers.member_serializer import MemberSerializer
+from ..serializers.member_serializer import MemberSerializer, ProfileUpdateSerializer
 
 
 class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(
+        operation_id="Get Profile",
+        operation_description="Get the profile information of the authenticated user",
+        responses={200: MemberSerializer},
+        tags=["Profile"],
+    )
     def get(self, request):
         member = get_object_or_404(Member, user=request.user)
         serializer = MemberSerializer(member)
         return Response(serializer.data)
 
+    @swagger_auto_schema(
+        operation_id="Partial Profile Update",
+        operation_description="Partial profile update of the authenticated user",
+        request_body=ProfileUpdateSerializer,
+        responses={200: MemberSerializer},
+        tags=["Profile"],
+    )
     def put(self, request):
         return self.patch(request)
 
+    @swagger_auto_schema(
+        operation_id="Partial Profile Update",
+        operation_description="Partial profile update of the authenticated user",
+        request_body=ProfileUpdateSerializer,
+        responses={200: MemberSerializer},
+        tags=["Profile"],
+    )
     def patch(self, request):
         member = get_object_or_404(Member, user=request.user)
         serializer = MemberSerializer(member, data=request.data, partial=True)
