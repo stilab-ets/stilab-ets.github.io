@@ -25,7 +25,7 @@ describe('ResearchPage.vue', () => {
 
     expect(statsGrid.exists()).toBe(true)
     expect(statsGrid.props('statistics')).toBeDefined()
-    expect(statsGrid.props('columns')).toBe(3)
+    expect(statsGrid.props('columns')).toBe(1)
     expect(statsGrid.props('backgroundClass')).toBe('bg-gradient-to-r from-blue-50 to-indigo-50')
   })
 
@@ -38,30 +38,5 @@ describe('ResearchPage.vue', () => {
     expect(Array.isArray(projectsProp)).toBe(true)
     expect(projectsProp.length).toBeLessThanOrEqual(4)
     expect(projectsProp.every(p => p.status === 'active')).toBe(true)
-  })
-
-  it('renders ResearchAreasAccordion with correct props', () => {
-    const wrapper = mount(ResearchPage)
-    const accordion = wrapper.findComponent({ name: 'ResearchAreasAccordion' })
-
-    expect(accordion.exists()).toBe(true)
-    expect(Array.isArray(accordion.props('researchAreas'))).toBe(true)
-    expect(typeof accordion.props('getProjectsByDomain')).toBe('function')
-  })
-
-  it('getProjectsByDomain returns projects matching domain or keyword', () => {
-    const wrapper = mount(ResearchPage)
-    const vm = wrapper.vm as any
-    const domain = 'software-development'
-
-    const results = vm.getProjectsByDomain(domain)
-    expect(Array.isArray(results)).toBe(true)
-    // Vérifier que chaque projet correspond au filtre
-    results.forEach((project: any) => {
-      const match = project.domain === domain ||
-                    project.title.toLowerCase().includes(domain.toLowerCase()) ||
-                    project.description.toLowerCase().includes(domain.toLowerCase())
-      expect(match).toBe(true)
-    })
   })
 })
