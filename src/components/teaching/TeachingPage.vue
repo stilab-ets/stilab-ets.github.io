@@ -2,6 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
 import { mockResearchers } from '@/data/mockResearchers'
+import axios from 'axios'
 
 // UI Components
 import PageHeader from '@/components/ui/PageHeader.vue'
@@ -53,11 +54,10 @@ const selectedLevel = ref('')
 const selectedSemester = ref('')
 
 const fetchCourses = async () => {
+
   try {
-    const response = await fetch(`${API_BASE_URL}/api/courses`)
-    if (!response.ok) throw new Error('Failed to fetch courses')
-    const data = await response.json()
-    allCourses.value = Array.isArray(data) ? data : []
+    const response = await axios.get(`${API_BASE_URL}/api/courses`)
+    allCourses.value = response.data 
   } catch (error) {
     console.error('Error fetching courses:', error)
   }
@@ -114,7 +114,6 @@ const filteredCourses = computed(() => {
     const matchesLevel = !selectedLevel.value ||
       course.level === selectedLevel.value
 
-      console.log(course.semester);
     const matchesSemester = !selectedSemester.value ||
       getFullSemester(course) === selectedSemester.value
 

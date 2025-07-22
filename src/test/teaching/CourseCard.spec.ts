@@ -8,18 +8,22 @@ const courseMock = {
   id: 'course1',
   title: 'Test Course',
   code: 'CS101',
-  instructor: 'Prof. Tester',
-  semester: 'Fall 2025',
-  level: 'undergraduate' as const,
+  teacher: {
+    first_name: 'John',
+    last_name: 'Doe',
+    role: 'Professor',
+    email: 'john.doe@example.com',
+    phone: null,
+    biography: null,
+    
+  },
+  semester: 'F',
+  year: 2025,
+  level: 'UGR' as const,
   description: 'A description',
-  credits: 3,
-  prerequisites: ['Intro to CS', 'Math 320'],
-  objectives: ['Learn basics', 'Understand concepts'],
-  topics: ['Topic 1', 'Topic 2'],
-  syllabusUrl: 'https://example.com/syllabus',
-  moodleUrl: 'https://example.com/moodle',
-  githubUrl: 'https://github.com/example'
+  url: 'https://example.com/syllabus',
 }
+
 
 describe('CourseCard.vue', () => {
   const wrapper = mount(CourseCard, {
@@ -50,18 +54,8 @@ describe('CourseCard.vue', () => {
     expect(p.exists()).toBe(true)
   })
 
-  it('renders the prerequisites, objectives, and topics sections', () => {
-    expect(wrapper.find('div.flex > span.font-medium').exists()).toBe(true)
-    expect(wrapper.findAll('span.inline-flex.items-center').length).toBeGreaterThanOrEqual(courseMock.topics.length)
-  })
-
-  it('renders three Button components for syllabus, moodle and github links', () => {
+  it('renders three Button components for syllabus', () => {
     const buttons = wrapper.findAllComponents(Button)
-    expect(buttons.length).toBe(3)
-  })
-
-  it('renders the credits section', () => {
-    const credits = wrapper.find('div.text-sm.text-gray-500')
-    expect(credits.exists()).toBe(true)
+    expect(buttons.length).toBe(1)
   })
 })
