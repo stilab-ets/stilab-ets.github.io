@@ -1,23 +1,21 @@
 <script setup lang="ts">
-import { useAuth } from '@/composables/useAuth'
 import { useLanguage } from '@/composables/useLanguage'
+import LoginForm from './LoginForm.vue'
 
 const emit = defineEmits<{
   setCurrentPage: [page: string]
 }>()
 
-const { login } = useAuth()
 const { t } = useLanguage()
 
-const handleLogin = async (credentials: { email: string; password: string; rememberMe: boolean }) => {
-  try {
-    await login(credentials)
-    // Redirect to dashboard after successful login
-    emit('setCurrentPage', 'dashboard')
-  } catch (error) {
-    console.error('Login failed:', error)
-    // Error is handled in LoginForm component
-  }
+const handleLoginSuccess = () => {
+  // Redirect to dashboard after successful login
+  emit('setCurrentPage', 'dashboard')
+}
+
+const handleLoginFailed = (error: string) => {
+  console.warn('Login failed:', error)
+  // Error is already displayed in LoginForm component
 }
 
 const handleRegisterRedirect = () => {
@@ -39,7 +37,10 @@ const handleRegisterRedirect = () => {
         </div>
 
         <!-- Login form -->
-        <LoginForm @login="handleLogin" />
+        <LoginForm 
+          @login-success="handleLoginSuccess" 
+          @login-failed="handleLoginFailed"
+        />
 
         <!-- Register link -->
         <div class="mt-6 text-center">

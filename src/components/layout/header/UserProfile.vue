@@ -1,16 +1,23 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { User, Settings, LogOut, Shield, BookOpen } from 'lucide-vue-next'
-import { useAuth } from '@/composables/useAuth'
+import { useAuthMiddleware } from '@/middleware/auth'
 import { useLanguage } from '@/composables/useLanguage'
 
 const emit = defineEmits<{
   navigate: [pageId: string]
 }>()
 
-const { isAuthenticated, user, fullName, logout } = useAuth()
+const { isAuthenticated, user, logout, requireAdmin } = useAuthMiddleware()
 const { t } = useLanguage()
 const isOpen = ref(false)
+
+const fullName = computed(() => {
+  if (user.value?.first_name && user.value?.last_name) {
+    return `${user.value.first_name} ${user.value.last_name}`
+  }
+  return user.value?.username || ''
+})
 
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value
@@ -110,6 +117,7 @@ const closeDropdown = () => {
             </button>
 
             <button
+              v-if="requireAdmin()"
               @click="handleNavigation('admin-management')"
               class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#08a4d4] transition-colors duration-200"
               role="menuitem"

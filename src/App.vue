@@ -2,12 +2,11 @@
 import { onMounted, onUnmounted, computed } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
 import { useNavigation } from '@/composables/useNavigation'
-import { useAuth } from '@/composables/useAuth'
+import { authMiddleware } from '@/middleware/auth'
 
 // Composables
 const { currentLanguage, localizedNavigationItems, setLanguage, t } = useLanguage()
 const { currentPage, navigateToPage, initializeNavigation } = useNavigation()
-const { isAuthenticated, user, initializeAuth } = useAuth()
 
 // Lab statistics data
 const labStats = computed(() => ({
@@ -33,9 +32,9 @@ const labStats = computed(() => ({
 let cleanupNavigation: (() => void) | null = null
 
 // Lifecycle
-onMounted(() => {
+onMounted(async () => {
   cleanupNavigation = initializeNavigation()
-  initializeAuth()
+  await authMiddleware.initialize()
 })
 
 onUnmounted(() => {
@@ -53,8 +52,9 @@ const handleLanguageChange = (language: 'en' | 'fr') => {
   setLanguage(language)
 }
 
-const handleLogout = () => {
-  // Logout logic handled by useAuth
+const handleLogout = async () => {
+  await authMiddleware.logout()
+  navigateToPage('home')
 }
 </script>
 
@@ -65,7 +65,7 @@ const handleLogout = () => {
       :current-page="currentPage"
       :navigation-items="localizedNavigationItems"
       :current-language="currentLanguage"
-      :user="user"
+      :user="authMiddleware.state.user.value"
       @set-current-page="handlePageNavigation"
       @language-changed="handleLanguageChange"
       @logout="handleLogout"
@@ -109,19 +109,19 @@ const handleLogout = () => {
       <LoginPage v-else-if="currentPage === 'login'" />
 
       <!-- Dashboard (authenticated) -->
-      <DashboardPage v-else-if="currentPage === 'dashboard' && isAuthenticated" />
+      <DashboardPage v-else-if="currentPage === 'dashboard' && authMiddleware.state.isAuthenticated.value" />
 
       <!-- Form Pages (authenticated) -->
-      <PublicationForm v-else-if="currentPage === 'publication-form' && isAuthenticated" />
-      <EventForm v-else-if="currentPage === 'event-form' && isAuthenticated" />
-      <ProjectForm v-else-if="currentPage === 'project-form' && isAuthenticated" />
-      <MemberForm v-else-if="currentPage === 'member-form' && isAuthenticated" />
-      <ResearchForm v-else-if="currentPage === 'research-form' && isAuthenticated" />
-      <TeachingForm v-else-if="currentPage === 'teaching-form' && isAuthenticated" />
-      <AwardForm v-else-if="currentPage === 'award-form' && isAuthenticated" />
-      <VacancyForm v-else-if="currentPage === 'vacancy-form' && isAuthenticated" />
-      <UserSettingsForm v-else-if="currentPage === 'user-settings-form' && isAuthenticated" />
-      <AdminManagementForm v-else-if="currentPage === 'admin-management-form' && isAuthenticated" />
+      <PublicationForm v-else-if="currentPage === 'publication-form' && authMiddleware.state.isAuthenticated.value" />
+      <EventForm v-else-if="currentPage === 'event-form' && authMiddleware.state.isAuthenticated.value" />
+      <ProjectForm v-else-if="currentPage === 'project-form' && authMiddleware.state.isAuthenticated.value" />
+      <MemberForm v-else-if="currentPage === 'member-form' && authMiddleware.state.isAuthenticated.value" />
+      <ResearchForm v-else-if="currentPage === 'research-form' && authMiddleware.state.isAuthenticated.value" />
+      <TeachingForm v-else-if="currentPage === 'teaching-form' && authMiddleware.state.isAuthenticated.value" />
+      <AwardForm v-else-if="currentPage === 'award-form' && authMiddleware.state.isAuthenticated.value" />
+      <VacancyForm v-else-if="currentPage === 'vacancy-form' && authMiddleware.state.isAuthenticated.value" />
+      <UserSettingsForm v-else-if="currentPage === 'user-settings-form' && authMiddleware.state.isAuthenticated.value" />
+      <AdminManagementForm v-else-if="currentPage === 'admin-management-form' && authMiddleware.state.isAuthenticated.value" />
 
       <!-- 404 Fallback -->
       <div v-else class="min-h-screen flex items-center justify-center">

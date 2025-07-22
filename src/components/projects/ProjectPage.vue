@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
-import { mockMScProjects, type MScProject } from '@/data/mockPublications'
+import { mainAPI } from '@/services/ApiFactory'
+import type { Project } from '@/services/MainAPI'
 
 // UI Components
 import PageHeader from '@/ui/PageHeader.vue'
@@ -17,19 +18,21 @@ import InterestModal from './InterestModal.vue'
 const { t } = useLanguage()
 
 // State
+const projects = ref<Project[]>([])
+const loading = ref(false)
 const searchQuery = ref('')
 const selectedDomain = ref('')
 const selectedStatus = ref('')
 const showModal = ref(false)
-const selectedProject = ref<MScProject | null>(null)
+const selectedProject = ref<Project | null>(null)
 
 // Computed
 const availableDomains = computed(() => {
-  return [...new Set(mockMScProjects.map(project => project.domain))].sort()
+  return [...new Set(projects.value.map(project => project.domain))].sort()
 })
 
 const filteredProjects = computed(() => {
-  return mockMScProjects.filter(project => {
+  return projects.value.filter(project => {
     const matchesSearch = !searchQuery.value ||
       project.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
       project.abstract.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
@@ -79,6 +82,19 @@ const resultsText = computed(() => {
 })
 
 // Methods
+const fetchProjects = async () => {
+  loading.value = true
+  try {
+    const response = await mainAPI.getProjects()
+    projects.value = response.data.results || []
+  } catch (error) {
+    console.warn('Failed to fetch projects:', error)
+    projects.value = []
+  } finally {
+    loading.value = false
+  }
+}
+
 const updateFilter = (filterId: string, value: string) => {
   switch (filterId) {
     case 'domain':
@@ -90,7 +106,7 @@ const updateFilter = (filterId: string, value: string) => {
   }
 }
 
-const showInterestForm = (project: MScProject) => {
+const showInterestForm = (project: Project) => {
   selectedProject.value = project
   showModal.value = true
 }
@@ -99,6 +115,11 @@ const closeModal = () => {
   showModal.value = false
   selectedProject.value = null
 }
+
+// Lifecycle
+onMounted(() => {
+  fetchProjects()
+})
 </script>
 
 <template>
@@ -126,8 +147,16 @@ const closeModal = () => {
       />
     </div>
 
+    <!-- Loading State -->
+    <div v-if="loading" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+      <div class="flex justify-center items-center py-12">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#08a4d4]"></div>
+        <span class="ml-2 text-gray-600">Loading projects...</span>
+      </div>
+    </div>
+
     <!-- Project Cards -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <div v-else class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
       <div v-if="filteredProjects.length > 0" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <ProjectCard
           v-for="project in filteredProjects"

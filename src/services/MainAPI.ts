@@ -75,15 +75,39 @@ export interface Project {
   id: number;
   title: string;
   abstract: string;
-  description?: string;
   domain: string;
+  status: 'available' | 'assigned' | 'completed';
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
   supervisor: string;
   co_supervisor?: string;
-  required_skills: string[];
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
-  status: 'available' | 'assigned' | 'completed';
+  requirements: string[];
   proposed_date: string;
-  contact_email?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ProjectInterest {
+  project_id: number;
+  full_name: string;
+  email: string;
+  study_level: string;
+  motivation: string;
+}
+
+export interface Vacancy {
+  id: number;
+  title: string;
+  description: string;
+  type: 'phd' | 'postdoc' | 'researcher' | 'engineer' | 'intern';
+  supervisor: string;
+  duration?: string;
+  salary?: string;
+  deadline: string;
+  start_date: string;
+  requirements: string[];
+  tags: string[];
+  apply_url: string;
+  is_active: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -215,8 +239,35 @@ export class MainAPI extends BaseAPI {
     return this.delete<void>(`/api/projects/${id}/`);
   }
 
+  async submitProjectInterest(data: ProjectInterest): Promise<ApiResponse<{ message: string }>> {
+    return this.post<{ message: string }>('/api/project-interest/', data);
+  }
+
+    // Vacancies
+  async getVacancies(): Promise<ApiResponse<PaginatedResponse<Vacancy>>> {
+    return this.get<PaginatedResponse<Vacancy>>('/api/vacancies/');
+  }
+
+  async getVacancy(id: number): Promise<ApiResponse<Vacancy>> {
+    return this.get<Vacancy>(`/api/vacancies/${id}/`);
+  }
+
+  async createVacancy(data: Partial<Vacancy>): Promise<ApiResponse<Vacancy>> {
+    return this.post<Vacancy>('/api/vacancies/', data);
+  }
+
+  async updateVacancy(id: number, data: Partial<Vacancy>): Promise<ApiResponse<Vacancy>> {
+    return this.put<Vacancy>(`/api/vacancies/${id}/`, data);
+  }
+
+  async deleteVacancy(id: number): Promise<ApiResponse<void>> {
+    return this.delete<void>(`/api/vacancies/${id}/`);
+  }
+
   // Admin command - Run get publications
   async runGetPublicationsCommand(): Promise<ApiResponse<{ message: string }>> {
     return this.post<{ message: string }>('/api/run-getpublications-command/');
   }
 }
+
+export { ApiResponse, PaginatedResponse };

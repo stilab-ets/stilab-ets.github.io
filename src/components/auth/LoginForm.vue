@@ -1,29 +1,32 @@
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
 import { Lock, XCircleIcon } from 'lucide-vue-next'
-import { useLanguage } from '@/composables/useLanguage.ts'
+import { useLanguage } from '@/composables/useLanguage'
+import { useAuthMiddleware } from '@/middleware/auth'
 
 interface LoginForm {
-  email: string
+  username: string
   password: string
   rememberMe: boolean
 }
 
 interface LoginErrors {
-  email?: string
+  username?: string
   password?: string
 }
 
 const emit = defineEmits<{
-  login: [credentials: LoginForm]
+  loginSuccess: []
+  loginFailed: [error: string]
 }>()
 
 const { t: translations } = useLanguage()
+const { login } = useAuthMiddleware()
 
 const t = computed(() => translations.value.auth.login)
 
 const form = reactive<LoginForm>({
-  email: '',
+  username: '',
   password: '',
   rememberMe: false
 })
@@ -35,10 +38,8 @@ const isSubmitting = ref(false)
 const validateForm = (): boolean => {
   errors.value = {}
   
-  if (!form.email) {
-    errors.value.email = t.value.validation.emailRequired
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-    errors.value.email = t.value.validation.emailInvalid
+  if (!form.username) {
+    errors.value.username = t.value.validation.emailRequired
   }
   
   if (!form.password) {
@@ -57,9 +58,21 @@ const handleSubmit = async () => {
   generalError.value = ''
   
   try {
-    emit('login', { ...form })
+    const success = await login({
+      username: form.username,
+      password: form.password
+    })
+    
+    if (success) {
+      emit('loginSuccess')
+    } else {
+      generalError.value = t.value.errors.loginFailed
+      emit('loginFailed', t.value.errors.loginFailed)
+    }
   } catch (error) {
+    console.warn('Login error:', error)
     generalError.value = t.value.errors.loginFailed
+    emit('loginFailed', t.value.errors.loginFailed)
   } finally {
     isSubmitting.value = false
   }
@@ -80,19 +93,19 @@ const handleSubmit = async () => {
       <form class="mt-8 space-y-6" @submit.prevent="handleSubmit">
         <div class="rounded-md shadow-sm -space-y-px">
           <div>
-            <label for="email" class="sr-only">{{ t.form.email }}</label>
+            <label for="username" class="sr-only">{{ t.form.email }}</label>
             <input
-              id="email"
-              name="email"
-              type="email"
-              autocomplete="email"
+              id="username"
+              name="username"
+              type="text"
+              autocomplete="username"
               required
-              v-model="form.email"
-              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-              :class="{ 'border-red-500': errors.email }"
+              v-model="form.username"
+              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] focus:z-10 sm:text-sm"
+              :class="{ 'border-red-500': errors.username }"
               :placeholder="t.form.emailPlaceholder"
             />
-            <p v-if="errors.email" class="mt-1 text-sm text-red-600">{{ errors.email }}</p>
+            <p v-if="errors.username" class="mt-1 text-sm text-red-600">{{ errors.username }}</p>
           </div>
           <div>
             <label for="password" class="sr-only">{{ t.form.password }}</label>
@@ -103,7 +116,7 @@ const handleSubmit = async () => {
               autocomplete="current-password"
               required
               v-model="form.password"
-              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] focus:z-10 sm:text-sm"
               :class="{ 'border-red-500': errors.password }"
               :placeholder="t.form.passwordPlaceholder"
             />
@@ -118,7 +131,7 @@ const handleSubmit = async () => {
               name="remember-me"
               type="checkbox"
               v-model="form.rememberMe"
-              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              class="h-4 w-4 text-[#08a4d4] focus:ring-[#08a4d4] border-gray-300 rounded"
             />
             <label for="remember-me" class="ml-2 block text-sm text-gray-900">
               {{ t.form.rememberMe }}
@@ -126,7 +139,7 @@ const handleSubmit = async () => {
           </div>
 
           <div class="text-sm">
-            <a href="#" class="font-medium text-blue-600 hover:text-blue-500">
+            <a href="#" class="font-medium text-[#08a4d4] hover:text-blue-500">
               {{ t.form.forgotPassword }}
             </a>
           </div>
@@ -149,16 +162,19 @@ const handleSubmit = async () => {
           <button
             type="submit"
             :disabled="isSubmitting"
-            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#08a4d4] hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#08a4d4] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span class="absolute left-0 inset-y-0 flex items-center pl-3">
               <Lock class="h-5 w-5 text-blue-500 group-hover:text-blue-400" />
             </span>
-            {{ isSubmitting ? t.form.submitting : t.form.submit }}
+            <span v-if="isSubmitting" class="flex items-center">
+              <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+              {{ t.form.submitting }}
+            </span>
+            <span v-else>{{ t.form.submit }}</span>
           </button>
         </div>
       </form>
     </div>
   </div>
 </template>
-

@@ -157,7 +157,7 @@ const closeModal = () => {
             @open-modal="openModal"
           />
         </div>
-        <p v-else class="text-gray-500">No M students found.</p>
+        <p v-else class="text-gray-500">No master students found.</p>
       </section>
 
       <!-- PROFESSOR Section -->
