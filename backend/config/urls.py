@@ -61,5 +61,5 @@ urlpatterns = [
         RunGetPublicationsCommandAPIView.as_view(),
         name="run-getpublications-command",
     ),
-    path("api/teachings", TeachingsView.as_view(), name="awards"),
+    path("api/teachings", TeachingsView.as_view(), name="teachings"),
 ]
