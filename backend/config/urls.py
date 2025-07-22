@@ -23,6 +23,7 @@ from rest_framework import permissions
 
 from backend.views.auth_views import LoginView, RegisterView
 from backend.views.awards_view import AwardsView
+from backend.views.courses_view import CoursesView
 from backend.views.member_view import MemberListAPI
 from backend.views.profile_views import ProfileView
 from backend.views.publication_views import PublicationListAPI
@@ -30,7 +31,6 @@ from backend.views.research_views import ResearchAPI
 from backend.views.run_getpublications_command_views import (
     RunGetPublicationsCommandAPIView,
 )
-from backend.views.teachings_view import TeachingsView
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -61,5 +61,5 @@ urlpatterns = [
         RunGetPublicationsCommandAPIView.as_view(),
         name="run-getpublications-command",
     ),
-    path("api/teachings", TeachingsView.as_view(), name="teachings"),
+    path("api/courses", CoursesView.as_view(), name="courses"),
 ]

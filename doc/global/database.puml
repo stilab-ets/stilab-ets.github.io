@@ -106,7 +106,7 @@ entity AwardRecipient {
   foreign_key(member_id): UUID
 }
 
-entity Teachings {
+entity Course {
   primary_key(id): UUID
   foreign_key(member_id): UUID
   url: VARCHAR

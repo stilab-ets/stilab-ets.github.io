@@ -84,7 +84,7 @@ class Command(BaseCommand):
             else:
                 logger.info(f"Award '{Award}' not created")
 
-    def insert_teachings(self):
+    def insert_courses(self):
         return
 
     def get_members(self, data_strings):
@@ -288,3 +288,5 @@ AWARDS = [
         "organization": "IEEE International Conference on Web Services (ICWS)",
     },
 ]
+
+COURSES = [{"title": "", "url": "", "year": "", "semester": "", "teacher": "Ali Ouni", "code": "", "level": "", "description": ""}]
