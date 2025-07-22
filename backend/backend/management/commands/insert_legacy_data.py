@@ -2,7 +2,7 @@ import logging
 
 from django.core.management.base import BaseCommand
 
-from backend.models import Award, AwardRecipient, Member
+from backend.models import Award, AwardRecipient, Course, Member
 
 logger = logging.getLogger(__name__)
 
@@ -14,6 +14,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.insert_members()
         self.insert_awards()
+        self.insert_courses()
 
     def insert_members(self):
         members = self.get_members(MEMBERS)
@@ -84,7 +85,34 @@ class Command(BaseCommand):
             else:
                 logger.info(f"Award '{Award}' not created")
 
-    def insert_teachings(self):
+    def insert_courses(self):
+        for course in COURSES:
+            try:
+                name = course["teacher"].strip().split(",")
+                teacher = Member.objects.get(first_name=name[0].strip(), last_name=name[1].strip())
+
+                obj, created = Course.objects.update_or_create(
+                    title=course["title"],
+                    year=course["year"],
+                    semester=course["semester"],
+                    defaults={
+                        "url": course["url"],
+                        "title": course["title"],
+                        "teacher": teacher,
+                        "code": course["code"],
+                        "level": course["level"],
+                        "description": course["description"],
+                    },
+                )
+            except Exception as e:
+                print(f"Error creating the award '{course}' - {e}")
+                logger.error(f"Error creating the award '{course}' - {e}")
+                continue
+
+            if created:
+                logger.info(f"Course '{course}' created")
+            else:
+                logger.info(f"Course '{course}' not created")
         return
 
     def get_members(self, data_strings):
@@ -286,5 +314,48 @@ AWARDS = [
         "award_recipients": ["Ali, Ouni"],
         "year": "2016",
         "organization": "IEEE International Conference on Web Services (ICWS)",
+    },
+]
+
+COURSES = [
+    {
+        "title": "Advanced Topics in Software Desgin",
+        "url": "https://www.etsmtl.ca/etudes/cours/MGL843",
+        "year": "2019",
+        "semester": "F",
+        "teacher": "Ali,Ouni",
+        "code": "MGL843",
+        "level": "GRD",
+        "description": "",
+    },
+    {
+        "title": "Programming in Software Engineering",
+        "url": "https://www.etsmtl.ca/etudes/cours/LOG100",
+        "year": "2020",
+        "semester": "W",
+        "teacher": "Ali,Ouni",
+        "code": "LOG100",
+        "level": "UGR",
+        "description": "",
+    },
+    {
+        "title": "Software Reegineering",
+        "url": "https://www.etsmtl.ca/etudes/cours/LOG530",
+        "year": "2021",
+        "semester": "W",
+        "teacher": "Ali,Ouni",
+        "code": "LOG530",
+        "level": "UGR",
+        "description": "",
+    },
+    {
+        "title": "Software Maintenance",
+        "url": "https://www.etsmtl.ca/etudes/cours/MGL804",
+        "year": "2021",
+        "semester": "W",
+        "teacher": "Ali,Ouni",
+        "code": "MGL804",
+        "level": "GRD",
+        "description": "",
     },
 ]

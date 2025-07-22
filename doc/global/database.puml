@@ -106,6 +106,14 @@ entity AwardRecipient {
   foreign_key(member_id): UUID
 }
 
+entity Course {
+  primary_key(id): UUID
+  foreign_key(member_id): UUID
+  url: VARCHAR
+  title: VARCHAR
+  year: VARCHAR
+}
+
 User ||--o{ Member : owns >
 ResearchProject ||--o{ ProjectParticipant : has >
 Member ||--o{ ProjectParticipant : participates >
@@ -116,5 +124,6 @@ Member ||--o{ AwardRecipient : receives >
 Publication ||--o{ PublicationAuthor : includes >
 Author ||--o{ PublicationAuthor : writes >
 Member ||--o{ ResearchProject : leads >
+Member ||--o{ Course : teaches >
 
 @enduml

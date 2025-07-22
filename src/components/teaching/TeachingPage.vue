@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
 import { mockResearchers } from '@/data/mockResearchers'
+import axios from 'axios'
 
 // UI Components
 import PageHeader from '@/components/ui/PageHeader.vue'
@@ -12,135 +13,109 @@ import EmptyState from '@/components/ui/EmptyState.vue'
 // Teaching components
 import CourseCard from './CourseCard.vue'
 
-// Extended Course interface for teaching page
-interface ExtendedCourse {
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+
+interface Teacher {
+  id: string
+  first_name: string
+  last_name: string
+  role: string
+  email: string | null
+  phone?: string | null
+  biography?: string | null
+  research_domain?: string | null
+  image_url?: string | null
+  github_url?: string | null
+  linkedin_url?: string | null
+  personal_website?: string | null
+  status?: string | null
+}
+
+interface Course {
   id: string;
   title: string;
   code: string;
-  instructor: string;
+  teacher: Teacher;
   semester: string;
   level: 'undergraduate' | 'graduate';
   description: string;
-  credits?: number;
-  prerequisites?: string[];
-  objectives?: string[];
-  topics?: string[];
-  syllabusUrl?: string;
-  moodleUrl?: string;
-  githubUrl?: string;
+  url?: string;
+  year: number;
 }
 
 // Language and translations
 const { t } = useLanguage()
 
 // State
+
+const allCourses = ref<Course[]>([]);
 const searchQuery = ref('')
 const selectedLevel = ref('')
 const selectedSemester = ref('')
 
-// Generate extended course data from researchers
-const generateAllCourses = (): ExtendedCourse[] => {
-  const additionalCourses: ExtendedCourse[] = [
-    {
-      id: 'c3',
-      title: 'Développement Web Avancé',
-      code: 'CS-401',
-      instructor: 'Dr. Sarah Chen',
-      semester: 'Fall 2024',
-      level: 'undergraduate',
-      description: 'Cours avancé sur le développement d\'applications web modernes avec focus sur les frameworks JavaScript et les architectures cloud.',
-      credits: 6,
-      prerequisites: ['HTML/CSS', 'JavaScript', 'Bases de données'],
-      objectives: ['Maîtriser React/Vue.js', 'Comprendre les architectures microservices', 'Implémenter des APIs REST'],
-      topics: ['React', 'Node.js', 'MongoDB', 'Docker', 'AWS'],
-      syllabusUrl: 'https://example.com/syllabus-web.pdf',
-      moodleUrl: 'https://moodle.univ.fr/course/web-advanced',
-      githubUrl: 'https://github.com/lab/web-course'
-    },
-    {
-      id: 'c4',
-      title: 'Sécurité Informatique',
-      code: 'CS-503',
-      instructor: 'Dr. Sarah Chen',
-      semester: 'Spring 2024',
-      level: 'graduate',
-      description: 'Cours approfondi sur la cybersécurité, couvrant les vulnérabilités, les attaques et les contre-mesures dans les systèmes modernes.',
-      credits: 6,
-      prerequisites: ['Réseaux informatiques', 'Systèmes d\'exploitation', 'Cryptographie'],
-      objectives: ['Identifier les vulnérabilités', 'Implémenter des mesures de sécurité', 'Analyser les incidents'],
-      topics: ['Pentest', 'Blockchain Security', 'Threat Analysis', 'Incident Response'],
-      syllabusUrl: 'https://example.com/syllabus-security.pdf',
-      moodleUrl: 'https://moodle.univ.fr/course/security'
-    },
-    {
-      id: 'c5',
-      title: 'Gestion de Projets Logiciels',
-      code: 'CS-403',
-      instructor: 'Dr. Marie Dubois',
-      semester: 'Fall 2024',
-      level: 'undergraduate',
-      description: 'Méthodologies de gestion de projets logiciels, incluant Agile, Scrum, et les outils de collaboration moderne.',
-      credits: 4,
-      prerequisites: ['Génie logiciel', 'Programmation orientée objet'],
-      objectives: ['Maîtriser les méthodes Agile', 'Gérer une équipe de développement', 'Utiliser les outils DevOps'],
-      topics: ['Scrum', 'Kanban', 'Git', 'CI/CD', 'Jira'],
-      syllabusUrl: 'https://example.com/syllabus-pm.pdf',
-      githubUrl: 'https://github.com/lab/project-management'
-    },
-    {
-      id: 'c6',
-      title: 'Intelligence Artificielle Appliquée',
-      code: 'CS-504',
-      instructor: 'Prof. Jean Martin',
-      semester: 'Spring 2024',
-      level: 'graduate',
-      description: 'Application de l\'IA aux problèmes réels du génie logiciel : génération de code, test automatique, détection de bugs.',
-      credits: 8,
-      prerequisites: ['Machine Learning', 'Algorithmique avancée', 'Statistiques'],
-      objectives: ['Développer des modèles ML', 'Appliquer l\'IA au développement', 'Évaluer les performances'],
-      topics: ['NLP for Code', 'Code Generation', 'Bug Detection', 'Test Generation'],
-      syllabusUrl: 'https://example.com/syllabus-ai.pdf',
-      moodleUrl: 'https://moodle.univ.fr/course/ai-applied'
-    }
-  ]
+const fetchCourses = async () => {
 
-  // Combine courses from researchers with additional courses
-  const researcherCourses = mockResearchers.flatMap(researcher =>
-    researcher.coursesTaught.map(course => ({
-      ...course,
-      instructor: researcher.name
-    }))
-  )
-
-  return [...researcherCourses, ...additionalCourses] as ExtendedCourse[]
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/courses`)
+    allCourses.value = response.data 
+  } catch (error) {
+    console.error('Error fetching courses:', error)
+  }
 }
+onMounted(fetchCourses)
 
-// Data
-const allCourses = generateAllCourses()
+const getFullSemester = (course: Course) => {
+  let semesterLabel = ''
+  switch (course.semester) {
+    case 'F':
+      semesterLabel = t.value.teaching.semesters.fall
+      break
+    case 'W':
+      semesterLabel = t.value.teaching.semesters.winter
+      break
+    case 'S':
+      semesterLabel = t.value.teaching.semesters.summer
+      break
+    default:
+      semesterLabel = course.semester
+  }
 
+  return `${semesterLabel} ${course.year}`
+}
 // Computed
 const availableSemesters = computed(() => {
-  const semesters = [...new Set(allCourses.map(course => course.semester))]
+  const semesters = [
+    ...new Set(
+      allCourses.value.map((course: Course) => {
+        // Translate the semester using t
+        return getFullSemester(course)
+        
+      })
+    )
+  ]
   return semesters.sort()
 })
 
 const uniqueInstructors = computed(() => {
-  return [...new Set(allCourses.map(course => course.instructor))]
+  return [...new Set(allCourses.value.map(
+    course => course.teacher.first_name + " " + course.teacher.last_name
+  ))]
 })
 
 const filteredCourses = computed(() => {
-  return allCourses.filter(course => {
+  return allCourses.value.filter(course => {
     const matchesSearch = !searchQuery.value ||
       course.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
       course.code.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      course.instructor.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      course.teacher.first_name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      course.teacher.last_name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
       course.description.toLowerCase().includes(searchQuery.value.toLowerCase())
 
     const matchesLevel = !selectedLevel.value ||
       course.level === selectedLevel.value
 
     const matchesSemester = !selectedSemester.value ||
-      course.semester === selectedSemester.value
+      getFullSemester(course) === selectedSemester.value
 
     return matchesSearch && matchesLevel && matchesSemester
   })
@@ -148,7 +123,7 @@ const filteredCourses = computed(() => {
 
 // Statistics
 const statistics = computed(() => [
-  { value: allCourses.length, label: t.value.teaching.statistics.coursesOffered },
+  { value: allCourses.value.length, label: t.value.teaching.statistics.coursesOffered },
   { value: uniqueInstructors.value.length, label: t.value.teaching.statistics.instructors },
   { value: 2, label: t.value.teaching.statistics.studyLevels }
 ])
@@ -161,8 +136,8 @@ const filters = computed(() => [
     value: selectedLevel.value,
     options: [
       { value: '', label: t.value.teaching.filters.allLevels },
-      { value: 'undergraduate', label: t.value.teaching.levels.undergraduate },
-      { value: 'graduate', label: t.value.teaching.levels.graduate }
+      { value: 'UGR', label: t.value.teaching.levels.undergraduate },
+      { value: 'GRD', label: t.value.teaching.levels.graduate }
     ]
   },
   {
