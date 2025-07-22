@@ -63,7 +63,12 @@ export interface ProjectsTranslations {
   }
 }
 
-export const projectsTranslations = {
+type ProjectsTranslationDict = {
+  fr: ProjectsTranslations;
+  en: ProjectsTranslations;
+};
+
+export const projectsTranslations: ProjectsTranslationDict = {
   fr: {
     pageTitle: 'Projets de Master',
     pageSubtitle: 'Découvrez les sujets de mémoire proposés par notre laboratoire',

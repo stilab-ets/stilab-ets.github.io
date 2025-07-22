@@ -2,13 +2,13 @@ import { ref, computed, readonly } from 'vue'
 import { translations, type LanguageCode, type Translations, navigationItems, type NavItem } from '@/data/translations'
 
 // Global reactive language state
-const currentLanguage = ref<LanguageCode>('fr')
+const currentLanguage = ref<LanguageCode>('en')
 
 // Browser language detection utility
 const detectBrowserLanguage = (): LanguageCode => {
   const browserLang = navigator.language.toLowerCase()
-  if (browserLang.startsWith('en')) return 'en'
-  return 'fr' // Default to French
+  if (browserLang.startsWith('fr')) return 'fr'
+  return 'en' // Default to French
 }
 
 // Initialize language from localStorage or browser preference

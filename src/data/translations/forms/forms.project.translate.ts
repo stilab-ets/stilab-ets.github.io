@@ -3,6 +3,7 @@ export interface ProjectFormTranslations {
   titleCreate: string
   subtitle: string
   sections: {
+    objectives: any
     type: string
     basic: string
     supervision: string
@@ -11,6 +12,8 @@ export interface ProjectFormTranslations {
     additional: string
   }
   form: {
+    type: any
+    cosupervisor: any
     abstract: any
     abstractPlaceholder: string | undefined
     projectType: string
@@ -107,7 +110,8 @@ export const projectFormTranslations: Record<'fr' | 'en', ProjectFormTranslation
       supervision: 'Encadrement',
       requirements: 'Exigences',
       timeline: 'Calendrier',
-      additional: 'Informations supplémentaires'
+      additional: 'Informations supplémentaires',
+      objectives: undefined
     },
     form: {
       projectType: 'Type de projet',
@@ -145,7 +149,9 @@ export const projectFormTranslations: Record<'fr' | 'en', ProjectFormTranslation
       update: 'Mettre à jour',
       submitting: 'En cours...',
       abstract: undefined,
-      abstractPlaceholder: undefined
+      abstractPlaceholder: undefined,
+      type: undefined,
+      cosupervisor: undefined
     },
     projectTypes: {
       research: 'Projet de recherche',
@@ -204,7 +210,8 @@ export const projectFormTranslations: Record<'fr' | 'en', ProjectFormTranslation
       supervision: 'Supervision',
       requirements: 'Requirements',
       timeline: 'Timeline',
-      additional: 'Additional Information'
+      additional: 'Additional Information',
+      objectives: undefined
     },
     form: {
       projectType: 'Project Type',
@@ -242,7 +249,9 @@ export const projectFormTranslations: Record<'fr' | 'en', ProjectFormTranslation
       update: 'Update',
       submitting: 'Submitting...',
       abstract: undefined,
-      abstractPlaceholder: undefined
+      abstractPlaceholder: undefined,
+      type: undefined,
+      cosupervisor: undefined
     },
     projectTypes: {
       research: 'Research Project',

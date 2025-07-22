@@ -47,7 +47,12 @@ export interface PersonTranslations {
   }
 }
 
-export const personTranslations = {
+type PersonTranslationDict = {
+  fr: PersonTranslations;
+  en: PersonTranslations;
+};
+
+export const personTranslations: PersonTranslationDict = {
   fr: {
     pageTitle: 'Notre Équipe',
     pageSubtitle: 'Découvrez les chercheurs et doctorants qui forment notre laboratoire de génie logiciel',

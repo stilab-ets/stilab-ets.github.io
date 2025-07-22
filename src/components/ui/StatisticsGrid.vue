@@ -2,7 +2,6 @@
 interface Statistic {
   value: number | string
   label: string
-  color?: string
 }
 
 interface Props {
@@ -34,8 +33,7 @@ const gridColsClass = {
       <div :class="['grid gap-6', gridColsClass]">
         <div v-for="(stat, index) in statistics" :key="index" class="text-center">
           <div :class="[
-            'text-3xl font-bold mb-2',
-            stat.color || 'text-[#08a4d4]'
+            'text-3xl font-bold mb-2 text-[#08a4d4]'
           ]">
             {{ stat.value }}
           </div>
@@ -46,8 +44,7 @@ const gridColsClass = {
     <div v-else :class="['grid gap-6', gridColsClass]">
       <div v-for="(stat, index) in statistics" :key="index" class="bg-white rounded-xl p-6 text-center shadow-sm">
         <div :class="[
-          'text-3xl font-bold mb-2',
-          stat.color || 'text-[#08a4d4]'
+          'text-3xl font-bold mb-2 text-[#08a4d4]'
         ]">
           {{ stat.value }}
         </div>

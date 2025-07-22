@@ -255,7 +255,7 @@ const submitButtonText = computed(() =>
             </p>
           </div>
 
-          <div class="md:col-span-2">
+          <div>
             <label for="department" class="block text-sm font-medium text-gray-700 mb-2">
               {{ t.forms.member.form.department }}
             </label>
@@ -267,16 +267,7 @@ const submitButtonText = computed(() =>
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
-        </div>
-      </Card>
 
-      <!-- Research Information -->
-      <Card>
-        <h2 class="text-xl font-semibold text-gray-900 mb-6">
-          {{ t.forms.member.sections.research }}
-        </h2>
-        
-        <div class="space-y-6">
           <div>
             <label for="researchDomains" class="block text-sm font-medium text-gray-700 mb-2">
               {{ t.forms.member.form.researchDomains }}
@@ -290,7 +281,7 @@ const submitButtonText = computed(() =>
             />
           </div>
 
-          <div>
+          <div class="md:col-span-2">
             <label for="biography" class="block text-sm font-medium text-gray-700 mb-2">
               {{ t.forms.member.form.biography }}
             </label>
@@ -313,11 +304,11 @@ const submitButtonText = computed(() =>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+            <label for="username_or_email" class="block text-sm font-medium text-gray-700 mb-2">
               {{ t.forms.member.form.email }}
             </label>
             <input
-              id="email"
+              id="username_or_email"
               v-model="formData.email"
               type="email"
               :placeholder="t.forms.member.form.emailPlaceholder"

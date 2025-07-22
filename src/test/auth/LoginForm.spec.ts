@@ -57,7 +57,7 @@ describe('LoginForm.vue', () => {
   })
 
   it('shows error for invalid email format', async () => {
-    await wrapper.get('#email').setValue('invalid-email')
+    await wrapper.get('#username_or_email').setValue('invalid-email')
     await wrapper.get('#password').setValue('123456')
     await wrapper.find('form').trigger('submit.prevent')
 
@@ -65,7 +65,7 @@ describe('LoginForm.vue', () => {
   })
 
   it('shows error for short password', async () => {
-    await wrapper.get('#email').setValue('user@example.com')
+    await wrapper.get('#username_or_email').setValue('user@example.com')
     await wrapper.get('#password').setValue('123')
     await wrapper.find('form').trigger('submit.prevent')
 
@@ -73,7 +73,7 @@ describe('LoginForm.vue', () => {
   })
 
   it('emits login event when form is valid', async () => {
-    await wrapper.get('#email').setValue('user@example.com')
+    await wrapper.get('#username_or_email').setValue('user@example.com')
     await wrapper.get('#password').setValue('123456')
     await wrapper.find('form').trigger('submit.prevent')
 

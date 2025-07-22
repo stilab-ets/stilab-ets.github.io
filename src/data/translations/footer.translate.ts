@@ -19,7 +19,12 @@ export interface FooterTranslations {
   copyright: string
 }
 
-export const footerTranslations = {
+type FooterTranslationDict = {
+  fr: FooterTranslations;
+  en: FooterTranslations;
+};
+
+export const footerTranslations: FooterTranslationDict = {
   fr: {
     labInfo: {
       labName: 'STIL',

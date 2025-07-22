@@ -1,197 +1,213 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue'
-import { useLanguage } from '@/composables/useLanguage'
-import { useNavigation } from '@/composables/useNavigation'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { useLanguage } from './composables/useLanguage'
+import { useAuthMiddleware } from './middleware/auth'
 
-// Composables
-const { currentLanguage, localizedNavigationItems, setLanguage, t } = useLanguage()
-const { currentPage, navigateToPage, initializeNavigation } = useNavigation()
+// Layout components
+import Header from './components/layout/Header.vue'
+import Footer from './components/layout/Footer.vue'
 
-// State management
-const isMobileMenuOpen = ref(false)
-const currentUser = ref(null)
+// Home page components
+import Hero from './components/home/Hero.vue'
+import StatsSection from './components/home/StatsSection.vue'
+import ResearchAreasPreview from './components/home/ResearchAreasPreview.vue'
+import QuickLinks from './components/home/QuickLinks.vue'
 
-// Lab statistics data
+// Page components
+import PeoplePage from './components/people/PeoplePage.vue'
+import PublicationsPage from './components/publications/PublicationsPage.vue'
+import ResearchPage from './components/research/ResearchPage.vue'
+import EventPage from './components/events/EventPage.vue'
+import TeachingPage from './components/teaching/TeachingPage.vue'
+import ProjectPage from './components/projects/ProjectPage.vue'
+import VacanciesPage from './components/vacancies/VacanciesPage.vue'
+import AwardsPage from './components/awards/AwardsPage.vue'
+
+// Authentication components
+import LoginPage from './components/auth/LoginPage.vue'
+
+// Dashboard components
+import AdminDashboard from './components/dashboard/AdminDashboard.vue'
+import ProfessorDashboard from './components/dashboard/ProfessorDashboard.vue'
+
+// Initialize systems
+const { currentLanguage, t, localizedNavigationItems, setLanguage } = useLanguage()
+const { isAuthenticated, user, isLoading } = useAuthMiddleware()
+
+// Navigation state
+const currentPage = ref('home')
+
+// User role computed property
+const userRole = computed(() => {
+  if (!user.value) return 'guest'
+  if (user.value.is_staff) return 'admin'
+  return user.value.role || 'professor'
+})
+
+// Check if user can access dashboard
+const canAccessDashboard = computed(() => {
+  return isAuthenticated.value && userRole.value !== 'guest'
+})
+
+// Protected routes that require authentication
+const protectedRoutes = ['dashboard', 'admin-dashboard', 'professor-dashboard']
+
+// Laboratory statistics
 const labStats = computed(() => ({
   members: { value: 12, label: t.value.stats.members },
-  publications: { value: 34, label: t.value.stats.publications },
-  projects: { value: 5, label: t.value.stats.projects },
-  awards: { value: 8, label: t.value.stats.awards }
+  publications: { value: 45, label: t.value.stats.publications },
+  projects: { value: 8, label: t.value.stats.projects },
+  awards: { value: 6, label: t.value.stats.awards }
 }))
 
-// Authentication state
-const isAuthenticated = computed(() => currentUser.value !== null)
+// Navigation methods
+const setCurrentPage = (page: string) => {
+  // Check if page requires authentication
+  if (protectedRoutes.includes(page)) {
+    if (!isAuthenticated.value) {
+      currentPage.value = 'login'
+      return
+    }
+    // Check role-specific access
+    if (page === 'admin-dashboard' && userRole.value !== 'admin') {
+      currentPage.value = 'dashboard' // Redirect to appropriate dashboard
+      return
+    }
+    // Redirect to role-specific dashboard
+    if (page === 'dashboard') {
+      page = userRole.value === 'admin' ? 'admin-dashboard' : 'professor-dashboard'
+    }
+  }
+  
+  currentPage.value = page
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
 
-// Initialize navigation system
-let cleanupNavigation: (() => void) | null = null
+// Language change handler
+const handleLanguageChange = (language: string) => {
+  setLanguage(language as 'en' | 'fr')
+}
+
+// Page title management
+const updatePageTitle = () => {
+  const baseTitle = currentLanguage.value === 'en' 
+    ? 'STIL - Research Laboratory'
+    : 'STIL - Laboratoire de Recherche'
+  
+  if (currentPage.value === 'home') {
+    document.title = baseTitle
+    return
+  }
+  
+  const currentNav = localizedNavigationItems.value.find(item => item.id === currentPage.value)
+  if (currentNav) {
+    document.title = `${currentNav.label} - ${baseTitle}`
+  }
+}
+
+// Authentication state watchers
+watch(isAuthenticated, (newValue) => {
+  if (!newValue && protectedRoutes.includes(currentPage.value)) {
+    currentPage.value = 'home'
+  }
+})
+
+// Initialize
+let unwatchPage: (() => void) | null = null
+let unwatchLanguage: (() => void) | null = null
 
 onMounted(() => {
-  cleanupNavigation = initializeNavigation()
+  document.documentElement.lang = currentLanguage.value
+  updatePageTitle()
+  
+  unwatchPage = watch(currentPage, updatePageTitle)
+  unwatchLanguage = watch(currentLanguage, (newLang) => {
+    document.documentElement.lang = newLang
+    updatePageTitle()
+  })
 })
 
 onUnmounted(() => {
-  if (cleanupNavigation) {
-    cleanupNavigation()
-  }
+  if (unwatchPage) unwatchPage()
+  if (unwatchLanguage) unwatchLanguage()
 })
-
-// Event handlers
-const handleLanguageChange = (language: 'en' | 'fr') => {
-  setLanguage(language)
-}
-
-const handleNavigation = (page: string) => {
-  navigateToPage(page)
-  isMobileMenuOpen.value = false
-}
-
-const handleMobileMenuToggle = () => {
-  isMobileMenuOpen.value = !isMobileMenuOpen.value
-}
-
-const handleLogin = (credentials: any) => {
-  console.log('Login attempt:', credentials)
-  // TODO: Implement actual authentication
-}
-
-const handleRegister = (userData: any) => {
-  console.log('Registration attempt:', userData)
-  // TODO: Implement actual registration
-}
-
-const handleLogout = () => {
-  currentUser.value = null
-  navigateToPage('home')
-}
-
-const handleFormSubmit = (formData: any) => {
-  console.log('Form submitted:', formData)
-  // TODO: Implement form submission logic
-}
-
-// Close mobile menu when clicking outside
-const handleOutsideClick = (event: Event) => {
-  if (isMobileMenuOpen.value) {
-    isMobileMenuOpen.value = false
-  }
-}
 </script>
 
 <template>
-  <div id="app" class="min-h-screen bg-gray-50" @click="handleOutsideClick">
-    <!-- Header -->
-    <Header
-      :current-page="currentPage"
-      :navigation-items="localizedNavigationItems"
-      :current-language="currentLanguage"
-      :is-mobile-menu-open="isMobileMenuOpen"
-      :user="currentUser"
-      @set-current-page="handleNavigation"
-      @language-changed="handleLanguageChange"
-      @toggle-mobile-menu="handleMobileMenuToggle"
-      @logout="handleLogout"
-    />
+  <div class="min-h-screen bg-gray-50">
+    <!-- Loading state -->
+    <div v-if="isLoading" class="flex items-center justify-center min-h-screen">
+      <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+    </div>
 
-    <!-- Main Content -->
-    <main class="pt-16">
-      <!-- Home Page -->
-      <div v-if="currentPage === 'home'">
-        <Hero @set-current-page="handleNavigation" />
-        <StatsSection :lab-stats="labStats" />
-        <ResearchAreasPreview />
-        <QuickLinksHome @set-current-page="handleNavigation" />
-      </div>
-
-      <!-- People Page -->
-      <PeoplePage v-else-if="currentPage === 'people'" />
-
-      <!-- Research Page -->
-      <ResearchPage v-else-if="currentPage === 'research'" />
-
-      <!-- Publications Page -->
-      <PublicationsPage v-else-if="currentPage === 'publications'" />
-
-      <!-- Teaching Page -->
-      <TeachingPage v-else-if="currentPage === 'teaching'" />
-
-      <!-- Events Page -->
-      <EventsPage v-else-if="currentPage === 'events'" />
-
-      <!-- Projects Page -->
-      <ProjectsPage v-else-if="currentPage === 'projects'" />
-
-      <!-- Vacancies Page -->
-      <VacanciesPage v-else-if="currentPage === 'vacancies'" />
-
-      <!-- Awards Page -->
-      <AwardsPage v-else-if="currentPage === 'awards'" />
-
-      <!-- Authentication Pages -->
-      <div v-else-if="currentPage === 'login'" class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <LoginForm @login="handleLogin" />
-      </div>
-
-      <div v-else-if="currentPage === 'register'" class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <RegisterForm @register="handleRegister" />
-      </div>
-
-      <!-- Form Pages -->
-      <div v-else-if="currentPage === 'publication-form'" class="container mx-auto px-4 py-8">
-        <PublicationForm @submit="handleFormSubmit" />
-      </div>
-
-      <div v-else-if="currentPage === 'event-form'" class="container mx-auto px-4 py-8">
-        <EventForm @submit="handleFormSubmit" />
-      </div>
-
-      <div v-else-if="currentPage === 'project-form'" class="container mx-auto px-4 py-8">
-        <ProjectForm @submit="handleFormSubmit" />
-      </div>
-
-      <div v-else-if="currentPage === 'member-form'" class="container mx-auto px-4 py-8">
-        <MemberForm @submit="handleFormSubmit" />
-      </div>
-
-      <div v-else-if="currentPage === 'research-form'" class="container mx-auto px-4 py-8">
-        <ResearchForm @submit="handleFormSubmit" />
-      </div>
-
-      <div v-else-if="currentPage === 'teaching-form'" class="container mx-auto px-4 py-8">
-        <TeachingForm @submit="handleFormSubmit" />
-      </div>
-
-      <div v-else-if="currentPage === 'award-form'" class="container mx-auto px-4 py-8">
-        <AwardForm @submit="handleFormSubmit" />
-      </div>
-
-      <div v-else-if="currentPage === 'vacancy-form'" class="container mx-auto px-4 py-8">
-        <VacancyForm @submit="handleFormSubmit" />
-      </div>
-
-      <div v-else-if="currentPage === 'user-settings-form'" class="container mx-auto px-4 py-8">
-        <UserSettingsForm @submit="handleFormSubmit" />
-      </div>
-
-      <div v-else-if="currentPage === 'admin-management-form'" class="container mx-auto px-4 py-8">
-        <AdminManagementForm @submit="handleFormSubmit" />
-      </div>
-
-      <!-- 404 Page -->
-      <div v-else class="min-h-screen flex items-center justify-center">
-        <div class="text-center">
-          <h1 class="text-6xl font-bold text-gray-900">404</h1>
-          <p class="text-xl text-gray-600 mt-4">Page not found</p>
-          <button
-            @click="handleNavigation('home')"
-            class="mt-6 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-          >
-            Return Home
-          </button>
+    <!-- Main application -->
+    <template v-else>
+      <!-- Header -->
+      <Header 
+        :current-page="currentPage" 
+        :navigation-items="localizedNavigationItems"
+        :current-language="currentLanguage"
+        :user="user"
+        :can-access-dashboard="canAccessDashboard"
+        @set-current-page="setCurrentPage"
+        @language-changed="handleLanguageChange"
+      />
+      
+      <!-- Main Content -->
+      <main>
+        <!-- Homepage -->
+        <div v-if="currentPage === 'home'">
+          <Hero @set-current-page="setCurrentPage" />
+          <StatsSection :lab-stats="labStats" />
+          <ResearchAreasPreview />
+          <QuickLinks @set-current-page="setCurrentPage" />
         </div>
-      </div>
-    </main>
-
-    <!-- Footer -->
-    <Footer @set-current-page="handleNavigation" />
+        
+        <!-- Public Pages - Available to all users -->
+        <PeoplePage v-else-if="currentPage === 'people'" />
+        <PublicationsPage v-else-if="currentPage === 'publications'" />
+        <ResearchPage v-else-if="currentPage === 'research'" />
+        <EventPage v-else-if="currentPage === 'events'" />
+        <TeachingPage v-else-if="currentPage === 'teaching'" />
+        <ProjectPage v-else-if="currentPage === 'projects'" />
+        <VacanciesPage v-else-if="currentPage === 'vacancies'" />
+        <AwardsPage v-else-if="currentPage === 'awards'" />
+        
+        <!-- Authentication -->
+        <LoginPage v-else-if="currentPage === 'login'" @login-success="setCurrentPage('home')" />
+        
+        <!-- Dashboard Page -->
+        <DashboardPage 
+          v-else-if="currentPage === 'dashboard'" 
+          @navigate="setCurrentPage"
+        />
+        <!-- Protected Dashboards -->
+        <AdminDashboard 
+          v-else-if="currentPage === 'admin-dashboard' && userRole === 'admin'"
+          @navigate="setCurrentPage"
+        />
+        <ProfessorDashboard 
+          v-else-if="currentPage === 'professor-dashboard' && userRole === 'professor'"
+          @navigate="setCurrentPage"
+        />
+        
+        <!-- Fallback for invalid routes -->
+        <div v-else class="container mx-auto px-4 py-8">
+          <div class="text-center">
+            <h1 class="text-2xl font-bold text-gray-800 mb-4">Page Not Found</h1>
+            <p class="text-gray-600 mb-4">The page you're looking for doesn't exist.</p>
+            <button 
+              @click="setCurrentPage('home')"
+              class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            >
+              Go Home
+            </button>
+          </div>
+        </div>
+      </main>
+      
+      <!-- Footer -->
+      <Footer @set-current-page="setCurrentPage" />
+    </template>
   </div>
 </template>

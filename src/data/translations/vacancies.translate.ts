@@ -1,64 +1,71 @@
 export interface VacanciesTranslations {
-  pageTitle: string
-  pageSubtitle: string
+  pageTitle: string;
+  pageSubtitle: string;
   infoBox: {
-    whyJoinUs: string
-    benefits: readonly string[]
-    hrContact: string
-    email: string
-    phone: string
-    address: string
-  }
+    whyJoinUs: string;
+    benefits: readonly string[];
+    hrContact: string;
+    email: string;
+    phone: string;
+    address: string;
+  };
   filters: {
-    positionType: string
-    allTypes: string
-    domain: string
-    allDomains: string
-    sortBy: string
-  }
+    supervisor: string;
+    allSupervisors: string;
+    positionType: string;
+    allTypes: string;
+    domain: string;
+    allDomains: string;
+    sortBy: string;
+  };
   positionTypes: {
-    phd: string
-    postdoc: string
-    researcher: string
-    engineer: string
-    intern: string
-  }
+    phd: string;
+    postdoc: string;
+    researcher: string;
+    engineer: string;
+    intern: string;
+  };
   sorting: {
-    deadlineClose: string
-    deadlineFar: string
-    positionType: string
-    recent: string
-  }
+    deadlineClose: string;
+    deadlineFar: string;
+    positionType: string;
+    recent: string;
+  };
   vacancyCard: {
-    supervisor: string
-    duration: string
-    salary: string
-    deadline: string
-    startDate: string
-    urgent: string
-    standard: string
-    profile: string
-    apply: string
-    share: string
-  }
+    supervisor: string;
+    duration: string;
+    salary: string;
+    deadline: string;
+    startDate: string;
+    urgent: string;
+    standard: string;
+    profile: string;
+    apply: string;
+    share: string;
+  };
   deadlineStatus: {
-    deadlinePassed: string
-    deadlineToday: string
-    deadlineTomorrow: string
-    daysRemaining: string
-  }
+    deadlinePassed: string;
+    deadlineToday: string;
+    deadlineTomorrow: string;
+    daysRemaining: string;
+  };
   results: {
-    offer: string
-    offers: string
-    available: string
-  }
+    offer: string;
+    offers: string;
+    available: string;
+  };
   empty: {
-    title: string
-    message: string
-  }
+    title: string;
+    message: string;
+  };
 }
 
-export const vacanciesTranslations = {
+type VacanciesTranslationDict = {
+  fr: VacanciesTranslations;
+  en: VacanciesTranslations;
+};
+
+export const vacanciesTranslations: VacanciesTranslationDict = {
   fr: {
     pageTitle: 'Recrutements & Opportunités',
     pageSubtitle: 'Rejoignez notre équipe de recherche en génie logiciel',
@@ -68,32 +75,34 @@ export const vacanciesTranslations = {
         'Recherche de pointe en génie logiciel',
         'Collaboration avec l\'industrie',
         'Équipe internationale et dynamique',
-        'Équipements et technologies modernes'
+        'Équipements et technologies modernes',
       ],
       hrContact: 'Contact RH',
-      email: 'recrutement@labo-software.fr',
-      phone: '+33 1 23 45 67 89',
-      address: 'Université de Recherche, Bâtiment Informatique'
+      email: 'changeme@stil-lab.fr',
+      phone: '+33 change me',
+      address: 'STIL Lab, Bâtiment Informatique (changeme)',
     },
     filters: {
+      supervisor: 'Superviseur',
+      allSupervisors: 'Tous les superviseurs',
       positionType: 'Type de poste',
       allTypes: 'Tous les types',
       domain: 'Domaine',
       allDomains: 'Tous les domaines',
-      sortBy: 'Trier par'
+      sortBy: 'Trier par',
     },
     positionTypes: {
       phd: 'Doctorat',
       postdoc: 'Post-doctorat',
       researcher: 'Chercheur',
       engineer: 'Ingénieur',
-      intern: 'Stage'
+      intern: 'Stage',
     },
     sorting: {
       deadlineClose: 'Date limite (proche)',
       deadlineFar: 'Date limite (lointaine)',
       positionType: 'Type de poste',
-      recent: 'Plus récents'
+      recent: 'Plus récents',
     },
     vacancyCard: {
       supervisor: 'Superviseur',
@@ -105,23 +114,23 @@ export const vacanciesTranslations = {
       standard: 'Standard',
       profile: 'Profil recherché',
       apply: 'Postuler',
-      share: 'Partager'
+      share: 'Partager',
     },
     deadlineStatus: {
       deadlinePassed: 'Date limite dépassée',
       deadlineToday: 'Date limite aujourd\'hui',
       deadlineTomorrow: 'Date limite demain',
-      daysRemaining: 'jours restants'
+      daysRemaining: 'jours restants',
     },
     results: {
       offer: 'offre',
       offers: 'offres',
-      available: 'disponible'
+      available: 'disponible',
     },
     empty: {
       title: 'Aucune offre trouvée',
-      message: 'Essayez de modifier vos filtres ou revenez plus tard.'
-    }
+      message: 'Essayez de modifier vos filtres ou revenez plus tard.',
+    },
   },
   en: {
     pageTitle: 'Vacancies & Opportunities',
@@ -132,32 +141,34 @@ export const vacanciesTranslations = {
         'Cutting-edge software engineering research',
         'Industry collaboration',
         'International and dynamic team',
-        'Modern equipment and technologies'
+        'Modern equipment and technologies',
       ],
       hrContact: 'HR Contact',
-      email: 'recruitment@lab-software.edu',
-      phone: '+33 1 23 45 67 89',
-      address: 'Research University, Computer Science Building'
+      email: 'changeme@lab-software.edu',
+      phone: '+33 changeme',
+      address: 'STIL lab, Computer Science Building(changeme)',
     },
     filters: {
+      supervisor: 'Supervisor',
+      allSupervisors: 'All supervisors',
       positionType: 'Position type',
       allTypes: 'All types',
       domain: 'Domain',
       allDomains: 'All domains',
-      sortBy: 'Sort by'
+      sortBy: 'Sort by',
     },
     positionTypes: {
       phd: 'PhD',
       postdoc: 'Post-doc',
       researcher: 'Researcher',
       engineer: 'Engineer',
-      intern: 'Internship'
+      intern: 'Internship',
     },
     sorting: {
       deadlineClose: 'Deadline (close)',
       deadlineFar: 'Deadline (far)',
       positionType: 'Position type',
-      recent: 'Most recent'
+      recent: 'Most recent',
     },
     vacancyCard: {
       supervisor: 'Supervisor',
@@ -169,22 +180,22 @@ export const vacanciesTranslations = {
       standard: 'Standard',
       profile: 'Profile sought',
       apply: 'Apply',
-      share: 'Share'
+      share: 'Share',
     },
     deadlineStatus: {
       deadlinePassed: 'Deadline passed',
       deadlineToday: 'Deadline today',
       deadlineTomorrow: 'Deadline tomorrow',
-      daysRemaining: 'days remaining'
+      daysRemaining: 'days remaining',
     },
     results: {
       offer: 'offer',
       offers: 'offers',
-      available: 'available'
+      available: 'available',
     },
     empty: {
       title: 'No offers found',
-      message: 'Try modifying your filters or come back later.'
-    }
-  }
-} as const
+      message: 'Try modifying your filters or come back later.',
+    },
+  },
+} as const;

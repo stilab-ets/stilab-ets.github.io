@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { nextTick, ref } from 'vue'
-import MemberForm from '@/components/forms/MemberForm.vue'
+import MemberForm from '@/components/people/MemberForm.vue'
 
 // Mock composable
 vi.mock('@/composables/useLanguage', () => ({
@@ -117,7 +117,7 @@ describe('MemberForm.vue', () => {
     await wrapper.find('#firstName').setValue('John')
     await wrapper.find('#lastName').setValue('Doe')
     await wrapper.find('#title').setValue('Prof.')
-    await wrapper.find('#email').setValue('invalid-email')
+    await wrapper.find('#username_or_email').setValue('invalid-email')
     await wrapper.find('#role').setValue('professor')
     await wrapper.find('#status').setValue('active')
 

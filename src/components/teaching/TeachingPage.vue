@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
-import { mockResearchers } from '@/data/mockResearchers'
-import axios from 'axios'
+import { useCourses } from '@/hooks/teaching/useCourses'
 
 // UI Components
 import PageHeader from '@/components/ui/PageHeader.vue'
@@ -13,122 +12,68 @@ import EmptyState from '@/components/ui/EmptyState.vue'
 // Teaching components
 import CourseCard from './CourseCard.vue'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
-
-interface Teacher {
-  id: string
-  first_name: string
-  last_name: string
-  role: string
-  email: string | null
-  phone?: string | null
-  biography?: string | null
-  research_domain?: string | null
-  image_url?: string | null
-  github_url?: string | null
-  linkedin_url?: string | null
-  personal_website?: string | null
-  status?: string | null
-}
-
-interface Course {
-  id: string;
-  title: string;
-  code: string;
-  teacher: Teacher;
-  semester: string;
-  level: 'undergraduate' | 'graduate';
-  description: string;
-  url?: string;
-  year: number;
-}
-
 // Language and translations
 const { t } = useLanguage()
 
-// State
+// Use courses hook
+const {
+  courses,
+  isLoading,
+  error,
+  fetchCourses,
+  filteredCourses,
+  uniqueLevels,
+  uniqueSemesters,
+  clearError
+} = useCourses()
 
-const allCourses = ref<Course[]>([]);
+// Filter state
 const searchQuery = ref('')
 const selectedLevel = ref('')
 const selectedSemester = ref('')
 
-const fetchCourses = async () => {
+// Fetch courses on mount
+onMounted(() => {
+  fetchCourses()
+})
 
-  try {
-    const response = await axios.get(`${API_BASE_URL}/api/courses`)
-    allCourses.value = response.data 
-  } catch (error) {
-    console.error('Error fetching courses:', error)
-  }
-}
-onMounted(fetchCourses)
+// Computed filtered courses using the hook's filter function
+const filteredCoursesComputed = computed(() => {
+  return filteredCourses(searchQuery.value, selectedLevel.value, selectedSemester.value)
+})
 
-const getFullSemester = (course: Course) => {
-  let semesterLabel = ''
-  switch (course.semester) {
-    case 'F':
-      semesterLabel = t.value.teaching.semesters.fall
-      break
-    case 'W':
-      semesterLabel = t.value.teaching.semesters.winter
-      break
-    case 'S':
-      semesterLabel = t.value.teaching.semesters.summer
-      break
-    default:
-      semesterLabel = course.semester
-  }
-
-  return `${semesterLabel} ${course.year}`
-}
-// Computed
-const availableSemesters = computed(() => {
-  const semesters = [
-    ...new Set(
-      allCourses.value.map((course: Course) => {
-        // Translate the semester using t
-        return getFullSemester(course)
-        
-      })
-    )
+// Statistics for the statistics grid - with proper null checking
+const statistics = computed(() => {
+  const coursesList = courses.value || []
+  return [
+    {
+      label: t.value.teaching.stats.totalCourses,
+      value: coursesList.length.toString(),
+      icon: 'book',
+      color: 'bg-blue-500'
+    },
+    {
+      label: t.value.teaching.stats.undergraduateCourses,
+      value: coursesList.filter(c => c.level === 'undergraduate').length.toString(),
+      icon: 'users',
+      color: 'bg-green-500'
+    },
+    {
+      label: t.value.teaching.stats.graduateCourses,
+      value: coursesList.filter(c => c.level === 'graduate').length.toString(),
+      icon: 'award',
+      color: 'bg-purple-500'
+    },
+    {
+      label: t.value.teaching.stats.instructors,
+      value: new Set(coursesList.map(c => c.teacher ? `${c.teacher.first_name} ${c.teacher.last_name}` : 'Unknown')).size.toString(),
+      icon: 'user-check',
+      color: 'bg-orange-500'
+    }
   ]
-  return semesters.sort()
 })
 
-const uniqueInstructors = computed(() => {
-  return [...new Set(allCourses.value.map(
-    course => course.teacher.first_name + " " + course.teacher.last_name
-  ))]
-})
-
-const filteredCourses = computed(() => {
-  return allCourses.value.filter(course => {
-    const matchesSearch = !searchQuery.value ||
-      course.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      course.code.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      course.teacher.first_name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      course.teacher.last_name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      course.description.toLowerCase().includes(searchQuery.value.toLowerCase())
-
-    const matchesLevel = !selectedLevel.value ||
-      course.level === selectedLevel.value
-
-    const matchesSemester = !selectedSemester.value ||
-      getFullSemester(course) === selectedSemester.value
-
-    return matchesSearch && matchesLevel && matchesSemester
-  })
-})
-
-// Statistics
-const statistics = computed(() => [
-  { value: allCourses.value.length, label: t.value.teaching.statistics.coursesOffered },
-  { value: uniqueInstructors.value.length, label: t.value.teaching.statistics.instructors },
-  { value: 2, label: t.value.teaching.statistics.studyLevels }
-])
-
-// Filters configuration
+// Filters configuration - with proper null checking
 const filters = computed(() => [
   {
     id: 'level',
@@ -136,8 +81,10 @@ const filters = computed(() => [
     value: selectedLevel.value,
     options: [
       { value: '', label: t.value.teaching.filters.allLevels },
-      { value: 'UGR', label: t.value.teaching.levels.undergraduate },
-      { value: 'GRD', label: t.value.teaching.levels.graduate }
+      ...(uniqueLevels.value || []).map(level => ({
+        value: level,
+        label: level === 'undergraduate' ? t.value.teaching.levels.undergraduate : t.value.teaching.levels.graduate
+      }))
     ]
   },
   {
@@ -146,12 +93,38 @@ const filters = computed(() => [
     value: selectedSemester.value,
     options: [
       { value: '', label: t.value.teaching.filters.allSemesters },
-      ...availableSemesters.value.map(semester => ({ value: semester, label: semester }))
+      ...(uniqueSemesters.value || []).map(semester => ({
+        value: semester,
+        label: getFullSemesterName(semester)
+      }))
     ]
   }
 ])
 
-// Methods
+// Helper function to get full semester name
+const getFullSemesterName = (semester: string | null): string => {
+  if (!semester) return ''
+  switch (semester) {
+    case 'F':
+      return t.value.teaching.semesters.fall
+    case 'W':
+      return t.value.teaching.semesters.winter
+    case 'S':
+      return t.value.teaching.semesters.summer
+    default:
+      return semester
+  }
+}
+
+// Results text - with proper null checking
+const resultsText = computed(() => {
+  const count = filteredCoursesComputed.value?.length || 0
+  if (count === 0) return `0 ${t.value.teaching.results.course}`
+  if (count === 1) return `1 ${t.value.teaching.results.course}`
+  return `${count} ${t.value.teaching.results.courses}`
+})
+
+// Filter update method
 const updateFilter = (filterId: string, value: string) => {
   switch (filterId) {
     case 'level':
@@ -160,7 +133,16 @@ const updateFilter = (filterId: string, value: string) => {
     case 'semester':
       selectedSemester.value = value
       break
+    case 'search':
+      searchQuery.value = value
+      break
   }
+}
+
+// Clear error and retry
+const retryFetch = () => {
+  clearError()
+  fetchCourses()
 }
 </script>
 
@@ -170,35 +152,54 @@ const updateFilter = (filterId: string, value: string) => {
     <PageHeader 
       :title="t.teaching.pageTitle"
       :subtitle="t.teaching.pageSubtitle"
-      highlight-word="Enseignement"
+      highlight-word="Teaching"
     />
 
-    <!-- Statistics -->
-    <StatisticsGrid 
-      :statistics="statistics"
-      :columns="3"
-    />
+    <!-- Statistics Grid -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <StatisticsGrid :statistics="statistics" />
+    </div>
 
-    <!-- Filters -->
-    <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
-      <div class="max-w-6xl mx-auto">
-        <SearchAndFilters
-          :search-query="searchQuery"
-          :search-label="t.teaching.search.label"
-          :search-placeholder="t.teaching.search.placeholder"
-          :filters="filters"
-          @update:search-query="searchQuery = $event"
-          @update-filter="updateFilter"
-        />
+    <!-- Search and Filters -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+      <SearchAndFilters
+        v-model:search-query="searchQuery"
+        :filters="filters"
+        :results-text="resultsText"
+        @update-filter="updateFilter"
+        @update:search-query="updateFilter('search', $event)"
+      />
+    </div>
+
+    <!-- Error State -->
+    <div v-if="error" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+      <div class="max-w-6xl mx-auto text-center">
+        <div class="bg-red-50 border border-red-200 rounded-lg p-6">
+          <p class="text-red-600">{{ error }}</p>
+          <button 
+            @click="retryFetch"
+            class="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+          >
+            {{ t.common.retry }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div v-else-if="isLoading" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+      <div class="max-w-6xl mx-auto text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+        <p class="mt-4 text-gray-600">{{ t.common.loading }}</p>
       </div>
     </div>
 
     <!-- Course List -->
-    <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <div v-else class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
       <div class="max-w-6xl mx-auto">
-        <div v-if="filteredCourses.length > 0" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div v-if="filteredCoursesComputed.length > 0" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <CourseCard
-            v-for="course in filteredCourses"
+            v-for="course in filteredCoursesComputed"
             :key="course.id"
             :course="course"
           />
