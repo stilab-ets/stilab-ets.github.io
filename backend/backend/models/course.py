@@ -2,7 +2,7 @@ import uuid
 
 from django.db import models
 
-from ..models import Member
+from .member import Member
 
 
 class Course(models.Model):
