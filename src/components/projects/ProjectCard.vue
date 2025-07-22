@@ -1,23 +1,23 @@
 <script setup lang="ts">
 import { useLanguage } from '@/composables/useLanguage'
-import type { MScProject } from '@/data/mockPublications'
+import type { Project } from '@/services/MainAPI'
 import Card from '@/ui/Card.vue'
 import Button from '@/ui/Button.vue'
 
 interface Props {
-  project: MScProject
+  project: Project
 }
 
 const props = defineProps<Props>()
 const emit = defineEmits<{
-  showInterest: [project: MScProject]
+  showInterest: [project: Project]
 }>()
 
 const { t } = useLanguage()
 
 // Methods
-const getStatusColor = (status: MScProject['status']) => {
-  const colors: Record<MScProject['status'], string> = {
+const getStatusColor = (status: Project['status']) => {
+  const colors: Record<Project['status'], string> = {
     available: 'bg-green-100 text-green-800',
     assigned: 'bg-yellow-100 text-yellow-800',
     completed: 'bg-gray-100 text-gray-800'
@@ -25,8 +25,8 @@ const getStatusColor = (status: MScProject['status']) => {
   return colors[status] || 'bg-gray-100 text-gray-800'
 }
 
-const getStatusDotColor = (status: MScProject['status']) => {
-  const colors: Record<MScProject['status'], string> = {
+const getStatusDotColor = (status: Project['status']) => {
+  const colors: Record<Project['status'], string> = {
     available: 'bg-green-500',
     assigned: 'bg-yellow-500',
     completed: 'bg-gray-500'
@@ -34,13 +34,13 @@ const getStatusDotColor = (status: MScProject['status']) => {
   return colors[status] || 'bg-gray-500'
 }
 
-const getStatusLabel = (status: MScProject['status']) => {
+const getStatusLabel = (status: Project['status']) => {
   const statusKey = status as keyof typeof t.value.projects.status
   return t.value.projects.status[statusKey] || status
 }
 
-const getDifficultyColor = (difficulty: MScProject['difficulty']) => {
-  const colors: Record<MScProject['difficulty'], string> = {
+const getDifficultyColor = (difficulty: Project['difficulty']) => {
+  const colors: Record<Project['difficulty'], string> = {
     beginner: 'bg-green-100 text-green-800',
     intermediate: 'bg-yellow-100 text-yellow-800',
     advanced: 'bg-red-100 text-red-800'
@@ -48,7 +48,7 @@ const getDifficultyColor = (difficulty: MScProject['difficulty']) => {
   return colors[difficulty] || 'bg-gray-100 text-gray-800'
 }
 
-const getDifficultyLabel = (difficulty: MScProject['difficulty']) => {
+const getDifficultyLabel = (difficulty: Project['difficulty']) => {
   const difficultyKey = difficulty as keyof typeof t.value.projects.difficulty
   return t.value.projects.difficulty[difficultyKey] || difficulty
 }
@@ -119,8 +119,8 @@ const showInterest = () => {
         </svg>
         <span class="font-medium">{{ t.projects.projectCard.supervisor }}:</span>
         <span class="ml-1">{{ project.supervisor }}</span>
-        <span v-if="project.coSupervisor" class="ml-2">
-          • {{ t.projects.projectCard.coSupervisor }}: {{ project.coSupervisor }}
+        <span v-if="project.co_supervisor" class="ml-2">
+          • {{ t.projects.projectCard.coSupervisor }}: {{ project.co_supervisor }}
         </span>
       </div>
     </div>
@@ -152,7 +152,7 @@ const showInterest = () => {
     <!-- Footer -->
     <div class="flex items-center justify-between pt-4 border-t border-gray-100">
       <div class="text-xs text-gray-500">
-        {{ t.projects.projectCard.proposedOn }} {{ formatDate(project.proposedDate) }}
+        {{ t.projects.projectCard.proposedOn }} {{ formatDate(project.proposed_date) }}
       </div>
       <div class="flex space-x-2">
         <Button 

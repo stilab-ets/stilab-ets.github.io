@@ -49,7 +49,12 @@ export interface PublicationsTranslations {
   }
 }
 
-export const publicationsTranslations = {
+type PublicationsTranslationDict = {
+  fr: PublicationsTranslations;
+  en: PublicationsTranslations;
+};
+
+export const publicationsTranslations: PublicationsTranslationDict = {
   fr: {
     pageTitle: 'Nos Publications',
     pageSubtitle: 'Découvrez les travaux de recherche publiés par notre laboratoire',

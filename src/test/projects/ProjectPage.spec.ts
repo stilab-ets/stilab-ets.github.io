@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 
-import ProjectPage from '../../components/projects/ProjectPage.vue'
+import ProjectPage from '../../components/projects/ProjectsPage.vue'
 
 describe('MScProjectsView.vue', () => {
   it('renders PageHeader with correct title and subtitle', () => {

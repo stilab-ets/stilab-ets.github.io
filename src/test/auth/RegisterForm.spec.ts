@@ -81,7 +81,7 @@ describe('RegisterForm.vue', () => {
 
   it('renders the form with prefilled email', () => {
     expect(wrapper.text()).toContain('Register')
-    const emailInput = wrapper.find('input#email')
+    const emailInput = wrapper.find('input#username_or_email')
     expect((emailInput.element as HTMLInputElement).value).toBe('test@example.com')
     expect(emailInput.attributes('disabled')).toBeDefined()
   })
@@ -112,7 +112,7 @@ describe('RegisterForm.vue', () => {
   it('shows email invalid error for invalid email', async () => {
     // Remove invitedEmail prop to allow editing email
     wrapper = mount(RegisterForm)
-    await wrapper.find('#email').setValue('invalid-email')
+    await wrapper.find('#username_or_email').setValue('invalid-email')
     await wrapper.find('form').trigger('submit.prevent')
     await nextTick()
     expect(wrapper.text()).toContain('Email is invalid.')

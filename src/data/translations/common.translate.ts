@@ -7,9 +7,15 @@ export interface CommonTranslations {
   email: string
   phone: string
   address: string
+  retry: string
 }
 
-export const commonTranslations = {
+type CommonTranslationDict = {
+  fr: CommonTranslations;
+  en: CommonTranslations;
+};
+
+export const commonTranslations: CommonTranslationDict = {
   fr: {
     loading: 'Chargement...',
     error: 'Une erreur est survenue',
@@ -18,7 +24,8 @@ export const commonTranslations = {
     contact: 'Contact',
     email: 'Email',
     phone: 'Téléphone',
-    address: 'Adresse'
+    address: 'Adresse',
+    retry: 'Réessayer'
   },
   en: {
     loading: 'Loading...',
@@ -28,6 +35,7 @@ export const commonTranslations = {
     contact: 'Contact',
     email: 'Email',
     phone: 'Phone',
-    address: 'Address'
+    address: 'Address',
+    retry: 'Retry'
   }
 } as const

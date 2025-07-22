@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import EventForm from '@/components/forms/EventForm.vue'
+import EventForm from '@/components/events/EventForm.vue'
 
 // Mock useLanguage composable
 vi.mock('@/composables/useLanguage', () => ({
