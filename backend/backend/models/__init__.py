@@ -1,6 +1,7 @@
 from .author import Author
 from .award import Award
 from .award_recipient import AwardRecipient
+from .course import Course
 from .event import Event
 from .event_participant import EventParticipant
 from .member import Member
@@ -20,4 +21,5 @@ __all__ = [
     "EventParticipant",
     "Award",
     "AwardRecipient",
+    "Course",
 ]
