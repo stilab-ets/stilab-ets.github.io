@@ -1,4 +1,3 @@
-// src/services/MainAPI.ts
 import { BaseAPI, type ApiResponse, type PaginatedResponse } from './BaseAPI';
 
 export interface Publication {
@@ -70,6 +69,23 @@ export interface Course {
   prerequisites?: string;
   learning_objectives?: string;
   created_at: string;
+}
+
+export interface Project {
+  id: number;
+  title: string;
+  abstract: string;
+  description?: string;
+  domain: string;
+  supervisor: string;
+  co_supervisor?: string;
+  required_skills: string[];
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  status: 'available' | 'assigned' | 'completed';
+  proposed_date: string;
+  contact_email?: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export class MainAPI extends BaseAPI {
@@ -176,6 +192,27 @@ export class MainAPI extends BaseAPI {
 
   async deleteCourse(id: number): Promise<ApiResponse<void>> {
     return this.delete<void>(`/api/courses/${id}/`);
+  }
+
+  // Projects
+  async getProjects(): Promise<ApiResponse<PaginatedResponse<Project>>> {
+    return this.get<PaginatedResponse<Project>>('/api/projects/');
+  }
+
+  async getProject(id: number): Promise<ApiResponse<Project>> {
+    return this.get<Project>(`/api/projects/${id}/`);
+  }
+
+  async createProject(data: Partial<Project>): Promise<ApiResponse<Project>> {
+    return this.post<Project>('/api/projects/', data);
+  }
+
+  async updateProject(id: number, data: Partial<Project>): Promise<ApiResponse<Project>> {
+    return this.put<Project>(`/api/projects/${id}/`, data);
+  }
+
+  async deleteProject(id: number): Promise<ApiResponse<void>> {
+    return this.delete<void>(`/api/projects/${id}/`);
   }
 
   // Admin command - Run get publications
