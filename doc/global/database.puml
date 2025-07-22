@@ -124,6 +124,6 @@ Member ||--o{ AwardRecipient : receives >
 Publication ||--o{ PublicationAuthor : includes >
 Author ||--o{ PublicationAuthor : writes >
 Member ||--o{ ResearchProject : leads >
-Member ||--o{ Teachings : teaches >
+Member ||--o{ Course : teaches >
 
 @enduml
