@@ -20,7 +20,7 @@ from django.urls import path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
-
+from rest_framework_simplejwt.views import TokenRefreshView
 from backend.views.auth_views import LoginView, RegisterView
 from backend.views.awards_view import AwardsView
 from backend.views.courses_view import CoursesView
@@ -49,17 +49,24 @@ urlpatterns = [
         name="swagger",
     ),
     path("admin/", admin.site.urls),
-    path("api/register", RegisterView.as_view(), name="register"),
-    path("api/login", LoginView.as_view(), name="login"),
+    
+    # Authentication endpoints (match frontend expectations)
+    path("auth/login/", LoginView.as_view(), name="login"),
+    path("auth/register/", RegisterView.as_view(), name="register"),
+    path("auth/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    
+    # API endpoints  
     path("api/publications/", PublicationListAPI.as_view(), name="publication-list"),
-    path("api/profile", ProfileView.as_view(), name="profile"),
-    path("api/members", MemberListAPI.as_view(), name="member-list"),
-    path("api/awards", AwardsView.as_view(), name="awards"),
-    path("api/researches", ResearchAPI.as_view(), name="research"),
+    path("api/profile/", ProfileView.as_view(), name="profile"),
+    path("api/members/", MemberListAPI.as_view(), name="member-list"),
+    path("api/awards/", AwardsView.as_view(), name="awards"),
+    path("api/research/", ResearchAPI.as_view(), name="research"),
+    path("api/courses/", CoursesView.as_view(), name="courses"),
+    
+    # Admin commands
     path(
-        "run-getpublications-command",
+        "api/run-getpublications-command/",
         RunGetPublicationsCommandAPIView.as_view(),
         name="run-getpublications-command",
     ),
-    path("api/courses", CoursesView.as_view(), name="courses"),
 ]

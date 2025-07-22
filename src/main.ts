@@ -1,7 +1,55 @@
-// src/main.ts
 import { createApp } from 'vue'
 import App from './App.vue'
 import './assets/style.css'
+
+// Configure axios globally for Django backend
+import axios from 'axios'
+axios.defaults.baseURL = 'http://localhost:8000'
+axios.defaults.timeout = 10000
+axios.defaults.headers.common['Content-Type'] = 'application/json'
+axios.defaults.withCredentials = true
+
+// Add request interceptor for auth tokens
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem('access_token')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
+
+// Response interceptor for token refresh
+axios.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config
+    
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true
+      
+      const refreshToken = localStorage.getItem('refresh_token')
+      if (refreshToken) {
+        try {
+          const response = await axios.post('/auth/refresh/', {
+            refresh: refreshToken
+          })
+          
+          const { access } = response.data
+          localStorage.setItem('access_token', access)
+          originalRequest.headers.Authorization = `Bearer ${access}`
+          
+          return axios(originalRequest)
+        } catch (refreshError) {
+          localStorage.removeItem('access_token')
+          localStorage.removeItem('refresh_token')
+          // Don't redirect here, let the app handle it
+        }
+      }
+    }
+    
+    return Promise.reject(error)
+  }
+)
 
 // Layout components
 import Header from '@/components/layout/Header.vue'
