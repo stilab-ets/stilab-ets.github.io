@@ -1,0 +1,185 @@
+// src/services/MainAPI.ts
+import { BaseAPI, type ApiResponse, type PaginatedResponse } from './BaseAPI';
+
+export interface Publication {
+  id: number;
+  title: string;
+  authors: string;
+  journal?: string;
+  year: number;
+  doi?: string;
+  url?: string;
+  abstract?: string;
+  publication_type: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Member {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  position: string;
+  bio?: string;
+  research_interests?: string;
+  profile_image?: string;
+  linkedin_url?: string;
+  personal_website?: string;
+  google_scholar?: string;
+  joined_date: string;
+  is_active: boolean;
+}
+
+export interface Award {
+  id: number;
+  title: string;
+  description?: string;
+  recipient: string;
+  date_received: string;
+  organization?: string;
+  amount?: number;
+  award_type: string;
+  created_at: string;
+}
+
+export interface Research {
+  id: number;
+  title: string;
+  description: string;
+  status: string;
+  start_date: string;
+  end_date?: string;
+  funding_amount?: number;
+  funding_source?: string;
+  team_members: string[];
+  publications?: number[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Course {
+  id: number;
+  code: string;
+  title: string;
+  description?: string;
+  credits: number;
+  semester: string;
+  year: number;
+  instructor: string;
+  prerequisites?: string;
+  learning_objectives?: string;
+  created_at: string;
+}
+
+export class MainAPI extends BaseAPI {
+  // Publications
+  async getPublications(): Promise<ApiResponse<PaginatedResponse<Publication>>> {
+    return this.get<PaginatedResponse<Publication>>('/api/publications/');
+  }
+
+  async getPublication(id: number): Promise<ApiResponse<Publication>> {
+    return this.get<Publication>(`/api/publications/${id}/`);
+  }
+
+  async createPublication(data: Partial<Publication>): Promise<ApiResponse<Publication>> {
+    return this.post<Publication>('/api/publications/', data);
+  }
+
+  async updatePublication(id: number, data: Partial<Publication>): Promise<ApiResponse<Publication>> {
+    return this.put<Publication>(`/api/publications/${id}/`, data);
+  }
+
+  async deletePublication(id: number): Promise<ApiResponse<void>> {
+    return this.delete<void>(`/api/publications/${id}/`);
+  }
+
+  // Members
+  async getMembers(): Promise<ApiResponse<PaginatedResponse<Member>>> {
+    return this.get<PaginatedResponse<Member>>('/api/members/');
+  }
+
+  async getMember(id: number): Promise<ApiResponse<Member>> {
+    return this.get<Member>(`/api/members/${id}/`);
+  }
+
+  async createMember(data: Partial<Member>): Promise<ApiResponse<Member>> {
+    return this.post<Member>('/api/members/', data);
+  }
+
+  async updateMember(id: number, data: Partial<Member>): Promise<ApiResponse<Member>> {
+    return this.put<Member>(`/api/members/${id}/`, data);
+  }
+
+  async deleteMember(id: number): Promise<ApiResponse<void>> {
+    return this.delete<void>(`/api/members/${id}/`);
+  }
+
+  // Awards
+  async getAwards(): Promise<ApiResponse<PaginatedResponse<Award>>> {
+    return this.get<PaginatedResponse<Award>>('/api/awards/');
+  }
+
+  async getAward(id: number): Promise<ApiResponse<Award>> {
+    return this.get<Award>(`/api/awards/${id}/`);
+  }
+
+  async createAward(data: Partial<Award>): Promise<ApiResponse<Award>> {
+    return this.post<Award>('/api/awards/', data);
+  }
+
+  async updateAward(id: number, data: Partial<Award>): Promise<ApiResponse<Award>> {
+    return this.put<Award>(`/api/awards/${id}/`, data);
+  }
+
+  async deleteAward(id: number): Promise<ApiResponse<void>> {
+    return this.delete<void>(`/api/awards/${id}/`);
+  }
+
+  // Research
+  async getResearch(): Promise<ApiResponse<PaginatedResponse<Research>>> {
+    return this.get<PaginatedResponse<Research>>('/api/research/');
+  }
+
+  async getResearchProject(id: number): Promise<ApiResponse<Research>> {
+    return this.get<Research>(`/api/research/${id}/`);
+  }
+
+  async createResearch(data: Partial<Research>): Promise<ApiResponse<Research>> {
+    return this.post<Research>('/api/research/', data);
+  }
+
+  async updateResearch(id: number, data: Partial<Research>): Promise<ApiResponse<Research>> {
+    return this.put<Research>(`/api/research/${id}/`, data);
+  }
+
+  async deleteResearch(id: number): Promise<ApiResponse<void>> {
+    return this.delete<void>(`/api/research/${id}/`);
+  }
+
+  // Courses
+  async getCourses(): Promise<ApiResponse<PaginatedResponse<Course>>> {
+    return this.get<PaginatedResponse<Course>>('/api/courses/');
+  }
+
+  async getCourse(id: number): Promise<ApiResponse<Course>> {
+    return this.get<Course>(`/api/courses/${id}/`);
+  }
+
+  async createCourse(data: Partial<Course>): Promise<ApiResponse<Course>> {
+    return this.post<Course>('/api/courses/', data);
+  }
+
+  async updateCourse(id: number, data: Partial<Course>): Promise<ApiResponse<Course>> {
+    return this.put<Course>(`/api/courses/${id}/`, data);
+  }
+
+  async deleteCourse(id: number): Promise<ApiResponse<void>> {
+    return this.delete<void>(`/api/courses/${id}/`);
+  }
+
+  // Admin command - Run get publications
+  async runGetPublicationsCommand(): Promise<ApiResponse<{ message: string }>> {
+    return this.post<{ message: string }>('/api/run-getpublications-command/');
+  }
+}
