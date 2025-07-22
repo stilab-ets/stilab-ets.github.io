@@ -1,32 +1,41 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { onMounted, onUnmounted, computed } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
 import { useNavigation } from '@/composables/useNavigation'
+import { useAuth } from '@/composables/useAuth'
 
 // Composables
 const { currentLanguage, localizedNavigationItems, setLanguage, t } = useLanguage()
 const { currentPage, navigateToPage, initializeNavigation } = useNavigation()
-
-// State management
-const isMobileMenuOpen = ref(false)
-const currentUser = ref(null)
+const { isAuthenticated, user, initializeAuth } = useAuth()
 
 // Lab statistics data
 const labStats = computed(() => ({
-  members: { value: 12, label: t.value.stats.members },
-  publications: { value: 34, label: t.value.stats.publications },
-  projects: { value: 5, label: t.value.stats.projects },
-  awards: { value: 8, label: t.value.stats.awards }
+  members: { 
+    value: 15, 
+    label: t.value.stats.members 
+  },
+  publications: { 
+    value: 45, 
+    label: t.value.stats.publications 
+  },
+  projects: { 
+    value: 8, 
+    label: t.value.stats.projects 
+  },
+  awards: { 
+    value: 12, 
+    label: t.value.stats.awards 
+  }
 }))
 
-// Authentication state
-const isAuthenticated = computed(() => currentUser.value !== null)
-
-// Initialize navigation system
+// Navigation cleanup function
 let cleanupNavigation: (() => void) | null = null
 
+// Lifecycle
 onMounted(() => {
   cleanupNavigation = initializeNavigation()
+  initializeAuth()
 })
 
 onUnmounted(() => {
@@ -36,70 +45,40 @@ onUnmounted(() => {
 })
 
 // Event handlers
+const handlePageNavigation = (page: string) => {
+  navigateToPage(page)
+}
+
 const handleLanguageChange = (language: 'en' | 'fr') => {
   setLanguage(language)
 }
 
-const handleNavigation = (page: string) => {
-  navigateToPage(page)
-  isMobileMenuOpen.value = false
-}
-
-const handleMobileMenuToggle = () => {
-  isMobileMenuOpen.value = !isMobileMenuOpen.value
-}
-
-const handleLogin = (credentials: any) => {
-  console.log('Login attempt:', credentials)
-  // TODO: Implement actual authentication
-}
-
-const handleRegister = (userData: any) => {
-  console.log('Registration attempt:', userData)
-  // TODO: Implement actual registration
-}
-
 const handleLogout = () => {
-  currentUser.value = null
-  navigateToPage('home')
-}
-
-const handleFormSubmit = (formData: any) => {
-  console.log('Form submitted:', formData)
-  // TODO: Implement form submission logic
-}
-
-// Close mobile menu when clicking outside
-const handleOutsideClick = (event: Event) => {
-  if (isMobileMenuOpen.value) {
-    isMobileMenuOpen.value = false
-  }
+  // Logout logic handled by useAuth
 }
 </script>
 
 <template>
-  <div id="app" class="min-h-screen bg-gray-50" @click="handleOutsideClick">
+  <div id="app" class="min-h-screen bg-gray-50 flex flex-col">
     <!-- Header -->
     <Header
       :current-page="currentPage"
       :navigation-items="localizedNavigationItems"
       :current-language="currentLanguage"
-      :is-mobile-menu-open="isMobileMenuOpen"
-      :user="currentUser"
-      @set-current-page="handleNavigation"
+      :user="user"
+      @set-current-page="handlePageNavigation"
       @language-changed="handleLanguageChange"
-      @toggle-mobile-menu="handleMobileMenuToggle"
       @logout="handleLogout"
     />
 
     <!-- Main Content -->
-    <main class="pt-16">
+    <main class="">
       <!-- Home Page -->
-      <div v-if="currentPage === 'home'">
-        <Hero @set-current-page="handleNavigation" />
+      <div v-if="currentPage === 'home'" class="space-y-12">
+        <Hero @set-current-page="handlePageNavigation" />
         <StatsSection :lab-stats="labStats" />
         <ResearchAreasPreview />
-        <QuickLinksHome @set-current-page="handleNavigation" />
+        <QuickLinksHome @set-current-page="handlePageNavigation" />
       </div>
 
       <!-- People Page -->
@@ -126,72 +105,37 @@ const handleOutsideClick = (event: Event) => {
       <!-- Awards Page -->
       <AwardsPage v-else-if="currentPage === 'awards'" />
 
-      <!-- Authentication Pages -->
-      <div v-else-if="currentPage === 'login'" class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <LoginForm @login="handleLogin" />
-      </div>
+      <!-- Auth Pages -->
+      <LoginPage v-else-if="currentPage === 'login'" />
 
-      <div v-else-if="currentPage === 'register'" class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <RegisterForm @register="handleRegister" />
-      </div>
+      <!-- Dashboard (authenticated) -->
+      <DashboardPage v-else-if="currentPage === 'dashboard' && isAuthenticated" />
 
-      <!-- Form Pages -->
-      <div v-else-if="currentPage === 'publication-form'" class="container mx-auto px-4 py-8">
-        <PublicationForm @submit="handleFormSubmit" />
-      </div>
+      <!-- Form Pages (authenticated) -->
+      <PublicationForm v-else-if="currentPage === 'publication-form' && isAuthenticated" />
+      <EventForm v-else-if="currentPage === 'event-form' && isAuthenticated" />
+      <ProjectForm v-else-if="currentPage === 'project-form' && isAuthenticated" />
+      <MemberForm v-else-if="currentPage === 'member-form' && isAuthenticated" />
+      <ResearchForm v-else-if="currentPage === 'research-form' && isAuthenticated" />
+      <TeachingForm v-else-if="currentPage === 'teaching-form' && isAuthenticated" />
+      <AwardForm v-else-if="currentPage === 'award-form' && isAuthenticated" />
+      <VacancyForm v-else-if="currentPage === 'vacancy-form' && isAuthenticated" />
+      <UserSettingsForm v-else-if="currentPage === 'user-settings-form' && isAuthenticated" />
+      <AdminManagementForm v-else-if="currentPage === 'admin-management-form' && isAuthenticated" />
 
-      <div v-else-if="currentPage === 'event-form'" class="container mx-auto px-4 py-8">
-        <EventForm @submit="handleFormSubmit" />
-      </div>
-
-      <div v-else-if="currentPage === 'project-form'" class="container mx-auto px-4 py-8">
-        <ProjectForm @submit="handleFormSubmit" />
-      </div>
-
-      <div v-else-if="currentPage === 'member-form'" class="container mx-auto px-4 py-8">
-        <MemberForm @submit="handleFormSubmit" />
-      </div>
-
-      <div v-else-if="currentPage === 'research-form'" class="container mx-auto px-4 py-8">
-        <ResearchForm @submit="handleFormSubmit" />
-      </div>
-
-      <div v-else-if="currentPage === 'teaching-form'" class="container mx-auto px-4 py-8">
-        <TeachingForm @submit="handleFormSubmit" />
-      </div>
-
-      <div v-else-if="currentPage === 'award-form'" class="container mx-auto px-4 py-8">
-        <AwardForm @submit="handleFormSubmit" />
-      </div>
-
-      <div v-else-if="currentPage === 'vacancy-form'" class="container mx-auto px-4 py-8">
-        <VacancyForm @submit="handleFormSubmit" />
-      </div>
-
-      <div v-else-if="currentPage === 'user-settings-form'" class="container mx-auto px-4 py-8">
-        <UserSettingsForm @submit="handleFormSubmit" />
-      </div>
-
-      <div v-else-if="currentPage === 'admin-management-form'" class="container mx-auto px-4 py-8">
-        <AdminManagementForm @submit="handleFormSubmit" />
-      </div>
-
-      <!-- 404 Page -->
+      <!-- 404 Fallback -->
       <div v-else class="min-h-screen flex items-center justify-center">
         <div class="text-center">
-          <h1 class="text-6xl font-bold text-gray-900">404</h1>
-          <p class="text-xl text-gray-600 mt-4">Page not found</p>
-          <button
-            @click="handleNavigation('home')"
-            class="mt-6 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-          >
-            Return Home
-          </button>
+          <h1 class="text-4xl font-bold text-gray-900 mb-4">404</h1>
+          <p class="text-lg text-gray-600 mb-8">Page not found</p>
+          <Button @click="handlePageNavigation('home')" variant="primary">
+            Go Home
+          </Button>
         </div>
       </div>
     </main>
 
     <!-- Footer -->
-    <Footer @set-current-page="handleNavigation" />
+    <Footer @set-current-page="handlePageNavigation" />
   </div>
 </template>

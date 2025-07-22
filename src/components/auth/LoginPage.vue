@@ -1,0 +1,69 @@
+<script setup lang="ts">
+import { useAuth } from '@/composables/useAuth'
+import { useLanguage } from '@/composables/useLanguage'
+
+const emit = defineEmits<{
+  setCurrentPage: [page: string]
+}>()
+
+const { login } = useAuth()
+const { t } = useLanguage()
+
+const handleLogin = async (credentials: { email: string; password: string; rememberMe: boolean }) => {
+  try {
+    await login(credentials)
+    // Redirect to dashboard after successful login
+    emit('setCurrentPage', 'dashboard')
+  } catch (error) {
+    console.error('Login failed:', error)
+    // Error is handled in LoginForm component
+  }
+}
+
+const handleRegisterRedirect = () => {
+  emit('setCurrentPage', 'register')
+}
+</script>
+
+<template>
+  <div class="min-h-screen flex-1 bg-gradient-to-br from-blue-50 to-indigo-100 items-center justify-center p-4">
+    <div class="max-w-md w-full">
+      <div class="block bg-white rounded-xl shadow-xl p-8">
+        <!-- Logo and title -->
+        <div class="text-center mb-8">
+          <div class="mx-auto w-16 h-16 bg-[#08a4d4] rounded-full flex items-center justify-center mb-4">
+            <span class="text-white text-2xl font-bold">S</span>
+          </div>
+          <h1 class="text-2xl font-bold text-gray-900 mb-2">STIL Lab</h1>
+          <p class="text-gray-600">{{ t.auth.login.subtitle }}</p>
+        </div>
+
+        <!-- Login form -->
+        <LoginForm @login="handleLogin" />
+
+        <!-- Register link -->
+        <div class="mt-6 text-center">
+          <p class="text-sm text-gray-600">
+            Don't have an account?
+            <button
+              @click="handleRegisterRedirect"
+              class="font-medium text-[#08a4d4] hover:text-blue-500 transition-colors duration-200"
+            >
+              Contact administrator
+            </button>
+          </p>
+        </div>
+
+        <!-- Back to home -->
+        <div class="mt-4 text-center">
+          <button
+            @click="emit('setCurrentPage', 'home')"
+            class="text-sm text-gray-500 hover:text-gray-700 transition-colors duration-200"
+          >
+            ← Back to home
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

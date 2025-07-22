@@ -59,6 +59,10 @@ import NotableAchievements from '@/components/awards/NotableAchievements.vue'
 // Authentication components
 import LoginForm from '@/components/auth/LoginForm.vue'
 import RegisterForm from '@/components/auth/RegisterForm.vue'
+import LoginPage from '@/components/auth/LoginPage.vue'
+
+// Dashboard components
+import DashboardPage from '@/components/dashboard/DashboardPage.vue'
 
 // Form components
 import PublicationForm from '@/components/forms/PublicationForm.vue'
@@ -139,6 +143,10 @@ app.component('NotableAchievements', NotableAchievements)
 // Register authentication components globally
 app.component('LoginForm', LoginForm)
 app.component('RegisterForm', RegisterForm)
+app.component('LoginPage', LoginPage)
+
+// Register dashboard components globally
+app.component('DashboardPage', DashboardPage)
 
 // Register form components globally
 app.component('PublicationForm', PublicationForm)

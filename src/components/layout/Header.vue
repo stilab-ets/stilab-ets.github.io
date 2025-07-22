@@ -5,6 +5,7 @@ import NavItems from './header/NavItems.vue'
 import MobileMenuToggle from './header/MobileMenuToggle.vue'
 import LanguageToggle from './header/LanguageToggle.vue'
 import UserProfile from './header/UserProfile.vue'
+import type { User } from '@/composables/useAuth'
 
 interface LocalizedNavItem {
   id: string
@@ -12,13 +13,6 @@ interface LocalizedNavItem {
   icon: string
 }
 
-interface User {
-  id: string
-  name: string
-  email: string
-  avatar?: string
-  role: string
-}
 
 const props = defineProps<{
   currentPage: string
