@@ -3,42 +3,84 @@ import { useLanguage } from '@/composables/useLanguage'
 import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
 
-interface ExtendedCourse {
+interface Teacher {
+  id: string
+  first_name: string
+  last_name: string
+  role: string
+  email: string | null
+  phone?: string | null
+  biography?: string | null
+  research_domain?: string | null
+  image_url?: string | null
+  github_url?: string | null
+  linkedin_url?: string | null
+  personal_website?: string | null
+  status?: string | null
+}
+
+interface Course {
   id: string;
   title: string;
   code: string;
-  instructor: string;
+  teacher: Teacher;
   semester: string;
-  level: 'undergraduate' | 'graduate';
+  level: 'UGR' | 'GRD';
   description: string;
-  credits?: number;
-  prerequisites?: string[];
-  objectives?: string[];
-  topics?: string[];
-  syllabusUrl?: string;
-  moodleUrl?: string;
-  githubUrl?: string;
+  url?: string;
+  year: number
 }
 
+
+
 interface Props {
-  course: ExtendedCourse
+  course: Course 
 }
 
 const props = defineProps<Props>()
 const { t } = useLanguage()
 
 // Methods
-const getLevelColor = (level: ExtendedCourse['level']) => {
-  const colors: Record<ExtendedCourse['level'], string> = {
-    undergraduate: 'bg-green-100 text-green-800',
-    graduate: 'bg-blue-100 text-blue-800'
+const getLevelColor = (level: Course['level']) => {
+  const colors: Record<Course['level'], string> = {
+    UGR: 'bg-green-100 text-green-800',
+    GRD: 'bg-blue-100 text-blue-800'
   }
   return colors[level] || 'bg-gray-100 text-gray-800'
 }
 
-const getLevelLabel = (level: ExtendedCourse['level']) => {
-  const levelKey = level as keyof typeof t.value.teaching.levels
-  return t.value.teaching.levels[levelKey] || level
+const getLevelLabel = (level: Course['level']) => {
+  let levelCode = ''
+  switch (level) {
+    case 'UGR':
+      levelCode = 'undergraduate'
+      break
+    case 'GRD':
+      levelCode = 'graduate'
+      break
+    default:
+      levelCode = level
+  }
+  // Use the t translator for the code if available
+  return t.value.teaching.levels[levelCode] || levelCode
+}
+
+const getSemesterLabel = (semester: string, year: number) => {
+  let semesterLabel = ''
+  switch (semester) {
+    case 'F':
+      semesterLabel = t.value.teaching.semesters.fall
+      break
+    case 'W':
+      semesterLabel = t.value.teaching.semesters.winter
+      break
+    case 'S':
+      semesterLabel = t.value.teaching.semesters.summer
+      break
+    default:
+      semesterLabel = semester
+  }
+  return `${semesterLabel} ${year}`
 }
 
 const openLink = (url: string) => {
@@ -70,14 +112,14 @@ const openLink = (url: string) => {
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
-            {{ course.instructor }}
+            {{ course.teacher.first_name }} {{ course.teacher.last_name }} 
           </div>
           <div class="flex items-center">
             <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
-            {{ course.semester }}
+            {{ getSemesterLabel(course.semester, course.year) }}
           </div>
         </div>
       </div>
@@ -87,34 +129,17 @@ const openLink = (url: string) => {
     <p class="text-gray-700 mb-4 leading-relaxed">{{ course.description }}</p>
 
     <!-- Course Details -->
-    <div class="space-y-2 text-sm text-gray-600">
-      <div v-if="course.prerequisites" class="flex">
-        <span class="font-medium mr-2">{{ t.teaching.courseCard.prerequisites }}:</span>
-        <span>{{ course.prerequisites.join(', ') }}</span>
-      </div>
-      <div v-if="course.objectives" class="flex">
-        <span class="font-medium mr-2">{{ t.teaching.courseCard.objectives }}:</span>
-        <span>{{ course.objectives.join(', ') }}</span>
-      </div>
-      <div v-if="course.topics" class="flex flex-wrap">
-        <span class="font-medium mr-2">{{ t.teaching.courseCard.topics }}:</span>
-        <div class="flex flex-wrap gap-1">
-          <span v-for="topic in course.topics" :key="topic"
-            class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
-            {{ topic }}
-          </span>
-        </div>
-      </div>
-    </div>
+    <!-- <div class="space-y-2 text-sm text-gray-600">
+    </div> -->
 
     <!-- Course Links -->
     <div class="mt-4 flex items-center justify-between">
       <div class="flex space-x-2">
         <Button 
-          v-if="course.syllabusUrl"
+          v-if="course.url"
           variant="outline"
           size="sm"
-          @click="openLink(course.syllabusUrl)"
+          @click="openLink(course.url)"
           class="hover:cursor-pointer"
         >
           <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -124,36 +149,7 @@ const openLink = (url: string) => {
           </svg>
           {{ t.teaching.links.syllabus }}
         </Button>
-        <Button 
-          v-if="course.moodleUrl"
-          variant="outline"
-          size="sm"
-          @click="openLink(course.moodleUrl)"
-          class="hover:cursor-pointer"
-        >
-          <svg class="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-          </svg>
-          {{ t.teaching.links.moodle }}
-        </Button>
-        <Button 
-          v-if="course.githubUrl"
-          variant="outline"
-          size="sm"
-          @click="openLink(course.githubUrl)"
-          class="hover:cursor-pointer"
-        >
-          <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd"
-              d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z"
-              clip-rule="evenodd" />
-          </svg>
-          {{ t.teaching.links.github }}
-        </Button>
-      </div>
-      <div v-if="course.credits" class="text-sm text-gray-500">
-        {{ course.credits }} {{ t.teaching.courseCard.credits }}
+        
       </div>
     </div>
   </Card>

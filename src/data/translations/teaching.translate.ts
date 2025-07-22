@@ -37,6 +37,11 @@ export interface TeachingTranslations {
     title: string
     message: string
   }
+  semesters: {
+    fall: string
+    summer: string
+    winter: string
+  }
 }
 
 export const teachingTranslations = {
@@ -78,6 +83,11 @@ export const teachingTranslations = {
     empty: {
       title: 'Aucun cours trouvé',
       message: 'Essayez de modifier vos critères de recherche.'
+    },
+    semesters: {
+      fall: 'Automne',
+      summer: 'Été',
+      winter: 'Hiver'
     }
   },
   en: {
@@ -118,6 +128,11 @@ export const teachingTranslations = {
     empty: {
       title: 'No courses found',
       message: 'Try modifying your search criteria.'
+    },
+    semesters: {
+      fall: 'Fall',
+      summer: 'Summer',
+      winter: 'Winter'
     }
   }
 } as const

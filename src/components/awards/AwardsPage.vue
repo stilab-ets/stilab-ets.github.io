@@ -59,7 +59,7 @@ const fetchAwards = async () => {
     const data = await response.json()
     allAwards.value = Array.isArray(data) ? data : []
   } catch (error) {
-    console.error('Error fetching members:', error)
+    console.error('Error fetching awards:', error)
   }
 }
 onMounted(fetchAwards)
