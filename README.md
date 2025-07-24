@@ -44,6 +44,13 @@ DB_HOST=db
 DB_PORT=5432
 DB_NAME=postgres
 
+EMAIL_HOST=SMTP_SERVER_HOST
+EMAIL_PORT=SMTP_SERVER_PORT
+EMAIL_USE_TLS=False
+EMAIL_HOST_USER=email@example.com
+EMAIL_HOST_PASSWORD=CHANGE_ME
+BACKEND_URL="https://www.backend.example"
+
 VITE_API_BASE_URL=http://localhost:8000
 ```
 
@@ -59,6 +66,8 @@ pgAdmin login credentials:
 
 User: `admin@admin.com`  
 Password: `admin123`
+
+The mailhog server to test email delivery is available at `localhost:8025`.
 
 ## Additional Information
 
