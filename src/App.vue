@@ -176,6 +176,11 @@ onUnmounted(() => {
         <!-- Authentication -->
         <LoginPage v-else-if="currentPage === 'login'" @login-success="setCurrentPage('home')" />
         
+        <!-- Dashboard Page -->
+        <DashboardPage 
+          v-else-if="currentPage === 'dashboard'" 
+          @navigate="setCurrentPage"
+        />
         <!-- Protected Dashboards -->
         <AdminDashboard 
           v-else-if="currentPage === 'admin-dashboard' && userRole === 'admin'"

@@ -1,300 +1,231 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useLanguage } from '@/composables/useLanguage'
-import { useAuthMiddleware } from '@/middleware/auth'
+import { ref, onMounted } from 'vue'
+import { useUserAuth } from '@/hooks/auth/useUserAuth'
+import { useAdminDashboard } from '@/hooks/dashboard/useAdminDashboard'
 
-// Hooks
-const { t } = useLanguage()
-const { user } = useAuthMiddleware()
+const { user } = useUserAuth()
+const {
+  isLoading,
+  searchQuery,
+  systemStats,
+  recentActivity,
+  hasErrors,
+  errors,
+  isApiHealthy,
+  tabs,
+  quickActions,
+  contentFilters,
+  filteredPendingContent,
+  fetchDashboardData,
+  approveContent,
+  formatTimestamp,
+  updateFilter
+} = useAdminDashboard()
 
-// Component state
 const activeTab = ref('overview')
-const showInviteModal = ref(false)
 
-// Define available tabs
-const tabs = computed(() => [
-  { id: 'overview', label: t.value.dashboard.admin.tabs.overview, icon: 'BarChart3' },
-  { id: 'users', label: t.value.dashboard.admin.tabs.users, icon: 'Users' },
-  { id: 'content', label: t.value.dashboard.admin.tabs.content, icon: 'FileText' },
-  { id: 'system', label: t.value.dashboard.admin.tabs.system, icon: 'Settings' },
-  { id: 'reports', label: t.value.dashboard.admin.tabs.reports, icon: 'TrendingUp' }
-])
-
-// Component props
-const emit = defineEmits<{
-  navigate: [page: string]
-}>()
-
-// Quick actions
-const quickActions = computed(() => [
-  { 
-    title: t.value.dashboard.admin.actions.inviteUser,
-    description: t.value.dashboard.admin.actions.inviteUserDesc,
-    icon: 'UserPlus',
-    action: () => showInviteModal.value = true,
-    color: 'bg-blue-500'
-  },
-  {
-    title: t.value.dashboard.admin.actions.moderateContent,
-    description: t.value.dashboard.admin.actions.moderateContentDesc,
-    icon: 'Shield',
-    action: () => activeTab.value = 'content',
-    color: 'bg-green-500'
-  },
-  {
-    title: t.value.dashboard.admin.actions.systemSettings,
-    description: t.value.dashboard.admin.actions.systemSettingsDesc,
-    icon: 'Cog',
-    action: () => activeTab.value = 'system',
-    color: 'bg-purple-500'
-  },
-  {
-    title: t.value.dashboard.admin.actions.viewReports,
-    description: t.value.dashboard.admin.actions.viewReportsDesc,
-    icon: 'BarChart',
-    action: () => activeTab.value = 'reports',
-    color: 'bg-orange-500'
+const handleQuickAction = (action: any) => {
+  if (action.title.includes('Content')) {
+    activeTab.value = 'content'
+  } else if (action.title.includes('System')) {
+    activeTab.value = 'system'
+  } else if (action.title.includes('Reports')) {
+    activeTab.value = 'reports'
+  } else {
+    action.action()
   }
-])
+}
+
+onMounted(() => {
+  fetchDashboardData()
+})
 </script>
 
 <template>
-  <div class="container mx-auto px-4 py-8">
-    <!-- Page Header -->
-    <PageHeader 
-      :title="t.dashboard.admin.title"
-      :subtitle="`${t.dashboard.admin.welcome} ${user?.first_name || user?.username}`"
-    />
-
-    <!-- Quick Actions Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      <Card
-        v-for="action in quickActions"
-        :key="action.title"
-        class="cursor-pointer hover:shadow-lg transition-shadow duration-200"
-        @click="action.action"
-      >
-        <div class="flex items-center p-4">
-          <div :class="[action.color, 'p-3 rounded-lg text-white mr-4']">
-            <component :is="action.icon" class="h-6 w-6" />
-          </div>
+  <div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white shadow-sm border-b border-gray-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center py-6">
           <div>
-            <h3 class="font-semibold text-gray-900">{{ action.title }}</h3>
-            <p class="text-sm text-gray-600">{{ action.description }}</p>
+            <h1 class="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
+            <p class="text-gray-600">Welcome back, {{ user?.first_name || user?.username }}</p>
+          </div>
+          <div class="flex items-center space-x-3">
+            <div :class="[
+              'flex items-center px-3 py-1 rounded-full text-sm font-medium',
+              isApiHealthy ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+            ]">
+              <div :class="[
+                'w-2 h-2 rounded-full mr-2',
+                isApiHealthy ? 'bg-green-500' : 'bg-red-500'
+              ]"></div>
+              System Health: {{ systemStats.systemHealth }}%
+            </div>
           </div>
         </div>
-      </Card>
+      </div>
     </div>
 
-    <!-- Tab Navigation -->
-    <div class="border-b border-gray-200 mb-6">
-      <nav class="-mb-px flex space-x-8">
-        <button
-          v-for="tab in tabs"
-          :key="tab.id"
-          @click="activeTab = tab.id"
-          :class="[
-            'py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2',
-            activeTab === tab.id
-              ? 'border-blue-500 text-blue-600'
-              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-          ]"
-        >
-          <component :is="tab.icon" class="h-4 w-4" />
-          {{ tab.label }}
-        </button>
-      </nav>
+    <!-- Error Messages -->
+    <div v-if="hasErrors" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+      <div v-for="error in errors" :key="error.timestamp.getTime()" 
+           class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+        <p class="text-red-800">{{ error.message }}</p>
+      </div>
     </div>
 
-    <!-- Tab Content -->
-    <div class="space-y-6">
+    <!-- Navigation Tabs -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+      <div class="border-b border-gray-200">
+        <nav class="-mb-px flex space-x-8">
+          <button
+            v-for="tab in tabs"
+            :key="tab.id"
+            @click="activeTab = tab.id"
+            :class="[
+              'whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm transition-colors duration-200',
+              activeTab === tab.id
+                ? 'border-primary text-primary'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            ]"
+          >
+            <component :is="tab.icon" class="w-5 h-5 inline-block mr-2" />
+            {{ tab.label }}
+          </button>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <!-- Overview Tab -->
       <div v-if="activeTab === 'overview'" class="space-y-6">
-        <StatisticsGrid 
-          :stats="[
-            { label: t.dashboard.admin.stats.totalUsers, value: '47', trend: '+12%' },
-            { label: t.dashboard.admin.stats.activeUsers, value: '42', trend: '+5%' },
-            { label: t.dashboard.admin.stats.pendingContent, value: '8', trend: '-3%' },
-            { label: t.dashboard.admin.stats.systemHealth, value: '98%', trend: '+1%' }
-          ]"
-        />
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card class="p-6">
+            <div class="flex items-center">
+              <Users class="h-8 w-8 text-blue-500" />
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Total Users</p>
+                <p class="text-2xl font-bold text-gray-900">{{ systemStats.totalUsers }}</p>
+              </div>
+            </div>
+          </Card>
+          
+          <Card class="p-6">
+            <div class="flex items-center">
+              <Activity class="h-8 w-8 text-green-500" />
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Active Users</p>
+                <p class="text-2xl font-bold text-gray-900">{{ systemStats.activeUsers }}</p>
+              </div>
+            </div>
+          </Card>
+          
+          <Card class="p-6">
+            <div class="flex items-center">
+              <FileText class="h-8 w-8 text-yellow-500" />
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Pending Content</p>
+                <p class="text-2xl font-bold text-gray-900">{{ systemStats.pendingContent }}</p>
+              </div>
+            </div>
+          </Card>
+          
+          <Card class="p-6">
+            <div class="flex items-center">
+              <TrendingUp class="h-8 w-8 text-purple-500" />
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">System Health</p>
+                <p class="text-2xl font-bold text-gray-900">{{ systemStats.systemHealth }}%</p>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        <!-- Quick Actions -->
+        <Card class="p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <button
+              v-for="action in quickActions"
+              :key="action.title"
+              @click="handleQuickAction(action)"
+              class="p-4 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors duration-200 text-left group"
+            >
+              <div :class="['w-10 h-10 rounded-lg flex items-center justify-center mb-3', action.color]">
+                <component :is="action.icon" class="w-5 h-5 text-white" />
+              </div>
+              <h4 class="font-medium text-gray-900 group-hover:text-primary">{{ action.title }}</h4>
+              <p class="text-sm text-gray-600 mt-1">{{ action.description }}</p>
+            </button>
+          </div>
+        </Card>
 
         <!-- Recent Activity -->
-        <Card>
-          <div class="p-6">
-            <h3 class="text-lg font-semibold mb-4">{{ t.dashboard.admin.recentActivity.title }}</h3>
-            <div class="space-y-3">
-              <div class="flex items-center justify-between py-2 border-b">
-                <div class="flex items-center space-x-3">
-                  <div class="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span class="text-sm">{{ t.dashboard.admin.recentActivity.userRegistered }}</span>
-                </div>
-                <span class="text-xs text-gray-500">2 hours ago</span>
-              </div>
-              <div class="flex items-center justify-between py-2 border-b">
-                <div class="flex items-center space-x-3">
-                  <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
-                  <span class="text-sm">{{ t.dashboard.admin.recentActivity.contentSubmitted }}</span>
-                </div>
-                <span class="text-xs text-gray-500">4 hours ago</span>
-              </div>
-              <div class="flex items-center justify-between py-2">
-                <div class="flex items-center space-x-3">
-                  <div class="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                  <span class="text-sm">{{ t.dashboard.admin.recentActivity.systemAlert }}</span>
-                </div>
-                <span class="text-xs text-gray-500">6 hours ago</span>
+        <Card class="p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
+          <div class="space-y-4">
+            <div v-for="activity in recentActivity" :key="activity.id" class="flex items-start">
+              <div :class="[
+                'flex-shrink-0 w-2 h-2 rounded-full mt-2 mr-3',
+                activity.type === 'user_registration' ? 'bg-green-500' :
+                activity.type === 'content_submission' ? 'bg-blue-500' : 'bg-yellow-500'
+              ]"></div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm text-gray-900">{{ activity.description }}</p>
+                <p class="text-xs text-gray-500">{{ formatTimestamp(activity.timestamp) }}</p>
               </div>
             </div>
           </div>
         </Card>
       </div>
 
-      <!-- Users Tab -->
-      <div v-else-if="activeTab === 'users'">
-        <AdminManagementForm />
-      </div>
-
-      <!-- Content Tab -->
+      <!-- Content Moderation Tab -->
       <div v-else-if="activeTab === 'content'" class="space-y-6">
-        <Card>
-          <div class="p-6">
-            <div class="flex justify-between items-center mb-4">
-              <h3 class="text-lg font-semibold">{{ t.dashboard.admin.content.pendingReviews }}</h3>
-              <Button variant="outline" size="sm">
-                {{ t.dashboard.admin.content.reviewAll }}
-              </Button>
-            </div>
-            
-            <!-- Pending Publications -->
-            <div class="space-y-4">
-              <div class="border rounded-lg p-4">
-                <div class="flex justify-between items-start">
-                  <div>
-                    <h4 class="font-medium text-gray-900">New Research Paper on AI Ethics</h4>
-                    <p class="text-sm text-gray-600 mt-1">Submitted by Dr. Sarah Johnson</p>
-                    <p class="text-xs text-gray-500 mt-2">Submitted 2 days ago</p>
-                  </div>
-                  <div class="flex space-x-2">
-                    <Button size="sm" variant="outline">
-                      {{ t.dashboard.admin.content.review }}
-                    </Button>
-                    <Button size="sm">
-                      {{ t.dashboard.admin.content.approve }}
-                    </Button>
-                  </div>
-                </div>
+        <Card class="p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Pending Reviews</h3>
+          
+          <!-- Search and Filters -->
+          <SearchAndFilters
+            v-model:search-query="searchQuery"
+            :filters="contentFilters"
+            search-label="Search Content"
+            search-placeholder="Search by title or author..."
+            :results-text="`${filteredPendingContent.length} items found`"
+            @update-filter="updateFilter"
+            class="mb-6"
+          />
+          
+          <div v-if="filteredPendingContent.length === 0" class="text-center py-8">
+            <p class="text-gray-500">No pending content to review</p>
+          </div>
+          <div v-else class="space-y-4">
+            <div v-for="item in filteredPendingContent" :key="item.id" 
+                 class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+              <div class="flex-1">
+                <h4 class="font-medium text-gray-900">{{ item.title }}</h4>
+                <p class="text-sm text-gray-600">{{ item.author }} • {{ item.type }}</p>
+                <p class="text-xs text-gray-500">{{ formatTimestamp(item.submittedAt) }}</p>
               </div>
-
-              <!-- Pending Events -->
-              <div class="border rounded-lg p-4">
-                <div class="flex justify-between items-start">
-                  <div>
-                    <h4 class="font-medium text-gray-900">AI Workshop Series</h4>
-                    <p class="text-sm text-gray-600 mt-1">Submitted by Prof. Michael Chen</p>
-                    <p class="text-xs text-gray-500 mt-2">Submitted 1 day ago</p>
-                  </div>
-                  <div class="flex space-x-2">
-                    <Button size="sm" variant="outline">
-                      {{ t.dashboard.admin.content.review }}
-                    </Button>
-                    <Button size="sm">
-                      {{ t.dashboard.admin.content.approve }}
-                    </Button>
-                  </div>
-                </div>
+              <div class="flex space-x-2">
+                <Button 
+                  @click="approveContent(item.id, item.type)"
+                  variant="primary"
+                  size="sm"
+                >
+                  Approve
+                </Button>
               </div>
             </div>
           </div>
         </Card>
       </div>
 
-      <!-- System Tab -->
-      <div v-else-if="activeTab === 'system'" class="space-y-6">
-        <Card>
-          <div class="p-6">
-            <h3 class="text-lg font-semibold mb-4">{{ t.dashboard.admin.system.settings }}</h3>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">
-                  {{ t.dashboard.admin.system.maintenanceMode }}
-                </label>
-                <div class="flex items-center">
-                  <input type="checkbox" class="rounded border-gray-300" />
-                  <span class="ml-2 text-sm text-gray-600">Enable maintenance mode</span>
-                </div>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">
-                  {{ t.dashboard.admin.system.registrationOpen }}
-                </label>
-                <div class="flex items-center">
-                  <input type="checkbox" checked class="rounded border-gray-300" />
-                  <span class="ml-2 text-sm text-gray-600">Allow new registrations</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Card>
-
-        <!-- System Health -->
-        <Card>
-          <div class="p-6">
-            <h3 class="text-lg font-semibold mb-4">{{ t.dashboard.admin.system.health }}</h3>
-            <div class="space-y-3">
-              <div class="flex justify-between items-center">
-                <span class="text-sm text-gray-600">Database Connection</span>
-                <div class="flex items-center">
-                  <div class="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-                  <span class="text-sm text-green-600">Healthy</span>
-                </div>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-sm text-gray-600">API Response Time</span>
-                <span class="text-sm text-gray-900">< 200ms</span>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-sm text-gray-600">Storage Usage</span>
-                <span class="text-sm text-gray-900">73% (2.1GB)</span>
-              </div>
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      <!-- Reports Tab -->
-      <div v-else-if="activeTab === 'reports'">
-        <Card>
-          <div class="p-6">
-            <h3 class="text-lg font-semibold mb-4">{{ t.dashboard.admin.reports.title }}</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <Button 
-                variant="outline" 
-                class="h-20 flex flex-col items-center justify-center"
-                @click="emit('navigate', 'reports-users')"
-              >
-                <component :is="'Users'" class="h-6 w-6 mb-2" />
-                <span class="text-sm">{{ t.dashboard.admin.reports.userReport }}</span>
-              </Button>
-              <Button 
-                variant="outline" 
-                class="h-20 flex flex-col items-center justify-center"
-                @click="emit('navigate', 'reports-content')"
-              >
-                <component :is="'FileText'" class="h-6 w-6 mb-2" />
-                <span class="text-sm">{{ t.dashboard.admin.reports.contentReport }}</span>
-              </Button>
-              <Button 
-                variant="outline" 
-                class="h-20 flex flex-col items-center justify-center"
-                @click="emit('navigate', 'reports-system')"
-              >
-                <component :is="'Activity'" class="h-6 w-6 mb-2" />
-                <span class="text-sm">{{ t.dashboard.admin.reports.systemReport }}</span>
-              </Button>
-            </div>
-          </div>
-        </Card>
+      <!-- Other tabs placeholder -->
+      <div v-else class="text-center py-12">
+        <p class="text-gray-500">Content for {{ activeTab }} tab coming soon...</p>
       </div>
     </div>
   </div>

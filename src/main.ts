@@ -111,6 +111,8 @@ import LoginPage from '@/components/auth/LoginPage.vue'
 // Dashboard components
 import AdminDashboard from '@/components/dashboard/AdminDashboard.vue'
 import ProfessorDashboard from '@/components/dashboard/ProfessorDashboard.vue'
+import StudentDashboard from '@/components/dashboard/StudentDashboard.vue'
+import DashboardPage from '@/components/dashboard/DashboardPage.vue'
 
 // Form components
 import PublicationForm from '@/components/forms/PublicationForm.vue'
@@ -205,7 +207,10 @@ app.component('LoginPage', LoginPage)
 
 // Register dashboard components globally
 app.component('AdminDashboard', AdminDashboard)
-app.component('ProfessorDashboard', ProfessorDashboard)
+app.component('ProfessorDashboard', ProfessorDashboard)  
+app.component('StudentDashboard', StudentDashboard)
+app.component('DashboardPage', DashboardPage)
+
 
 // Register form components globally
 app.component('PublicationForm', PublicationForm)
