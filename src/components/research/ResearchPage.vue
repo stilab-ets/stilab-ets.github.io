@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
-import { useResearch } from '@/composables/useResearch'
+import { useResearch } from '@/hooks/useResearch'
 
 // UI Components
 import PageHeader from '@/components/ui/PageHeader.vue'

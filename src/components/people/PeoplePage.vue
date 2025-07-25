@@ -1,112 +1,52 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
+import { useMembers, useMemberFilters } from '@/hooks/members'
 import PersonCard from './PersonCard.vue'
 import PersonModal from './PersonModal.vue'
 import PeopleFilters from './PeopleFilters.vue'
+import type { Member } from '@/services/MainAPI'
 
-interface Member {
-  id: string
-  first_name: string
-  last_name: string
-  role: string
-  email: string | null
-  phone?: string | null
-  biography?: string | null
-  research_domain?: string | null
-  image_url?: string | null
-  github_url?: string | null
-  linkedin_url?: string | null
-  personal_website?: string | null
-  status?: string | null
-}
+// Hooks
+const { t } = useLanguage()
+const { members, loading, error, fetchMembers, uniqueResearchDomains } = useMembers()
+const {
+  searchQuery,
+  selectedDomain,
+  selectedStatus,
+  getFilteredMembers,
+  getPhdStudents,
+  getMscStudents,
+  getProfessors
+} = useMemberFilters()
 
-// State
-const members = ref<Member[]>([])
-const searchQuery = ref('')
-const selectedDomain = ref('')
-const selectedStatus = ref('')
+// Modal state
 const selectedMember = ref<Member | null>(null)
 
-// Language
-const { t } = useLanguage()
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
-// Fetch members on mount
-const fetchMembers = async () => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/members`)
-    if (!response.ok) throw new Error('Failed to fetch members')
-    const data = await response.json()
-    members.value = Array.isArray(data) ? data : []
-  } catch (error) {
-    console.error('Error fetching members:', error)
-  }
-}
-onMounted(fetchMembers)
-
-// Dynamically get list of unique research domains
-const uniqueResearchDomains = computed(() => {
-  const domainSet = new Set<string>()
-  for (const member of members.value) {
-    if (member.research_domain) {
-      domainSet.add(member.research_domain)
-    }
-  }
-  return Array.from(domainSet).sort()
-})
-
-// Filtered members based on search + filters
-const filteredMembers = computed(() => {
-  return members.value.filter((member) => {
-    const fullName = `${member.first_name} ${member.last_name}`
-    const matchesSearch =
-      !searchQuery.value ||
-      fullName.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      (member.research_domain &&
-        member.research_domain.toLowerCase().includes(searchQuery.value.toLowerCase())) ||
-      (member.role &&
-        member.role.toLowerCase().includes(searchQuery.value.toLowerCase()))
-
-    const matchesDomain =
-      !selectedDomain.value || member.research_domain === selectedDomain.value
-
-    const matchesStatus =
-      !selectedStatus.value || member.status === selectedStatus.value
-
-    return matchesSearch && matchesDomain && matchesStatus
-  })
-})
-
-const phdStudents = computed(() =>
-  filteredMembers.value.filter(
-    (member) => member.role?.toLowerCase() === 'phd'
-  )
-)
-
-const mStudents = computed(() =>
-  filteredMembers.value.filter(
-    (member) => member.role?.toLowerCase() === 'msc'
-  )
-)
-
-const professors = computed(() =>
-  filteredMembers.value.filter(
-    (member) => member.role?.toLowerCase() === 'pro'
-  )
-)
+// Computed filtered members
+const filteredMembers = computed(() => getFilteredMembers(members.value))
+const phdStudents = computed(() => getPhdStudents(filteredMembers.value))
+const mscStudents = computed(() => getMscStudents(filteredMembers.value))
+const professors = computed(() => getProfessors(filteredMembers.value))
 
 // Modal methods
 const openModal = (member: Member) => {
   selectedMember.value = member
 }
+
 const closeModal = () => {
   selectedMember.value = null
 }
+
+// Initialize data
+onMounted(() => {
+  fetchMembers()
+})
 </script>
 
 <template>
   <div class="min-h-screen bg-gray-50">
+    <!-- Header -->
     <div class="bg-white shadow-sm">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
         <h1 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
@@ -129,38 +69,36 @@ const closeModal = () => {
       />
     </div>
 
+    <!-- Loading State -->
+    <div v-if="loading" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#08a4d4] mx-auto"></div>
+        <p class="mt-4 text-gray-600">{{ t.common.loading }}</p>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div v-else-if="error" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="text-center">
+        <div class="text-red-500 mb-4">
+          <svg class="h-12 w-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">{{ t.common.error }}</h3>
+        <p class="text-gray-600 mb-4">{{ error }}</p>
+        <button 
+          @click="fetchMembers"
+          class="btn btn-primary"
+        >
+          {{ t.common.retry }}
+        </button>
+      </div>
+    </div>
+
     <!-- Member sections -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 space-y-12">
-
-      <!-- PHD STUDENT Section -->
-      <section>
-        <h2 class="text-2xl font-bold mb-4">{{ t.person.sections.phd }}</h2>
-        <div v-if="phdStudents.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <PersonCard
-            v-for="member in phdStudents"
-            :key="member.id"
-            :member="member"
-            @open-modal="openModal"
-          />
-        </div>
-        <p v-else class="text-gray-500">No PHD students found.</p>
-      </section>
-
-      <!-- M STUDENT Section -->
-      <section>
-        <h2 class="text-2xl font-bold mb-4">{{ t.person.sections.msc }}</h2>
-        <div v-if="mStudents.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <PersonCard
-            v-for="member in mStudents"
-            :key="member.id"
-            :member="member"
-            @open-modal="openModal"
-          />
-        </div>
-        <p v-else class="text-gray-500">No master students found.</p>
-      </section>
-
-      <!-- PROFESSOR Section -->
+    <div v-else class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 space-y-12">
+      <!-- Professors Section -->
       <section>
         <h2 class="text-2xl font-bold mb-4">{{ t.person.sections.pro }}</h2>
         <div v-if="professors.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -171,11 +109,45 @@ const closeModal = () => {
             @open-modal="openModal"
           />
         </div>
-        <p v-else class="text-gray-500">No professors found.</p>
+        <div v-else class="text-center py-8">
+          <p class="text-gray-500">{{ t.person.empty.message }}</p>
+        </div>
       </section>
 
+      <!-- PhD Students Section -->
+      <section>
+        <h2 class="text-2xl font-bold mb-4">{{ t.person.sections.phd }}</h2>
+        <div v-if="phdStudents.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <PersonCard
+            v-for="member in phdStudents"
+            :key="member.id"
+            :member="member"
+            @open-modal="openModal"
+          />
+        </div>
+        <div v-else class="text-center py-8">
+          <p class="text-gray-500">{{ t.person.empty.message }}</p>
+        </div>
+      </section>
+
+      <!-- Master Students Section -->
+      <section>
+        <h2 class="text-2xl font-bold mb-4">{{ t.person.sections.msc }}</h2>
+        <div v-if="mscStudents.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <PersonCard
+            v-for="member in mscStudents"
+            :key="member.id"
+            :member="member"
+            @open-modal="openModal"
+          />
+        </div>
+        <div v-else class="text-center py-8">
+          <p class="text-gray-500">{{ t.person.empty.message }}</p>
+        </div>
+      </section>
     </div>
 
+    <!-- Modal -->
     <PersonModal
       :member="selectedMember"
       :is-open="selectedMember !== null"

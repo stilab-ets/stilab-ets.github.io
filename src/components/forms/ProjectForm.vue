@@ -1,156 +1,56 @@
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue'
 import { XCircleIcon, XIcon, PlusIcon } from 'lucide-vue-next'
-import { useLanguage } from '@/composables/useLanguage'
+import { useProjectForm } from '@/hooks/projects/useProjectForm'
+import type { Project } from '@/services/MainAPI'
 
-interface ProjectForm {
-  projectType: 'research' | 'msc'
-  title: string
-  domain: string
-  difficulty: string
-  status: string
-  description: string
-  supervisor: string
-  coSupervisor: string
-  requirements: string[]
-  objectives: string[]
-  startDate: string
-  endDate: string
-  funding: string
-  githubUrl: string
-  websiteUrl: string
-}
-
-interface ProjectErrors {
-  [key: string]: string
-}
-
-interface Supervisor {
-  id: string
-  name: string
-}
-
-const props = defineProps<{
-  initialData?: Partial<ProjectForm>
+interface Props {
+  initialData?: Partial<Project>
   isEditing?: boolean
-}>()
+}
 
+const props = defineProps<Props>()
 const emit = defineEmits<{
-  submit: [data: ProjectForm]
+  submit: [data: Partial<Project>]
   cancel: []
 }>()
 
-const { t: translations } = useLanguage()
-const t = computed(() => translations.value.forms.project)
-
-const form = reactive<ProjectForm>({
-  projectType: 'msc',
-  title: '',
-  domain: '',
-  difficulty: '',
-  status: 'planned',
-  description: '',
-  supervisor: '',
-  coSupervisor: '',
-  requirements: [],
-  objectives: [],
-  startDate: '',
-  endDate: '',
-  funding: '',
-  githubUrl: '',
-  websiteUrl: '',
-  ...props.initialData
-})
-
-const errors = ref<ProjectErrors>({})
-const generalError = ref<string>('')
-const isSubmitting = ref(false)
-const supervisors = ref<Supervisor[]>([])
-const newRequirement = ref('')
-const newObjective = ref('')
-
-const validateForm = (): boolean => {
-  errors.value = {}
-  
-  if (!form.title.trim()) {
-    errors.value.title = t.value.validation.titleRequired
-  }
-  
-  if (!form.domain) {
-    errors.value.domain = t.value.validation.domainRequired
-  }
-  
-  if (!form.description.trim()) {
-    errors.value.description = t.value.validation.descriptionRequired
-  }
-  
-  if (!form.supervisor) {
-    errors.value.supervisor = t.value.validation.supervisorRequired
-  }
-  
-  if (!form.startDate) {
-    errors.value.startDate = t.value.validation.startDateRequired
-  }
-  
-  if (form.endDate && form.startDate) {
-    const startDate = new Date(form.startDate)
-    const endDate = new Date(form.endDate)
-    
-    if (endDate <= startDate) {
-      errors.value.endDate = t.value.validation.endDateAfterStart
-    }
-  }
-  
-  return Object.keys(errors.value).length === 0
-}
-
-const addRequirement = () => {
-  const req = newRequirement.value.trim()
-  if (req && !form.requirements.includes(req)) {
-    form.requirements.push(req)
-    newRequirement.value = ''
-  }
-}
-
-const removeRequirement = (index: number) => {
-  form.requirements.splice(index, 1)
-}
-
-const addObjective = () => {
-  const obj = newObjective.value.trim()
-  if (obj && !form.objectives.includes(obj)) {
-    form.objectives.push(obj)
-    newObjective.value = ''
-  }
-}
-
-const removeObjective = (index: number) => {
-  form.objectives.splice(index, 1)
-}
+const {
+  form,
+  errors,
+  generalError,
+  isSubmitting,
+  newRequirement,
+  t,
+  validateForm,
+  addRequirement,
+  removeRequirement,
+  prepareSubmissionData,
+  setSubmitting,
+  setGeneralError
+} = useProjectForm(props.initialData)
 
 const handleSubmit = async () => {
   if (!validateForm()) return
   
-  isSubmitting.value = true
-  generalError.value = ''
+  setSubmitting(true)
+  setGeneralError('')
   
   try {
-    emit('submit', { ...form })
+    const submissionData = prepareSubmissionData()
+    emit('submit', submissionData)
   } catch (error) {
-    generalError.value = t.value.errors.submitFailed
+    setGeneralError(t.value.errors.submitFailed)
   } finally {
-    isSubmitting.value = false
+    setSubmitting(false)
   }
 }
 
-// Mock supervisors - replace with actual API call
-onMounted(() => {
-  supervisors.value = [
-    { id: '1', name: 'Dr. Marie Dubois' },
-    { id: '2', name: 'Prof. Jean Martin' },
-    { id: '3', name: 'Dr. Sarah Chen' }
-  ]
-})
+// Mock supervisors - replace with actual API call or prop
+const supervisors = [
+  { id: '1', name: 'Dr. Marie Dubois' },
+  { id: '2', name: 'Prof. Jean Martin' },
+  { id: '3', name: 'Dr. Sarah Chen' }
+]
 </script>
 
 <template>
@@ -233,13 +133,13 @@ onMounted(() => {
                 >
                   <option value="">{{ t.form.selectDomain }}</option>
                   <option value="software-architecture">{{ t.domains.softwareArchitecture }}</option>
-                  <option value="machine-learning">{{ t.domains.machineLearning }}</option>
+                  <option value="artificial-intelligence">{{ t.domains.artificialIntelligence }}</option>
                   <option value="cybersecurity">{{ t.domains.cybersecurity }}</option>
-                  <option value="distributed-systems">{{ t.domains.distributedSystems }}</option>
                   <option value="devops">{{ t.domains.devops }}</option>
-                  <option value="blockchain">{{ t.domains.blockchain }}</option>
-                  <option value="ui-ux">{{ t.domains.uiUx }}</option>
-                  <option value="data-science">{{ t.domains.dataScience }}</option>
+                  <option value="cloud-computing">{{ t.domains.cloudComputing }}</option>
+                  <option value="software-testing">{{ t.domains.softwareTesting }}</option>
+                  <option value="software-maintenance">{{ t.domains.softwareMaintenance }}</option>
+                  <option value="human-computer-interaction">{{ t.domains.humanComputerInteraction }}</option>
                 </select>
                 <p v-if="errors.domain" class="mt-1 text-sm text-red-600">{{ errors.domain }}</p>
               </div>
@@ -277,19 +177,19 @@ onMounted(() => {
             </div>
 
             <div>
-              <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
-                {{ form.projectType === 'msc' ? t.form.abstract : t.form.description }}
+              <label for="abstract" class="block text-sm font-medium text-gray-700 mb-2">
+                {{ form.projectType === 'msc' ? 'Résumé' : t.form.description }}
               </label>
               <textarea
-                id="description"
+                id="abstract"
                 rows="5"
-                v-model="form.description"
+                v-model="form.abstract"
                 required
                 class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                :class="{ 'border-red-500': errors.description }"
-                :placeholder="form.projectType === 'msc' ? t.form.abstractPlaceholder : t.form.descriptionPlaceholder"
+                :class="{ 'border-red-500': errors.abstract }"
+                :placeholder="form.projectType === 'msc' ? 'Décrivez le projet en détail...' : t.form.descriptionPlaceholder"
               ></textarea>
-              <p v-if="errors.description" class="mt-1 text-sm text-red-600">{{ errors.description }}</p>
+              <p v-if="errors.abstract" class="mt-1 text-sm text-red-600">{{ errors.abstract }}</p>
             </div>
           </div>
         </div>
@@ -311,7 +211,7 @@ onMounted(() => {
                 :class="{ 'border-red-500': errors.supervisor }"
               >
                 <option value="">{{ t.form.selectSupervisor }}</option>
-                <option v-for="member in supervisors" :key="member.id" :value="member.id">
+                <option v-for="member in supervisors" :key="member.id" :value="member.name">
                   {{ member.name }}
                 </option>
               </select>
@@ -328,7 +228,7 @@ onMounted(() => {
                 class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               >
                 <option value="">{{ t.form.selectCoSupervisor }}</option>
-                <option v-for="member in supervisors" :key="member.id" :value="member.id">
+                <option v-for="member in supervisors" :key="member.id" :value="member.name">
                   {{ member.name }}
                 </option>
               </select>
@@ -336,85 +236,45 @@ onMounted(() => {
           </div>
         </div>
 
-        <!-- Requirements & Skills -->
+        <!-- Requirements -->
         <div>
           <h3 class="text-lg font-medium text-gray-900 mb-4">{{ t.sections.requirements }}</h3>
           
-          <div class="space-y-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                {{ t.form.requirements }}
-              </label>
-              <div class="flex flex-wrap gap-2 mb-2">
-                <span
-                  v-for="(req, index) in form.requirements"
-                  :key="index"
-                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
-                >
-                  {{ req }}
-                  <button
-                    type="button"
-                    @click="removeRequirement(index)"
-                    class="ml-1.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-green-400 hover:bg-green-200 hover:text-green-500 focus:outline-none focus:bg-green-500 focus:text-white"
-                  >
-                    <XIcon class="h-3 w-3" />
-                  </button>
-                </span>
-              </div>
-              <div class="flex">
-                <input
-                  v-model="newRequirement"
-                  @keydown.enter.prevent="addRequirement"
-                  @keydown.comma.prevent="addRequirement"
-                  class="block w-full px-3 py-2 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  :placeholder="t.form.requirementsPlaceholder"
-                />
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              {{ t.form.requirements }}
+            </label>
+            <div class="flex flex-wrap gap-2 mb-2">
+              <span
+                v-for="(req, index) in form.requirements"
+                :key="index"
+                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+              >
+                {{ req }}
                 <button
                   type="button"
-                  @click="addRequirement"
-                  class="px-3 py-2 border border-l-0 border-gray-300 rounded-r-md bg-gray-50 text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  @click="removeRequirement(index)"
+                  class="ml-1.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-green-400 hover:bg-green-200 hover:text-green-500 focus:outline-none focus:bg-green-500 focus:text-white"
                 >
-                  <PlusIcon class="h-4 w-4" />
+                  <XIcon class="h-3 w-3" />
                 </button>
-              </div>
+              </span>
             </div>
-
-            <div v-if="form.projectType === 'msc'">
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                {{ t.form.objectives }}
-              </label>
-              <div class="flex flex-wrap gap-2 mb-2">
-                <span
-                  v-for="(obj, index) in form.objectives"
-                  :key="index"
-                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800"
-                >
-                  {{ obj }}
-                  <button
-                    type="button"
-                    @click="removeObjective(index)"
-                    class="ml-1.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-purple-400 hover:bg-purple-200 hover:text-purple-500 focus:outline-none focus:bg-purple-500 focus:text-white"
-                  >
-                    <XIcon class="h-3 w-3" />
-                  </button>
-                </span>
-              </div>
-              <div class="flex">
-                <input
-                  v-model="newObjective"
-                  @keydown.enter.prevent="addObjective"
-                  @keydown.comma.prevent="addObjective"
-                  class="block w-full px-3 py-2 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  :placeholder="t.form.objectivesPlaceholder"
-                />
-                <button
-                  type="button"
-                  @click="addObjective"
-                  class="px-3 py-2 border border-l-0 border-gray-300 rounded-r-md bg-gray-50 text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <PlusIcon class="h-4 w-4" />
-                </button>
-              </div>
+            <div class="flex">
+              <input
+                v-model="newRequirement"
+                @keydown.enter.prevent="addRequirement"
+                @keydown.comma.prevent="addRequirement"
+                class="block w-full px-3 py-2 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                :placeholder="t.form.requirementsPlaceholder"
+              />
+              <button
+                type="button"
+                @click="addRequirement"
+                class="px-3 py-2 border border-l-0 border-gray-300 rounded-r-md bg-gray-50 text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <PlusIcon class="h-4 w-4" />
+              </button>
             </div>
           </div>
         </div>
@@ -483,8 +343,10 @@ onMounted(() => {
                   type="url"
                   v-model="form.githubUrl"
                   class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="https://github.com/organization/project"
+                  :class="{ 'border-red-500': errors.githubUrl }"
+                  :placeholder="t.form.githubUrlPlaceholder"
                 />
+                <p v-if="errors.githubUrl" class="mt-1 text-sm text-red-600">{{ errors.githubUrl }}</p>
               </div>
 
               <div>
@@ -496,8 +358,10 @@ onMounted(() => {
                   type="url"
                   v-model="form.websiteUrl"
                   class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="https://project-website.com"
+                  :class="{ 'border-red-500': errors.websiteUrl }"
+                  :placeholder="t.form.websiteUrlPlaceholder"
                 />
+                <p v-if="errors.websiteUrl" class="mt-1 text-sm text-red-600">{{ errors.websiteUrl }}</p>
               </div>
             </div>
           </div>

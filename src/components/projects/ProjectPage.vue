@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
-import { mainAPI } from '@/services/ApiFactory'
-import type { Project } from '@/services/MainAPI'
+import { useProjects } from '@/hooks/projects/useProjects'
+import { useProjectFilters } from '@/hooks/projects/useProjectFilters'
+import { useProjectInterest } from '@/hooks/projects/useProjectInterest'
 
 // UI Components
 import PageHeader from '@/ui/PageHeader.vue'
@@ -14,42 +15,20 @@ import ProjectsInfoBanner from './ProjectsInfoBanner.vue'
 import ProjectCard from './ProjectCard.vue'
 import InterestModal from './InterestModal.vue'
 
-// Language and translations
 const { t } = useLanguage()
+const { projects, loading, error, fetchProjects, submitProjectInterest } = useProjects()
+const projectInterest = useProjectInterest()
 
-// State
-const projects = ref<Project[]>([])
-const loading = ref(false)
-const searchQuery = ref('')
-const selectedDomain = ref('')
-const selectedStatus = ref('')
-const showModal = ref(false)
-const selectedProject = ref<Project | null>(null)
+const {
+  searchQuery,
+  selectedDomain,
+  selectedStatus,
+  selectedDifficulty,
+  availableDomains,
+  filteredProjects,
+  updateFilter
+} = useProjectFilters(projects.value)
 
-// Computed
-const availableDomains = computed(() => {
-  return [...new Set(projects.value.map(project => project.domain))].sort()
-})
-
-const filteredProjects = computed(() => {
-  return projects.value.filter(project => {
-    const matchesSearch = !searchQuery.value ||
-      project.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      project.abstract.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      project.supervisor.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      project.domain.toLowerCase().includes(searchQuery.value.toLowerCase())
-
-    const matchesDomain = !selectedDomain.value ||
-      project.domain === selectedDomain.value
-
-    const matchesStatus = !selectedStatus.value ||
-      project.status === selectedStatus.value
-
-    return matchesSearch && matchesDomain && matchesStatus
-  })
-})
-
-// Filters configuration
 const filters = computed(() => [
   {
     id: 'domain',
@@ -73,7 +52,6 @@ const filters = computed(() => [
   }
 ])
 
-// Results text
 const resultsText = computed(() => {
   const count = filteredProjects.value.length
   if (count === 0) return `0 ${t.value.projects.results.project} ${t.value.projects.results.found}`
@@ -81,42 +59,17 @@ const resultsText = computed(() => {
   return `${count} ${t.value.projects.results.projects} ${t.value.projects.results.found}s`
 })
 
-// Methods
-const fetchProjects = async () => {
-  loading.value = true
-  try {
-    const response = await mainAPI.getProjects()
-    projects.value = response.data.results || []
-  } catch (error) {
-    console.warn('Failed to fetch projects:', error)
-    projects.value = []
-  } finally {
-    loading.value = false
+const handleShowInterest = (project: any) => {
+  projectInterest.openModal(project)
+}
+
+const handleSubmitInterest = async () => {
+  const success = await projectInterest.submitInterest(submitProjectInterest)
+  if (success) {
+    alert('Votre demande a été envoyée avec succès ! Le superviseur vous contactera bientôt.')
   }
 }
 
-const updateFilter = (filterId: string, value: string) => {
-  switch (filterId) {
-    case 'domain':
-      selectedDomain.value = value
-      break
-    case 'status':
-      selectedStatus.value = value
-      break
-  }
-}
-
-const showInterestForm = (project: Project) => {
-  selectedProject.value = project
-  showModal.value = true
-}
-
-const closeModal = () => {
-  showModal.value = false
-  selectedProject.value = null
-}
-
-// Lifecycle
 onMounted(() => {
   fetchProjects()
 })
@@ -133,6 +86,22 @@ onMounted(() => {
 
     <!-- Information Banner -->
     <ProjectsInfoBanner />
+
+    <!-- Error State -->
+    <div v-if="error" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+      <div class="bg-red-50 border border-red-200 rounded-md p-4">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-red-800">{{ error }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Filters and Search -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
@@ -151,7 +120,7 @@ onMounted(() => {
     <div v-if="loading" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
       <div class="flex justify-center items-center py-12">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#08a4d4]"></div>
-        <span class="ml-2 text-gray-600">Loading projects...</span>
+        <span class="ml-2 text-gray-600">{{ t.common.loading }}</span>
       </div>
     </div>
 
@@ -162,7 +131,7 @@ onMounted(() => {
           v-for="project in filteredProjects"
           :key="project.id"
           :project="project"
-          @show-interest="showInterestForm"
+          @show-interest="handleShowInterest"
         />
       </div>
 
@@ -177,9 +146,14 @@ onMounted(() => {
 
     <!-- Interest Form Modal -->
     <InterestModal
-      :is-open="showModal"
-      :project="selectedProject"
-      @close="closeModal"
+      :is-open="projectInterest.isModalOpen.value"
+      :project="projectInterest.selectedProject.value"
+      :form-data="projectInterest.interestForm.value"
+      :submitting="projectInterest.submitting.value"
+      :submit-error="projectInterest.submitError.value"
+      @close="projectInterest.closeModal"
+      @submit="handleSubmitInterest"
+      @update:form-data="projectInterest.interestForm.value = $event"
     />
   </div>
 </template>

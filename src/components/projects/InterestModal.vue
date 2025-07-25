@@ -1,75 +1,45 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
-import { mainAPI } from '@/services/ApiFactory'
 import type { Project } from '@/services/MainAPI'
 import Button from '@/ui/Button.vue'
+
+interface FormData {
+  name: string
+  email: string
+  level: string
+  motivation: string
+}
 
 interface Props {
   isOpen: boolean
   project: Project | null
+  formData: FormData
+  submitting: boolean
+  submitError: string
 }
 
 const props = defineProps<Props>()
 const emit = defineEmits<{
   close: []
+  submit: []
+  'update:formData': [data: FormData]
 }>()
 
 const { t } = useLanguage()
 
-// Interest form data
-const interestForm = ref({
-  name: '',
-  email: '',
-  level: '',
-  motivation: ''
-})
-
-const submitting = ref(false)
-const submitError = ref('')
-
-// Watch for modal open/close to reset form
-watch(() => props.isOpen, (isOpen) => {
-  if (!isOpen) {
-    // Reset form when modal closes
-    interestForm.value = {
-      name: '',
-      email: '',
-      level: '',
-      motivation: ''
-    }
-    submitError.value = ''
-  }
-})
+const updateFormField = (field: keyof FormData, value: string) => {
+  emit('update:formData', {
+    ...props.formData,
+    [field]: value
+  })
+}
 
 const closeModal = () => {
   emit('close')
 }
 
-const submitInterest = async () => {
-  if (!props.project) return
-
-  submitting.value = true
-  submitError.value = ''
-
-  try {
-    await mainAPI.submitProjectInterest({
-      project_id: props.project.id,
-      full_name: interestForm.value.name,
-      email: interestForm.value.email,
-      study_level: interestForm.value.level,
-      motivation: interestForm.value.motivation
-    })
-
-    // Show success message
-    alert('Votre demande a été envoyée avec succès ! Le superviseur vous contactera bientôt.')
-    closeModal()
-  } catch (error) {
-    console.warn('Failed to submit project interest:', error)
-    submitError.value = 'Une erreur est survenue lors de l\'envoi de votre demande. Veuillez réessayer.'
-  } finally {
-    submitting.value = false
-  }
+const submitInterest = () => {
+  emit('submit')
 }
 </script>
 
@@ -111,7 +81,8 @@ const submitInterest = async () => {
             </label>
             <input 
               id="student-name" 
-              v-model="interestForm.name" 
+              :value="formData.name"
+              @input="updateFormField('name', ($event.target as HTMLInputElement).value)"
               type="text" 
               required
               :disabled="submitting"
@@ -126,7 +97,8 @@ const submitInterest = async () => {
             </label>
             <input 
               id="student-email" 
-              v-model="interestForm.email" 
+              :value="formData.email"
+              @input="updateFormField('email', ($event.target as HTMLInputElement).value)"
               type="email" 
               required
               :disabled="submitting"
@@ -141,7 +113,8 @@ const submitInterest = async () => {
             </label>
             <select 
               id="student-level" 
-              v-model="interestForm.level" 
+              :value="formData.level"
+              @change="updateFormField('level', ($event.target as HTMLSelectElement).value)"
               required
               :disabled="submitting"
               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] disabled:bg-gray-50 disabled:text-gray-500"
@@ -158,7 +131,8 @@ const submitInterest = async () => {
             </label>
             <textarea 
               id="motivation" 
-              v-model="interestForm.motivation" 
+              :value="formData.motivation"
+              @input="updateFormField('motivation', ($event.target as HTMLTextAreaElement).value)"
               rows="4" 
               required
               :disabled="submitting"

@@ -112,6 +112,25 @@ export interface Vacancy {
   updated_at: string;
 }
 
+export interface Event {
+  id: number;
+  title: string;
+  speaker?: string;
+  date: string;
+  time?: string;
+  location: string;
+  type: 'seminar' | 'workshop' | 'conference' | 'defense' | 'meeting' | 'colloquium' | 'masterclass';
+  description: string;
+  registration_url?: string;
+  tags: string[];
+  is_upcoming: boolean;
+  capacity?: number;
+  current_registrations?: number;
+  created_at: string;
+  updated_at: string;
+}
+
+
 export class MainAPI extends BaseAPI {
   // Publications
   async getPublications(): Promise<ApiResponse<PaginatedResponse<Publication>>> {
@@ -267,6 +286,27 @@ export class MainAPI extends BaseAPI {
   // Admin command - Run get publications
   async runGetPublicationsCommand(): Promise<ApiResponse<{ message: string }>> {
     return this.post<{ message: string }>('/api/run-getpublications-command/');
+  }
+
+  // Events
+  async getEvents(): Promise<ApiResponse<PaginatedResponse<Event>>> {
+    return this.get<PaginatedResponse<Event>>('/api/events/');
+  }
+
+  async getEvent(id: number): Promise<ApiResponse<Event>> {
+    return this.get<Event>(`/api/events/${id}/`);
+  }
+
+  async createEvent(data: Partial<Event>): Promise<ApiResponse<Event>> {
+    return this.post<Event>('/api/events/', data);
+  }
+
+  async updateEvent(id: number, data: Partial<Event>): Promise<ApiResponse<Event>> {
+    return this.put<Event>(`/api/events/${id}/`, data);
+  }
+
+  async deleteEvent(id: number): Promise<ApiResponse<void>> {
+    return this.delete<void>(`/api/events/${id}/`);
   }
 }
 

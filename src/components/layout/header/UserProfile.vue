@@ -1,31 +1,34 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
 import { User, Settings, LogOut, Shield, BookOpen } from 'lucide-vue-next'
-import { useAuthMiddleware } from '@/middleware/auth'
+import { useUserAuth } from '@/hooks/auth/useUserAuth'
 import { useLanguage } from '@/composables/useLanguage'
+import type { User as UserType } from '@/services/AuthAPI'
+
+const props = defineProps<{
+  user?: UserType | null
+  isMobile?: boolean
+}>()
 
 const emit = defineEmits<{
   navigate: [pageId: string]
 }>()
 
-const { isAuthenticated, user, logout, requireAdmin } = useAuthMiddleware()
+const { 
+  isAuthenticated, 
+  fullName, 
+  userInitials, 
+  isDropdownOpen, 
+  requireAdmin, 
+  logout,
+  toggleDropdown, 
+  closeDropdown 
+} = useUserAuth()
+
 const { t } = useLanguage()
-const isOpen = ref(false)
-
-const fullName = computed(() => {
-  if (user.value?.first_name && user.value?.last_name) {
-    return `${user.value.first_name} ${user.value.last_name}`
-  }
-  return user.value?.username || ''
-})
-
-const toggleDropdown = () => {
-  isOpen.value = !isOpen.value
-}
 
 const handleNavigation = (pageId: string) => {
   emit('navigate', pageId)
-  isOpen.value = false
+  closeDropdown()
 }
 
 const handleLogin = () => {
@@ -34,13 +37,7 @@ const handleLogin = () => {
 
 const handleLogout = async () => {
   await logout()
-  isOpen.value = false
   emit('navigate', 'home')
-}
-
-// Close dropdown when clicking outside
-const closeDropdown = () => {
-  isOpen.value = false
 }
 </script>
 
@@ -61,16 +58,16 @@ const closeDropdown = () => {
       <button
         @click="toggleDropdown"
         class="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-700 hover:text-[#08a4d4] transition-colors duration-200 bg-white rounded-lg border border-gray-200 hover:border-[#08a4d4] focus:outline-none focus:ring-2 focus:ring-[#08a4d4] focus:ring-offset-2"
-        :aria-expanded="isOpen"
+        :aria-expanded="isDropdownOpen"
         aria-haspopup="true"
       >
         <div class="w-8 h-8 bg-[#08a4d4] rounded-full flex items-center justify-center">
           <span class="text-white text-sm font-semibold">
-            {{ fullName.charAt(0).toUpperCase() || 'U' }}
+            {{ userInitials }}
           </span>
         </div>
         <span class="hidden md:block">{{ fullName || user?.username }}</span>
-        <svg class="h-4 w-4 transition-transform duration-200" :class="{ 'rotate-180': isOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="h-4 w-4 transition-transform duration-200" :class="{ 'rotate-180': isDropdownOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
         </svg>
       </button>
@@ -85,7 +82,7 @@ const closeDropdown = () => {
         leave-to-class="transform opacity-0 scale-95"
       >
         <div
-          v-if="isOpen"
+          v-if="isDropdownOpen"
           class="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-50"
           role="menu"
           @click.stop
@@ -143,7 +140,7 @@ const closeDropdown = () => {
 
       <!-- Overlay to close dropdown -->
       <div
-        v-if="isOpen"
+        v-if="isDropdownOpen"
         class="fixed inset-0 z-40"
         @click="closeDropdown"
       ></div>
