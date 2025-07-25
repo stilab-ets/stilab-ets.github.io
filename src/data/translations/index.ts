@@ -14,6 +14,7 @@ import { TeachingTranslations, teachingTranslations } from './teaching.translate
 import { ProjectsTranslations, projectsTranslations } from './projects.translate'
 import { VacanciesTranslations, vacanciesTranslations } from './vacancies.translate'
 import { authTranslations, AuthTranslations } from './auth.translate'
+import { dashboardTranslations, DashboardTranslations } from './dashboard.translate'
 import { formsTranslations, FormsTranslations } from './forms'
 
 export type LanguageCode = 'en' | 'fr'
@@ -36,6 +37,7 @@ export interface Translations {
   vacancies: VacanciesTranslations
   auth: AuthTranslations
   forms: FormsTranslations
+  dashboard: DashboardTranslations
 }
 
 export const translations: Record<LanguageCode, Translations> = {
@@ -56,7 +58,8 @@ export const translations: Record<LanguageCode, Translations> = {
     projects: projectsTranslations.fr,
     vacancies: vacanciesTranslations.fr,
     auth: authTranslations.fr,
-    forms: formsTranslations.fr
+    forms: formsTranslations.fr,
+    dashboard: dashboardTranslations.fr
   },
   en: {
     navigation: navigationTranslations.en,
@@ -75,7 +78,8 @@ export const translations: Record<LanguageCode, Translations> = {
     projects: projectsTranslations.en,
     vacancies: vacanciesTranslations.en,
     auth: authTranslations.en,
-    forms: formsTranslations.en
+    forms: formsTranslations.en,
+    dashboard: dashboardTranslations.en
   }
 }
 

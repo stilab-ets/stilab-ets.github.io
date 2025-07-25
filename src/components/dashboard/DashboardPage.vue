@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useAuthMiddleware } from '@/middleware/auth'
-import { useLanguage } from '@/composables/useLanguage'
 import { mainAPI } from '@/services/ApiFactory'
 import { FileText, Calendar, Users, Award, Briefcase, Search } from 'lucide-vue-next'
 import Card from '@/ui/Card.vue'

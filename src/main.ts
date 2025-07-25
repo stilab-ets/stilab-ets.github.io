@@ -42,7 +42,6 @@ axios.interceptors.response.use(
         } catch (refreshError) {
           localStorage.removeItem('access_token')
           localStorage.removeItem('refresh_token')
-          // Don't redirect here, let the app handle it
         }
       }
     }
@@ -91,7 +90,7 @@ import EventCard from '@/components/events/EventCard.vue'
 import TeachingPage from '@/components/teaching/TeachingPage.vue'
 import CourseCard from '@/components/teaching/CourseCard.vue'
 
-import ProjectsPage from '@/components/projects/ProjectPage.vue'
+import ProjectsPage from '@/components/projects/ProjectsPage.vue'
 import ProjectsInfoBanner from '@/components/projects/ProjectsInfoBanner.vue'
 import ProjectCard from '@/components/projects/ProjectCard.vue'
 import InterestModal from '@/components/projects/InterestModal.vue'
@@ -110,7 +109,8 @@ import RegisterForm from '@/components/auth/RegisterForm.vue'
 import LoginPage from '@/components/auth/LoginPage.vue'
 
 // Dashboard components
-import DashboardPage from '@/components/dashboard/DashboardPage.vue'
+import AdminDashboard from '@/components/dashboard/AdminDashboard.vue'
+import ProfessorDashboard from '@/components/dashboard/ProfessorDashboard.vue'
 
 // Form components
 import PublicationForm from '@/components/forms/PublicationForm.vue'
@@ -131,6 +131,16 @@ import PageHeader from '@/components/ui/PageHeader.vue'
 import SearchAndFilters from '@/components/ui/SearchAndFilters.vue'
 import StatisticsGrid from '@/components/ui/StatisticsGrid.vue'
 import EmptyState from '@/components/ui/EmptyState.vue'
+
+// Lucide icons
+import { 
+  BarChart3, Users, FileText, Settings, TrendingUp, UserPlus, Shield, Cog, 
+  BarChart, Home, GraduationCap, User, Plus, Calendar, Briefcase,
+  Activity
+} from 'lucide-vue-next'
+
+// Initialize auth middleware
+import { authMiddleware } from '@/middleware/auth'
 
 // Create Vue application
 const app = createApp(App)
@@ -194,7 +204,8 @@ app.component('RegisterForm', RegisterForm)
 app.component('LoginPage', LoginPage)
 
 // Register dashboard components globally
-app.component('DashboardPage', DashboardPage)
+app.component('AdminDashboard', AdminDashboard)
+app.component('ProfessorDashboard', ProfessorDashboard)
 
 // Register form components globally
 app.component('PublicationForm', PublicationForm)
@@ -216,5 +227,30 @@ app.component('SearchAndFilters', SearchAndFilters)
 app.component('StatisticsGrid', StatisticsGrid)
 app.component('EmptyState', EmptyState)
 
-// Mount the application
-app.mount('#app')
+// Register Lucide icons globally
+app.component('BarChart3', BarChart3)
+app.component('Users', Users)
+app.component('FileText', FileText)
+app.component('Settings', Settings)
+app.component('TrendingUp', TrendingUp)
+app.component('UserPlus', UserPlus)
+app.component('Shield', Shield)
+app.component('Cog', Cog)
+app.component('BarChart', BarChart)
+app.component('Home', Home)
+app.component('GraduationCap', GraduationCap)
+app.component('User', User)
+app.component('Plus', Plus)
+app.component('Calendar', Calendar)
+app.component('Briefcase', Briefcase)
+app.component('Activity', Activity)
+
+// Initialize authentication middleware before mounting
+authMiddleware.initialize().then(() => {
+  // Mount the application
+  app.mount('#app')
+}).catch((error) => {
+  console.error('Failed to initialize auth middleware:', error)
+  // Mount anyway but user will need to login
+  app.mount('#app')
+})
