@@ -1,9 +1,14 @@
 import logging
 import string
 import time
+import urllib.parse
 
 import requests
+from config.settings import BACKEND_URL, EMAIL_HOST_USER
+from django.contrib.auth import get_user_model
+from django.core.mail import EmailMultiAlternatives
 from django.core.management.base import BaseCommand
+from django.template.loader import render_to_string
 from scholarly import ProxyGenerator, scholarly
 
 from backend.models import Member, Publication
@@ -89,6 +94,41 @@ class Command(BaseCommand):
             help="Will skip querying Google Scholar. Using this option has a high chance of returning incomplete data.",
         )
 
+    def _notify_admins(self, publications_changed):
+        User = get_user_model()
+        superusers = User.objects.filter(is_superuser=True, is_active=True, email__isnull=False).exclude(email="")
+
+        emails = [user.email for user in superusers]
+
+        if not emails:
+            logger.warning("No superusers with email found")
+            return
+
+        backend_url = f"{BACKEND_URL}/admin/backend/publication/"
+        context = {"publications_changed": publications_changed, "backend_url": backend_url}
+
+        text_content = render_to_string(
+            "templates/emails/notify_admins.txt",
+            context=context,
+        )
+
+        html_content = render_to_string(
+            "templates/emails/notify_admins.html",
+            context=context,
+        )
+
+        msg = EmailMultiAlternatives(
+            "Publications need approval",
+            text_content,
+            EMAIL_HOST_USER,
+            superusers,
+        )
+
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+
+        logger.info("Email sent to admins.")
+
     def handle(self, *args, **options):
         skip_google_scholar = options["fast"]
 
@@ -99,6 +139,8 @@ class Command(BaseCommand):
             authors = ALL_AUTHORS
 
         blocked_by_google = False
+
+        publications_changed = []
         for author in authors:
             logger.info(f"Gathering publications for {author}...")
             try:
@@ -167,6 +209,7 @@ class Command(BaseCommand):
                             "is_approved": False,
                         },
                     )
+                    publications_changed.append({"id": urllib.parse.quote(obj.id, safe="").replace("%", "_"), "title": obj.title})
                 except Exception as e:
                     logger.error(f"Error creating the publication '{publication["title"]}' - {e}")
                     continue
@@ -174,6 +217,9 @@ class Command(BaseCommand):
                     logger.info(f"Publication '{publication["title"]}' created")
                 else:
                     logger.info(f"Publication titled - '{publication["title"]}' was already in the database")
+        if publications_changed:
+            self._notify_admins(publications_changed)
+            pass
 
     def get_all_openalex_publications(self, author_name):
         """Gather all publications of the author with the OpenAlex API. The results may be incomplete."""

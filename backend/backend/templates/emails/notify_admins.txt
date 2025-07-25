@@ -1,0 +1,5 @@
+The following publications have been created or updated and require your approval:
+
+ {% for publication in publications_changed %}
+- {{ publication.title }}: {{ backend_url }}{{ publication.id }}/change/
+{% endfor %}
