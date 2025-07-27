@@ -131,8 +131,20 @@ def test_research_serializer_create_without_participants(mock_project_create):
 
 @patch("backend.serializers.research_serializer.ProjectParticipant.objects.filter")
 def test_research_serializer_to_representation(mock_participant_filter):
-    member = MagicMock(id=uuid.uuid4(), first_name="Alice", last_name="Smith", email="a@example.com", role="PI")
-    project = MagicMock(id=uuid.uuid4(), title="Test", start_date=date.today(), description="desc", leader=member)
+    member = MagicMock(
+        id=uuid.uuid4(),
+        first_name="Alice",
+        last_name="Smith",
+        email="a@example.com",
+        role="PI",
+    )
+    project = MagicMock(
+        id=uuid.uuid4(),
+        title="Test",
+        start_date=date.today(),
+        description="desc",
+        leader=member,
+    )
 
     mock_participant = MagicMock()
     mock_participant.member = member
@@ -143,3 +155,69 @@ def test_research_serializer_to_representation(mock_participant_filter):
 
     assert result["leader"]["first_name"] == "Alice"
     assert result["participants"][0]["email"] == "a@example.com"
+
+
+@patch("backend.views.research_views.ResearchSerializer")
+@patch("backend.views.research_views.ResearchProject")
+def test_research_update_success(mock_research_model, mock_serializer, research_url):
+    mock_queryset = MagicMock()
+    mock_research_model.objects.filter.return_value = mock_queryset
+    mock_queryset.exists.return_value = True
+
+    mock_instance = MagicMock()
+    mock_queryset.first.return_value = mock_instance
+
+    mock_serializer_instance = MagicMock()
+    mock_serializer_instance.is_valid.return_value = True
+    mock_serializer_instance.save.return_value = mock_instance
+    mock_serializer_instance.data = {
+        "id": "mock-id",
+        "title": "Dev project",
+        "start_date": str(date.today()),
+        "description": "test",
+        "participants": [],
+    }
+
+    mock_serializer.return_value = mock_serializer_instance
+
+    data = {
+        "id": "mock-id",
+        "title": "Project",
+        "start_date": str(date.today()),
+        "description": "Independent research",
+        "participants": [{"id": "member-id"}],
+    }
+
+    client.force_authenticate(user=MagicMock())
+    response = client.put(research_url, data, format="json")
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response.data["title"] == "Dev project"
+
+    mock_research_model.objects.filter.assert_called_once_with(id="mock-id")
+    mock_queryset.exists.assert_called_once()
+    mock_queryset.first.assert_called_once()
+
+    mock_serializer.assert_called_once_with(instance=mock_instance, data=data, partial=True)
+    mock_serializer_instance.is_valid.assert_called_once()
+    mock_serializer_instance.save.assert_called_once()
+
+
+@patch("backend.views.research_views.get_object_or_404")
+def test_research_delete_success(mock_get_object_or_404, research_url):
+    mock_instance = MagicMock()
+    mock_get_object_or_404.return_value = mock_instance
+
+    data = {
+        "title": "Project",
+        "start_date": date.today(),
+        "description": "Independent research",
+        "participants": [],
+    }
+    client.force_authenticate(user=MagicMock())
+    response = client.delete(research_url, data, format="json")
+
+    assert response.status_code == status.HTTP_204_NO_CONTENT
+
+    mock_get_object_or_404.assert_called_once()
+    mock_instance.delete.assert_called_once()
