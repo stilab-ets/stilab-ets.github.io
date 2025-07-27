@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted} from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
+import axios from 'axios'
 
 // UI Components
 import PageHeader from '@/ui/PageHeader.vue'
@@ -11,83 +12,67 @@ import EmptyState from '@/ui/EmptyState.vue'
 // Events components
 import EventCard from './EventCard.vue'
 
-// Interface matching EventCard's AcademicEvent
+interface Participant {
+  id: string
+  first_name: string
+  last_name: string
+  role: string
+  email: string | null
+  phone?: string | null
+  biography?: string | null
+  research_domain?: string | null
+  image_url?: string | null
+  github_url?: string | null
+  linkedin_url?: string | null
+  personal_website?: string | null
+  status?: string | null
+}
+
 interface AcademicEvent {
   id: string;
   title: string;
-  speaker?: string;
+  speaker?: Participant;
   date: string;
   time?: string;
   location: string;
-  type: 'seminar' | 'workshop' | 'conference' | 'defense' | 'meeting' | 'colloquium' | 'masterclass';
+  domain: 'seminar' | 'workshop' | 'conference' | 'defense' | 'meeting' | 'colloquium' | 'masterclass';
   description: string;
-  registrationUrl?: string;
+  registration_url?: string;
   tags: string[];
-  isUpcoming: boolean;
+  is_upcoming: boolean;
   capacity?: number;
-  currentRegistrations?: number;
+  current_registrations?: number;
+  participants: Participant[]
 }
 
-const mockEvents: AcademicEvent[] = [
-  {
-    id: 'e1',
-    title: 'Séminaire: AI in Software Engineering - Current Trends and Future Directions',
-    speaker: 'Prof. Jean Martin',
-    date: '2024-06-15',
-    time: '14:00',
-    location: 'Amphithéâtre A, Bâtiment Informatique',
-    type: 'seminar',
-    description: 'Présentation des dernières avancées en intelligence artificielle appliquée au génie logiciel, avec discussion sur les perspectives futures et les défis technologiques.',
-    registrationUrl: 'https://event.univ.fr/register/ai-seminar',
-    tags: ['AI', 'machine learning', 'software engineering'],
-    isUpcoming: true,
-    capacity: 150,
-    currentRegistrations: 87
-  },
-  {
-    id: 'e2',
-    title: 'Workshop: Blockchain Security for Developers',
-    speaker: 'Dr. Sarah Chen',
-    date: '2024-06-20',
-    time: '09:00',
-    location: 'Salle de conférence B12',
-    type: 'workshop',
-    description: 'Atelier pratique sur les bonnes pratiques de sécurité lors du développement d\'applications blockchain.',
-    registrationUrl: 'https://event.univ.fr/register/blockchain-workshop',
-    tags: ['blockchain', 'security', 'hands-on'],
-    isUpcoming: true,
-    capacity: 30,
-    currentRegistrations: 24
-  },
-  {
-    id: 'e3',
-    title: 'Soutenance de thèse: Alex Rodriguez',
-    speaker: 'Alex Rodriguez',
-    date: '2024-07-10',
-    time: '10:00',
-    location: 'Amphithéâtre Principal',
-    type: 'defense',
-    description: 'Soutenance de thèse: "Automated Detection and Management of Technical Debt in Large-Scale Software Systems"',
-    tags: ['defense', 'technical debt', 'automation'],
-    isUpcoming: true,
-    capacity: 100,
-    currentRegistrations: 45
-  }
-]
+
 
 // Language and translations
 const { t } = useLanguage()
 
 // State
+const events = ref<AcademicEvent[]>([]);
 const selectedType = ref('')
 const selectedPeriod = ref('all')
 const viewMode = ref('upcoming')
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+// Generate all awards from researchers
+const fetchAwards = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/events`)
+    events.value = response.data 
+  } catch (error) {
+    console.error('Error fetching events:', error)
+  }
+}
+onMounted(fetchAwards)
+
 // Computed
 const filteredUpcomingEvents = computed(() => {
-  return mockEvents.filter(event => {
-    const matchesType = !selectedType.value || event.type === selectedType.value
-    const isUpcoming = event.isUpcoming
+  return events.value.filter(event => {
+    const matchesType = !selectedType.value || event.domain === selectedType.value
+    const isUpcoming = event.is_upcoming
     const matchesPeriod = selectedPeriod.value === 'all' ||
       (selectedPeriod.value === 'upcoming' && isUpcoming)
 
@@ -96,9 +81,9 @@ const filteredUpcomingEvents = computed(() => {
 })
 
 const filteredPastEvents = computed(() => {
-  return mockEvents.filter(event => {
-    const matchesType = !selectedType.value || event.type === selectedType.value
-    const isPast = !event.isUpcoming
+  return events.value.filter(event => {
+    const matchesType = !selectedType.value || event.domain === selectedType.value
+    const isPast = !event.is_upcoming
     const matchesPeriod = selectedPeriod.value === 'all' ||
       (selectedPeriod.value === 'past' && isPast)
 
@@ -107,20 +92,20 @@ const filteredPastEvents = computed(() => {
 })
 
 const upcomingEventsCount = computed(() => {
-  return mockEvents.filter(event => event.isUpcoming).length
+  return events.value.filter(event => event.is_upcoming).length
 })
 
 const totalRegistrations = computed(() => {
-  return mockEvents
-    .filter(event => event.isUpcoming && event.currentRegistrations)
-    .reduce((sum, event) => sum + (event.currentRegistrations || 0), 0)
+  return events.value
+    .filter(event => event.is_upcoming && event.current_registrations)
+    .reduce((sum, event) => sum + (event.current_registrations || 0), 0)
 })
 
 // Statistics
 const statistics = computed(() => [
   { value: upcomingEventsCount.value, label: t.value.events.statistics.upcomingEvents },
   { value: totalRegistrations.value, label: t.value.events.statistics.registrations },
-  { value: mockEvents.length, label: t.value.events.statistics.totalEvents }
+  { value: events.value.length, label: t.value.events.statistics.totalEvents }
 ])
 
 // Filters configuration

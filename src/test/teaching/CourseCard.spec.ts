@@ -9,6 +9,7 @@ const courseMock = {
   title: 'Test Course',
   code: 'CS101',
   teacher: {
+    id: "1",
     first_name: 'John',
     last_name: 'Doe',
     role: 'Professor',
