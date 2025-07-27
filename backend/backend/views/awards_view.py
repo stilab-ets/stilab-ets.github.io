@@ -19,7 +19,7 @@ class AwardsView(APIView):
         operation_id="Get Awards",
         operation_description="Retrieves a list of all awards",
         responses={200: AwardSerializer},
-        tags=["Award"],
+        tags=["Awards"],
     )
     def get(self, request):
         awards = get_list_or_404(Award)

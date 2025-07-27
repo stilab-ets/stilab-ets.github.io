@@ -6,20 +6,37 @@ import Button from '@/ui/Button.vue'
 
 const { openUrl } = useBrowserUtils()
 
+interface Participant {
+  id: string
+  first_name: string
+  last_name: string
+  role: string
+  email: string | null
+  phone?: string | null
+  biography?: string | null
+  research_domain?: string | null
+  image_url?: string | null
+  github_url?: string | null
+  linkedin_url?: string | null
+  personal_website?: string | null
+  status?: string | null
+}
+
 interface AcademicEvent {
   id: string;
   title: string;
-  speaker?: string;
+  speaker?: Participant;
   date: string;
   time?: string;
   location: string;
-  type: 'seminar' | 'workshop' | 'conference' | 'defense' | 'meeting' | 'colloquium' | 'masterclass';
+  domain: 'seminar' | 'workshop' | 'conference' | 'defense' | 'meeting' | 'colloquium' | 'masterclass';
   description: string;
-  registrationUrl?: string;
+  registration_url?: string;
   tags: string[];
-  isUpcoming: boolean;
+  is_upcoming: boolean;
   capacity?: number;
-  currentRegistrations?: number;
+  current_registrations?: number;
+  participants: Participant[]
 }
 
 interface Props {
@@ -30,8 +47,8 @@ interface Props {
 const props = defineProps<Props>()
 const { t } = useLanguage()
 
-const getTypeColor = (type: AcademicEvent['type']) => {
-  const colors: Record<AcademicEvent['type'], string> = {
+const getTypeColor = (type: AcademicEvent['domain']) => {
+  const colors: Record<AcademicEvent['domain'], string> = {
     seminar: 'bg-blue-100 text-blue-800',
     workshop: 'bg-green-100 text-green-800',
     conference: 'bg-purple-100 text-purple-800',
@@ -43,12 +60,12 @@ const getTypeColor = (type: AcademicEvent['type']) => {
   return colors[type] || 'bg-gray-100 text-gray-800'
 }
 
-const getTypeLabel = (type: AcademicEvent['type']) => {
+const getTypeLabel = (type: AcademicEvent['domain']) => {
   const typeKey = type as keyof typeof t.value.events.eventTypes
   return t.value.events.eventTypes[typeKey] || type
 }
 
-const openRegistrationLink = () => openUrl(props.eventData.registrationUrl!)
+const openRegistrationLink = () => openUrl(props.eventData.registration_url!)
 
 const formatDate = (dateString: string) => {
   const date = new Date(dateString)
@@ -61,13 +78,13 @@ const formatDate = (dateString: string) => {
 }
 
 const isCapacityNearFull = () => {
-  return props.eventData.capacity && props.eventData.currentRegistrations && 
-         (props.eventData.currentRegistrations / props.eventData.capacity) > 0.8
+  return props.eventData.capacity && props.eventData.current_registrations && 
+         (props.eventData.current_registrations / props.eventData.capacity) > 0.8
 }
 
 const isCapacityFull = () => {
-  return props.eventData.capacity && props.eventData.currentRegistrations && 
-         props.eventData.currentRegistrations >= props.eventData.capacity
+  return props.eventData.capacity && props.eventData.current_registrations && 
+         props.eventData.current_registrations >= props.eventData.capacity
 }
 </script>
 
@@ -79,11 +96,11 @@ const isCapacityFull = () => {
         <div class="flex items-center mb-2">
           <span :class="[
             'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mr-3',
-            getTypeColor(eventData.type)
+            getTypeColor(eventData.domain)
           ]">
-            {{ getTypeLabel(eventData.type) }}
+            {{ getTypeLabel(eventData.domain) }}
           </span>
-          <span v-if="!isPast && eventData.registrationUrl" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+          <span v-if="!isPast && eventData.registration_url" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
             {{ t.events.eventCard.registrationOpen }}
           </span>
           <span v-if="!isPast && isCapacityNearFull()" 
@@ -119,18 +136,19 @@ const isCapacityFull = () => {
     <!-- Speaker -->
     <div v-if="eventData.speaker" class="mb-4">
       <p class="text-sm text-gray-600">
-        <span class="font-medium">{{ t.events.eventCard.speaker }}:</span> {{ eventData.speaker }}
+        <span class="font-medium">{{ t.events.eventCard.speaker }}:</span> {{ eventData.speaker.first_name }}, {{ eventData.speaker.last_name}}
+
       </p>
     </div>
 
     <!-- Capacity info for upcoming events -->
-    <div v-if="!isPast && eventData.capacity && eventData.currentRegistrations" class="mb-4">
+    <div v-if="!isPast && eventData.capacity && eventData.current_registrations" class="mb-4">
       <div class="flex items-center justify-between text-sm text-gray-600 mb-2">
         <span>{{ t.events.eventCard.registrations }}</span>
-        <span>{{ eventData.currentRegistrations }} / {{ eventData.capacity }}</span>
+        <span>{{ eventData.current_registrations }} / {{ eventData.capacity }}</span>
       </div>
       <div class="w-full bg-gray-200 rounded-full h-2">
-        <div class="bg-[#08a4d4] h-2 rounded-full" :style="{ width: (eventData.currentRegistrations / eventData.capacity * 100) + '%' }"></div>
+        <div class="bg-[#08a4d4] h-2 rounded-full" :style="{ width: (eventData.current_registrations / eventData.capacity * 100) + '%' }"></div>
       </div>
     </div>
 
@@ -151,7 +169,7 @@ const isCapacityFull = () => {
     </div>
 
     <!-- Registration Button -->
-    <div v-if="!isPast && eventData.registrationUrl" class="mt-4">
+    <div v-if="!isPast && eventData.registration_url" class="mt-4">
       <Button
         :variant="isCapacityFull() ? 'secondary' : 'primary'"
         :disabled="!!isCapacityFull()"

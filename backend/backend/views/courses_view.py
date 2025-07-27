@@ -13,7 +13,7 @@ class CoursesView(APIView):
         operation_id="Get Courses",
         operation_description="Retrieves a list of all courses",
         responses={200: CourseSerializer},
-        tags=["Course"],
+        tags=["Courses"],
     )
     def get(self, request):
         courses = get_list_or_404(Course)

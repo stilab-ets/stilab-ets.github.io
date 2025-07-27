@@ -7,17 +7,27 @@ import { describe, it, expect } from 'vitest'
 const mockEventData = {
   id: '1',
   title: 'Test Event Title',
-  speaker: 'Dr. John Doe',
+  speaker: {
+    id : '1',
+    first_name: 'John',
+    last_name: 'Doe',
+    role: 'Professor',
+    email: 'john.doe@example.com',
+    phone: null,
+    biography: null,
+    
+  },
   date: '2025-06-20',
   time: '14:00',
   location: 'Room 101',
-  type: 'seminar' as const,
   description: 'This is a test description of the academic event.',
-  registrationUrl: 'https://register.example.com',
+  registration_url: 'https://register.example.com',
   tags: ['tag1', 'tag2'],
-  isUpcoming: true,
+  is_upcoming: true,
   capacity: 100,
-  currentRegistrations: 50,
+  current_registrations: 50,
+  domain: 'seminar' as const,
+  participants: []
 }
 
 describe('EventCard.vue', () => {
@@ -84,7 +94,7 @@ describe('EventCard.vue', () => {
   })
 
   it('disables registration button when capacity full', () => {
-    const fullCapacityEvent = { ...mockEventData, currentRegistrations: 100 }
+    const fullCapacityEvent = { ...mockEventData, current_registrations: 100 }
     const wrapper = mount(EventCard, {
       props: { eventData: fullCapacityEvent, isPast: false },
       global: { components: { Card, Button } }
