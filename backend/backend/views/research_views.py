@@ -40,3 +40,37 @@ class ResearchAPI(APIView):
             serializer.save(leader=member)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @swagger_auto_schema(
+        operation_id="Update Research",
+        operation_description="Update a research",
+        responses={200: ResearchSerializer},
+        tags=["Research"],
+    )
+    def put(self, request):
+        existing = ResearchProject.objects.filter(id=request.data.get("id"))
+
+        if not existing.exists():
+            return Response(
+                {"error": "The research you are trying to update does not exists"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        research = existing.first()
+        serializer = ResearchSerializer(instance=research, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @swagger_auto_schema(
+        operation_id="Delete research",
+        operation_description="Deletes a research",
+        responses={200: ResearchSerializer},
+        tags=["Research"],
+    )
+    def delete(self, request):
+        research = get_object_or_404(ResearchProject, id=request.data.get("id"))
+        research.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
