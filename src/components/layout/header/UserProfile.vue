@@ -47,7 +47,7 @@ const handleLogout = async () => {
     <button
       v-if="!isAuthenticated"
       @click="handleLogin"
-      class="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-700 hover:text-[#08a4d4] transition-colors duration-200"
+      class="flex items-center hover:cursor-pointer space-x-2 px-4 py-2 text-sm font-medium text-gray-700 hover:text-[#08a4d4] transition-colors duration-200"
     >
       <User class="h-4 w-4" />
       <span>{{ t.auth.login.title }}</span>

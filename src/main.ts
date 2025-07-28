@@ -92,7 +92,7 @@ import CourseCard from '@/components/teaching/CourseCard.vue'
 
 import ProjectsPage from '@/components/projects/ProjectsPage.vue'
 import ProjectsInfoBanner from '@/components/projects/ProjectsInfoBanner.vue'
-import ProjectCard from '@/components/projects/ProjectCard.vue'
+import ProjectCard from '@/components/projects/ProjectsCard.vue'
 import InterestModal from '@/components/projects/InterestModal.vue'
 
 import VacanciesPage from '@/components/vacancies/VacanciesPage.vue'

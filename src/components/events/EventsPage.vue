@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { onMounted, computed } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
-import { useEvents } from '@/hooks/useEvents'
-import { useEventsFilters } from '@/hooks/useEventsFilters'
-import { useEventsStatistics } from '@/hooks/useEventsStatistics'
+import { useEvents } from '@/hooks/events/useEvents'
+import { useEventsFilters } from '@/hooks/events/useEventsFilters'
+import { useEventsStatistics } from '@/hooks/events/useEventsStatistics'
 
 // UI Components
 import PageHeader from '@/components/ui/PageHeader.vue'

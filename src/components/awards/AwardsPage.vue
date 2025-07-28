@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
-import { useAwards } from '@/hooks/useAwards'
-import { useFilteredAwards } from '@/hooks/useFilteredAwards'
+import { useAwards } from '@/hooks/awards/useAwards'
+import { useFilteredAwards } from '@/hooks/awards/useFilteredAwards'
 
 // UI Components
 import PageHeader from '@/ui/PageHeader.vue'
