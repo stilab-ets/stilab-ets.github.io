@@ -7,7 +7,6 @@ export interface CommonTranslations {
   email: string
   phone: string
   address: string
-  retry: string
 }
 
 export const commonTranslations = {
@@ -19,8 +18,7 @@ export const commonTranslations = {
     contact: 'Contact',
     email: 'Email',
     phone: 'Téléphone',
-    address: 'Adresse',
-    retry: 'Réessayer'
+    address: 'Adresse'
   },
   en: {
     loading: 'Loading...',
@@ -30,7 +28,6 @@ export const commonTranslations = {
     contact: 'Contact',
     email: 'Email',
     phone: 'Phone',
-    address: 'Address',
-    retry: 'Retry'
+    address: 'Address'
   }
 } as const

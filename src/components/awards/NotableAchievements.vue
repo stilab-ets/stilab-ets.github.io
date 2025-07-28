@@ -2,7 +2,6 @@
 import { computed } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
 import Card from '@/ui/Card.vue'
-import type { Award } from '@/services/MainAPI'
 
 interface AwardRecipient {
   id: string
@@ -22,14 +21,20 @@ interface AwardRecipient {
   }
 }
 
-interface ExtendedAward extends Award {
-  recipients?: AwardRecipient[]
-  url?: string
-  year?: number
+// Extended award data structure
+interface Award {
+  recipients: AwardRecipient[];
+  id: string;
+  title: string;
+  url: string;
+  year?: number;
+  organization: string;
 }
 
+
+
 interface Props {
-  allAwards: ExtendedAward[]
+  allAwards: Award[]
 }
 
 const props = defineProps<Props>()
@@ -37,27 +42,25 @@ const { t } = useLanguage()
 
 // Award statistics
 const bestPaperAwards = computed(() => {
-  return props.allAwards.filter(award =>
-    award.title.toLowerCase().includes('best paper') ||
-    award.title.toLowerCase().includes('paper award')
+  return props.allAwards.filter(a =>
+    a.title.toLowerCase().includes('best paper') ||
+    a.title.toLowerCase().includes('paper award')
   ).length
 })
 
 const researchExcellenceAwards = computed(() => {
-  return props.allAwards.filter(award =>
-    award.title.toLowerCase().includes('excellence') ||
-    award.title.toLowerCase().includes('distinguished') ||
-    award.title.toLowerCase().includes('achievement')
+  return props.allAwards.filter(a =>
+    a.title.toLowerCase().includes('excellence') ||
+    a.title.toLowerCase().includes('distinguished') ||
+    a.title.toLowerCase().includes('achievement')
   ).length
 })
 
 const industryAwards = computed(() => {
-  return props.allAwards.filter(award =>
-    (award.organization && (
-      award.organization.toLowerCase().includes('industry') ||
-      award.organization.toLowerCase().includes('ieee') ||
-      award.organization.toLowerCase().includes('acm')
-    ))
+  return props.allAwards.filter(a =>
+    a.organization.toLowerCase().includes('industry') ||
+    a.organization.toLowerCase().includes('ieee') ||
+    a.organization.toLowerCase().includes('acm')
   ).length
 })
 

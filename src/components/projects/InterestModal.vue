@@ -1,45 +1,54 @@
 <script setup lang="ts">
+import { ref, watch } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
-import type { Project } from '@/services/MainAPI'
+import type { MScProject } from '@/data/mockPublications'
 import Button from '@/ui/Button.vue'
-
-interface FormData {
-  name: string
-  email: string
-  level: string
-  motivation: string
-}
 
 interface Props {
   isOpen: boolean
-  project: Project | null
-  formData: FormData
-  submitting: boolean
-  submitError: string
+  project: MScProject | null
 }
 
 const props = defineProps<Props>()
 const emit = defineEmits<{
   close: []
-  submit: []
-  'update:formData': [data: FormData]
 }>()
 
 const { t } = useLanguage()
 
-const updateFormField = (field: keyof FormData, value: string) => {
-  emit('update:formData', {
-    ...props.formData,
-    [field]: value
-  })
-}
+// Interest form data
+const interestForm = ref({
+  name: '',
+  email: '',
+  level: '',
+  motivation: ''
+})
+
+// Watch for modal open/close to reset form
+watch(() => props.isOpen, (isOpen) => {
+  if (!isOpen) {
+    // Reset form when modal closes
+    interestForm.value = {
+      name: '',
+      email: '',
+      level: '',
+      motivation: ''
+    }
+  }
+})
 
 const closeModal = () => {
   emit('close')
 }
 
 const submitInterest = () => {
-  emit('submit')
+  // Here you would typically send the form data to your backend
+  console.log('Submitting interest for project:', props.project?.title)
+  console.log('Form data:', interestForm.value)
+
+  // Show success message (in a real app, you'd handle this properly)
+  alert('Votre demande a été envoyée avec succès ! Le superviseur vous contactera bientôt.')
+  closeModal()
 }
 </script>
 
@@ -69,11 +78,6 @@ const submitInterest = () => {
           {{ t.projects.interestModal.projectLabel }}: <strong>{{ project.title }}</strong>
         </p>
 
-        <!-- Error Message -->
-        <div v-if="submitError" class="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
-          <p class="text-sm text-red-600">{{ submitError }}</p>
-        </div>
-
         <form @submit.prevent="submitInterest" class="space-y-4">
           <div>
             <label for="student-name" class="block text-sm font-medium text-gray-700">
@@ -81,12 +85,10 @@ const submitInterest = () => {
             </label>
             <input 
               id="student-name" 
-              :value="formData.name"
-              @input="updateFormField('name', ($event.target as HTMLInputElement).value)"
+              v-model="interestForm.name" 
               type="text" 
               required
-              :disabled="submitting"
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] disabled:bg-gray-50 disabled:text-gray-500"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4]"
               :placeholder="t.projects.interestModal.fullNamePlaceholder" 
             />
           </div>
@@ -97,12 +99,10 @@ const submitInterest = () => {
             </label>
             <input 
               id="student-email" 
-              :value="formData.email"
-              @input="updateFormField('email', ($event.target as HTMLInputElement).value)"
+              v-model="interestForm.email" 
               type="email" 
               required
-              :disabled="submitting"
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] disabled:bg-gray-50 disabled:text-gray-500"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4]"
               :placeholder="t.projects.interestModal.emailPlaceholder" 
             />
           </div>
@@ -113,11 +113,9 @@ const submitInterest = () => {
             </label>
             <select 
               id="student-level" 
-              :value="formData.level"
-              @change="updateFormField('level', ($event.target as HTMLSelectElement).value)"
+              v-model="interestForm.level" 
               required
-              :disabled="submitting"
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] disabled:bg-gray-50 disabled:text-gray-500"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4]"
             >
               <option value="">{{ t.projects.interestModal.selectLevel }}</option>
               <option value="M1">{{ t.projects.interestModal.master1 }}</option>
@@ -131,33 +129,20 @@ const submitInterest = () => {
             </label>
             <textarea 
               id="motivation" 
-              :value="formData.motivation"
-              @input="updateFormField('motivation', ($event.target as HTMLTextAreaElement).value)"
+              v-model="interestForm.motivation" 
               rows="4" 
               required
-              :disabled="submitting"
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] disabled:bg-gray-50 disabled:text-gray-500"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4]"
               :placeholder="t.projects.interestModal.motivationPlaceholder"
             ></textarea>
           </div>
 
           <div class="flex justify-end space-x-3 pt-4">
-            <Button 
-              type="button" 
-              variant="outline" 
-              @click="closeModal" 
-              :disabled="submitting"
-              class="hover:cursor-pointer"
-            >
+            <Button type="button" variant="outline" @click="closeModal" class="hover:cursor-pointer">
               {{ t.projects.interestModal.cancel }}
             </Button>
-            <Button 
-              type="submit" 
-              :disabled="submitting"
-              class="hover:cursor-pointer flex items-center"
-            >
-              <div v-if="submitting" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-              {{ submitting ? 'Envoi...' : t.projects.interestModal.submit }}
+            <Button type="submit" class="hover:cursor-pointer">
+              {{ t.projects.interestModal.submit }}
             </Button>
           </div>
         </form>

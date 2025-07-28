@@ -2,19 +2,21 @@
 import { ref, reactive, computed, watch } from 'vue'
 import { XCircleIcon } from 'lucide-vue-next'
 import { useLanguage } from '@/composables/useLanguage'
-import { usePublications } from '@/hooks/publications/usePublications'
-import type { Publication } from '@/services/MainAPI'
+import axios from 'axios'
 
-interface PublicationFormData {
-  publication_type: string
+interface PublicationForm {
+  entrytype: string
+  citekey: string
   title: string
-  authors: string
+  author: string
   journal: string
-  year: number | undefined
+  booktitle: string
+  publisher: string
+  year: number | null
   volume: string
-  doi: string
+  number: string
+  pages: string
   url: string
-  abstract: string
 }
 
 interface PublicationErrors {
@@ -22,63 +24,92 @@ interface PublicationErrors {
 }
 
 const props = defineProps<{
-  initialData?: Partial<Publication>
+  initialData?: Partial<PublicationForm>
   isEditing?: boolean
 }>()
 
 const emit = defineEmits<{
-  submit: [data: PublicationFormData]
+  submit: [data: PublicationForm]
   cancel: []
-  success: []
 }>()
 
 const { t: translations } = useLanguage()
 const t = computed(() => translations.value.forms.publication)
 
-const { createPublication, updatePublication, isLoading } = usePublications()
-
-const form = reactive<PublicationFormData>({
-  publication_type: '',
+const form = reactive<PublicationForm>({
+  entrytype: '',
+  citekey: '',
   title: '',
-  authors: '',
+  author: '',
   journal: '',
-  year: undefined,
+  booktitle: '',
+  publisher: '',
+  year: null,
   volume: '',
-  doi: '',
+  number: '',
+  pages: '',
   url: '',
-  abstract: '',
   ...props.initialData
 })
 
 const errors = ref<PublicationErrors>({})
 const generalError = ref<string>('')
+const isSubmitting = ref(false)
 const bibtexInput = ref('')
 const showPreview = ref(false)
 
-// Generate BibTeX preview
-const generatedBibtex = computed(() => {
-  if (!form.publication_type || !form.title) return ''
+// Computed properties for conditional fields
+const showJournal = computed(() => 
+  ['article', 'misc'].includes(form.entrytype)
+)
+
+const showBooktitle = computed(() => 
+  ['inproceedings', 'incollection', 'inbook', 'conference'].includes(form.entrytype)
+)
+
+const showPublisher = computed(() => 
+  ['book', 'inbook', 'incollection', 'proceedings', 'techreport'].includes(form.entrytype)
+)
+
+const updateFormField = (fieldName: string, value: string) => {
+  const typedFieldName = fieldName as keyof PublicationForm
   
-  const citekey = generateCitekey()
-  let bibtex = `@${form.publication_type}{${citekey},\n`
+  if (typedFieldName in form) {
+    if (typedFieldName === 'year') {
+      form[typedFieldName] = parseInt(value) || null
+    } else {
+      // Type assertion for non-year fields
+      (form[typedFieldName] as string) = value
+    }
+  }
+}
+
+
+const generatedBibtex = computed(() => {
+  if (!form.entrytype || !form.title) return ''
+  
+  const citekey = form.citekey || generateCitekey()
+  let bibtex = `@${form.entrytype}{${citekey},\n`
   
   if (form.title) bibtex += `  title={${form.title}},\n`
-  if (form.authors) bibtex += `  author={${form.authors}},\n`
+  if (form.author) bibtex += `  author={${form.author}},\n`
   if (form.journal) bibtex += `  journal={${form.journal}},\n`
+  if (form.booktitle) bibtex += `  booktitle={${form.booktitle}},\n`
+  if (form.publisher) bibtex += `  publisher={${form.publisher}},\n`
   if (form.year) bibtex += `  year={${form.year}},\n`
   if (form.volume) bibtex += `  volume={${form.volume}},\n`
-  if (form.doi) bibtex += `  doi={${form.doi}},\n`
+  if (form.number) bibtex += `  number={${form.number}},\n`
+  if (form.pages) bibtex += `  pages={${form.pages}},\n`
   if (form.url) bibtex += `  url={${form.url}},\n`
-  if (form.abstract) bibtex += `  abstract={${form.abstract}},\n`
   
   bibtex += '}'
   return bibtex
 })
 
 const generateCitekey = (): string => {
-  if (!form.authors || !form.title) return ''
+  if (!form.author || !form.title) return ''
   
-  const firstAuthor = form.authors.split(' and ')[0].trim()
+  const firstAuthor = form.author.split(' and ')[0].trim()
   const lastName = firstAuthor.split(',')[0].trim() || firstAuthor.split(' ').pop()
   const year = form.year || new Date().getFullYear()
   const firstWord = form.title.split(' ').find(word => 
@@ -91,124 +122,115 @@ const generateCitekey = (): string => {
 const validateForm = (): boolean => {
   errors.value = {}
   
-  if (!form.publication_type) {
-    errors.value.publication_type = t.value.validation.entryTypeRequired
+  if (!form.entrytype) {
+    errors.value.entrytype = t.value.validation.entryTypeRequired
   }
   
   if (!form.title.trim()) {
     errors.value.title = t.value.validation.titleRequired
   }
   
-  if (!form.authors.trim()) {
-    errors.value.authors = t.value.validation.authorRequired
+  if (!form.author.trim()) {
+    errors.value.author = t.value.validation.authorRequired
   }
   
   if (form.year && (form.year < 1900 || form.year > new Date().getFullYear() + 5)) {
     errors.value.year = t.value.validation.yearInvalid
   }
-
-  if (form.url && !isValidUrl(form.url)) {
-    errors.value.url = t.value.validation.urlInvalid
-  }
-
-  if (form.doi && !isValidDoi(form.doi)) {
-    errors.value.doi = t.value.validation.doiInvalid
-  }
   
   return Object.keys(errors.value).length === 0
 }
 
-const isValidUrl = (url: string): boolean => {
-  try {
-    new URL(url)
-    return true
-  } catch {
-    return false
+const parseBibtex = (bibtex: string) => {
+  const fieldRegex = /(\w+)\s*=\s*{([^}]*)}/g
+  let match: RegExpExecArray | null
+
+  while ((match = fieldRegex.exec(bibtex)) !== null) {
+    const [, field, value] = match
+    updateFormField(field.toLowerCase(), value)
   }
 }
 
-const isValidDoi = (doi: string): boolean => {
-  return /^10\.\d{4,}\//.test(doi)
+const clearForm = () => {
+  const formKeys = Object.keys(form) as (keyof PublicationForm)[]
+  formKeys.forEach(key => {
+    if (key === 'year') {
+      form[key] = null
+    } else {
+      form[key] = ''
+    }
+  })
 }
 
-const parseBibtex = (bibtex: string) => {
+const parseBibtexInput = () => {
   try {
-    // Clear form first
-    clearForm();
+    const bibtex = bibtexInput.value.trim()
+    if (!bibtex) return
 
-    // Extract entry type and citekey
+    clearForm()
+
     const entryTypeMatch = bibtex.match(/@(\w+)\s*\{\s*([^,]+),/)
     if (entryTypeMatch) {
-      form.publication_type = entryTypeMatch[1].toLowerCase()
+      form.entrytype = entryTypeMatch[1].toLowerCase()
+      form.citekey = entryTypeMatch[2].trim()
     }
 
-    // Extract fields
     const fieldRegex = /(\w+)\s*=\s*\{([^}]*)\}/g
     let match: RegExpExecArray | null
 
     while ((match = fieldRegex.exec(bibtex)) !== null) {
       const [, field, value] = match
-      const fieldName = field.toLowerCase()
-      
-      if (fieldName === 'author') {
-        form.authors = value.trim()
-      } else if (fieldName === 'year') {
-        form.year = parseInt(value) || undefined
-      } else if (fieldName in form) {
-        (form[fieldName as keyof PublicationFormData] as string) = value.trim()
-      }
+      updateFormField(field.toLowerCase(), value.trim())
     }
   } catch (error) {
     console.error('BibTeX parsing error:', error)
-    generalError.value = t.value.errors.bibtexParseError
   }
-}
-
-const clearForm = () => {
-  form.publication_type = ''
-  form.title = ''
-  form.authors = ''
-  form.journal = ''
-  form.year = undefined
-  form.volume = ''
-  form.doi = ''
-  form.url = ''
-  form.abstract = ''
-  errors.value = {}
-  generalError.value = ''
-}
-
-const parseBibtexInput = () => {
-  if (!bibtexInput.value.trim()) return
-  parseBibtex(bibtexInput.value.trim())
 }
 
 const handleSubmit = async () => {
   if (!validateForm()) return
 
+  isSubmitting.value = true
   generalError.value = ''
 
   try {
-    const success = props.isEditing && props.initialData?.id
-      ? await updatePublication(props.initialData.id, form)
-      : await createPublication(form)
-
-    if (success) {
-      emit('success')
-      if (!props.isEditing) {
-        clearForm()
-      }
-    } else {
-      generalError.value = t.value.errors.submitFailed
+    if (!form.citekey) {
+      form.citekey = generateCitekey()
     }
+
+    const payload = {
+      ...form,
+      id: form.citekey.toLowerCase(),
+    }
+
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+    const response = await axios.post(`${API_BASE_URL}/api/publications/`, payload)
+
+    alert('Publication created successfully!')
+    clearForm()
   } catch (error: any) {
-    generalError.value = error.message || t.value.errors.submitFailed
+    if (error.response?.data?.error) {
+      generalError.value = error.response.data.error
+    } else if (error.response?.data) {
+      generalError.value = JSON.stringify(error.response.data)
+    } else {
+      generalError.value = 'An unexpected error occurred.'
+    }
+  } finally {
+    isSubmitting.value = false
   }
 }
 
+// Auto-generate citekey when form changes
+watch([() => form.author, () => form.title, () => form.year], () => {
+  if (!form.citekey && form.author && form.title) {
+    form.citekey = generateCitekey()
+  }
+})
+
 // Show preview when form has content
-watch(() => [form.publication_type, form.title], () => {
-  showPreview.value = Boolean(form.publication_type && form.title)
+watch(() => [form.entrytype, form.title], () => {
+  showPreview.value = Boolean(form.entrytype && form.title)
 })
 </script>
 
@@ -225,27 +247,37 @@ watch(() => [form.publication_type, form.title], () => {
 
     <form @submit.prevent="handleSubmit" class="p-6">
       <div class="space-y-8">
-        <!-- Publication Type -->
+        <!-- Entry Type -->
         <div>
-          <label for="publication_type" class="block text-sm font-medium text-gray-700 mb-2">
+          <label for="entrytype" class="block text-sm font-medium text-gray-700 mb-2">
             {{ t.form.entryType }}
           </label>
           <select
-            id="publication_type"
-            v-model="form.publication_type"
+            id="entrytype"
+            v-model="form.entrytype"
             required
             class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            :class="{ 'border-red-500': errors.publication_type }"
+            :class="{ 'border-red-500': errors.entrytype }"
           >
             <option value="">{{ t.form.selectEntryType }}</option>
             <option value="article">{{ t.entryTypes.article }}</option>
-            <option value="conference">{{ t.entryTypes.conference }}</option>
-            <option value="workshop">{{ t.entryTypes.inproceedings }}</option>
             <option value="book">{{ t.entryTypes.book }}</option>
-            <option value="thesis">{{ t.entryTypes.phdthesis }}</option>
+            <option value="booklet">{{ t.entryTypes.booklet }}</option>
+            <option value="conference">{{ t.entryTypes.conference }}</option>
+            <option value="inbook">{{ t.entryTypes.inbook }}</option>
+            <option value="incollection">{{ t.entryTypes.incollection }}</option>
+            <option value="inproceedings">{{ t.entryTypes.inproceedings }}</option>
+            <option value="manual">{{ t.entryTypes.manual }}</option>
+            <option value="mastersthesis">{{ t.entryTypes.mastersthesis }}</option>
             <option value="misc">{{ t.entryTypes.misc }}</option>
+            <option value="phdthesis">{{ t.entryTypes.phdthesis }}</option>
+            <option value="proceedings">{{ t.entryTypes.proceedings }}</option>
+            <option value="techreport">{{ t.entryTypes.techreport }}</option>
+            <option value="unpublished">{{ t.entryTypes.unpublished }}</option>
+            <option value="online">{{ t.entryTypes.online }}</option>
+            <option value="presentation">{{ t.entryTypes.presentation }}</option>
           </select>
-          <p v-if="errors.publication_type" class="mt-1 text-sm text-red-600">{{ errors.publication_type }}</p>
+          <p v-if="errors.entrytype" class="mt-1 text-sm text-red-600">{{ errors.entrytype }}</p>
         </div>
 
         <!-- Basic Information -->
@@ -267,20 +299,20 @@ watch(() => [form.publication_type, form.title], () => {
           </div>
 
           <div class="sm:col-span-2">
-            <label for="authors" class="block text-sm font-medium text-gray-700 mb-2">
+            <label for="author" class="block text-sm font-medium text-gray-700 mb-2">
               {{ t.form.authors }}
             </label>
             <input
-              id="authors"
+              id="author"
               type="text"
-              v-model="form.authors"
+              v-model="form.author"
               required
               class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              :class="{ 'border-red-500': errors.authors }"
+              :class="{ 'border-red-500': errors.author }"
               :placeholder="t.form.authorsPlaceholder"
             />
             <p class="mt-1 text-xs text-gray-500">{{ t.form.authorsHelp }}</p>
-            <p v-if="errors.authors" class="mt-1 text-sm text-red-600">{{ errors.authors }}</p>
+            <p v-if="errors.author" class="mt-1 text-sm text-red-600">{{ errors.author }}</p>
           </div>
 
           <div>
@@ -300,6 +332,65 @@ watch(() => [form.publication_type, form.title], () => {
           </div>
 
           <div>
+            <label for="citekey" class="block text-sm font-medium text-gray-700 mb-2">
+              {{ t.form.citekey }}
+            </label>
+            <input
+              id="citekey"
+              type="text"
+              v-model="form.citekey"
+              class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              :placeholder="t.form.citekeyPlaceholder"
+            />
+            <p class="mt-1 text-xs text-gray-500">{{ t.form.citekeyHelp }}</p>
+          </div>
+        </div>
+
+        <!-- Publication Venue -->
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <div v-if="showJournal">
+            <label for="journal" class="block text-sm font-medium text-gray-700 mb-2">
+              {{ t.form.journal }}
+            </label>
+            <input
+              id="journal"
+              type="text"
+              v-model="form.journal"
+              class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              :placeholder="t.form.journalPlaceholder"
+            />
+          </div>
+
+          <div v-if="showBooktitle">
+            <label for="booktitle" class="block text-sm font-medium text-gray-700 mb-2">
+              {{ t.form.booktitle }}
+            </label>
+            <input
+              id="booktitle"
+              type="text"
+              v-model="form.booktitle"
+              class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              :placeholder="t.form.booktitlePlaceholder"
+            />
+          </div>
+
+          <div v-if="showPublisher">
+            <label for="publisher" class="block text-sm font-medium text-gray-700 mb-2">
+              {{ t.form.publisher }}
+            </label>
+            <input
+              id="publisher"
+              type="text"
+              v-model="form.publisher"
+              class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              :placeholder="t.form.publisherPlaceholder"
+            />
+          </div>
+        </div>
+
+        <!-- Publication Details -->
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
+          <div>
             <label for="volume" class="block text-sm font-medium text-gray-700 mb-2">
               {{ t.form.volume }}
             </label>
@@ -311,67 +402,46 @@ watch(() => [form.publication_type, form.title], () => {
               :placeholder="t.form.volumePlaceholder"
             />
           </div>
+
+          <div>
+            <label for="number" class="block text-sm font-medium text-gray-700 mb-2">
+              {{ t.form.number }}
+            </label>
+            <input
+              id="number"
+              type="text"
+              v-model="form.number"
+              class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              :placeholder="t.form.numberPlaceholder"
+            />
+          </div>
+
+          <div>
+            <label for="pages" class="block text-sm font-medium text-gray-700 mb-2">
+              {{ t.form.pages }}
+            </label>
+            <input
+              id="pages"
+              type="text"
+              v-model="form.pages"
+              class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              :placeholder="t.form.pagesPlaceholder"
+            />
+          </div>
         </div>
 
-        <!-- Publication Venue -->
+        <!-- URL -->
         <div>
-          <label for="journal" class="block text-sm font-medium text-gray-700 mb-2">
-            {{ t.form.journal }}
+          <label for="url" class="block text-sm font-medium text-gray-700 mb-2">
+            {{ t.form.url }}
           </label>
           <input
-            id="journal"
-            type="text"
-            v-model="form.journal"
+            id="url"
+            type="url"
+            v-model="form.url"
             class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            :placeholder="t.form.journalPlaceholder"
+            :placeholder="t.form.urlPlaceholder"
           />
-        </div>
-
-        <!-- DOI and URL -->
-        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          <div>
-            <label for="doi" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.form.doi }}
-            </label>
-            <input
-              id="doi"
-              type="text"
-              v-model="form.doi"
-              class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              :class="{ 'border-red-500': errors.doi }"
-              :placeholder="t.form.doiPlaceholder"
-            />
-            <p v-if="errors.doi" class="mt-1 text-sm text-red-600">{{ errors.doi }}</p>
-          </div>
-
-          <div>
-            <label for="url" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.form.url }}
-            </label>
-            <input
-              id="url"
-              type="url"
-              v-model="form.url"
-              class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              :class="{ 'border-red-500': errors.url }"
-              :placeholder="t.form.urlPlaceholder"
-            />
-            <p v-if="errors.url" class="mt-1 text-sm text-red-600">{{ errors.url }}</p>
-          </div>
-        </div>
-
-        <!-- Abstract -->
-        <div>
-          <label for="abstract" class="block text-sm font-medium text-gray-700 mb-2">
-            {{ t.form.abstract }}
-          </label>
-          <textarea
-            id="abstract"
-            v-model="form.abstract"
-            rows="4"
-            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            :placeholder="t.form.abstractPlaceholder"
-          ></textarea>
         </div>
 
         <!-- BibTeX Import -->
@@ -443,10 +513,10 @@ watch(() => [form.publication_type, form.title], () => {
         
         <button
           type="submit"
-          :disabled="isLoading"
+          :disabled="isSubmitting"
           class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {{ isLoading ? t.form.submitting : (isEditing ? t.form.update : t.form.create) }}
+          {{ isSubmitting ? t.form.submitting : (isEditing ? t.form.update : t.form.create) }}
         </button>
       </div>
     </form>

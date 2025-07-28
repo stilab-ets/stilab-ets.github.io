@@ -27,6 +27,10 @@ const props = defineProps<{
   invitedEmail?: string
 }>()
 
+const emit = defineEmits<{
+  register: [data: RegisterForm & { invitationToken?: string }]
+}>()
+
 const { t: translations } = useLanguage()
 const t = computed(() => translations.value.auth.register)
 

@@ -1,12 +1,19 @@
 <script setup lang="ts">
 import { useLanguage } from '@/composables/useLanguage'
 
-const sortBy = defineModel<string>('sortBy')
+interface Props {
+  sortBy: string
+}
+
+const props = defineProps<Props>()
+const emit = defineEmits<{
+  'update:sortBy': [value: string]
+}>()
 
 const { t } = useLanguage()
 
 const updateSort = (value: string) => {
-  sortBy.value = value
+  emit('update:sortBy', value)
 }
 </script>
 

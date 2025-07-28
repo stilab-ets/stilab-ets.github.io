@@ -1,5 +1,3 @@
-import { useLanguage } from '@/composables/useLanguage'
-import { navigationItems } from '@/data/translations'
 import { ref, computed } from 'vue'
 import type { ComputedRef } from 'vue'
 
@@ -12,13 +10,6 @@ interface NavigationComposable {
   validRoutes: string[]
   protectedRoutes: string[]
 }
-
-interface LocalizedNavItem {
-  id: string
-  label: string
-  icon: string
-}
-
 
 // Navigation state management
 const currentPage = ref('home')
@@ -116,34 +107,5 @@ export const useNavigation = (): NavigationComposable => {
     initializeNavigation,
     validRoutes,
     protectedRoutes
-  }
-}
-
-
-export function useMobileNavigation() {
-  const mobileMenuOpen = ref(false)
-  const { currentLanguage } = useLanguage()
-
-  const navigationItemsComputed = computed((): LocalizedNavItem[] => {
-    return navigationItems.map(item => ({
-      id: item.id,
-      label: item.label[currentLanguage.value as 'en' | 'fr'],
-      icon: item.icon
-    }))
-  })
-
-  const toggleMobileMenu = () => {
-    mobileMenuOpen.value = !mobileMenuOpen.value
-  }
-
-  const closeMobileMenu = () => {
-    mobileMenuOpen.value = false
-  }
-
-  return {
-    mobileMenuOpen,
-    navigationItems: navigationItemsComputed,
-    toggleMobileMenu,
-    closeMobileMenu
   }
 }

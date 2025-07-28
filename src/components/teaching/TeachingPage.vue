@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
-import { mainAPI } from '@/services/ApiFactory'
-import type { Course } from '@/services/MainAPI'
+import { mockResearchers } from '@/data/mockResearchers'
+import axios from 'axios'
 
 // UI Components
 import PageHeader from '@/components/ui/PageHeader.vue'
@@ -13,32 +13,55 @@ import EmptyState from '@/components/ui/EmptyState.vue'
 // Teaching components
 import CourseCard from './CourseCard.vue'
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+
+interface Teacher {
+  id: string
+  first_name: string
+  last_name: string
+  role: string
+  email: string | null
+  phone?: string | null
+  biography?: string | null
+  research_domain?: string | null
+  image_url?: string | null
+  github_url?: string | null
+  linkedin_url?: string | null
+  personal_website?: string | null
+  status?: string | null
+}
+
+interface Course {
+  id: string;
+  title: string;
+  code: string;
+  teacher: Teacher;
+  semester: string;
+  level: 'undergraduate' | 'graduate';
+  description: string;
+  url?: string;
+  year: number;
+}
+
 // Language and translations
 const { t } = useLanguage()
 
 // State
-const allCourses = ref<Course[]>([])
+
+const allCourses = ref<Course[]>([]);
 const searchQuery = ref('')
 const selectedLevel = ref('')
 const selectedSemester = ref('')
-const isLoading = ref(false)
-const error = ref<string | null>(null)
 
 const fetchCourses = async () => {
-  isLoading.value = true
-  error.value = null
-  
+
   try {
-    const response = await mainAPI.getCourses()
-    allCourses.value = response.data.results || response.data
-  } catch (err) {
-    console.error('Error fetching courses:', err)
-    error.value = 'Failed to load courses'
-  } finally {
-    isLoading.value = false
+    const response = await axios.get(`${API_BASE_URL}/api/courses`)
+    allCourses.value = response.data 
+  } catch (error) {
+    console.error('Error fetching courses:', error)
   }
 }
-
 onMounted(fetchCourses)
 
 const getFullSemester = (course: Course) => {
@@ -56,21 +79,27 @@ const getFullSemester = (course: Course) => {
     default:
       semesterLabel = course.semester
   }
+
   return `${semesterLabel} ${course.year}`
 }
-
 // Computed
 const availableSemesters = computed(() => {
   const semesters = [
     ...new Set(
-      allCourses.value.map((course: Course) => getFullSemester(course))
+      allCourses.value.map((course: Course) => {
+        // Translate the semester using t
+        return getFullSemester(course)
+        
+      })
     )
   ]
   return semesters.sort()
 })
 
 const uniqueInstructors = computed(() => {
-  return [...new Set(allCourses.value.map(course => course.instructor))]
+  return [...new Set(allCourses.value.map(
+    course => course.teacher.first_name + " " + course.teacher.last_name
+  ))]
 })
 
 const filteredCourses = computed(() => {
@@ -78,11 +107,12 @@ const filteredCourses = computed(() => {
     const matchesSearch = !searchQuery.value ||
       course.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
       course.code.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      course.instructor.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      course.description?.toLowerCase().includes(searchQuery.value.toLowerCase())
+      course.teacher.first_name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      course.teacher.last_name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      course.description.toLowerCase().includes(searchQuery.value.toLowerCase())
 
     const matchesLevel = !selectedLevel.value ||
-      course.code.startsWith(selectedLevel.value)
+      course.level === selectedLevel.value
 
     const matchesSemester = !selectedSemester.value ||
       getFullSemester(course) === selectedSemester.value
@@ -163,31 +193,8 @@ const updateFilter = (filterId: string, value: string) => {
       </div>
     </div>
 
-    <!-- Loading State -->
-    <div v-if="isLoading" class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-      <div class="max-w-6xl mx-auto text-center">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-        <p class="mt-4 text-gray-600">{{ t.common.loading }}</p>
-      </div>
-    </div>
-
-    <!-- Error State -->
-    <div v-else-if="error" class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-      <div class="max-w-6xl mx-auto text-center">
-        <div class="bg-red-50 border border-red-200 rounded-lg p-6">
-          <p class="text-red-600">{{ error }}</p>
-          <button 
-            @click="fetchCourses"
-            class="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-          >
-            Retry
-          </button>
-        </div>
-      </div>
-    </div>
-
     <!-- Course List -->
-    <div v-else class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
       <div class="max-w-6xl mx-auto">
         <div v-if="filteredCourses.length > 0" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <CourseCard

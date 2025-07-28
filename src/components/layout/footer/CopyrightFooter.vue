@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import { useFooterData } from '@/hooks/layout/useFooterData'
+import { useLanguage } from '@/composables/useLanguage'
 
-const { currentYear, t } = useFooterData()
+// Access translation system for footer content
+const { t } = useLanguage()
+
+// Copyright configuration - centralized for easy annual updates
+const currentYear = new Date().getFullYear()
 </script>
 
 <template>

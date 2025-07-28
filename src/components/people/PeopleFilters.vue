@@ -5,7 +5,6 @@ import Card from '@/ui/Card.vue'
 interface Props {
   searchQuery: string
   selectedDomain: string
-  selectedStatus: string
   resultsCount: number
   availableDomains: string[]
 }
@@ -13,7 +12,6 @@ interface Props {
 interface Emits {
   (e: 'update:searchQuery', value: string): void
   (e: 'update:selectedDomain', value: string): void
-  (e: 'update:selectedStatus', value: string): void
 }
 
 const props = defineProps<Props>()
@@ -30,7 +28,7 @@ const getResultsText = (count: number) => {
 
 <template>
   <Card>
-    <div class="flex flex-col lg:flex-row gap-4 items-end">
+    <div class="flex flex-col md:flex-row gap-4 items-end">
       <!-- Search Bar -->
       <div class="flex-1">
         <label for="search" class="block text-sm font-medium text-gray-700 mb-2">
@@ -55,7 +53,7 @@ const getResultsText = (count: number) => {
       </div>
 
       <!-- Domain Filter -->
-      <div class="w-full lg:w-64">
+      <div class="w-full md:w-64">
         <label for="domain-filter" class="block text-sm font-medium text-gray-700 mb-2">
           {{ t.person.search.domainLabel }}
         </label>
@@ -73,23 +71,6 @@ const getResultsText = (count: number) => {
           >
             {{ domain }}
           </option>
-        </select>
-      </div>
-
-      <!-- Status Filter -->
-      <div class="w-full lg:w-48">
-        <label for="status-filter" class="block text-sm font-medium text-gray-700 mb-2">
-          {{ t.person.search.statusLabel }}
-        </label>
-        <select 
-          id="status-filter" 
-          :value="selectedStatus"
-          @change="$emit('update:selectedStatus', ($event.target as HTMLSelectElement).value)"
-          class="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] hover:cursor-pointer"
-        >
-          <option value="">{{ t.person.search.allStatuses }}</option>
-          <option value="active">{{ t.person.search.active }}</option>
-          <option value="inactive">{{ t.person.search.alumni }}</option>
         </select>
       </div>
     </div>

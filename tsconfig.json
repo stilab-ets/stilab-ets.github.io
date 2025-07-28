@@ -74,9 +74,6 @@
       ],
       "@/middleware/*": [
         "./src/middleware/*"
-      ],
-      "@/hooks/*": [
-        "./src/hooks/*"
       ]
     },
     /* Vue specific */

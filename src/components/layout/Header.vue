@@ -1,16 +1,23 @@
 <script setup lang="ts">
+import { ref, watch } from 'vue'
 import LogoButton from './header/LogoButton.vue'
 import NavItems from './header/NavItems.vue'
 import MobileMenuToggle from './header/MobileMenuToggle.vue'
 import LanguageToggle from './header/LanguageToggle.vue'
 import UserProfile from './header/UserProfile.vue'
-import { useNavigation, useMobileNavigation } from '@/hooks/layout/useNavigation'
-import type { User } from '@/services/AuthAPI'
 
 interface LocalizedNavItem {
   id: string
   label: string
   icon: string
+}
+
+interface User {
+  id: string
+  name: string
+  email: string
+  avatar?: string
+  role: string
 }
 
 const props = defineProps<{
@@ -26,13 +33,26 @@ const emit = defineEmits<{
   (e: 'userLogout'): void
 }>()
 
-const { navigateToPage } = useNavigation()
-const { mobileMenuOpen, toggleMobileMenu } = useMobileNavigation()
+// Internal reactive state for current page
+const internalCurrentPage = ref(props.currentPage)
+const mobileMenuOpen = ref(false)
+
+// Watch for prop changes and update internal state
+watch(() => props.currentPage, (newPage) => {
+  internalCurrentPage.value = newPage
+}, { immediate: true })
 
 const setCurrentPage = (page: string) => {
-  navigateToPage(page)
+  // Update internal state immediately for responsive UI
+  internalCurrentPage.value = page
+  // Emit to parent
   emit('setCurrentPage', page)
+  // Close mobile menu
   mobileMenuOpen.value = false
+}
+
+const toggleMobileMenu = () => {
+  mobileMenuOpen.value = !mobileMenuOpen.value
 }
 
 const handleLanguageChange = (language: string) => {
@@ -63,7 +83,7 @@ const handleUserLogout = () => {
         <div class="flex">
           <NavItems
             :items="navigationItems"
-            :currentPage="currentPage"
+            :currentPage="internalCurrentPage"
             @navigate="setCurrentPage"
           />
         </div>
@@ -109,7 +129,7 @@ const handleUserLogout = () => {
       <!-- Navigation Items -->
       <NavItems
         :items="navigationItems"
-        :currentPage="currentPage"
+        :currentPage="internalCurrentPage"
         isMobile
         @navigate="setCurrentPage"
       />
