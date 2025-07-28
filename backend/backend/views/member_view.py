@@ -13,6 +13,7 @@ from ..serializers.delete_serializer import (
 from ..serializers.member_serializer import (
     CreateMemberSerializer,
     MemberSerializer,
+    UpdateMemberSerializer,
 )
 
 
@@ -45,6 +46,27 @@ class MemberView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @swagger_auto_schema(
+        operation_id="Member Update (Admin)",
+        operation_description="Update a member",
+        request_body=UpdateMemberSerializer,
+        responses={200: MemberSerializer},
+        tags=["Member"],
+    )
+    def put(self, request):
+        member_id = request.data.get("id")
+        if not member_id:
+            return Response(
+                {"error": "Missing 'id' of the member in request body."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        member = get_object_or_404(Member, id=member_id)
+        serializer = MemberSerializer(member, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(
