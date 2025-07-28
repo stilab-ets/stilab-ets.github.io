@@ -1,15 +1,24 @@
 from django.shortcuts import get_list_or_404, get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
+from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from ..models.course import Course
 from ..serializers.course_serializer import CourseSerializer
-from ..serializers.delete_serializer import DeleteSerializer
+from ..serializers.delete_serializer import (
+    DeleteRequestSerializer,
+    DeleteResponseSerializer,
+)
 
 
 class CoursesView(APIView):
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [AllowAny()]
+        return [IsAdminUser()]
+
     @swagger_auto_schema(
         operation_id="Get Courses",
         operation_description="Retrieves a list of all courses",
@@ -22,8 +31,9 @@ class CoursesView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
-        operation_id="Create Courses",
+        operation_id="Create Courses (Admin)",
         operation_description="Creates a new course",
+        request_body=CourseSerializer,
         responses={201: CourseSerializer},
         tags=["Courses"],
     )
@@ -43,8 +53,9 @@ class CoursesView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(
-        operation_id="Update Courses",
+        operation_id="Update Courses (Admin)",
         operation_description="Updates a course",
+        request_body=CourseSerializer,
         responses={200: CourseSerializer},
         tags=["Courses"],
     )
@@ -66,9 +77,10 @@ class CoursesView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(
-        operation_id="Delete courses",
+        operation_id="Delete courses (Admin)",
         operation_description="Deletes a course",
-        responses={204: DeleteSerializer},
+        request_body=DeleteRequestSerializer,
+        responses={204: DeleteResponseSerializer},
         tags=["Courses"],
     )
     def delete(self, request):

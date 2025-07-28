@@ -31,7 +31,6 @@ Admin --> CU06
 Admin --> CU07
 
 ' Membre use cases
-Membre --> CU03
 Membre --> CU05
 Membre --> CU06
 Membre --> CU07

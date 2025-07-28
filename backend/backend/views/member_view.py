@@ -6,7 +6,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from ..models.member import Member
-from ..serializers.delete_serializer import DeleteSerializer
+from ..serializers.delete_serializer import (
+    DeleteRequestSerializer,
+    DeleteResponseSerializer,
+)
 from ..serializers.member_serializer import (
     CreateMemberSerializer,
     MemberSerializer,
@@ -26,14 +29,15 @@ class MemberView(APIView):
         tags=["Member"],
     )
     def get(self, request):
-        members = Member.objects.all()
+        members = Member.objects.filter(user__isnull=True) | Member.objects.filter(user__is_active=True)
         serializer = MemberSerializer(members, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
-        operation_id="Create Member",
+        operation_id="Create Member (Admin)",
         operation_description="Creates a new member",
-        responses={201: CreateMemberSerializer},
+        request_body=CreateMemberSerializer,
+        responses={201: MemberSerializer},
         tags=["Member"],
     )
     def post(self, request):
@@ -44,9 +48,10 @@ class MemberView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(
-        operation_id="Delete member",
+        operation_id="Delete member (Admin)",
         operation_description="Deletes a member",
-        responses={204: DeleteSerializer},
+        request_body=DeleteRequestSerializer,
+        responses={204: DeleteResponseSerializer, 200: DeleteResponseSerializer},
         tags=["Member"],
     )
     def delete(self, request):
@@ -58,5 +63,10 @@ class MemberView(APIView):
             )
 
         member = get_object_or_404(Member, id=member_id)
-        member.delete()
-        return Response({"status": "deleted"}, status=status.HTTP_204_NO_CONTENT)
+        if member.user:
+            member.user.is_active = False
+            member.user.save()
+            return Response({"status": "deactivated"}, status=status.HTTP_200_OK)
+        else:
+            member.delete()
+            return Response({"status": "deleted"}, status=status.HTTP_204_NO_CONTENT)
