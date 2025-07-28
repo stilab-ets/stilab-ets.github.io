@@ -33,6 +33,12 @@ export interface AuthTranslations {
       security: string
     }
     form: {
+      firstNamePlaceholder: string | undefined
+      lastNamePlaceholder: string | undefined
+      emailPlaceholder: string | undefined
+      roles: any
+      passwordPlaceholder: string | undefined
+      confirmPasswordPlaceholder: string | undefined
       firstName: string
       lastName: string
       email: string

@@ -40,23 +40,31 @@ onMounted(() => {
   fetchAwards()
 })
 
-// Filtered awards logic
+// Filtered awards logic with safety checks
 const filteredAwards = computed(() => {
+  if (!allAwards.value || !Array.isArray(allAwards.value)) {
+    return []
+  }
+  
   return allAwards.value.filter(award => {
+    // Ensure award exists and has required properties
+    if (!award) return false
+    
     const matchesYear = !selectedYear.value || 
       (award.year && award.year.toString() === selectedYear.value) ||
-      (!award.year && new Date(award.date_received).getFullYear().toString() === selectedYear.value)
+      (!award.year && award.date_received && new Date(award.date_received).getFullYear().toString() === selectedYear.value)
     
     const matchesOrganization = !selectedOrganization.value || 
-      award.award_type === selectedOrganization.value
+      (award.award_type && award.award_type === selectedOrganization.value)
     
     const matchesMember = !selectedMember.value ||
-      (award.recipients && award.recipients.some(recipient => 
+      (award.recipients && Array.isArray(award.recipients) && award.recipients.some(recipient => 
+        recipient && recipient.member && 
         `${recipient.member.first_name} ${recipient.member.last_name}` === selectedMember.value
       ))
     
     const matchesSearch = !searchQuery.value ||
-      award.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      (award.title && award.title.toLowerCase().includes(searchQuery.value.toLowerCase())) ||
       (award.description && award.description.toLowerCase().includes(searchQuery.value.toLowerCase())) ||
       (award.award_type && award.award_type.toLowerCase().includes(searchQuery.value.toLowerCase()))
 
@@ -64,7 +72,7 @@ const filteredAwards = computed(() => {
   })
 })
 
-// Statistics
+// Statistics with safety checks
 const statistics = computed(() => [
   {
     label: t.value.awards.statistics.totalAwards,
@@ -74,13 +82,13 @@ const statistics = computed(() => [
   },
   {
     label: t.value.awards.statistics.organizations,
-    value: uniqueOrganizations.value.length.toString(),
+    value: (uniqueOrganizations.value || []).length.toString(),
     icon: 'building',
     color: 'bg-blue-500'
   },
   {
     label: t.value.awards.statistics.awardedMembers,
-    value: awardedMembers.value.length.toString(),
+    value: (awardedMembers.value || []).length.toString(),
     icon: 'users',
     color: 'bg-green-500'
   },
@@ -92,7 +100,7 @@ const statistics = computed(() => [
   }
 ])
 
-// Filters configuration
+// Filters configuration with safety checks
 const filters = computed(() => [
   {
     id: 'year',
@@ -100,7 +108,7 @@ const filters = computed(() => [
     value: selectedYear.value,
     options: [
       { value: '', label: t.value.awards.filters.allYears },
-      ...availableYears.value.map(year => ({
+      ...(availableYears.value || []).map(year => ({
         value: year.toString(),
         label: year.toString()
       }))
@@ -112,7 +120,7 @@ const filters = computed(() => [
     value: selectedOrganization.value,
     options: [
       { value: '', label: t.value.awards.filters.allOrganizations },
-      ...uniqueOrganizations.value.map(org => ({
+      ...(uniqueOrganizations.value || []).map(org => ({
         value: org,
         label: org
       }))
@@ -124,7 +132,7 @@ const filters = computed(() => [
     value: selectedMember.value,
     options: [
       { value: '', label: t.value.awards.filters.allMembers },
-      ...awardedMembers.value.map(member => ({
+      ...(awardedMembers.value || []).map(member => ({
         value: member,
         label: member
       }))
@@ -233,7 +241,7 @@ const updateFilter = (filterId: string, value: string) => {
 
       <!-- Notable Achievements Section -->
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-        <NotableAchievements :all-awards="allAwards" />
+        <NotableAchievements :all-awards="allAwards || []" />
       </div>
     </template>
   </div>
