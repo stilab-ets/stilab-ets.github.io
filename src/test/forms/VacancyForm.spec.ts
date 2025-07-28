@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
-import VacancyForm from '@/components/forms/VacancyForm.vue'
+import VacancyForm from '@/components/vacancies/VacancyForm.vue'
 import { nextTick, ref } from 'vue'
 
 // Mock useLanguage composable with full translation structure

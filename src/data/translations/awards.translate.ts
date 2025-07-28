@@ -49,7 +49,12 @@ export interface AwardsTranslations {
   }
 }
 
-export const awardsTranslations = {
+type AwardsTranslationDict = {
+  fr: AwardsTranslations;
+  en: AwardsTranslations;
+};
+
+export const awardsTranslations: AwardsTranslationDict = {
   fr: {
     pageTitle: 'Prix & Distinctions',
     pageSubtitle: 'Reconnaissance de l\'excellence de nos recherches et de notre équipe',
@@ -70,7 +75,7 @@ export const awardsTranslations = {
       resultsFound: 'prix trouvé',
       award: 'prix',
       awards: 'prix',
-      found: 's'
+      found: 'trouvés'
     },
     categories: {
       publication: 'Publication',
@@ -97,7 +102,8 @@ export const awardsTranslations = {
     empty: {
       title: 'Aucun prix trouvé',
       message: 'Essayez de modifier vos filtres.'
-    }
+    },
+    results: 'Résultats'
   },
   en: {
     pageTitle: 'Awards & Distinctions',
@@ -119,7 +125,7 @@ export const awardsTranslations = {
       resultsFound: 'award found',
       award: 'award',
       awards: 'awards',
-      found: ''
+      found: 'found'
     },
     categories: {
       publication: 'Publication',
@@ -146,6 +152,7 @@ export const awardsTranslations = {
     empty: {
       title: 'No awards found',
       message: 'Try modifying your filters.'
-    }
+    },
+    results: 'Results'
   }
 } as const

@@ -10,7 +10,12 @@ export interface CommonTranslations {
   retry: string
 }
 
-export const commonTranslations = {
+type CommonTranslationDict = {
+  fr: CommonTranslations;
+  en: CommonTranslations;
+};
+
+export const commonTranslations: CommonTranslationDict = {
   fr: {
     loading: 'Chargement...',
     error: 'Une erreur est survenue',

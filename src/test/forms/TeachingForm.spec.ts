@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
-import TeachingForm from '@/components/forms/TeachingForm.vue'
+import TeachingForm from '@/components/teaching/TeachingForm.vue'
 import { nextTick, ref } from 'vue'
 
 vi.mock('@/composables/useLanguage', () => ({

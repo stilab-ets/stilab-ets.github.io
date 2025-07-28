@@ -80,7 +80,12 @@ export interface AuthTranslations {
   }
 }
 
-export const authTranslations = {
+type AuthTranslationDict = {
+  fr: AuthTranslations;
+  en: AuthTranslations;
+};
+
+export const authTranslations: AuthTranslationDict = {
   en: {
     login: {
       title: 'Sign in to your account',
@@ -132,7 +137,13 @@ export const authTranslations = {
         password: 'Password',
         confirmPassword: 'Confirm Password',
         submit: 'Create Account',
-        submitting: 'Creating account...'
+        submitting: 'Creating account...',
+        firstNamePlaceholder: 'First Name',
+        lastNamePlaceholder: 'Last Name',
+        emailPlaceholder: 'Email',
+        roles: 'Roles',
+        passwordPlaceholder: 'Password',
+        confirmPasswordPlaceholder: 'Confirm Password'
       },
       roles: {
         professor: 'PRO',
@@ -206,7 +217,13 @@ export const authTranslations = {
         password: 'Mot de passe',
         confirmPassword: 'Confirmer le mot de passe',
         submit: 'Créer le compte',
-        submitting: 'Création du compte...'
+        submitting: 'Création du compte...',
+        firstNamePlaceholder: 'Prénom',
+        lastNamePlaceholder: 'Nom',
+        emailPlaceholder: 'Email',
+        roles: 'Rôle',
+        passwordPlaceholder: 'Mot de passe',
+        confirmPasswordPlaceholder: 'Confirmer le mot de passe'
       },
       roles: {
         professor: 'PRO',
