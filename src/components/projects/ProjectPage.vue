@@ -11,8 +11,8 @@ import SearchAndFilters from '@/ui/SearchAndFilters.vue'
 import EmptyState from '@/ui/EmptyState.vue'
 
 // Projects components
-import ProjectsInfoBanner from './ProjectsInfoBanner.vue'
-import ProjectCard from './ProjectsCard.vue'
+import ProjectsInfoBanner from './ProjectInfoBanner.vue'
+import ProjectCard from './ProjectCard.vue'
 import InterestModal from './InterestModal.vue'
 
 const { t } = useLanguage()
