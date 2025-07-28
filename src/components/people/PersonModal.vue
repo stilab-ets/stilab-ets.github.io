@@ -56,13 +56,6 @@ const getStatusLabel = (isActive: boolean) => {
               {{ getStatusLabel(member.is_active) }}
             </p>
             <div class="flex items-center mt-2 space-x-4">
-              <a
-                v-if="member.email"
-                :href="`mailto:${member.email}`"
-                class="text-[#08a4d4] hover:underline"
-              >
-                {{ member.email }}
-              </a>
               <span class="text-gray-600 text-sm">
                 Joined {{ formatJoinDate(member.joined_date) }}
               </span>

@@ -10,8 +10,6 @@ interface AwardRecipient {
     first_name: string
     last_name: string
     role: string
-    email: string | null
-    phone?: string | null
     biography?: string | null
     research_domain?: string | null
     image_url?: string | null
