@@ -1,20 +1,23 @@
 from django.shortcuts import get_list_or_404, get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from ..models.award import Award
 from ..serializers.award_serializer import AwardSerializer
-from ..serializers.delete_serializer import DeleteSerializer
+from ..serializers.delete_serializer import (
+    DeleteRequestSerializer,
+    DeleteResponseSerializer,
+)
 
 
 class AwardsView(APIView):
     def get_permissions(self):
         if self.request.method == "GET":
             return [AllowAny()]
-        return [IsAuthenticated()]
+        return [IsAdminUser()]
 
     @swagger_auto_schema(
         operation_id="Get Awards",
@@ -28,8 +31,9 @@ class AwardsView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
-        operation_id="Create Awards",
+        operation_id="Create Awards (Admin)",
         operation_description="Creates a new award",
+        request_body=AwardSerializer,
         responses={201: AwardSerializer},
         tags=["Awards"],
     )
@@ -49,8 +53,9 @@ class AwardsView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(
-        operation_id="Update Awards",
+        operation_id="Update Awards (Admin)",
         operation_description="Updates an award",
+        request_body=AwardSerializer,
         responses={200: AwardSerializer},
         tags=["Awards"],
     )
@@ -72,9 +77,10 @@ class AwardsView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(
-        operation_id="Delete awards",
+        operation_id="Delete awards (Admin)",
         operation_description="Deletes an award",
-        responses={204: DeleteSerializer},
+        request_body=DeleteRequestSerializer,
+        responses={204: DeleteResponseSerializer},
         tags=["Awards"],
     )
     def delete(self, request):

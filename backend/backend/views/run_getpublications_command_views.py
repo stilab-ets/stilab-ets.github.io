@@ -27,7 +27,7 @@ class RunGetPublicationsCommandAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
-        operation_id="Get Publication Command",
+        operation_id="Get Publication Command (Member)",
         operation_description="Runs the `getpublications` Admin command. Authentication required (Bearer Token)",
         responses={
             202: GetPublicationsCommandSerializer,

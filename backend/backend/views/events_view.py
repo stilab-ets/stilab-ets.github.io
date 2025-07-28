@@ -1,21 +1,23 @@
 from django.shortcuts import get_list_or_404, get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from ..models.event import Event
-from ..serializers.delete_serializer import DeleteSerializer
+from ..serializers.delete_serializer import (
+    DeleteRequestSerializer,
+    DeleteResponseSerializer,
+)
 from ..serializers.event_serializer import EventSerializer
 
 
 class EventsView(APIView):
-
     def get_permissions(self):
         if self.request.method == "GET":
             return [AllowAny()]
-        return [IsAuthenticated()]
+        return [IsAdminUser()]
 
     @swagger_auto_schema(
         operation_id="Get Events",
@@ -29,8 +31,9 @@ class EventsView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
-        operation_id="Create Events",
+        operation_id="Create Events (Admin)",
         operation_description="Creates a new event",
+        request_body=EventSerializer,
         responses={201: EventSerializer},
         tags=["Events"],
     )
@@ -50,8 +53,9 @@ class EventsView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(
-        operation_id="Update Events",
+        operation_id="Update Events (Admin)",
         operation_description="Updates an event",
+        request_body=EventSerializer,
         responses={200: EventSerializer},
         tags=["Events"],
     )
@@ -73,9 +77,10 @@ class EventsView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(
-        operation_id="Delete events",
+        operation_id="Delete events (Admin)",
         operation_description="Deletes an event",
-        responses={204: DeleteSerializer},
+        request_body=DeleteRequestSerializer,
+        responses={204: DeleteResponseSerializer},
         tags=["Events"],
     )
     def delete(self, request):

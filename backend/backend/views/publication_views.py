@@ -1,21 +1,23 @@
 from django.shortcuts import get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from ..models.publication import Publication
-from ..serializers.delete_serializer import DeleteSerializer
+from ..serializers.delete_serializer import (
+    DeleteRequestSerializer,
+    DeleteResponseSerializer,
+)
 from ..serializers.publication_serializer import PublicationSerializer
 
 
 class PublicationListAPI(APIView):
-
     def get_permissions(self):
         if self.request.method == "GET":
             return [AllowAny()]
-        return [IsAuthenticated()]
+        return [IsAdminUser()]
 
     @swagger_auto_schema(
         operation_id="Get Publications",
@@ -29,8 +31,9 @@ class PublicationListAPI(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
-        operation_id="Create Publication",
+        operation_id="Create Publication (Admin)",
         operation_description="Creates a new publication",
+        request_body=PublicationSerializer,
         responses={201: PublicationSerializer},
         tags=["Publication"],
     )
@@ -50,8 +53,9 @@ class PublicationListAPI(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(
-        operation_id="Update Publication",
+        operation_id="Update Publication (Admin)",
         operation_description="Update a publication",
+        request_body=PublicationSerializer,
         responses={200: PublicationSerializer},
         tags=["Publication"],
     )
@@ -73,9 +77,10 @@ class PublicationListAPI(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(
-        operation_id="Delete Publication",
+        operation_id="Delete Publication (Admin)",
         operation_description="Deletes a publication",
-        responses={204: DeleteSerializer},
+        request_body=DeleteRequestSerializer,
+        responses={204: DeleteResponseSerializer},
         tags=["Publication"],
     )
     def delete(self, request):

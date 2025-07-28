@@ -13,7 +13,7 @@ class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
-        operation_id="Get Profile",
+        operation_id="Get Profile (Member)",
         operation_description="Get the profile information of the authenticated user",
         responses={200: MemberSerializer},
         tags=["Profile"],
@@ -24,7 +24,7 @@ class ProfileView(APIView):
         return Response(serializer.data)
 
     @swagger_auto_schema(
-        operation_id="Partial Profile Update",
+        operation_id="Partial Profile Update (Member)",
         operation_description="Partial profile update of the authenticated user",
         request_body=ProfileUpdateSerializer,
         responses={200: MemberSerializer},
@@ -34,7 +34,7 @@ class ProfileView(APIView):
         return self.patch(request)
 
     @swagger_auto_schema(
-        operation_id="Partial Profile Update",
+        operation_id="Partial Profile Update (Member)",
         operation_description="Partial profile update of the authenticated user",
         request_body=ProfileUpdateSerializer,
         responses={200: MemberSerializer},

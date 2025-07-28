@@ -1,13 +1,16 @@
 from django.shortcuts import get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from ..models.member import Member
 from ..models.research_project import ResearchProject
-from ..serializers.delete_serializer import DeleteSerializer
+from ..serializers.delete_serializer import (
+    DeleteRequestSerializer,
+    DeleteResponseSerializer,
+)
 from ..serializers.research_serializer import ResearchSerializer
 
 
@@ -15,7 +18,7 @@ class ResearchAPI(APIView):
     def get_permissions(self):
         if self.request.method == "GET":
             return [AllowAny()]
-        return [IsAuthenticated()]
+        return [IsAdminUser()]
 
     @swagger_auto_schema(
         operation_id="Get Research Projects",
@@ -29,8 +32,9 @@ class ResearchAPI(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
-        operation_id="Create Research Projects",
+        operation_id="Create Research Projects (Admin)",
         operation_description="Creates a new research projects. Authentication required",
+        request_body=ResearchSerializer,
         responses={200: ResearchSerializer},
         tags=["Research"],
     )
@@ -43,8 +47,9 @@ class ResearchAPI(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(
-        operation_id="Update Research",
+        operation_id="Update Research (Admin)",
         operation_description="Update a research",
+        request_body=ResearchSerializer,
         responses={200: ResearchSerializer},
         tags=["Research"],
     )
@@ -66,9 +71,10 @@ class ResearchAPI(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(
-        operation_id="Delete research",
+        operation_id="Delete research (Admin)",
         operation_description="Deletes a research",
-        responses={204: DeleteSerializer},
+        request_body=DeleteRequestSerializer,
+        responses={204: DeleteResponseSerializer},
         tags=["Research"],
     )
     def delete(self, request):

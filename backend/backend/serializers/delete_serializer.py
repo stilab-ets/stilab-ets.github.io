@@ -1,5 +1,9 @@
 from rest_framework import serializers
 
 
-class DeleteSerializer(serializers.Serializer):
+class DeleteRequestSerializer(serializers.Serializer):
     id = serializers.UUIDField()
+
+
+class DeleteResponseSerializer(serializers.Serializer):
+    status = serializers.CharField()
