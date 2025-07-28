@@ -162,7 +162,7 @@ export interface Vacancy {
 export class MainAPI extends BaseAPI {
   // Publications
   async getPublications(): Promise<ApiResponse<Publication[]>> {
-    return this.get<Publication[]>('/api/publications');
+    return this.get<Publication[]>('/api/publications/');
   }
 
   async getPublication(id: string): Promise<ApiResponse<Publication>> {
@@ -170,7 +170,7 @@ export class MainAPI extends BaseAPI {
   }
 
   async createPublication(data: Partial<Publication>): Promise<ApiResponse<Publication>> {
-    return this.post<Publication>('/api/publications', data);
+    return this.post<Publication>('/api/publications/', data);
   }
 
   async updatePublication(id: string, data: Partial<Publication>): Promise<ApiResponse<Publication>> {
