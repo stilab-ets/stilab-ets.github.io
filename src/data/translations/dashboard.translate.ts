@@ -1,4 +1,3 @@
-// src/data/translations/dashboard.translate.ts
 export interface DashboardTranslations {
   admin: {
     title: string
@@ -156,7 +155,12 @@ export interface DashboardTranslations {
   }
 }
 
-export const dashboardTranslations = {
+type DashboardTranslationDict = {
+  fr: DashboardTranslations;
+  en: DashboardTranslations;
+};
+
+export const dashboardTranslations: DashboardTranslationDict = {
   en: {
     admin: {
       title: 'Admin Dashboard',
@@ -233,7 +237,8 @@ export const dashboardTranslations = {
       stats: {
         publications: 'Publications',
         activeProjects: 'Active Projects',
-        students: 'Students'
+        students: 'Students',
+        upcomingEvents: "Upcoming Events"
       },
       overview: {
         recentPublications: 'Recent Publications',
@@ -331,8 +336,7 @@ export const dashboardTranslations = {
         systemSettings: 'Paramètres système',
         systemSettingsDesc: 'Configurer les paramètres du laboratoire',
         viewReports: 'Voir les rapports',
-        viewReportsDesc: 'Accéder aux analyses et rapports',
-        quickActions: 'Actions rapides'
+        viewReportsDesc: 'Accéder aux analyses et rapports'
       },
       stats: {
         totalUsers: 'Total des utilisateurs',
@@ -428,7 +432,8 @@ export const dashboardTranslations = {
         viewCourses: 'Voir les cours',
         viewCoursesDesc: 'Vérifier vos cours inscrits',
         updateProfile: 'Mettre à jour le profil',
-        updateProfileDesc: 'Gérer les paramètres de votre compte'
+        updateProfileDesc: 'Gérer les paramètres de votre compte',
+        quickActions: ""
       },
       stats: {
         enrolledProjects: 'Projets inscrits',

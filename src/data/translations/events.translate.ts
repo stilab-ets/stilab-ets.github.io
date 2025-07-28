@@ -49,7 +49,12 @@ export interface EventsTranslations {
   }
 }
 
-export const eventsTranslations = {
+type EventsTranslationDict = {
+  fr: EventsTranslations;
+  en: EventsTranslations;
+};
+
+export const eventsTranslations: EventsTranslationDict = {
   fr: {
     pageTitle: 'Événements & Actualités',
     pageSubtitle: 'Découvrez nos séminaires, workshops, soutenances et événements du laboratoire',
@@ -64,7 +69,9 @@ export const eventsTranslations = {
       period: 'Période',
       all: 'Tous',
       upcoming: 'À venir',
-      past: 'Passés'
+      past: 'Passés',
+      view: 'Vue',
+      type: 'Type'
     },
     eventTypes: {
       seminar: 'Séminaires',
@@ -82,7 +89,8 @@ export const eventsTranslations = {
       limitedSeats: 'Places limitées',
       register: 'S\'inscrire',
       full: 'Complet',
-      capacity: 'Capacité'
+      capacity: 'Capacité',
+      capacityFull: undefined
     },
     sections: {
       upcomingEvents: 'Événements à venir',
@@ -93,7 +101,9 @@ export const eventsTranslations = {
       noUpcomingMessage: 'Consultez nos événements passés ou revenez plus tard.',
       noPast: 'Aucun événement passé trouvé',
       noPastMessage: 'Essayez de modifier vos filtres.'
-    }
+    },
+    stats: 'Statistiques',
+    results: 'Résultats'
   },
   en: {
     pageTitle: 'Events & News',
@@ -109,7 +119,9 @@ export const eventsTranslations = {
       period: 'Period',
       all: 'All',
       upcoming: 'Upcoming',
-      past: 'Past'
+      past: 'Past',
+      view: undefined,
+      type: undefined
     },
     eventTypes: {
       seminar: 'Seminars',
@@ -127,7 +139,8 @@ export const eventsTranslations = {
       limitedSeats: 'Limited seats',
       register: 'Register',
       full: 'Full',
-      capacity: 'Capacity'
+      capacity: 'Capacity',
+      capacityFull: undefined
     },
     sections: {
       upcomingEvents: 'Upcoming events',
@@ -138,6 +151,8 @@ export const eventsTranslations = {
       noUpcomingMessage: 'Check our past events or come back later.',
       noPast: 'No past events found',
       noPastMessage: 'Try modifying your filters.'
-    }
+    },
+    stats: 'Statistics',
+    results: 'Results'
   }
 } as const

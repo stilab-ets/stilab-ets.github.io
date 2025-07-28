@@ -26,7 +26,12 @@ export interface HeroTranslations {
   activity: string
 }
 
-export const heroTranslations = {
+type HeroTranslationDict = {
+  fr: HeroTranslations;
+  en: HeroTranslations;
+};
+
+export const heroTranslations: HeroTranslationDict = {
   fr: {
     title: {
       line1: 'Innovation en',

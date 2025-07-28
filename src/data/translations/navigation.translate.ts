@@ -10,7 +10,12 @@ export interface NavigationTranslations {
   awards: string
 }
 
-export const navigationTranslations = {
+type NavigationTranslationDict = {
+  fr: NavigationTranslations;
+  en: NavigationTranslations;
+};
+
+export const navigationTranslations: NavigationTranslationDict = {
   fr: {
     home: 'Accueil',
     people: 'Équipe', 
