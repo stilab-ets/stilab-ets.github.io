@@ -71,3 +71,19 @@ class ResearchSerializer(serializers.ModelSerializer):
                 member = Member.objects.get(id=member_data["id"])
                 ProjectParticipant.objects.create(project=project, member=member)
         return project
+
+    def update(self, instance, validated_data):
+        members_data = validated_data.pop("participants", None)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        with transaction.atomic():
+            instance.save()
+
+            if members_data is not None:
+                ProjectParticipant.objects.filter(project=instance).delete()
+
+                for member_data in members_data:
+                    member = Member.objects.get(id=member_data["id"])
+                    ProjectParticipant.objects.create(project=instance, member=member)
+
+        return instance

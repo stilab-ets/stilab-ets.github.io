@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Publication Approval Needed</title>
+</head>
+
+<body>
+    <p>The following publications have been created or updated and require your approval:</p>
+
+    <ul>
+        {% for publication in publications_changed %}
+        <li>
+            <a href="{{ backend_url }}{{ publication.id }}/change/">
+                {{ publication.title }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+
+</html>

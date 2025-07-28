@@ -49,6 +49,8 @@ class LoginView(APIView):
                 "user": user,
             }
             response_serializer = LoginResponseSerializer(response_data)
-            return Response(response_serializer.data)
+            response = Response(response_serializer.data)
+            response.headers["Authorization"] = refresh.access_token
+            return response
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
