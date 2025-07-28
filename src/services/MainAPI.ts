@@ -1,78 +1,115 @@
 import { BaseAPI, type ApiResponse, type PaginatedResponse } from './BaseAPI';
 
-export interface Publication {
+// User interface from SwaggerDoc
+export interface User {
   id: number;
-  title: string;
-  authors: string;
-  journal?: string;
-  year: number;
-  doi?: string;
-  url?: string;
-  abstract?: string;
-  publication_type: string;
-  created_at: string;
-  updated_at: string;
+  username: string;
+  email: string;
+  first_name?: string;
+  last_name?: string;
+  is_staff: boolean;
+  is_active: boolean;
+  is_superuser: boolean;
+  last_login?: string;
+  date_joined: string;
+  groups: number[];
+  user_permissions: number[];
 }
 
+// Member interface matching SwaggerDoc
 export interface Member {
-  id: number;
+  id: string; // UUID
+  user?: User;
   first_name: string;
   last_name: string;
-  email: string;
-  position: string;
-  bio?: string;
-  research_interests?: string;
-  profile_image?: string;
-  linkedin_url?: string;
-  personal_website?: string;
-  google_scholar?: string;
-  joined_date: string;
-  is_active: boolean;
+  role?: 'PHD' | 'MSC' | 'PRO' | null;
+  email?: string | null;
+  phone?: string | null;
+  biography?: string | null;
+  research_domain?: string | null;
+  image_url?: string | null;
+  github_url?: string | null;
+  linkedin_url?: string | null;
+  personal_website?: string | null;
+  status?: string | null;
 }
 
+// Publication interface matching SwaggerDoc
+export interface Publication {
+  id: string; // UUID
+  title: string;
+  authors?: string | null;
+  journal?: string | null;
+  year?: number | null;
+  doi?: string | null;
+  url?: string | null;
+  abstract?: string | null;
+  publication_type?: string | null;
+  bibtex?: string | null;
+}
+
+// Award interface matching SwaggerDoc
 export interface Award {
-  id: number;
+  id: string; // UUID
   title: string;
-  description?: string;
-  recipient: string;
-  date_received: string;
-  organization?: string;
-  amount?: number;
-  award_type: string;
-  created_at: string;
+  description?: string | null;
+  award_type?: string | null;
+  date_received: string; // date
+  amount?: number | null;
+  url?: string | null;
+  year?: number | null;
 }
 
-export interface Research {
-  id: number;
-  title: string;
-  description: string;
-  status: string;
-  start_date: string;
-  end_date?: string;
-  funding_amount?: number;
-  funding_source?: string;
-  team_members: string[];
-  publications?: number[];
-  created_at: string;
-  updated_at: string;
-}
-
+// Course interface matching SwaggerDoc
 export interface Course {
-  id: number;
-  code: string;
+  id: string; // UUID
+  teacher?: Member;
   title: string;
-  description?: string;
-  credits: number;
-  semester: string;
-  year: number;
-  instructor: string;
-  prerequisites?: string;
-  learning_objectives?: string;
-  created_at: string;
+  code: string;
+  level?: string | null;
+  semester?: string | null;
+  description?: string | null;
 }
 
+// Event interface matching SwaggerDoc and EventCard expectations
+export interface Event {
+  id: string; // UUID
+  title: string;
+  domain: string; // readOnly from API
+  description?: string | null;
+  date?: string | null; // date
+  participants: string; // readOnly
+  location?: string | null;
+  time?: string | null;
+  speaker?: Member;
+  // Additional fields expected by EventCard
+  type: 'seminar' | 'workshop' | 'conference' | 'defense' | 'meeting' | 'colloquium' | 'masterclass';
+  registration_url?: string | null;
+  tags: string[];
+  is_upcoming: boolean;
+  capacity?: number | null;
+  current_registrations?: number | null;
+}
+
+// Research interface matching SwaggerDoc  
+export interface Research {
+  id: string; // UUID
+  title: string;
+  start_date: string; // date
+  end_date?: string | null; // date
+  description: string;
+  project_url?: string | null;
+  github_url?: string | null;
+  participants: Participant[];
+}
+
+export interface Participant {
+  id: string; // UUID
+}
+
+// Project interface (custom for MSc projects)
 export interface Project {
-  id: number;
+  id: string;
   title: string;
   abstract: string;
   domain: string;
@@ -87,15 +124,16 @@ export interface Project {
 }
 
 export interface ProjectInterest {
-  project_id: number;
+  project_id: string;
   full_name: string;
   email: string;
   study_level: string;
   motivation: string;
 }
 
+// Vacancy interface (custom)
 export interface Vacancy {
-  id: number;
+  id: string;
   title: string;
   description: string;
   type: 'phd' | 'postdoc' | 'researcher' | 'engineer' | 'intern';
@@ -112,149 +150,151 @@ export interface Vacancy {
   updated_at: string;
 }
 
-export interface Event {
-  id: number;
-  title: string;
-  speaker?: string;
-  date: string;
-  time?: string;
-  location: string;
-  type: 'seminar' | 'workshop' | 'conference' | 'defense' | 'meeting' | 'colloquium' | 'masterclass';
-  description: string;
-  registration_url?: string;
-  tags: string[];
-  is_upcoming: boolean;
-  capacity?: number;
-  current_registrations?: number;
-  created_at: string;
-  updated_at: string;
-}
-
-
 export class MainAPI extends BaseAPI {
   // Publications
-  async getPublications(): Promise<ApiResponse<PaginatedResponse<Publication>>> {
-    return this.get<PaginatedResponse<Publication>>('/api/publications/');
+  async getPublications(): Promise<ApiResponse<Publication[]>> {
+    return this.get<Publication[]>('/api/publications');
   }
 
-  async getPublication(id: number): Promise<ApiResponse<Publication>> {
+  async getPublication(id: string): Promise<ApiResponse<Publication>> {
     return this.get<Publication>(`/api/publications/${id}/`);
   }
 
   async createPublication(data: Partial<Publication>): Promise<ApiResponse<Publication>> {
-    return this.post<Publication>('/api/publications/', data);
+    return this.post<Publication>('/api/publications', data);
   }
 
-  async updatePublication(id: number, data: Partial<Publication>): Promise<ApiResponse<Publication>> {
+  async updatePublication(id: string, data: Partial<Publication>): Promise<ApiResponse<Publication>> {
     return this.put<Publication>(`/api/publications/${id}/`, data);
   }
 
-  async deletePublication(id: number): Promise<ApiResponse<void>> {
+  async deletePublication(id: string): Promise<ApiResponse<void>> {
     return this.delete<void>(`/api/publications/${id}/`);
   }
 
   // Members
-  async getMembers(): Promise<ApiResponse<PaginatedResponse<Member>>> {
-    return this.get<PaginatedResponse<Member>>('/api/members/');
+  async getMembers(): Promise<ApiResponse<Member[]>> {
+    return this.get<Member[]>('/api/members');
   }
 
-  async getMember(id: number): Promise<ApiResponse<Member>> {
+  async getMember(id: string): Promise<ApiResponse<Member>> {
     return this.get<Member>(`/api/members/${id}/`);
   }
 
   async createMember(data: Partial<Member>): Promise<ApiResponse<Member>> {
-    return this.post<Member>('/api/members/', data);
+    return this.post<Member>('/api/members', data);
   }
 
-  async updateMember(id: number, data: Partial<Member>): Promise<ApiResponse<Member>> {
+  async updateMember(id: string, data: Partial<Member>): Promise<ApiResponse<Member>> {
     return this.put<Member>(`/api/members/${id}/`, data);
   }
 
-  async deleteMember(id: number): Promise<ApiResponse<void>> {
+  async deleteMember(id: string): Promise<ApiResponse<void>> {
     return this.delete<void>(`/api/members/${id}/`);
   }
 
   // Awards
-  async getAwards(): Promise<ApiResponse<PaginatedResponse<Award>>> {
-    return this.get<PaginatedResponse<Award>>('/api/awards/');
+  async getAwards(): Promise<ApiResponse<Award[]>> {
+    return this.get<Award[]>('/api/awards');
   }
 
-  async getAward(id: number): Promise<ApiResponse<Award>> {
+  async getAward(id: string): Promise<ApiResponse<Award>> {
     return this.get<Award>(`/api/awards/${id}/`);
   }
 
   async createAward(data: Partial<Award>): Promise<ApiResponse<Award>> {
-    return this.post<Award>('/api/awards/', data);
+    return this.post<Award>('/api/awards', data);
   }
 
-  async updateAward(id: number, data: Partial<Award>): Promise<ApiResponse<Award>> {
+  async updateAward(id: string, data: Partial<Award>): Promise<ApiResponse<Award>> {
     return this.put<Award>(`/api/awards/${id}/`, data);
   }
 
-  async deleteAward(id: number): Promise<ApiResponse<void>> {
+  async deleteAward(id: string): Promise<ApiResponse<void>> {
     return this.delete<void>(`/api/awards/${id}/`);
   }
 
   // Research
-  async getResearch(): Promise<ApiResponse<PaginatedResponse<Research>>> {
-    return this.get<PaginatedResponse<Research>>('/api/research/');
+  async getResearch(): Promise<ApiResponse<Research[]>> {
+    return this.get<Research[]>('/api/research');
   }
 
-  async getResearchProject(id: number): Promise<ApiResponse<Research>> {
+  async getResearchProject(id: string): Promise<ApiResponse<Research>> {
     return this.get<Research>(`/api/research/${id}/`);
   }
 
   async createResearch(data: Partial<Research>): Promise<ApiResponse<Research>> {
-    return this.post<Research>('/api/research/', data);
+    return this.post<Research>('/api/research', data);
   }
 
-  async updateResearch(id: number, data: Partial<Research>): Promise<ApiResponse<Research>> {
+  async updateResearch(id: string, data: Partial<Research>): Promise<ApiResponse<Research>> {
     return this.put<Research>(`/api/research/${id}/`, data);
   }
 
-  async deleteResearch(id: number): Promise<ApiResponse<void>> {
+  async deleteResearch(id: string): Promise<ApiResponse<void>> {
     return this.delete<void>(`/api/research/${id}/`);
   }
 
   // Courses
-  async getCourses(): Promise<ApiResponse<PaginatedResponse<Course>>> {
-    return this.get<PaginatedResponse<Course>>('/api/courses/');
+  async getCourses(): Promise<ApiResponse<Course[]>> {
+    return this.get<Course[]>('/api/courses');
   }
 
-  async getCourse(id: number): Promise<ApiResponse<Course>> {
+  async getCourse(id: string): Promise<ApiResponse<Course>> {
     return this.get<Course>(`/api/courses/${id}/`);
   }
 
   async createCourse(data: Partial<Course>): Promise<ApiResponse<Course>> {
-    return this.post<Course>('/api/courses/', data);
+    return this.post<Course>('/api/courses', data);
   }
 
-  async updateCourse(id: number, data: Partial<Course>): Promise<ApiResponse<Course>> {
+  async updateCourse(id: string, data: Partial<Course>): Promise<ApiResponse<Course>> {
     return this.put<Course>(`/api/courses/${id}/`, data);
   }
 
-  async deleteCourse(id: number): Promise<ApiResponse<void>> {
+  async deleteCourse(id: string): Promise<ApiResponse<void>> {
     return this.delete<void>(`/api/courses/${id}/`);
   }
 
-  // Projects
-  async getProjects(): Promise<ApiResponse<PaginatedResponse<Project>>> {
-    return this.get<PaginatedResponse<Project>>('/api/projects/');
+  // Events
+  async getEvents(): Promise<ApiResponse<Event[]>> {
+    return this.get<Event[]>('/api/events');
   }
 
-  async getProject(id: number): Promise<ApiResponse<Project>> {
+  async getEvent(id: string): Promise<ApiResponse<Event>> {
+    return this.get<Event>(`/api/events/${id}/`);
+  }
+
+  async createEvent(data: Partial<Event>): Promise<ApiResponse<Event>> {
+    return this.post<Event>('/api/events', data);
+  }
+
+  async updateEvent(id: string, data: Partial<Event>): Promise<ApiResponse<Event>> {
+    return this.put<Event>(`/api/events/${id}/`, data);
+  }
+
+  async deleteEvent(id: string): Promise<ApiResponse<void>> {
+    return this.delete<void>(`/api/events/${id}/`);
+  }
+
+  // Projects (custom endpoints)
+  async getProjects(): Promise<ApiResponse<Project[]>> {
+    return this.get<Project[]>('/api/projects');
+  }
+
+  async getProject(id: string): Promise<ApiResponse<Project>> {
     return this.get<Project>(`/api/projects/${id}/`);
   }
 
   async createProject(data: Partial<Project>): Promise<ApiResponse<Project>> {
-    return this.post<Project>('/api/projects/', data);
+    return this.post<Project>('/api/projects', data);
   }
 
-  async updateProject(id: number, data: Partial<Project>): Promise<ApiResponse<Project>> {
+  async updateProject(id: string, data: Partial<Project>): Promise<ApiResponse<Project>> {
     return this.put<Project>(`/api/projects/${id}/`, data);
   }
 
-  async deleteProject(id: number): Promise<ApiResponse<void>> {
+  async deleteProject(id: string): Promise<ApiResponse<void>> {
     return this.delete<void>(`/api/projects/${id}/`);
   }
 
@@ -262,51 +302,30 @@ export class MainAPI extends BaseAPI {
     return this.post<{ message: string }>('/api/project-interest/', data);
   }
 
-    // Vacancies
-  async getVacancies(): Promise<ApiResponse<PaginatedResponse<Vacancy>>> {
-    return this.get<PaginatedResponse<Vacancy>>('/api/vacancies/');
+  // Vacancies (custom endpoints)
+  async getVacancies(): Promise<ApiResponse<Vacancy[]>> {
+    return this.get<Vacancy[]>('/api/vacancies');
   }
 
-  async getVacancy(id: number): Promise<ApiResponse<Vacancy>> {
+  async getVacancy(id: string): Promise<ApiResponse<Vacancy>> {
     return this.get<Vacancy>(`/api/vacancies/${id}/`);
   }
 
   async createVacancy(data: Partial<Vacancy>): Promise<ApiResponse<Vacancy>> {
-    return this.post<Vacancy>('/api/vacancies/', data);
+    return this.post<Vacancy>('/api/vacancies', data);
   }
 
-  async updateVacancy(id: number, data: Partial<Vacancy>): Promise<ApiResponse<Vacancy>> {
+  async updateVacancy(id: string, data: Partial<Vacancy>): Promise<ApiResponse<Vacancy>> {
     return this.put<Vacancy>(`/api/vacancies/${id}/`, data);
   }
 
-  async deleteVacancy(id: number): Promise<ApiResponse<void>> {
+  async deleteVacancy(id: string): Promise<ApiResponse<void>> {
     return this.delete<void>(`/api/vacancies/${id}/`);
   }
 
   // Admin command - Run get publications
   async runGetPublicationsCommand(): Promise<ApiResponse<{ message: string }>> {
     return this.post<{ message: string }>('/api/run-getpublications-command/');
-  }
-
-  // Events
-  async getEvents(): Promise<ApiResponse<PaginatedResponse<Event>>> {
-    return this.get<PaginatedResponse<Event>>('/api/events/');
-  }
-
-  async getEvent(id: number): Promise<ApiResponse<Event>> {
-    return this.get<Event>(`/api/events/${id}/`);
-  }
-
-  async createEvent(data: Partial<Event>): Promise<ApiResponse<Event>> {
-    return this.post<Event>('/api/events/', data);
-  }
-
-  async updateEvent(id: number, data: Partial<Event>): Promise<ApiResponse<Event>> {
-    return this.put<Event>(`/api/events/${id}/`, data);
-  }
-
-  async deleteEvent(id: number): Promise<ApiResponse<void>> {
-    return this.delete<void>(`/api/events/${id}/`);
   }
 }
 

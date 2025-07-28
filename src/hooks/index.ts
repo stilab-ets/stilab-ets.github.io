@@ -1,3 +1,4 @@
+// src/hooks/index.ts
 // Layout hooks
 export { useMobileNavigation } from './layout/useNavigation'
 export { useLanguageToggle } from './layout/useLanguageToggle'
@@ -13,13 +14,15 @@ export { useErrorHandler } from './api/useErrorHandler'
 export type { ErrorState } from './api/useErrorHandler'
 
 // Members hooks
-export * from './members'
+export { useMembers } from './members/useMembers'
+export { useMemberFilters } from './members/useMemberFilters'
 
 // Publications hooks
-export * from './publications'
+export { usePublications } from './publications/usePublications'
+export type { UsePublicationsReturn } from './publications/usePublications'
 
 // Projects hooks
-export * from './projects'
+export { useProjects } from './projects/useProjects'
 
 // Awards hooks
 export { useAwards } from './awards/useAwards'
@@ -30,6 +33,12 @@ export { useEvents } from './events/useEvents'
 export { useEventsFilters } from './events/useEventsFilters'
 export { useEventsStatistics } from './events/useEventsStatistics'
 export { useEventForm } from './events/useEventForm'
+
+// Teaching/Courses hooks
+export { useCourses } from './teaching/useCourses'
+
+// Vacancies hooks
+export { useVacancies } from './vacancies/useVacancies'
 
 // Research hooks
 export { useResearch } from './useResearch'

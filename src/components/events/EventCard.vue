@@ -43,6 +43,18 @@ const formatDate = (dateString: string): string => {
   })
 }
 
+// Format speaker name from Member object or string
+const speakerName = computed((): string => {
+  if (!props.eventData.speaker) return ''
+  
+  if (typeof props.eventData.speaker === 'string') {
+    return props.eventData.speaker
+  }
+  
+  // Speaker is Member object
+  return `${props.eventData.speaker.first_name} ${props.eventData.speaker.last_name}`
+})
+
 const isCapacityNearFull = computed((): boolean => {
   return !!(props.eventData.capacity && props.eventData.current_registrations && 
            (props.eventData.current_registrations / props.eventData.capacity) > 0.8)
@@ -87,7 +99,7 @@ const openRegistrationLink = (): void => {
           </span>
         </div>
         <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ eventData.title }}</h3>
-        <div class="flex items-center text-sm text-gray-600 space-x-4">
+        <div class="flex items-center text-sm text-gray-600 space-x-4" v-if="eventData.date">
           <div class="flex items-center">
             <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -100,7 +112,7 @@ const openRegistrationLink = (): void => {
             </svg>
             {{ eventData.time }}
           </div>
-          <div class="flex items-center">
+          <div v-if="eventData.location" class="flex items-center">
             <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -112,9 +124,9 @@ const openRegistrationLink = (): void => {
     </div>
 
     <!-- Speaker -->
-    <div v-if="eventData.speaker" class="mb-4">
+    <div v-if="speakerName" class="mb-4">
       <p class="text-sm text-gray-600">
-        <span class="font-medium">{{ t.events.eventCard.speaker }}:</span> {{ eventData.speaker }}
+        <span class="font-medium">{{ t.events.eventCard.speaker }}:</span> {{ speakerName }}
       </p>
     </div>
 
@@ -130,10 +142,10 @@ const openRegistrationLink = (): void => {
     </div>
 
     <!-- Description -->
-    <p class="text-gray-700 mb-4 leading-relaxed">{{ eventData.description }}</p>
+    <p v-if="eventData.description" class="text-gray-700 mb-4 leading-relaxed">{{ eventData.description }}</p>
 
     <!-- Tags -->
-    <div v-if="eventData.tags.length > 0" class="mb-4">
+    <div v-if="eventData.tags && eventData.tags.length > 0" class="mb-4">
       <div class="flex flex-wrap gap-2">
         <span
           v-for="tag in eventData.tags"
@@ -151,12 +163,14 @@ const openRegistrationLink = (): void => {
         :variant="isCapacityFull ? 'secondary' : 'primary'"
         :disabled="isCapacityFull"
         @click="openRegistrationLink"
-        class="hover:cursor-pointer"
+        class="w-full"
       >
-        {{ isCapacityFull ? t.events.eventCard.full : t.events.eventCard.register }}
-        <svg v-if="!isCapacityFull" class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-        </svg>
+        <template v-if="isCapacityFull">
+          {{ t.events.eventCard.capacityFull }}
+        </template>
+        <template v-else>
+          {{ t.events.eventCard.register }}
+        </template>
       </Button>
     </div>
   </Card>

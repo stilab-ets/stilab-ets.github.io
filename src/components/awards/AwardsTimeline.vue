@@ -1,29 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
-import type { Award } from '@/services/MainAPI'
-
-interface AwardRecipient {
-  id: string
-  member: {
-    first_name: string
-    last_name: string
-    role: string
-    biography?: string | null
-    research_domain?: string | null
-    image_url?: string | null
-    github_url?: string | null
-    linkedin_url?: string | null
-    personal_website?: string | null
-    status?: string | null
-  }
-}
-
-interface ExtendedAward extends Award {
-  recipients?: AwardRecipient[]
-  url?: string
-  year?: number
-}
+import { type ExtendedAward } from '@/hooks/awards/useAwards'
 
 interface Props {
   awards: ExtendedAward[]
@@ -74,7 +52,8 @@ const getRecipientName = (award: ExtendedAward): string => {
   if (award.recipients && award.recipients.length > 0) {
     return award.recipients.map(r => `${r.member.first_name} ${r.member.last_name}`).join(', ')
   }
-  return award.recipient || 'Unknown'
+  // Award interface doesn't have recipient field, but let's handle it gracefully
+  return 'Unknown'
 }
 
 const getAwardYear = (award: ExtendedAward): number => {
@@ -125,7 +104,7 @@ const getAwardYear = (award: ExtendedAward): number => {
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-5 0H3m2 0h4M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                 </svg>
-                <span class="text-sm text-gray-600">{{ award.organization || 'Unknown Organization' }}</span>
+                <span class="text-sm text-gray-600">{{ award.award_type || 'Unknown Organization' }}</span>
               </div>
 
               <!-- Category/Type -->

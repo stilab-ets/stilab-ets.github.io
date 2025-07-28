@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
-import { mainAPI } from '@/services/ApiFactory'
-import type { Vacancy } from '@/services/MainAPI'
+import { useVacancies } from '@/hooks/vacancies/useVacancies'
 
 // UI Components
-import PageHeader from '@/ui/PageHeader.vue'
-import SearchAndFilters from '@/ui/SearchAndFilters.vue'
-import EmptyState from '@/ui/EmptyState.vue'
+import PageHeader from '@/components/ui/PageHeader.vue'
+import SearchAndFilters from '@/components/ui/SearchAndFilters.vue'
+import EmptyState from '@/components/ui/EmptyState.vue'
 
 // Vacancies components
 import VacanciesInfoBanner from './VacanciesInfoBanner.vue'
@@ -16,63 +15,51 @@ import VacancyCard from './VacancyCard.vue'
 // Language and translations
 const { t } = useLanguage()
 
-// State
-const vacancies = ref<Vacancy[]>([])
-const loading = ref(true)
-const error = ref<string | null>(null)
+// Use vacancies hook
+const {
+  vacancies,
+  isLoading,
+  error,
+  fetchVacancies,
+  filteredVacancies,
+  activeVacancies,
+  upcomingDeadlines,
+  uniqueTypes,
+  uniqueSupervisors,
+  clearError
+} = useVacancies()
+
+// Filter state
+const searchQuery = ref('')
 const selectedType = ref('')
-const selectedTag = ref('')
+const selectedSupervisor = ref('')
 const sortBy = ref('deadline-asc')
 
-// Load vacancies from API
-const loadVacancies = async () => {
-  try {
-    loading.value = true
-    error.value = null
-    const response = await mainAPI.getVacancies()
-    vacancies.value = response.data.results.filter(vacancy => vacancy.is_active)
-  } catch (err) {
-    console.error('Failed to load vacancies:', err)
-    error.value = 'Failed to load vacancies'
-  } finally {
-    loading.value = false
-  }
-}
-
-// Lifecycle
+// Fetch vacancies on mount
 onMounted(() => {
-  loadVacancies()
+  fetchVacancies()
 })
 
-// Computed
-const availableTags = computed(() => {
-  const allTags = vacancies.value.flatMap(vacancy => vacancy.tags)
-  return [...new Set(allTags)].sort()
-})
-
-const filteredVacancies = computed(() => {
-  return vacancies.value.filter(vacancy => {
-    const matchesType = !selectedType.value || vacancy.type === selectedType.value
-    const matchesTag = !selectedTag.value || vacancy.tags.includes(selectedTag.value)
-
-    return matchesType && matchesTag
-  })
-})
-
-const sortedVacancies = computed(() => {
-  const sorted = [...filteredVacancies.value]
-
+// Computed filtered and sorted vacancies
+const processedVacancies = computed(() => {
+  // First filter
+  let filtered = filteredVacancies(searchQuery.value, selectedType.value, selectedSupervisor.value)
+  
+  // Only show active vacancies
+  filtered = filtered.filter(vacancy => vacancy.is_active)
+  
+  // Then sort
   switch (sortBy.value) {
     case 'deadline-asc':
-      return sorted.sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime())
+      return filtered.sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime())
     case 'deadline-desc':
-      return sorted.sort((a, b) => new Date(b.deadline).getTime() - new Date(a.deadline).getTime())
+      return filtered.sort((a, b) => new Date(b.deadline).getTime() - new Date(a.deadline).getTime())
     case 'type':
-      return sorted.sort((a, b) => a.type.localeCompare(b.type))
+      return filtered.sort((a, b) => a.type.localeCompare(b.type))
     case 'recent':
-      return sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+      return filtered.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     default:
-      return sorted
+      return filtered
   }
 })
 
@@ -84,20 +71,22 @@ const filters = computed(() => [
     value: selectedType.value,
     options: [
       { value: '', label: t.value.vacancies.filters.allTypes },
-      { value: 'phd', label: t.value.vacancies.positionTypes.phd },
-      { value: 'postdoc', label: t.value.vacancies.positionTypes.postdoc },
-      { value: 'researcher', label: t.value.vacancies.positionTypes.researcher },
-      { value: 'engineer', label: t.value.vacancies.positionTypes.engineer },
-      { value: 'intern', label: t.value.vacancies.positionTypes.intern }
+      ...uniqueTypes.value.map(type => ({
+        value: type,
+        label: (t.value.vacancies.positionTypes as Record<string, string>)[type] || type
+      }))
     ]
   },
   {
-    id: 'tag',
-    label: t.value.vacancies.filters.domain,
-    value: selectedTag.value,
+    id: 'supervisor',
+    label: t.value.vacancies.filters.supervisor,
+    value: selectedSupervisor.value,
     options: [
-      { value: '', label: t.value.vacancies.filters.allDomains },
-      ...availableTags.value.map(tag => ({ value: tag, label: tag }))
+      { value: '', label: t.value.vacancies.filters.allSupervisors },
+      ...uniqueSupervisors.value.map(supervisor => ({
+        value: supervisor,
+        label: supervisor
+      }))
     ]
   },
   {
@@ -115,25 +104,34 @@ const filters = computed(() => [
 
 // Results text
 const resultsText = computed(() => {
-  const count = sortedVacancies.value.length
+  const count = processedVacancies.value.length
   if (count === 0) return `0 ${t.value.vacancies.results.offer} ${t.value.vacancies.results.available}`
   if (count === 1) return `1 ${t.value.vacancies.results.offer} ${t.value.vacancies.results.available}`
   return `${count} ${t.value.vacancies.results.offers} ${t.value.vacancies.results.available}s`
 })
 
-// Methods
+// Filter update method
 const updateFilter = (filterId: string, value: string) => {
   switch (filterId) {
     case 'type':
       selectedType.value = value
       break
-    case 'tag':
-      selectedTag.value = value
+    case 'supervisor':
+      selectedSupervisor.value = value
       break
     case 'sort':
       sortBy.value = value
       break
+    case 'search':
+      searchQuery.value = value
+      break
   }
+}
+
+// Clear error and retry
+const retryFetch = () => {
+  clearError()
+  fetchVacancies()
 }
 </script>
 
@@ -149,8 +147,19 @@ const updateFilter = (filterId: string, value: string) => {
     <!-- Information Banner -->
     <VacanciesInfoBanner />
 
+    <!-- Search and Filters -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+      <SearchAndFilters
+        v-model:search-query="searchQuery"
+        :filters="filters"
+        :results-text="resultsText"
+        @update-filter="updateFilter"
+        @update:search-query="updateFilter('search', $event)"
+      />
+    </div>
+
     <!-- Loading State -->
-    <div v-if="loading" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div v-if="isLoading" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div class="flex justify-center">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
@@ -165,6 +174,14 @@ const updateFilter = (filterId: string, value: string) => {
           </svg>
           <div class="ml-3">
             <h3 class="text-sm font-medium text-red-800">{{ error }}</h3>
+            <div class="mt-2">
+              <button
+                @click="retryFetch"
+                class="text-sm bg-red-100 hover:bg-red-200 text-red-800 px-3 py-1 rounded transition-colors"
+              >
+                {{ t.common.retry }}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -172,20 +189,11 @@ const updateFilter = (filterId: string, value: string) => {
 
     <!-- Content -->
     <template v-else>
-      <!-- Filters -->
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
-        <SearchAndFilters
-          :filters="filters"
-          :results-text="resultsText"
-          @update-filter="updateFilter"
-        />
-      </div>
-
       <!-- Vacancy Cards -->
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-        <div v-if="sortedVacancies.length > 0" class="space-y-6">
+        <div v-if="processedVacancies.length > 0" class="space-y-6">
           <VacancyCard
-            v-for="vacancy in sortedVacancies"
+            v-for="vacancy in processedVacancies"
             :key="vacancy.id"
             :vacancy="vacancy"
           />

@@ -1,4 +1,4 @@
-import { ref, computed, type Ref } from 'vue'
+import { ref, type Ref } from 'vue'
 import type { Member } from '@/services/MainAPI'
 
 interface UseMemberFiltersReturn {
@@ -29,18 +29,18 @@ export function useMemberFilters(): UseMemberFiltersReturn {
       const matchesSearch =
         !searchQuery.value ||
         fullName.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-        (member.research_interests &&
-          member.research_interests.toLowerCase().includes(searchQuery.value.toLowerCase())) ||
-        (member.position &&
-          member.position.toLowerCase().includes(searchQuery.value.toLowerCase()))
+        (member.research_domain &&
+          member.research_domain.toLowerCase().includes(searchQuery.value.toLowerCase())) ||
+        (member.role &&
+          member.role.toLowerCase().includes(searchQuery.value.toLowerCase()))
 
       const matchesDomain =
-        !selectedDomain.value || member.research_interests === selectedDomain.value
+        !selectedDomain.value || member.research_domain === selectedDomain.value
 
       const matchesStatus =
         !selectedStatus.value || 
-        (selectedStatus.value === 'active' && member.is_active) ||
-        (selectedStatus.value === 'inactive' && !member.is_active)
+        (selectedStatus.value === 'active' && member.status === 'active') ||
+        (selectedStatus.value === 'inactive' && member.status !== 'active')
 
       return matchesSearch && matchesDomain && matchesStatus
     })
@@ -48,25 +48,19 @@ export function useMemberFilters(): UseMemberFiltersReturn {
 
   const getPhdStudents = (filteredMembers: Member[]): Member[] => {
     return filteredMembers.filter(
-      (member) => member.position?.toLowerCase().includes('phd') || 
-                  member.position?.toLowerCase().includes('doctoral')
+      (member) => member.role === 'PHD'
     )
   }
 
   const getMscStudents = (filteredMembers: Member[]): Member[] => {
     return filteredMembers.filter(
-      (member) => member.position?.toLowerCase().includes('master') ||
-                  member.position?.toLowerCase().includes('msc') ||
-                  member.position?.toLowerCase().includes('m.sc')
+      (member) => member.role === 'MSC'
     )
   }
 
   const getProfessors = (filteredMembers: Member[]): Member[] => {
     return filteredMembers.filter(
-      (member) => member.position?.toLowerCase().includes('professor') ||
-                  member.position?.toLowerCase().includes('prof') ||
-                  member.position?.toLowerCase().includes('director') ||
-                  member.position?.toLowerCase().includes('researcher')
+      (member) => member.role === 'PRO' || !member.role // Professors might not have a role set
     )
   }
 

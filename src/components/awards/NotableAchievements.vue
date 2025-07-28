@@ -1,30 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
-import Card from '@/ui/Card.vue'
-import type { Award } from '@/services/MainAPI'
-
-interface AwardRecipient {
-  id: string
-  member: {
-    first_name: string
-    last_name: string
-    role: string
-    biography?: string | null
-    research_domain?: string | null
-    image_url?: string | null
-    github_url?: string | null
-    linkedin_url?: string | null
-    personal_website?: string | null
-    status?: string | null
-  }
-}
-
-interface ExtendedAward extends Award {
-  recipients?: AwardRecipient[]
-  url?: string
-  year?: number
-}
+import Card from '@/components/ui/Card.vue'
+import { type ExtendedAward } from '@/hooks/awards/useAwards'
 
 interface Props {
   allAwards: ExtendedAward[]
@@ -51,10 +29,10 @@ const researchExcellenceAwards = computed(() => {
 
 const industryAwards = computed(() => {
   return props.allAwards.filter(award =>
-    (award.organization && (
-      award.organization.toLowerCase().includes('industry') ||
-      award.organization.toLowerCase().includes('ieee') ||
-      award.organization.toLowerCase().includes('acm')
+    (award.award_type && (
+      award.award_type.toLowerCase().includes('industry') ||
+      award.award_type.toLowerCase().includes('ieee') ||
+      award.award_type.toLowerCase().includes('acm')
     ))
   ).length
 })

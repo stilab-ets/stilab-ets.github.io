@@ -11,8 +11,8 @@ interface UseEventsState {
 interface UseEventsActions {
   fetchEvents: () => Promise<void>
   createEvent: (eventData: Partial<Event>) => Promise<Event | null>
-  updateEvent: (id: number, eventData: Partial<Event>) => Promise<Event | null>
-  deleteEvent: (id: number) => Promise<boolean>
+  updateEvent: (id: string, eventData: Partial<Event>) => Promise<Event | null>
+  deleteEvent: (id: string) => Promise<boolean>
   clearError: () => void
 }
 
@@ -44,7 +44,8 @@ export function useEvents(): UseEventsReturn {
       error.value = null
       
       const response = await mainAPI.getEvents()
-      events.value = response.data.results
+      // API returns array directly, not paginated
+      events.value = response.data || []
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch events'
       console.error('Error fetching events:', err)
@@ -72,7 +73,7 @@ export function useEvents(): UseEventsReturn {
     }
   }
 
-  const updateEvent = async (id: number, eventData: Partial<Event>): Promise<Event | null> => {
+  const updateEvent = async (id: string, eventData: Partial<Event>): Promise<Event | null> => {
     try {
       isLoading.value = true
       error.value = null
@@ -95,14 +96,13 @@ export function useEvents(): UseEventsReturn {
     }
   }
 
-  const deleteEvent = async (id: number): Promise<boolean> => {
+  const deleteEvent = async (id: string): Promise<boolean> => {
     try {
       isLoading.value = true
       error.value = null
 
       await mainAPI.deleteEvent(id)
       events.value = events.value.filter(e => e.id !== id)
-      
       return true
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to delete event'
@@ -117,17 +117,52 @@ export function useEvents(): UseEventsReturn {
     error.value = null
   }
 
+  // Computed properties
+  const upcomingEvents = computed(() => {
+    const now = new Date()
+    return events.value.filter(event => {
+      if (!event.date) return false
+      return new Date(event.date) >= now
+    }).sort((a, b) => {
+      if (!a.date || !b.date) return 0
+      return new Date(a.date).getTime() - new Date(b.date).getTime()
+    })
+  })
+
+  const pastEvents = computed(() => {
+    const now = new Date()
+    return events.value.filter(event => {
+      if (!event.date) return false
+      return new Date(event.date) < now
+    }).sort((a, b) => {
+      if (!a.date || !b.date) return 0
+      return new Date(b.date).getTime() - new Date(a.date).getTime()
+    })
+  })
+
+  const upcomingEventsCount = computed(() => upcomingEvents.value.length)
+
+  const totalRegistrations = computed(() => {
+    // Since we don't have registration data in the current model, return 0
+    return 0
+  })
+
+  const eventTypes = computed(() => {
+    const types = new Set(events.value.map(event => event.domain).filter(Boolean))
+    return Array.from(types).sort()
+  })
+
+  // Filter methods
   const filterByType = (type: string): Event[] => {
-    if (!type) return events.value
-    return events.value.filter(event => event.type === type)
+    return events.value.filter(event => event.domain === type)
   }
 
   const filterByUpcoming = (): Event[] => {
-    return events.value.filter(event => event.is_upcoming)
+    return upcomingEvents.value
   }
 
   const filterByPast = (): Event[] => {
-    return events.value.filter(event => !event.is_upcoming)
+    return pastEvents.value
   }
 
   const filterByPeriod = (period: 'all' | 'upcoming' | 'past'): Event[] => {
@@ -141,46 +176,23 @@ export function useEvents(): UseEventsReturn {
     }
   }
 
-  const upcomingEvents = computed(() => filterByUpcoming())
-  const pastEvents = computed(() => filterByPast())
-
-  const upcomingEventsCount = computed(() => upcomingEvents.value.length)
-
-  const totalRegistrations = computed(() => {
-    return upcomingEvents.value
-      .filter(event => event.current_registrations)
-      .reduce((sum, event) => sum + (event.current_registrations || 0), 0)
-  })
-
-  const eventTypes = computed(() => {
-    const types = [...new Set(events.value.map(event => event.type))]
-    return types.sort()
-  })
-
   return {
-    // State
     events,
     isLoading,
     error,
-    
-    // Actions
     fetchEvents,
     createEvent,
     updateEvent,
     deleteEvent,
     clearError,
-    
-    // Filters
-    filterByType,
-    filterByUpcoming,
-    filterByPast,
-    filterByPeriod,
-    
-    // Computed
     upcomingEvents,
     pastEvents,
     upcomingEventsCount,
     totalRegistrations,
-    eventTypes
+    eventTypes,
+    filterByType,
+    filterByUpcoming,
+    filterByPast,
+    filterByPeriod
   }
 }

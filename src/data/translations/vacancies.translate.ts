@@ -10,6 +10,8 @@ export interface VacanciesTranslations {
     address: string
   }
   filters: {
+    supervisor: any
+    allSupervisors: any
     positionType: string
     allTypes: string
     domain: string

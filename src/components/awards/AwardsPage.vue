@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
-import { useAwards } from '@/hooks/awards/useAwards'
-import { useFilteredAwards } from '@/hooks/awards/useFilteredAwards'
+import { useAwards, type ExtendedAward } from '@/hooks/awards/useAwards'
 
 // UI Components
-import PageHeader from '@/ui/PageHeader.vue'
-import SearchAndFilters from '@/ui/SearchAndFilters.vue'
-import StatisticsGrid from '@/ui/StatisticsGrid.vue'
-import EmptyState from '@/ui/EmptyState.vue'
+import PageHeader from '@/components/ui/PageHeader.vue'
+import SearchAndFilters from '@/components/ui/SearchAndFilters.vue'
+import StatisticsGrid from '@/components/ui/StatisticsGrid.vue'
+import EmptyState from '@/components/ui/EmptyState.vue'
 
 // Awards components
 import AwardsTimeline from './AwardsTimeline.vue'
@@ -22,28 +21,75 @@ const {
   awards: allAwards,
   isLoading,
   error,
+  fetchAwards,
   uniqueOrganizations,
   awardedMembers,
   availableYears,
   totalAwards,
   yearsOfRecognition
-} = useAwards()
+} = useAwards({ autoFetch: false })
 
-// Filtered awards composable
-const {
-  selectedYear,
-  selectedOrganization,
-  selectedMember,
-  filteredAwards,
-  updateFilter
-} = useFilteredAwards({ awards: allAwards })
+// Filter state
+const selectedYear = ref('')
+const selectedOrganization = ref('')
+const selectedMember = ref('')
+const searchQuery = ref('')
+
+// Fetch awards on mount
+onMounted(() => {
+  fetchAwards()
+})
+
+// Filtered awards logic
+const filteredAwards = computed(() => {
+  return allAwards.value.filter(award => {
+    const matchesYear = !selectedYear.value || 
+      (award.year && award.year.toString() === selectedYear.value) ||
+      (!award.year && new Date(award.date_received).getFullYear().toString() === selectedYear.value)
+    
+    const matchesOrganization = !selectedOrganization.value || 
+      award.award_type === selectedOrganization.value
+    
+    const matchesMember = !selectedMember.value ||
+      (award.recipients && award.recipients.some(recipient => 
+        `${recipient.member.first_name} ${recipient.member.last_name}` === selectedMember.value
+      ))
+    
+    const matchesSearch = !searchQuery.value ||
+      award.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      (award.description && award.description.toLowerCase().includes(searchQuery.value.toLowerCase())) ||
+      (award.award_type && award.award_type.toLowerCase().includes(searchQuery.value.toLowerCase()))
+
+    return matchesYear && matchesOrganization && matchesMember && matchesSearch
+  })
+})
 
 // Statistics
 const statistics = computed(() => [
-  { value: totalAwards.value, label: t.value.awards.statistics.totalAwards },
-  { value: uniqueOrganizations.value.length, label: t.value.awards.statistics.organizations },
-  { value: awardedMembers.value.length, label: t.value.awards.statistics.awardedMembers },
-  { value: yearsOfRecognition.value, label: t.value.awards.statistics.yearsOfRecognition }
+  {
+    label: t.value.awards.statistics.totalAwards,
+    value: totalAwards.value.toString(),
+    icon: 'award',
+    color: 'bg-yellow-500'
+  },
+  {
+    label: t.value.awards.statistics.organizations,
+    value: uniqueOrganizations.value.length.toString(),
+    icon: 'building',
+    color: 'bg-blue-500'
+  },
+  {
+    label: t.value.awards.statistics.awardedMembers,
+    value: awardedMembers.value.length.toString(),
+    icon: 'users',
+    color: 'bg-green-500'
+  },
+  {
+    label: t.value.awards.statistics.yearsOfRecognition,
+    value: yearsOfRecognition.value.toString(),
+    icon: 'calendar',
+    color: 'bg-purple-500'
+  }
 ])
 
 // Filters configuration
@@ -54,7 +100,10 @@ const filters = computed(() => [
     value: selectedYear.value,
     options: [
       { value: '', label: t.value.awards.filters.allYears },
-      ...availableYears.value.map(year => ({ value: year.toString(), label: year.toString() }))
+      ...availableYears.value.map(year => ({
+        value: year.toString(),
+        label: year.toString()
+      }))
     ]
   },
   {
@@ -63,7 +112,10 @@ const filters = computed(() => [
     value: selectedOrganization.value,
     options: [
       { value: '', label: t.value.awards.filters.allOrganizations },
-      ...uniqueOrganizations.value.map(org => ({ value: org, label: org }))
+      ...uniqueOrganizations.value.map(org => ({
+        value: org,
+        label: org
+      }))
     ]
   },
   {
@@ -83,10 +135,28 @@ const filters = computed(() => [
 // Results text
 const resultsText = computed(() => {
   const count = filteredAwards.value.length
-  if (count === 0) return `0 ${t.value.awards.filters.award} ${t.value.awards.filters.found}`
-  if (count === 1) return `1 ${t.value.awards.filters.award} ${t.value.awards.filters.found}`
-  return `${count} ${t.value.awards.filters.awards} ${t.value.awards.filters.found}${t.value.awards.filters.found}`
+  if (count === 0) return `0 ${t.value.awards.results.award}`
+  if (count === 1) return `1 ${t.value.awards.results.award}`
+  return `${count} ${t.value.awards.results.awards}`
 })
+
+// Filter update method
+const updateFilter = (filterId: string, value: string) => {
+  switch (filterId) {
+    case 'year':
+      selectedYear.value = value
+      break
+    case 'organization':
+      selectedOrganization.value = value
+      break
+    case 'member':
+      selectedMember.value = value
+      break
+    case 'search':
+      searchQuery.value = value
+      break
+  }
+}
 </script>
 
 <template>
@@ -95,18 +165,19 @@ const resultsText = computed(() => {
     <PageHeader 
       :title="t.awards.pageTitle"
       :subtitle="t.awards.pageSubtitle"
-      highlight-word="Prix"
+      highlight-word="Awards"
     />
 
     <!-- Loading State -->
-    <div v-if="isLoading" class="flex justify-center items-center py-12">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#08a4d4]"></div>
-      <span class="ml-2 text-gray-600">{{ t.common.loading }}</span>
+    <div v-if="isLoading" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="flex justify-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
     </div>
 
     <!-- Error State -->
-    <div v-else-if="error" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+    <div v-else-if="error" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="bg-red-50 border border-red-200 rounded-md p-4">
         <div class="flex">
           <div class="text-red-400">
             <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
@@ -115,6 +186,12 @@ const resultsText = computed(() => {
           </div>
           <div class="ml-3">
             <p class="text-sm text-red-700">{{ error }}</p>
+            <button
+              @click="fetchAwards"
+              class="mt-2 text-sm bg-red-100 hover:bg-red-200 text-red-800 px-3 py-1 rounded transition-colors"
+            >
+              {{ t.common.retry }}
+            </button>
           </div>
         </div>
       </div>
@@ -123,19 +200,18 @@ const resultsText = computed(() => {
     <!-- Content -->
     <template v-else>
       <!-- Statistics -->
-      <StatisticsGrid 
-        :statistics="statistics"
-        :columns="4"
-        :title="t.awards.statistics.sectionTitle"
-        background-class="bg-gradient-to-r from-yellow-50 to-orange-50"
-      />
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <StatisticsGrid :statistics="statistics" />
+      </div>
 
-      <!-- Filters -->
+      <!-- Search and Filters -->
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
         <SearchAndFilters
+          v-model:search-query="searchQuery"
           :filters="filters"
           :results-text="resultsText"
           @update-filter="updateFilter"
+          @update:search-query="updateFilter('search', $event)"
         />
       </div>
 

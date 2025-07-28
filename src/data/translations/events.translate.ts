@@ -1,4 +1,6 @@
 export interface EventsTranslations {
+  stats: any
+  results: any
   pageTitle: string
   pageSubtitle: string
   statistics: {
@@ -7,6 +9,8 @@ export interface EventsTranslations {
     totalEvents: string
   }
   filters: {
+    view: any
+    type: any
     eventType: string
     allTypes: string
     period: string
@@ -24,6 +28,7 @@ export interface EventsTranslations {
     masterclass: string
   }
   eventCard: {
+    capacityFull: any
     speaker: string
     registrations: string
     registrationOpen: string

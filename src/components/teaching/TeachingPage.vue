@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
-import { mainAPI } from '@/services/ApiFactory'
-import type { Course } from '@/services/MainAPI'
+import { useCourses } from '@/hooks/teaching/useCourses'
 
 // UI Components
 import PageHeader from '@/components/ui/PageHeader.vue'
@@ -16,86 +15,59 @@ import CourseCard from './CourseCard.vue'
 // Language and translations
 const { t } = useLanguage()
 
-// State
-const allCourses = ref<Course[]>([])
+// Use courses hook
+const {
+  courses,
+  isLoading,
+  error,
+  fetchCourses,
+  filteredCourses,
+  uniqueLevels,
+  uniqueSemesters,
+  clearError
+} = useCourses()
+
+// Filter state
 const searchQuery = ref('')
 const selectedLevel = ref('')
 const selectedSemester = ref('')
-const isLoading = ref(false)
-const error = ref<string | null>(null)
 
-const fetchCourses = async () => {
-  isLoading.value = true
-  error.value = null
-  
-  try {
-    const response = await mainAPI.getCourses()
-    allCourses.value = response.data.results || response.data
-  } catch (err) {
-    console.error('Error fetching courses:', err)
-    error.value = 'Failed to load courses'
-  } finally {
-    isLoading.value = false
-  }
-}
-
-onMounted(fetchCourses)
-
-const getFullSemester = (course: Course) => {
-  let semesterLabel = ''
-  switch (course.semester) {
-    case 'F':
-      semesterLabel = t.value.teaching.semesters.fall
-      break
-    case 'W':
-      semesterLabel = t.value.teaching.semesters.winter
-      break
-    case 'S':
-      semesterLabel = t.value.teaching.semesters.summer
-      break
-    default:
-      semesterLabel = course.semester
-  }
-  return `${semesterLabel} ${course.year}`
-}
-
-// Computed
-const availableSemesters = computed(() => {
-  const semesters = [
-    ...new Set(
-      allCourses.value.map((course: Course) => getFullSemester(course))
-    )
-  ]
-  return semesters.sort()
+// Fetch courses on mount
+onMounted(() => {
+  fetchCourses()
 })
 
-const uniqueInstructors = computed(() => {
-  return [...new Set(allCourses.value.map(course => course.instructor))]
+// Computed filtered courses using the hook's filter function
+const filteredCoursesComputed = computed(() => {
+  return filteredCourses(searchQuery.value, selectedLevel.value, selectedSemester.value)
 })
 
-const filteredCourses = computed(() => {
-  return allCourses.value.filter(course => {
-    const matchesSearch = !searchQuery.value ||
-      course.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      course.code.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      course.instructor.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      course.description?.toLowerCase().includes(searchQuery.value.toLowerCase())
-
-    const matchesLevel = !selectedLevel.value ||
-      course.code.startsWith(selectedLevel.value)
-
-    const matchesSemester = !selectedSemester.value ||
-      getFullSemester(course) === selectedSemester.value
-
-    return matchesSearch && matchesLevel && matchesSemester
-  })
-})
-
-// Statistics
+// Statistics for the statistics grid
 const statistics = computed(() => [
-  { value: allCourses.value.length, label: t.value.teaching.statistics.coursesOffered },
-  { value: uniqueInstructors.value.length, label: t.value.teaching.statistics.instructors },
-  { value: 2, label: t.value.teaching.statistics.studyLevels }
+  {
+    label: t.value.teaching.stats.totalCourses,
+    value: courses.value.length.toString(),
+    icon: 'book',
+    color: 'bg-blue-500'
+  },
+  {
+    label: t.value.teaching.stats.undergraduateCourses,
+    value: courses.value.filter(c => c.level === 'undergraduate').length.toString(),
+    icon: 'users',
+    color: 'bg-green-500'
+  },
+  {
+    label: t.value.teaching.stats.graduateCourses,
+    value: courses.value.filter(c => c.level === 'graduate').length.toString(),
+    icon: 'award',
+    color: 'bg-purple-500'
+  },
+  {
+    label: t.value.teaching.stats.instructors,
+    value: new Set(courses.value.map(c => c.teacher ? `${c.teacher.first_name} ${c.teacher.last_name}` : 'Unknown')).size.toString(),
+    icon: 'user-check',
+    color: 'bg-orange-500'
+  }
 ])
 
 // Filters configuration
@@ -106,8 +78,10 @@ const filters = computed(() => [
     value: selectedLevel.value,
     options: [
       { value: '', label: t.value.teaching.filters.allLevels },
-      { value: 'UGR', label: t.value.teaching.levels.undergraduate },
-      { value: 'GRD', label: t.value.teaching.levels.graduate }
+      ...uniqueLevels.value.map(level => ({
+        value: level,
+        label: level === 'undergraduate' ? t.value.teaching.levels.undergraduate : t.value.teaching.levels.graduate
+      }))
     ]
   },
   {
@@ -116,12 +90,38 @@ const filters = computed(() => [
     value: selectedSemester.value,
     options: [
       { value: '', label: t.value.teaching.filters.allSemesters },
-      ...availableSemesters.value.map(semester => ({ value: semester, label: semester }))
+      ...uniqueSemesters.value.map(semester => ({
+        value: semester,
+        label: getFullSemesterName(semester)
+      }))
     ]
   }
 ])
 
-// Methods
+// Helper function to get full semester name
+const getFullSemesterName = (semester: string | null): string => {
+  if (!semester) return ''
+  switch (semester) {
+    case 'F':
+      return t.value.teaching.semesters.fall
+    case 'W':
+      return t.value.teaching.semesters.winter
+    case 'S':
+      return t.value.teaching.semesters.summer
+    default:
+      return semester
+  }
+}
+
+// Results text
+const resultsText = computed(() => {
+  const count = filteredCoursesComputed.value.length
+  if (count === 0) return `0 ${t.value.teaching.results.course}`
+  if (count === 1) return `1 ${t.value.teaching.results.course}`
+  return `${count} ${t.value.teaching.results.courses}`
+})
+
+// Filter update method
 const updateFilter = (filterId: string, value: string) => {
   switch (filterId) {
     case 'level':
@@ -130,7 +130,16 @@ const updateFilter = (filterId: string, value: string) => {
     case 'semester':
       selectedSemester.value = value
       break
+    case 'search':
+      searchQuery.value = value
+      break
   }
+}
+
+// Clear error and retry
+const retryFetch = () => {
+  clearError()
+  fetchCourses()
 }
 </script>
 
@@ -140,31 +149,27 @@ const updateFilter = (filterId: string, value: string) => {
     <PageHeader 
       :title="t.teaching.pageTitle"
       :subtitle="t.teaching.pageSubtitle"
-      highlight-word="Enseignement"
+      highlight-word="Teaching"
     />
 
-    <!-- Statistics -->
-    <StatisticsGrid 
-      :statistics="statistics"
-      :columns="3"
-    />
+    <!-- Statistics Grid -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <StatisticsGrid :statistics="statistics" />
+    </div>
 
-    <!-- Filters -->
-    <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
-      <div class="max-w-6xl mx-auto">
-        <SearchAndFilters
-          :search-query="searchQuery"
-          :search-label="t.teaching.search.label"
-          :search-placeholder="t.teaching.search.placeholder"
-          :filters="filters"
-          @update:search-query="searchQuery = $event"
-          @update-filter="updateFilter"
-        />
-      </div>
+    <!-- Search and Filters -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+      <SearchAndFilters
+        v-model:search-query="searchQuery"
+        :filters="filters"
+        :results-text="resultsText"
+        @update-filter="updateFilter"
+        @update:search-query="updateFilter('search', $event)"
+      />
     </div>
 
     <!-- Loading State -->
-    <div v-if="isLoading" class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <div v-if="isLoading" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
       <div class="max-w-6xl mx-auto text-center">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
         <p class="mt-4 text-gray-600">{{ t.common.loading }}</p>
@@ -172,26 +177,26 @@ const updateFilter = (filterId: string, value: string) => {
     </div>
 
     <!-- Error State -->
-    <div v-else-if="error" class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <div v-else-if="error" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
       <div class="max-w-6xl mx-auto text-center">
         <div class="bg-red-50 border border-red-200 rounded-lg p-6">
           <p class="text-red-600">{{ error }}</p>
           <button 
-            @click="fetchCourses"
+            @click="retryFetch"
             class="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
           >
-            Retry
+            {{ t.common.retry }}
           </button>
         </div>
       </div>
     </div>
 
     <!-- Course List -->
-    <div v-else class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <div v-else class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
       <div class="max-w-6xl mx-auto">
-        <div v-if="filteredCourses.length > 0" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div v-if="filteredCoursesComputed.length > 0" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <CourseCard
-            v-for="course in filteredCourses"
+            v-for="course in filteredCoursesComputed"
             :key="course.id"
             :course="course"
           />

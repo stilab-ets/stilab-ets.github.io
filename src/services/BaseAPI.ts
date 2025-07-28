@@ -4,6 +4,13 @@ export interface ApiResponse<T = any> {
   status?: number;
 }
 
+export interface PaginatedResponse<T> {
+  count: number;
+  next?: string | null;
+  previous?: string | null;
+  results: T[];
+}
+
 export interface AuthTokens {
   access_token: string;
   refresh_token: string;

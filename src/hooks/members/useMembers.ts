@@ -8,8 +8,8 @@ interface UseMembersReturn {
   error: Ref<string | null>
   fetchMembers: () => Promise<void>
   createMember: (data: Partial<Member>) => Promise<boolean>
-  updateMember: (id: number, data: Partial<Member>) => Promise<boolean>
-  deleteMember: (id: number) => Promise<boolean>
+  updateMember: (id: string, data: Partial<Member>) => Promise<boolean>
+  deleteMember: (id: string) => Promise<boolean>
   uniqueResearchDomains: Ref<string[]>
   filteredMembers: (searchQuery: string, selectedDomain: string, selectedStatus: string) => Member[]
 }
@@ -22,8 +22,8 @@ export function useMembers(): UseMembersReturn {
   const uniqueResearchDomains = computed(() => {
     const domainSet = new Set<string>()
     for (const member of members.value) {
-      if (member.research_interests) {
-        domainSet.add(member.research_interests)
+      if (member.research_domain) {
+        domainSet.add(member.research_domain)
       }
     }
     return Array.from(domainSet).sort()
@@ -35,7 +35,8 @@ export function useMembers(): UseMembersReturn {
     
     try {
       const response = await mainAPI.getMembers()
-      members.value = response.data.results || []
+      // API returns array directly, not paginated
+      members.value = response.data || []
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch members'
       console.error('Error fetching members:', err)
@@ -61,7 +62,7 @@ export function useMembers(): UseMembersReturn {
     }
   }
 
-  const updateMember = async (id: number, data: Partial<Member>): Promise<boolean> => {
+  const updateMember = async (id: string, data: Partial<Member>): Promise<boolean> => {
     loading.value = true
     error.value = null
     
@@ -81,7 +82,7 @@ export function useMembers(): UseMembersReturn {
     }
   }
 
-  const deleteMember = async (id: number): Promise<boolean> => {
+  const deleteMember = async (id: string): Promise<boolean> => {
     loading.value = true
     error.value = null
     
@@ -104,18 +105,18 @@ export function useMembers(): UseMembersReturn {
       const matchesSearch =
         !searchQuery ||
         fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (member.research_interests &&
-          member.research_interests.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (member.position &&
-          member.position.toLowerCase().includes(searchQuery.toLowerCase()))
+        (member.research_domain &&
+          member.research_domain.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (member.role &&
+          member.role.toLowerCase().includes(searchQuery.toLowerCase()))
 
       const matchesDomain =
-        !selectedDomain || member.research_interests === selectedDomain
+        !selectedDomain || member.research_domain === selectedDomain
 
       const matchesStatus =
         !selectedStatus || 
-        (selectedStatus === 'active' && member.is_active) ||
-        (selectedStatus === 'inactive' && !member.is_active)
+        (selectedStatus === 'active' && member.status === 'active') ||
+        (selectedStatus === 'inactive' && member.status !== 'active')
 
       return matchesSearch && matchesDomain && matchesStatus
     })

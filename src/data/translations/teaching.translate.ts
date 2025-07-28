@@ -1,4 +1,6 @@
 export interface TeachingTranslations {
+  stats: any
+  results: any
   pageTitle: string
   pageSubtitle: string
   statistics: {

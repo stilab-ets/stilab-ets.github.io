@@ -9,8 +9,8 @@ export interface UsePublicationsReturn {
   fetchPublications: () => Promise<void>
   refreshPublications: () => Promise<void>
   createPublication: (data: Partial<Publication>) => Promise<boolean>
-  updatePublication: (id: number, data: Partial<Publication>) => Promise<boolean>
-  deletePublication: (id: number) => Promise<boolean>
+  updatePublication: (id: string, data: Partial<Publication>) => Promise<boolean>
+  deletePublication: (id: string) => Promise<boolean>
   clearError: () => void
 }
 
@@ -29,7 +29,8 @@ export function usePublications(): UsePublicationsReturn {
     
     try {
       const response = await mainAPI.getPublications()
-      publications.value = response.data.results
+      // API returns array directly, not paginated
+      publications.value = response.data || []
     } catch (err: any) {
       error.value = err.message || 'Failed to fetch publications'
       console.error('Error fetching publications:', err)
@@ -59,7 +60,7 @@ export function usePublications(): UsePublicationsReturn {
     }
   }
 
-  const updatePublication = async (id: number, data: Partial<Publication>): Promise<boolean> => {
+  const updatePublication = async (id: string, data: Partial<Publication>): Promise<boolean> => {
     isLoading.value = true
     error.value = null
 
@@ -79,7 +80,7 @@ export function usePublications(): UsePublicationsReturn {
     }
   }
 
-  const deletePublication = async (id: number): Promise<boolean> => {
+  const deletePublication = async (id: string): Promise<boolean> => {
     isLoading.value = true
     error.value = null
 

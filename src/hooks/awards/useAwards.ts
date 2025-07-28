@@ -2,7 +2,7 @@ import { ref, computed, readonly, type Ref } from 'vue'
 import { mainAPI } from '@/services/ApiFactory'
 import type { Award } from '@/services/MainAPI'
 
-interface AwardRecipient {
+export interface AwardRecipient {
   id: string
   member: {
     first_name: string
@@ -20,10 +20,8 @@ interface AwardRecipient {
   }
 }
 
-interface ExtendedAward extends Award {
+export interface ExtendedAward extends Award {
   recipients?: AwardRecipient[]
-  url?: string
-  year?: number
 }
 
 interface UseAwardsOptions {
@@ -54,7 +52,7 @@ export function useAwards(options: UseAwardsOptions = {}): UseAwardsReturn {
 
   // Computed values
   const uniqueOrganizations = computed(() => {
-    return [...new Set(awards.value.map(award => award.organization || 'Unknown'))].sort()
+    return [...new Set(awards.value.map(award => award.award_type || 'Unknown'))].sort()
   })
 
   const awardedMembers = computed(() => {
@@ -67,10 +65,6 @@ export function useAwards(options: UseAwardsOptions = {}): UseAwardsReturn {
             members.push(fullName)
           }
         })
-      } else if (award.recipient) {
-        if (!members.includes(award.recipient)) {
-          members.push(award.recipient)
-        }
       }
     })
     return members.sort()
@@ -94,36 +88,29 @@ export function useAwards(options: UseAwardsOptions = {}): UseAwardsReturn {
   const totalAwards = computed(() => awards.value.length)
 
   const yearsOfRecognition = computed(() => {
-    const currentYear = new Date().getFullYear()
-    return currentYear - oldestAwardYear.value + 1
+    const years = availableYears.value
+    return years.length > 0 ? Math.max(...years) - Math.min(...years) + 1 : 0
   })
 
-  // Methods
-  const fetchAwards = async () => {
-    if (isLoading.value) return
-
+  // Actions
+  const fetchAwards = async (): Promise<void> => {
     isLoading.value = true
     error.value = null
-
+    
     try {
       const response = await mainAPI.getAwards()
-      awards.value = response.data.results || []
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Failed to fetch awards'
+      // API returns array directly, not paginated
+      awards.value = response.data || []
+    } catch (err: any) {
+      error.value = err.message || 'Failed to fetch awards'
       console.error('Error fetching awards:', err)
     } finally {
       isLoading.value = false
     }
   }
 
-  const refreshAwards = async () => {
-    awards.value = []
+  const refreshAwards = async (): Promise<void> => {
     await fetchAwards()
-  }
-
-  // Auto-fetch on initialization if enabled
-  if (autoFetch) {
-    fetchAwards()
   }
 
   return {
@@ -132,11 +119,11 @@ export function useAwards(options: UseAwardsOptions = {}): UseAwardsReturn {
     error: readonly(error),
     fetchAwards,
     refreshAwards,
-    uniqueOrganizations: uniqueOrganizations,
-    awardedMembers: awardedMembers,
-    availableYears: availableYears,
-    oldestAwardYear: readonly(oldestAwardYear),
-    totalAwards: readonly(totalAwards),
-    yearsOfRecognition: readonly(yearsOfRecognition)
+    uniqueOrganizations,
+    awardedMembers,
+    availableYears,
+    oldestAwardYear,
+    totalAwards,
+    yearsOfRecognition
   }
 }

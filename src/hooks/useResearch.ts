@@ -1,16 +1,16 @@
 import { ref, computed, type Ref } from 'vue'
 import { mainAPI } from '@/services/ApiFactory'
-import type { Research, ApiResponse, PaginatedResponse } from '@/services/MainAPI'
+import type { Research, ApiResponse } from '@/services/MainAPI'
 
 interface UseResearchReturn {
   research: Ref<Research[]>
   isLoading: Ref<boolean>
   error: Ref<string | null>
   fetchResearch: () => Promise<void>
-  getResearchById: (id: number) => Research | undefined
+  getResearchById: (id: string) => Research | undefined
   createResearch: (data: Partial<Research>) => Promise<boolean>
-  updateResearch: (id: number, data: Partial<Research>) => Promise<boolean>
-  deleteResearch: (id: number) => Promise<boolean>
+  updateResearch: (id: string, data: Partial<Research>) => Promise<boolean>
+  deleteResearch: (id: string) => Promise<boolean>
   activeProjects: Ref<Research[]>
   completedProjects: Ref<Research[]>
   featuredProjects: Ref<Research[]>
@@ -26,8 +26,9 @@ export function useResearch(): UseResearchReturn {
     error.value = null
     
     try {
-      const response: ApiResponse<PaginatedResponse<Research>> = await mainAPI.getResearch()
-      research.value = response.data.results
+      const response: ApiResponse<Research[]> = await mainAPI.getResearch()
+      // API returns array directly, not paginated
+      research.value = response.data || []
     } catch (err: any) {
       error.value = err.message || 'Failed to fetch research data'
       console.error('Error fetching research:', err)
@@ -36,7 +37,7 @@ export function useResearch(): UseResearchReturn {
     }
   }
 
-  const getResearchById = (id: number): Research | undefined => {
+  const getResearchById = (id: string): Research | undefined => {
     return research.value.find(r => r.id === id)
   }
 
@@ -57,7 +58,7 @@ export function useResearch(): UseResearchReturn {
     }
   }
 
-  const updateResearch = async (id: number, data: Partial<Research>): Promise<boolean> => {
+  const updateResearch = async (id: string, data: Partial<Research>): Promise<boolean> => {
     isLoading.value = true
     error.value = null
     
@@ -77,7 +78,7 @@ export function useResearch(): UseResearchReturn {
     }
   }
 
-  const deleteResearch = async (id: number): Promise<boolean> => {
+  const deleteResearch = async (id: string): Promise<boolean> => {
     isLoading.value = true
     error.value = null
     
@@ -95,17 +96,18 @@ export function useResearch(): UseResearchReturn {
   }
 
   // Computed properties
-  const activeProjects = computed(() => 
-    research.value.filter(r => r.status === 'active')
-  )
+  const activeProjects = computed(() => {
+    return research.value.filter(project => !project.end_date || new Date(project.end_date) > new Date())
+  })
 
-  const completedProjects = computed(() => 
-    research.value.filter(r => r.status === 'completed')
-  )
+  const completedProjects = computed(() => {
+    return research.value.filter(project => project.end_date && new Date(project.end_date) <= new Date())
+  })
 
-  const featuredProjects = computed(() => 
-    research.value.slice(0, 4)
-  )
+  const featuredProjects = computed(() => {
+    // Return the most recent active projects as featured
+    return activeProjects.value.slice(0, 3)
+  })
 
   return {
     research,
