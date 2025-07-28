@@ -42,35 +42,38 @@ const filteredCoursesComputed = computed(() => {
   return filteredCourses(searchQuery.value, selectedLevel.value, selectedSemester.value)
 })
 
-// Statistics for the statistics grid
-const statistics = computed(() => [
-  {
-    label: t.value.teaching.stats.totalCourses,
-    value: courses.value.length.toString(),
-    icon: 'book',
-    color: 'bg-blue-500'
-  },
-  {
-    label: t.value.teaching.stats.undergraduateCourses,
-    value: courses.value.filter(c => c.level === 'undergraduate').length.toString(),
-    icon: 'users',
-    color: 'bg-green-500'
-  },
-  {
-    label: t.value.teaching.stats.graduateCourses,
-    value: courses.value.filter(c => c.level === 'graduate').length.toString(),
-    icon: 'award',
-    color: 'bg-purple-500'
-  },
-  {
-    label: t.value.teaching.stats.instructors,
-    value: new Set(courses.value.map(c => c.teacher ? `${c.teacher.first_name} ${c.teacher.last_name}` : 'Unknown')).size.toString(),
-    icon: 'user-check',
-    color: 'bg-orange-500'
-  }
-])
+// Statistics for the statistics grid - with proper null checking
+const statistics = computed(() => {
+  const coursesList = courses.value || []
+  return [
+    {
+      label: t.value.teaching.stats.totalCourses,
+      value: coursesList.length.toString(),
+      icon: 'book',
+      color: 'bg-blue-500'
+    },
+    {
+      label: t.value.teaching.stats.undergraduateCourses,
+      value: coursesList.filter(c => c.level === 'undergraduate').length.toString(),
+      icon: 'users',
+      color: 'bg-green-500'
+    },
+    {
+      label: t.value.teaching.stats.graduateCourses,
+      value: coursesList.filter(c => c.level === 'graduate').length.toString(),
+      icon: 'award',
+      color: 'bg-purple-500'
+    },
+    {
+      label: t.value.teaching.stats.instructors,
+      value: new Set(coursesList.map(c => c.teacher ? `${c.teacher.first_name} ${c.teacher.last_name}` : 'Unknown')).size.toString(),
+      icon: 'user-check',
+      color: 'bg-orange-500'
+    }
+  ]
+})
 
-// Filters configuration
+// Filters configuration - with proper null checking
 const filters = computed(() => [
   {
     id: 'level',
@@ -78,7 +81,7 @@ const filters = computed(() => [
     value: selectedLevel.value,
     options: [
       { value: '', label: t.value.teaching.filters.allLevels },
-      ...uniqueLevels.value.map(level => ({
+      ...(uniqueLevels.value || []).map(level => ({
         value: level,
         label: level === 'undergraduate' ? t.value.teaching.levels.undergraduate : t.value.teaching.levels.graduate
       }))
@@ -90,7 +93,7 @@ const filters = computed(() => [
     value: selectedSemester.value,
     options: [
       { value: '', label: t.value.teaching.filters.allSemesters },
-      ...uniqueSemesters.value.map(semester => ({
+      ...(uniqueSemesters.value || []).map(semester => ({
         value: semester,
         label: getFullSemesterName(semester)
       }))
@@ -113,9 +116,9 @@ const getFullSemesterName = (semester: string | null): string => {
   }
 }
 
-// Results text
+// Results text - with proper null checking
 const resultsText = computed(() => {
-  const count = filteredCoursesComputed.value.length
+  const count = filteredCoursesComputed.value?.length || 0
   if (count === 0) return `0 ${t.value.teaching.results.course}`
   if (count === 1) return `1 ${t.value.teaching.results.course}`
   return `${count} ${t.value.teaching.results.courses}`
@@ -168,16 +171,8 @@ const retryFetch = () => {
       />
     </div>
 
-    <!-- Loading State -->
-    <div v-if="isLoading" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-      <div class="max-w-6xl mx-auto text-center">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-        <p class="mt-4 text-gray-600">{{ t.common.loading }}</p>
-      </div>
-    </div>
-
     <!-- Error State -->
-    <div v-else-if="error" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <div v-if="error" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
       <div class="max-w-6xl mx-auto text-center">
         <div class="bg-red-50 border border-red-200 rounded-lg p-6">
           <p class="text-red-600">{{ error }}</p>
@@ -188,6 +183,14 @@ const retryFetch = () => {
             {{ t.common.retry }}
           </button>
         </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div v-else-if="isLoading" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+      <div class="max-w-6xl mx-auto text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+        <p class="mt-4 text-gray-600">{{ t.common.loading }}</p>
       </div>
     </div>
 

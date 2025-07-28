@@ -43,6 +43,7 @@ export interface Publication {
   year?: number | null;
   doi?: string | null;
   url?: string | null;
+  volume?: string | null;
   abstract?: string | null;
   publication_type?: string | null;
   bibtex?: string | null;
@@ -73,6 +74,8 @@ export interface Course {
 
 // Event interface matching SwaggerDoc and EventCard expectations
 export interface Event {
+  currentRegistrations: number | null | undefined;
+  registrationUrl: string | null | undefined;
   id: string; // UUID
   title: string;
   domain: string; // readOnly from API
@@ -113,6 +116,12 @@ export interface Project {
   title: string;
   abstract: string;
   domain: string;
+  description: string;
+  cosupervisor: string;
+  type: string;
+  objectives: string;
+  startDate: string | Date;
+  endDate: string | Date;
   status: 'available' | 'assigned' | 'completed';
   difficulty: 'beginner' | 'intermediate' | 'advanced';
   supervisor: string;

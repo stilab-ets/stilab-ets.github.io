@@ -43,7 +43,7 @@ onMounted(() => {
   fetchPublications()
 })
 
-// Filters configuration
+// Filters configuration - with proper null checking
 const filters = computed(() => [
   {
     id: 'year',
@@ -51,7 +51,7 @@ const filters = computed(() => [
     value: selectedYear.value,
     options: [
       { value: '', label: t.value.publications.filters.allYears },
-      ...availableYears.value.map(year => ({ 
+      ...(availableYears.value || []).map(year => ({ 
         value: year.toString(), 
         label: year.toString() 
       }))
@@ -63,24 +63,24 @@ const filters = computed(() => [
     value: selectedType.value,
     options: [
       { value: '', label: t.value.publications.filters.allTypes },
-      ...availableEntryTypes.value.map(type => ({ 
+      ...(availableEntryTypes.value || []).map(type => ({ 
         value: type, 
-        label: type 
+        label: type.charAt(0).toUpperCase() + type.slice(1).replace(/_/g, ' ')
       }))
     ]
   }
 ])
 
-// Results text
+// Results text - with proper null checking
 const resultsText = computed(() => {
-  const count = resultsCount.value
-  if (count === 0) return `0 ${t.value.publications.results.publications} ${t.value.publications.results.found}`
-  if (count === 1) return `1 ${t.value.publications.results.publication} ${t.value.publications.results.found}`
-  return `${count} ${t.value.publications.results.publications} ${t.value.publications.results.found}`
+  const count = resultsCount.value || 0
+  if (count === 0) return `0 ${t.value.publications.results.publication}`
+  if (count === 1) return `1 ${t.value.publications.results.publication}`
+  return `${count} ${t.value.publications.results.publications}`
 })
 
-// Error handling
-const handleRetry = () => {
+// Clear error and retry fetch
+const retryFetch = () => {
   clearError()
   fetchPublications()
 }
@@ -96,27 +96,16 @@ const handleRetry = () => {
     />
 
     <!-- Error State -->
-    <div v-if="error" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <div class="bg-red-50 border border-red-200 rounded-md p-4">
-        <div class="flex">
-          <div class="flex-shrink-0">
-            <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-            </svg>
-          </div>
-          <div class="ml-3">
-            <h3 class="text-sm font-medium text-red-800">
-              {{ error }}
-            </h3>
-            <div class="mt-2">
-              <button
-                @click="handleRetry"
-                class="bg-red-100 px-2 py-1 rounded text-sm text-red-700 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500"
-              >
-                {{ t.common.retry }}
-              </button>
-            </div>
-          </div>
+    <div v-if="error" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="text-center">
+        <div class="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
+          <p class="text-red-600 mb-4">{{ error }}</p>
+          <button 
+            @click="retryFetch"
+            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+          >
+            {{ t.common.retry }}
+          </button>
         </div>
       </div>
     </div>
@@ -134,12 +123,11 @@ const handleRetry = () => {
       <!-- Search and Filters -->
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <SearchAndFilters
-          :search-query="searchQuery"
+          v-model:search-query="searchQuery"
           :search-label="t.publications.search.label"
           :search-placeholder="t.publications.search.placeholder"
           :filters="filters"
           :results-text="resultsText"
-          @update:search-query="searchQuery = $event"
           @update-filter="updateFilter"
         />
 
@@ -151,7 +139,7 @@ const handleRetry = () => {
 
       <!-- Publications Grid -->
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-        <div v-if="sortedPublications.length > 0" class="space-y-6">
+        <div v-if="sortedPublications && sortedPublications.length > 0" class="space-y-6">
           <PublicationCard
             v-for="publication in sortedPublications"
             :key="publication.id"

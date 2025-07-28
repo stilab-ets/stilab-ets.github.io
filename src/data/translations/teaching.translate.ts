@@ -46,7 +46,12 @@ export interface TeachingTranslations {
   }
 }
 
-export const teachingTranslations = {
+type TeachingTranslationDict = {
+  fr: TeachingTranslations;
+  en: TeachingTranslations;
+};
+
+export const teachingTranslations: TeachingTranslationDict = {
   fr: {
     pageTitle: 'Enseignement',
     pageSubtitle: 'Découvrez les cours dispensés par les membres de notre laboratoire',
@@ -90,7 +95,9 @@ export const teachingTranslations = {
       fall: 'Automne',
       summer: 'Été',
       winter: 'Hiver'
-    }
+    },
+    stats: 'Statistiques',
+    results: 'Résultats'
   },
   en: {
     pageTitle: 'Teaching',
@@ -135,6 +142,8 @@ export const teachingTranslations = {
       fall: 'Fall',
       summer: 'Summer',
       winter: 'Winter'
-    }
+    },
+    stats: 'Statistics',
+    results: 'Results'
   }
 } as const

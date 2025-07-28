@@ -6,7 +6,12 @@ export interface StatsTranslations {
   awards: string
 }
 
-export const statsTranslations = {
+type StatsTranslationDict = {
+  fr: StatsTranslations;
+  en: StatsTranslations;
+};
+
+export const statsTranslations: StatsTranslationDict = {
   fr: {
     sectionTitle: 'Le laboratoire en chiffres',
     members: 'Membres',

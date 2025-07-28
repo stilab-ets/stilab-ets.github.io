@@ -17,6 +17,7 @@ interface UseCoursesReturn {
 }
 
 export function useCourses(): UseCoursesReturn {
+  // Initialize with empty array to prevent undefined access
   const courses = ref<Course[]>([])
   const isLoading = ref(false)
   const error = ref<string | null>(null)
@@ -31,11 +32,13 @@ export function useCourses(): UseCoursesReturn {
     
     try {
       const response = await mainAPI.getCourses()
-      // API returns array directly, not paginated
-      courses.value = response.data || []
+      // API returns array directly, not paginated - ensure it's always an array
+      courses.value = Array.isArray(response.data) ? response.data : []
     } catch (err: any) {
       error.value = err.message || 'Failed to fetch courses'
       console.error('Error fetching courses:', err)
+      // Ensure courses is still an empty array on error
+      courses.value = []
     } finally {
       isLoading.value = false
     }
@@ -47,7 +50,9 @@ export function useCourses(): UseCoursesReturn {
     
     try {
       const response = await mainAPI.createCourse(data)
-      courses.value.push(response.data)
+      if (response.data) {
+        courses.value.push(response.data)
+      }
       return true
     } catch (err: any) {
       error.value = err.message || 'Failed to create course'
@@ -65,7 +70,7 @@ export function useCourses(): UseCoursesReturn {
     try {
       const response = await mainAPI.updateCourse(id, data)
       const index = courses.value.findIndex(c => c.id === id)
-      if (index !== -1) {
+      if (index !== -1 && response.data) {
         courses.value[index] = response.data
       }
       return true
@@ -95,30 +100,49 @@ export function useCourses(): UseCoursesReturn {
     }
   }
 
-    // Computed properties
-    const uniqueLevels = computed(() => {
+  // Computed properties with proper null checking
+  const uniqueLevels = computed(() => {
+    if (!courses.value || !Array.isArray(courses.value)) {
+      return []
+    }
+    
     return Array.from(
-        new Set(courses.value.map(course => course.level).filter((l): l is string => typeof l === 'string'))
+      new Set(courses.value
+        .map(course => course.level)
+        .filter((l): l is string => typeof l === 'string' && l.length > 0)
+      )
     ).sort()
-    })
+  })
 
-    const uniqueSemesters = computed(() => {
+  const uniqueSemesters = computed(() => {
+    if (!courses.value || !Array.isArray(courses.value)) {
+      return []
+    }
+    
     return Array.from(
-        new Set(courses.value.map(course => course.semester).filter((s): s is string => typeof s === 'string'))
+      new Set(courses.value
+        .map(course => course.semester)
+        .filter((s): s is string => typeof s === 'string' && s.length > 0)
+      )
     ).sort()
-    })
+  })
 
-
-  // Filter function
+  // Filter function with proper null checking
   const filteredCourses = (searchQuery: string, selectedLevel: string, selectedSemester: string): Course[] => {
+    if (!courses.value || !Array.isArray(courses.value)) {
+      return []
+    }
+    
     return courses.value.filter((course) => {
+      if (!course) return false
+      
       const matchesSearch =
         !searchQuery ||
-        course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        course.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (course.title && course.title.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (course.code && course.code.toLowerCase().includes(searchQuery.toLowerCase())) ||
         (course.description && course.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
         (course.teacher && 
-          `${course.teacher.first_name} ${course.teacher.last_name}`.toLowerCase().includes(searchQuery.toLowerCase()))
+          `${course.teacher.first_name || ''} ${course.teacher.last_name || ''}`.toLowerCase().includes(searchQuery.toLowerCase()))
 
       const matchesLevel =
         !selectedLevel || course.level === selectedLevel

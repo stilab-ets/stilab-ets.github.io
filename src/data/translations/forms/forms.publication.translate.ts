@@ -1,4 +1,5 @@
 export interface PublicationFormTranslations {
+  sections: any
   titleCreate: string
   titleEdit: string
   subtitle: string
@@ -50,6 +51,7 @@ export interface PublicationFormTranslations {
     title: string
   }
   validation: {
+    authorsRequired: string
     entryTypeRequired: string
     titleRequired: string
     authorRequired: string
@@ -141,7 +143,8 @@ export const publicationFormTranslations: Record<'fr' | 'en', PublicationFormTra
       yearRequired: 'L\'année est requise',
       yearInvalid: 'Année invalide',
       urlInvalid: 'URL invalide',
-      doiInvalid: 'DOI invalide'
+      doiInvalid: 'DOI invalide',
+      authorsRequired: ""
     },
     errors: {
       submitFailed: 'Échec de la soumission',
@@ -164,7 +167,8 @@ export const publicationFormTranslations: Record<'fr' | 'en', PublicationFormTra
       unpublished: 'Non publié',
       online: 'En ligne',
       presentation: 'Présentation'
-    }
+    },
+    sections: undefined
   },
   en: {
     titleCreate: 'Create Publication',
@@ -224,7 +228,8 @@ export const publicationFormTranslations: Record<'fr' | 'en', PublicationFormTra
       yearRequired: 'Year is required',
       yearInvalid: 'Invalid year',
       urlInvalid: 'Invalid URL',
-      doiInvalid: 'Invalid DOI'
+      doiInvalid: 'Invalid DOI',
+      authorsRequired: ""
     },
     errors: {
       submitFailed: 'Failed to submit',
@@ -247,6 +252,7 @@ export const publicationFormTranslations: Record<'fr' | 'en', PublicationFormTra
       unpublished: 'Unpublished',
       online: 'Online',
       presentation: 'Presentation'
-    }
+    },
+    sections: undefined
   }
 }

@@ -1,49 +1,65 @@
 <script setup lang="ts">
-import { XCircleIcon, XIcon, PlusIcon } from 'lucide-vue-next'
-import { useProjectForm } from '@/hooks/projects/useProjectForm'
+import { ref, reactive, computed } from 'vue'
+import { useLanguage } from '@/composables/useLanguage'
 import type { Project } from '@/services/MainAPI'
 
-interface Props {
-  initialData?: Partial<Project>
-  isEditing?: boolean
+// UI Components
+import Card from '@/components/ui/Card.vue'
+import Button from '@/components/ui/Button.vue'
+
+interface ProjectFormData {
+  type: string
+  title: string
+  domain: string
+  description: string
+  supervisor: string
+  cosupervisor: string
+  requirements: string[]
+  objectives: string[]
+  startDate: string | Date
+  endDate: string | Date
+  difficulty: string
+  status: string
 }
 
-const props = defineProps<Props>()
+interface ProjectErrors {
+  [key: string]: string
+}
+
+const props = defineProps<{
+  initialData?: Partial<Project>
+  isEditing?: boolean
+}>()
+
 const emit = defineEmits<{
-  submit: [data: Partial<Project>]
+  submit: [data: ProjectFormData]
   cancel: []
 }>()
 
-const {
-  form,
-  errors,
-  generalError,
-  isSubmitting,
-  newRequirement,
-  t,
-  validateForm,
-  addRequirement,
-  removeRequirement,
-  prepareSubmissionData,
-  setSubmitting,
-  setGeneralError
-} = useProjectForm(props.initialData)
+const { t: translations } = useLanguage()
+const t = computed(() => translations.value.forms.project)
 
-const handleSubmit = async () => {
-  if (!validateForm()) return
-  
-  setSubmitting(true)
-  setGeneralError('')
-  
-  try {
-    const submissionData = prepareSubmissionData()
-    emit('submit', submissionData)
-  } catch (error) {
-    setGeneralError(t.value.errors.submitFailed)
-  } finally {
-    setSubmitting(false)
-  }
-}
+// Initialize form with default values to ensure reactivity
+const form = reactive<ProjectFormData>({
+  type: props.initialData?.type || 'msc',
+  title: props.initialData?.title || '',
+  domain: props.initialData?.domain || '',
+  description: props.initialData?.description || '',
+  supervisor: props.initialData?.supervisor || '',
+  cosupervisor: props.initialData?.cosupervisor || '',
+  requirements: Array.isArray(props.initialData?.requirements) ? [...props.initialData.requirements] : [],
+  objectives: Array.isArray(props.initialData?.objectives) ? [...props.initialData.objectives] : [],
+  startDate: props.initialData?.startDate || '',
+  endDate: props.initialData?.endDate || '',
+  difficulty: props.initialData?.difficulty || 'intermediate',
+  status: props.initialData?.status || 'planned'
+})
+
+const errors = ref<ProjectErrors>({})
+const generalError = ref<string>('')
+const isSubmitting = ref(false)
+const newRequirement = ref('')
+const newObjective = ref('')
 
 // Mock supervisors - replace with actual API call or prop
 const supervisors = [
@@ -51,10 +67,104 @@ const supervisors = [
   { id: '2', name: 'Prof. Jean Martin' },
   { id: '3', name: 'Dr. Sarah Chen' }
 ]
+
+// Project domains
+const domains = [
+  { value: 'software-architecture', label: t.value.domains.softwareArchitecture },
+  { value: 'machine-learning', label: 'Machine Learning' },
+  { value: 'web-development', label: 'Web Development' },
+  { value: 'mobile-development', label: 'Mobile Development' },
+  { value: 'data-science', label: 'Data Science' }
+]
+
+// Validation function
+const validateForm = (): boolean => {
+  errors.value = {}
+  
+  if (!form.title.trim()) {
+    errors.value.title = t.value.validation.titleRequired
+  }
+  
+  if (!form.domain) {
+    errors.value.domain = t.value.validation.domainRequired
+  }
+  
+  if (!form.description.trim()) {
+    errors.value.description = t.value.validation.descriptionRequired
+  }
+  
+  if (!form.supervisor) {
+    errors.value.supervisor = t.value.validation.supervisorRequired
+  }
+  
+  if (!form.startDate) {
+    errors.value.startDate = t.value.validation.startDateRequired
+  }
+  
+  if (form.endDate && form.startDate && new Date(form.endDate) <= new Date(form.startDate)) {
+    errors.value.endDate = t.value.validation.endDateAfterStart
+  }
+  
+  return Object.keys(errors.value).length === 0
+}
+
+// Add requirement
+const addRequirement = () => {
+  if (newRequirement.value.trim()) {
+    form.requirements.push(newRequirement.value.trim())
+    newRequirement.value = ''
+  }
+}
+
+// Remove requirement
+const removeRequirement = (index: number) => {
+  form.requirements.splice(index, 1)
+}
+
+// Add objective
+const addObjective = () => {
+  if (newObjective.value.trim()) {
+    form.objectives.push(newObjective.value.trim())
+    newObjective.value = ''
+  }
+}
+
+// Remove objective
+const removeObjective = (index: number) => {
+  form.objectives.splice(index, 1)
+}
+
+// Form submission
+const handleSubmit = async () => {
+  if (!validateForm()) return
+  
+  isSubmitting.value = true
+  generalError.value = ''
+  
+  try {
+    emit('submit', { ...form })
+  } catch (error: any) {
+    generalError.value = error.message || t.value.errors.submitFailed
+  } finally {
+    isSubmitting.value = false
+  }
+}
+
+// Handle cancel
+const handleCancel = () => {
+  emit('cancel')
+}
+
+// Submit button text
+const submitButtonText = computed(() => {
+  if (isSubmitting.value) return t.value.form.submitting
+  return props.isEditing ? t.value.form.update : t.value.form.create
+})
 </script>
 
 <template>
   <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg">
+    <!-- Form Header -->
     <div class="px-6 py-4 border-b border-gray-200">
       <h2 class="text-2xl font-bold text-gray-900">
         {{ isEditing ? t.titleEdit : t.titleCreate }}
@@ -64,42 +174,31 @@ const supervisors = [
       </p>
     </div>
 
+    <!-- Form Content -->
     <form @submit.prevent="handleSubmit" class="p-6">
       <div class="space-y-8">
+        
         <!-- Project Type -->
-        <div>
+        <Card>
           <h3 class="text-lg font-medium text-gray-900 mb-4">{{ t.sections.type }}</h3>
-          <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <div class="flex items-center">
-              <input
-                id="research"
-                type="radio"
-                value="research"
-                v-model="form.projectType"
-                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-              />
-              <label for="research" class="ml-2 block text-sm text-gray-900">
-                {{ t.projectTypes.research }}
-              </label>
-            </div>
-            
-            <div class="flex items-center">
-              <input
-                id="msc"
-                type="radio"
-                value="msc"
-                v-model="form.projectType"
-                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-              />
-              <label for="msc" class="ml-2 block text-sm text-gray-900">
-                {{ t.projectTypes.msc }}
-              </label>
-            </div>
+          
+          <div>
+            <label for="type" class="block text-sm font-medium text-gray-700 mb-2">
+              {{ t.form.type }}
+            </label>
+            <select
+              id="type"
+              v-model="form.type"
+              class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            >
+              <option value="msc">{{ t.projectTypes.msc }}</option>
+              <option value="research">{{ t.projectTypes.research }}</option>
+            </select>
           </div>
-        </div>
+        </Card>
 
         <!-- Basic Information -->
-        <div>
+        <Card>
           <h3 class="text-lg font-medium text-gray-900 mb-4">{{ t.sections.basic }}</h3>
           
           <div class="space-y-6">
@@ -114,88 +213,48 @@ const supervisors = [
                 required
                 class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 :class="{ 'border-red-500': errors.title }"
-                :placeholder="t.form.titlePlaceholder"
               />
               <p v-if="errors.title" class="mt-1 text-sm text-red-600">{{ errors.title }}</p>
             </div>
 
-            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              <div>
-                <label for="domain" class="block text-sm font-medium text-gray-700 mb-2">
-                  {{ t.form.domain }}
-                </label>
-                <select
-                  id="domain"
-                  v-model="form.domain"
-                  required
-                  class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  :class="{ 'border-red-500': errors.domain }"
-                >
-                  <option value="">{{ t.form.selectDomain }}</option>
-                  <option value="software-architecture">{{ t.domains.softwareArchitecture }}</option>
-                  <option value="artificial-intelligence">{{ t.domains.artificialIntelligence }}</option>
-                  <option value="cybersecurity">{{ t.domains.cybersecurity }}</option>
-                  <option value="devops">{{ t.domains.devops }}</option>
-                  <option value="cloud-computing">{{ t.domains.cloudComputing }}</option>
-                  <option value="software-testing">{{ t.domains.softwareTesting }}</option>
-                  <option value="software-maintenance">{{ t.domains.softwareMaintenance }}</option>
-                  <option value="human-computer-interaction">{{ t.domains.humanComputerInteraction }}</option>
-                </select>
-                <p v-if="errors.domain" class="mt-1 text-sm text-red-600">{{ errors.domain }}</p>
-              </div>
-
-              <div v-if="form.projectType === 'msc'">
-                <label for="difficulty" class="block text-sm font-medium text-gray-700 mb-2">
-                  {{ t.form.difficulty }}
-                </label>
-                <select
-                  id="difficulty"
-                  v-model="form.difficulty"
-                  class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                >
-                  <option value="">{{ t.form.selectDifficulty }}</option>
-                  <option value="beginner">{{ t.difficulties.beginner }}</option>
-                  <option value="intermediate">{{ t.difficulties.intermediate }}</option>
-                  <option value="advanced">{{ t.difficulties.advanced }}</option>
-                </select>
-              </div>
-
-              <div v-if="form.projectType === 'research'">
-                <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
-                  {{ t.form.status }}
-                </label>
-                <select
-                  id="status"
-                  v-model="form.status"
-                  class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                >
-                  <option value="planned">{{ t.statuses.planned }}</option>
-                  <option value="active">{{ t.statuses.active }}</option>
-                  <option value="completed">{{ t.statuses.completed }}</option>
-                </select>
-              </div>
+            <div>
+              <label for="domain" class="block text-sm font-medium text-gray-700 mb-2">
+                {{ t.form.domain }}
+              </label>
+              <select
+                id="domain"
+                v-model="form.domain"
+                required
+                class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                :class="{ 'border-red-500': errors.domain }"
+              >
+                <option value="">Select a domain</option>
+                <option v-for="domain in domains" :key="domain.value" :value="domain.value">
+                  {{ domain.label }}
+                </option>
+              </select>
+              <p v-if="errors.domain" class="mt-1 text-sm text-red-600">{{ errors.domain }}</p>
             </div>
 
             <div>
-              <label for="abstract" class="block text-sm font-medium text-gray-700 mb-2">
-                {{ form.projectType === 'msc' ? 'Résumé' : t.form.description }}
+              <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+                {{ t.form.description }}
               </label>
               <textarea
-                id="abstract"
-                rows="5"
-                v-model="form.abstract"
+                id="description"
+                v-model="form.description"
                 required
+                rows="4"
                 class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                :class="{ 'border-red-500': errors.abstract }"
-                :placeholder="form.projectType === 'msc' ? 'Décrivez le projet en détail...' : t.form.descriptionPlaceholder"
-              ></textarea>
-              <p v-if="errors.abstract" class="mt-1 text-sm text-red-600">{{ errors.abstract }}</p>
+                :class="{ 'border-red-500': errors.description }"
+              />
+              <p v-if="errors.description" class="mt-1 text-sm text-red-600">{{ errors.description }}</p>
             </div>
           </div>
-        </div>
+        </Card>
 
         <!-- Supervision -->
-        <div>
+        <Card>
           <h3 class="text-lg font-medium text-gray-900 mb-4">{{ t.sections.supervision }}</h3>
           
           <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -210,34 +269,34 @@ const supervisors = [
                 class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 :class="{ 'border-red-500': errors.supervisor }"
               >
-                <option value="">{{ t.form.selectSupervisor }}</option>
-                <option v-for="member in supervisors" :key="member.id" :value="member.name">
-                  {{ member.name }}
+                <option value="">Select a supervisor</option>
+                <option v-for="supervisor in supervisors" :key="supervisor.id" :value="supervisor.name">
+                  {{ supervisor.name }}
                 </option>
               </select>
               <p v-if="errors.supervisor" class="mt-1 text-sm text-red-600">{{ errors.supervisor }}</p>
             </div>
 
             <div>
-              <label for="coSupervisor" class="block text-sm font-medium text-gray-700 mb-2">
-                {{ t.form.coSupervisor }}
+              <label for="cosupervisor" class="block text-sm font-medium text-gray-700 mb-2">
+                {{ t.form.cosupervisor }}
               </label>
               <select
-                id="coSupervisor"
-                v-model="form.coSupervisor"
+                id="cosupervisor"
+                v-model="form.cosupervisor"
                 class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               >
-                <option value="">{{ t.form.selectCoSupervisor }}</option>
-                <option v-for="member in supervisors" :key="member.id" :value="member.name">
-                  {{ member.name }}
+                <option value="">Select a co-supervisor (optional)</option>
+                <option v-for="supervisor in supervisors" :key="supervisor.id" :value="supervisor.name">
+                  {{ supervisor.name }}
                 </option>
               </select>
             </div>
           </div>
-        </div>
+        </Card>
 
         <!-- Requirements -->
-        <div>
+        <Card>
           <h3 class="text-lg font-medium text-gray-900 mb-4">{{ t.sections.requirements }}</h3>
           
           <div>
@@ -256,7 +315,7 @@ const supervisors = [
                   @click="removeRequirement(index)"
                   class="ml-1.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-green-400 hover:bg-green-200 hover:text-green-500 focus:outline-none focus:bg-green-500 focus:text-white"
                 >
-                  <XIcon class="h-3 w-3" />
+                  ×
                 </button>
               </span>
             </div>
@@ -264,7 +323,6 @@ const supervisors = [
               <input
                 v-model="newRequirement"
                 @keydown.enter.prevent="addRequirement"
-                @keydown.comma.prevent="addRequirement"
                 class="block w-full px-3 py-2 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 :placeholder="t.form.requirementsPlaceholder"
               />
@@ -273,14 +331,56 @@ const supervisors = [
                 @click="addRequirement"
                 class="px-3 py-2 border border-l-0 border-gray-300 rounded-r-md bg-gray-50 text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <PlusIcon class="h-4 w-4" />
+                +
               </button>
             </div>
           </div>
-        </div>
+        </Card>
+
+        <!-- Objectives (for MSc projects) -->
+        <Card v-if="form.type === 'msc'">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">{{ t.sections.objectives }}</h3>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              {{ t.form.objectives }}
+            </label>
+            <div class="flex flex-wrap gap-2 mb-2">
+              <span
+                v-for="(obj, index) in form.objectives"
+                :key="index"
+                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+              >
+                {{ obj }}
+                <button
+                  type="button"
+                  @click="removeObjective(index)"
+                  class="ml-1.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-blue-400 hover:bg-blue-200 hover:text-blue-500 focus:outline-none focus:bg-blue-500 focus:text-white"
+                >
+                  ×
+                </button>
+              </span>
+            </div>
+            <div class="flex">
+              <input
+                v-model="newObjective"
+                @keydown.enter.prevent="addObjective"
+                class="block w-full px-3 py-2 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                :placeholder="t.form.objectivesPlaceholder"
+              />
+              <button
+                type="button"
+                @click="addObjective"
+                class="px-3 py-2 border border-l-0 border-gray-300 rounded-r-md bg-gray-50 text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                +
+              </button>
+            </div>
+          </div>
+        </Card>
 
         <!-- Timeline -->
-        <div>
+        <Card>
           <h3 class="text-lg font-medium text-gray-900 mb-4">{{ t.sections.timeline }}</h3>
           
           <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -313,92 +413,31 @@ const supervisors = [
               <p v-if="errors.endDate" class="mt-1 text-sm text-red-600">{{ errors.endDate }}</p>
             </div>
           </div>
+        </Card>
+
+        <!-- Error Display -->
+        <div v-if="generalError" class="bg-red-50 border border-red-200 rounded-lg p-4">
+          <p class="text-red-800">{{ generalError }}</p>
         </div>
 
-        <!-- Additional Information -->
-        <div>
-          <h3 class="text-lg font-medium text-gray-900 mb-4">{{ t.sections.additional }}</h3>
+        <!-- Form Actions -->
+        <div class="flex justify-end space-x-4">
+          <Button
+            type="button"
+            variant="secondary"
+            @click="handleCancel"
+            :disabled="isSubmitting"
+          >
+            {{ t.form.cancel }}
+          </Button>
           
-          <div class="space-y-6">
-            <div v-if="form.projectType === 'research'">
-              <label for="funding" class="block text-sm font-medium text-gray-700 mb-2">
-                {{ t.form.funding }}
-              </label>
-              <input
-                id="funding"
-                type="text"
-                v-model="form.funding"
-                class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                :placeholder="t.form.fundingPlaceholder"
-              />
-            </div>
-
-            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              <div>
-                <label for="githubUrl" class="block text-sm font-medium text-gray-700 mb-2">
-                  {{ t.form.githubUrl }}
-                </label>
-                <input
-                  id="githubUrl"
-                  type="url"
-                  v-model="form.githubUrl"
-                  class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  :class="{ 'border-red-500': errors.githubUrl }"
-                  :placeholder="t.form.githubUrlPlaceholder"
-                />
-                <p v-if="errors.githubUrl" class="mt-1 text-sm text-red-600">{{ errors.githubUrl }}</p>
-              </div>
-
-              <div>
-                <label for="websiteUrl" class="block text-sm font-medium text-gray-700 mb-2">
-                  {{ t.form.websiteUrl }}
-                </label>
-                <input
-                  id="websiteUrl"
-                  type="url"
-                  v-model="form.websiteUrl"
-                  class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  :class="{ 'border-red-500': errors.websiteUrl }"
-                  :placeholder="t.form.websiteUrlPlaceholder"
-                />
-                <p v-if="errors.websiteUrl" class="mt-1 text-sm text-red-600">{{ errors.websiteUrl }}</p>
-              </div>
-            </div>
-          </div>
+          <Button
+            type="submit"
+            :disabled="isSubmitting"
+          >
+            {{ submitButtonText }}
+          </Button>
         </div>
-      </div>
-
-      <!-- Error Display -->
-      <div v-if="generalError" class="mt-6 rounded-md bg-red-50 p-4">
-        <div class="flex">
-          <div class="flex-shrink-0">
-            <XCircleIcon class="h-5 w-5 text-red-400" />
-          </div>
-          <div class="ml-3">
-            <h3 class="text-sm font-medium text-red-800">
-              {{ generalError }}
-            </h3>
-          </div>
-        </div>
-      </div>
-
-      <!-- Submit Buttons -->
-      <div class="mt-8 flex justify-end space-x-3">
-        <button
-          type="button"
-          @click="$emit('cancel')"
-          class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-        >
-          {{ t.form.cancel }}
-        </button>
-        
-        <button
-          type="submit"
-          :disabled="isSubmitting"
-          class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {{ isSubmitting ? t.form.submitting : (isEditing ? t.form.update : t.form.create) }}
-        </button>
       </div>
     </form>
   </div>
