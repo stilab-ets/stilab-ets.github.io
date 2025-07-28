@@ -15,6 +15,24 @@ const props = defineProps<Props>()
 const { t } = useLanguage()
 const { openUrl } = useBrowserUtils()
 
+// Provide fallback values for translations
+const getTranslation = (path: string, fallback: string) => {
+  try {
+    const parts = path.split('.')
+    let result: any = t.value
+    for (const part of parts) {
+      if (result && typeof result === 'object' && part in result) {
+        result = result[part]
+      } else {
+        return fallback
+      }
+    }
+    return result || fallback
+  } catch {
+    return fallback
+  }
+}
+
 const getTypeColor = (type: Event['type']): string => {
   const colors: Record<Event['type'], string> = {
     seminar: 'bg-blue-100 text-blue-800',
@@ -29,8 +47,7 @@ const getTypeColor = (type: Event['type']): string => {
 }
 
 const getTypeLabel = (type: Event['type']): string => {
-  const typeKey = type as keyof typeof t.value.events.eventTypes
-  return t.value.events.eventTypes[typeKey] || type
+  return getTranslation(`events.eventTypes.${type}`, type)
 }
 
 const formatDate = (dateString: string): string => {
@@ -56,23 +73,27 @@ const speakerName = computed((): string => {
 })
 
 const isCapacityNearFull = computed((): boolean => {
-  return !!(props.eventData.capacity && props.eventData.current_registrations && 
-           (props.eventData.current_registrations / props.eventData.capacity) > 0.8)
+  const current = props.eventData.current_registrations || props.eventData.currentRegistrations
+  return !!(props.eventData.capacity && current && 
+           (current / props.eventData.capacity) > 0.8)
 })
 
 const isCapacityFull = computed((): boolean => {
-  return !!(props.eventData.capacity && props.eventData.current_registrations && 
-           props.eventData.current_registrations >= props.eventData.capacity)
+  const current = props.eventData.current_registrations || props.eventData.currentRegistrations
+  return !!(props.eventData.capacity && current && 
+           current >= props.eventData.capacity)
 })
 
 const capacityPercentage = computed((): number => {
-  if (!props.eventData.capacity || !props.eventData.current_registrations) return 0
-  return (props.eventData.current_registrations / props.eventData.capacity) * 100
+  const current = props.eventData.current_registrations || props.eventData.currentRegistrations
+  if (!props.eventData.capacity || !current) return 0
+  return (current / props.eventData.capacity) * 100
 })
 
 const openRegistrationLink = (): void => {
-  if (props.eventData.registration_url) {
-    openUrl(props.eventData.registration_url)
+  const url = props.eventData.registration_url || props.eventData.registrationUrl
+  if (url) {
+    openUrl(url)
   }
 }
 </script>
@@ -89,13 +110,13 @@ const openRegistrationLink = (): void => {
           ]">
             {{ getTypeLabel(eventData.type) }}
           </span>
-          <span v-if="!isPast && eventData.registration_url" 
+          <span v-if="!isPast && (eventData.registration_url || eventData.registrationUrl)" 
             class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-            {{ t.events.eventCard.registrationOpen }}
+            {{ getTranslation('events.eventCard.registrationOpen', 'Registration Open') }}
           </span>
           <span v-if="!isPast && isCapacityNearFull" 
             class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 ml-2">
-            {{ t.events.eventCard.limitedSeats }}
+            {{ getTranslation('events.eventCard.limitedSeats', 'Limited Seats') }}
           </span>
         </div>
         <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ eventData.title }}</h3>
@@ -126,15 +147,15 @@ const openRegistrationLink = (): void => {
     <!-- Speaker -->
     <div v-if="speakerName" class="mb-4">
       <p class="text-sm text-gray-600">
-        <span class="font-medium">{{ t.events.eventCard.speaker }}:</span> {{ speakerName }}
+        <span class="font-medium">{{ getTranslation('events.eventCard.speaker', 'Speaker') }}:</span> {{ speakerName }}
       </p>
     </div>
 
     <!-- Capacity info for upcoming events -->
-    <div v-if="!isPast && eventData.capacity && eventData.current_registrations" class="mb-4">
+    <div v-if="!isPast && eventData.capacity && (eventData.current_registrations || eventData.currentRegistrations)" class="mb-4">
       <div class="flex items-center justify-between text-sm text-gray-600 mb-2">
-        <span>{{ t.events.eventCard.registrations }}</span>
-        <span>{{ eventData.current_registrations }} / {{ eventData.capacity }}</span>
+        <span>{{ getTranslation('events.eventCard.registrations', 'Registrations') }}</span>
+        <span>{{ eventData.current_registrations || eventData.currentRegistrations }} / {{ eventData.capacity }}</span>
       </div>
       <div class="w-full bg-gray-200 rounded-full h-2">
         <div class="bg-[#08a4d4] h-2 rounded-full" :style="{ width: capacityPercentage + '%' }"></div>
@@ -158,7 +179,7 @@ const openRegistrationLink = (): void => {
     </div>
 
     <!-- Registration Button -->
-    <div v-if="!isPast && eventData.registration_url" class="mt-4">
+    <div v-if="!isPast && (eventData.registration_url || eventData.registrationUrl)" class="mt-4">
       <Button
         :variant="isCapacityFull ? 'secondary' : 'primary'"
         :disabled="isCapacityFull"
@@ -166,10 +187,10 @@ const openRegistrationLink = (): void => {
         class="w-full"
       >
         <template v-if="isCapacityFull">
-          {{ t.events.eventCard.capacityFull }}
+          {{ getTranslation('events.eventCard.capacityFull', 'Capacity Full') }}
         </template>
         <template v-else>
-          {{ t.events.eventCard.register }}
+          {{ getTranslation('events.eventCard.register', 'Register') }}
         </template>
       </Button>
     </div>

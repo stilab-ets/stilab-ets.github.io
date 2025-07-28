@@ -1,4 +1,5 @@
 export interface AwardsTranslations {
+  results: any
   pageTitle: string
   pageSubtitle: string
   statistics: {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
-import { useAwards, type ExtendedAward } from '@/hooks/awards/useAwards'
+import { useAwards } from '@/hooks/awards/useAwards'
 
 // UI Components
 import PageHeader from '@/components/ui/PageHeader.vue'
@@ -73,79 +73,141 @@ const filteredAwards = computed(() => {
 })
 
 // Statistics with safety checks
-const statistics = computed(() => [
-  {
-    label: t.value.awards.statistics.totalAwards,
-    value: totalAwards.value.toString(),
-    icon: 'award',
-    color: 'bg-yellow-500'
-  },
-  {
-    label: t.value.awards.statistics.organizations,
-    value: (uniqueOrganizations.value || []).length.toString(),
-    icon: 'building',
-    color: 'bg-blue-500'
-  },
-  {
-    label: t.value.awards.statistics.awardedMembers,
-    value: (awardedMembers.value || []).length.toString(),
-    icon: 'users',
-    color: 'bg-green-500'
-  },
-  {
-    label: t.value.awards.statistics.yearsOfRecognition,
-    value: yearsOfRecognition.value.toString(),
-    icon: 'calendar',
-    color: 'bg-purple-500'
+const statistics = computed(() => {
+  if (!t.value?.awards?.statistics) {
+    return [
+      { label: 'Total Awards', value: totalAwards.value.toString(), icon: 'award', color: 'bg-yellow-500' },
+      { label: 'Organizations', value: (uniqueOrganizations.value || []).length.toString(), icon: 'building', color: 'bg-blue-500' },
+      { label: 'Awarded Members', value: (awardedMembers.value || []).length.toString(), icon: 'users', color: 'bg-green-500' },
+      { label: 'Years of Recognition', value: yearsOfRecognition.value.toString(), icon: 'calendar', color: 'bg-purple-500' }
+    ]
   }
-])
+  
+  return [
+    {
+      label: t.value.awards.statistics.totalAwards,
+      value: totalAwards.value.toString(),
+      icon: 'award',
+      color: 'bg-yellow-500'
+    },
+    {
+      label: t.value.awards.statistics.organizations,
+      value: (uniqueOrganizations.value || []).length.toString(),
+      icon: 'building',
+      color: 'bg-blue-500'
+    },
+    {
+      label: t.value.awards.statistics.awardedMembers,
+      value: (awardedMembers.value || []).length.toString(),
+      icon: 'users',
+      color: 'bg-green-500'
+    },
+    {
+      label: t.value.awards.statistics.yearsOfRecognition,
+      value: yearsOfRecognition.value.toString(),
+      icon: 'calendar',
+      color: 'bg-purple-500'
+    }
+  ]
+})
 
 // Filters configuration with safety checks
-const filters = computed(() => [
-  {
-    id: 'year',
-    label: t.value.awards.filters.year,
-    value: selectedYear.value,
-    options: [
-      { value: '', label: t.value.awards.filters.allYears },
-      ...(availableYears.value || []).map(year => ({
-        value: year.toString(),
-        label: year.toString()
-      }))
-    ]
-  },
-  {
-    id: 'organization',
-    label: t.value.awards.filters.organization,
-    value: selectedOrganization.value,
-    options: [
-      { value: '', label: t.value.awards.filters.allOrganizations },
-      ...(uniqueOrganizations.value || []).map(org => ({
-        value: org,
-        label: org
-      }))
-    ]
-  },
-  {
-    id: 'member',
-    label: t.value.awards.filters.member,
-    value: selectedMember.value,
-    options: [
-      { value: '', label: t.value.awards.filters.allMembers },
-      ...(awardedMembers.value || []).map(member => ({
-        value: member,
-        label: member
-      }))
+const filters = computed(() => {
+  if (!t.value?.awards?.filters) {
+    return [
+      {
+        id: 'year',
+        label: 'Year',
+        value: selectedYear.value,
+        options: [
+          { value: '', label: 'All Years' },
+          ...(availableYears.value || []).map(year => ({
+            value: year.toString(),
+            label: year.toString()
+          }))
+        ]
+      },
+      {
+        id: 'organization',
+        label: 'Organization',
+        value: selectedOrganization.value,
+        options: [
+          { value: '', label: 'All Organizations' },
+          ...(uniqueOrganizations.value || []).map(org => ({
+            value: org,
+            label: org
+          }))
+        ]
+      },
+      {
+        id: 'member',
+        label: 'Member',
+        value: selectedMember.value,
+        options: [
+          { value: '', label: 'All Members' },
+          ...(awardedMembers.value || []).map(member => ({
+            value: member,
+            label: member
+          }))
+        ]
+      }
     ]
   }
-])
+  
+  return [
+    {
+      id: 'year',
+      label: t.value.awards.filters.year,
+      value: selectedYear.value,
+      options: [
+        { value: '', label: t.value.awards.filters.allYears },
+        ...(availableYears.value || []).map(year => ({
+          value: year.toString(),
+          label: year.toString()
+        }))
+      ]
+    },
+    {
+      id: 'organization',
+      label: t.value.awards.filters.organization,
+      value: selectedOrganization.value,
+      options: [
+        { value: '', label: t.value.awards.filters.allOrganizations },
+        ...(uniqueOrganizations.value || []).map(org => ({
+          value: org,
+          label: org
+        }))
+      ]
+    },
+    {
+      id: 'member',
+      label: t.value.awards.filters.member,
+      value: selectedMember.value,
+      options: [
+        { value: '', label: t.value.awards.filters.allMembers },
+        ...(awardedMembers.value || []).map(member => ({
+          value: member,
+          label: member
+        }))
+      ]
+    }
+  ]
+})
 
 // Results text
 const resultsText = computed(() => {
   const count = filteredAwards.value.length
-  if (count === 0) return `0 ${t.value.awards.results.award}`
-  if (count === 1) return `1 ${t.value.awards.results.award}`
-  return `${count} ${t.value.awards.results.awards}`
+  const results = t.value?.awards?.results
+  
+  if (!results) {
+    if (count === 0) return '0 awards'
+    if (count === 1) return '1 award'
+    return `${count} awards`
+  }
+  
+  if (count === 0) return `0 ${results.award}`
+  if (count === 1) return `1 ${results.award}`
+  return `${count} ${results.awards}`
 })
 
 // Filter update method
@@ -171,8 +233,8 @@ const updateFilter = (filterId: string, value: string) => {
   <div class="min-h-screen bg-gray-50">
     <!-- Page Header -->
     <PageHeader 
-      :title="t.awards.pageTitle"
-      :subtitle="t.awards.pageSubtitle"
+      :title="t.awards?.pageTitle || 'Awards'"
+      :subtitle="t.awards?.pageSubtitle || 'Recognitions and achievements'"
       highlight-word="Awards"
     />
 
@@ -198,7 +260,7 @@ const updateFilter = (filterId: string, value: string) => {
               @click="fetchAwards"
               class="mt-2 text-sm bg-red-100 hover:bg-red-200 text-red-800 px-3 py-1 rounded transition-colors"
             >
-              {{ t.common.retry }}
+              {{ t.common?.retry || 'Retry' }}
             </button>
           </div>
         </div>
@@ -233,8 +295,8 @@ const updateFilter = (filterId: string, value: string) => {
         <!-- Empty State -->
         <EmptyState 
           v-else
-          :title="t.awards.empty.title"
-          :message="t.awards.empty.message"
+          :title="t.awards?.empty?.title || 'No awards found'"
+          :message="t.awards?.empty?.message || 'Try adjusting your filters'"
           icon="star"
         />
       </div>

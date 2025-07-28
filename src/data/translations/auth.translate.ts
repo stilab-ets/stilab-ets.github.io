@@ -58,6 +58,7 @@ export interface AuthTranslations {
       submitting: string
     }
     roles: {
+      [x: string]: any
       professor: string
       phd: string
       master: string
