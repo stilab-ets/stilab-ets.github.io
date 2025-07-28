@@ -52,7 +52,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/register", RegisterView.as_view(), name="register"),
     path("api/login", LoginView.as_view(), name="login"),
-    path("api/publications/", PublicationListAPI.as_view(), name="publication-list"),
+    path("api/publications", PublicationListAPI.as_view(), name="publication-list"),
     path("api/profile", ProfileView.as_view(), name="profile"),
     path("api/members", MemberView.as_view(), name="member-list"),
     path("api/awards", AwardsView.as_view(), name="awards"),
