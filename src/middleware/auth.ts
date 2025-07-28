@@ -50,7 +50,7 @@ class AuthMiddleware {
     }
   }
 
-  async login(credentials: { username: string; password: string }): Promise<boolean> {
+  async login(credentials: { email: string; password: string }): Promise<boolean> {
     this.state.isLoading.value = true;
     
     try {

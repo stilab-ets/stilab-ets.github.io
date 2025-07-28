@@ -24,7 +24,7 @@ const handleRegisterRedirect = () => {
 </script>
 
 <template>
-  <div class="min-h-screen flex-1 bg-gradient-to-br from-blue-50 to-indigo-100 items-center justify-center p-4">
+  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
     <div class="max-w-md w-full">
       <div class="block bg-white rounded-xl shadow-xl p-8">
         <!-- Logo and title -->
@@ -37,10 +37,13 @@ const handleRegisterRedirect = () => {
         </div>
 
         <!-- Login form -->
-        <LoginForm 
-          @login-success="handleLoginSuccess" 
-          @login-failed="handleLoginFailed"
-        />
+        <div class="flex items-center justify-center">
+          <LoginForm 
+            @login-success="handleLoginSuccess" 
+            @login-failed="handleLoginFailed"
+          />
+        </div>
+        
 
         <!-- Register link -->
         <div class="mt-6 text-center">
@@ -48,7 +51,7 @@ const handleRegisterRedirect = () => {
             Don't have an account?
             <button
               @click="handleRegisterRedirect"
-              class="font-medium text-[#08a4d4] hover:text-blue-500 transition-colors duration-200"
+              class="font-medium text-[#08a4d4] hover:cursor-pointer hover:text-blue-500 transition-colors duration-200"
             >
               Contact administrator
             </button>
@@ -59,7 +62,7 @@ const handleRegisterRedirect = () => {
         <div class="mt-4 text-center">
           <button
             @click="emit('setCurrentPage', 'home')"
-            class="text-sm text-gray-500 hover:text-gray-700 transition-colors duration-200"
+            class="text-sm text-gray-500 hover:cursor-pointer hover:text-gray-700 transition-colors duration-200"
           >
             ← Back to home
           </button>

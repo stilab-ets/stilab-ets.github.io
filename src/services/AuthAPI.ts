@@ -1,7 +1,7 @@
 import { BaseAPI, type ApiResponse, type AuthTokens } from './BaseAPI';
 
 export interface LoginCredentials {
-  username: string;
+  email: string;
   password: string;
 }
 

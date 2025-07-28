@@ -32,6 +32,7 @@ const { mobileMenuOpen, toggleMobileMenu } = useMobileNavigation()
 const setCurrentPage = (page: string) => {
   navigateToPage(page)
   emit('setCurrentPage', page)
+  mobileMenuOpen.value = false
 }
 
 const handleLanguageChange = (language: string) => {

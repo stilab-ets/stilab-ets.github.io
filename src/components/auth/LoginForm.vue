@@ -59,7 +59,7 @@ const handleSubmit = async () => {
   
   try {
     const success = await login({
-      username: form.username,
+      email: form.username,
       password: form.password
     })
     
@@ -131,7 +131,7 @@ const handleSubmit = async () => {
               name="remember-me"
               type="checkbox"
               v-model="form.rememberMe"
-              class="h-4 w-4 text-[#08a4d4] focus:ring-[#08a4d4] border-gray-300 rounded"
+              class="h-4 w-4 text-[#08a4d4] hover:cursor-pointer focus:ring-[#08a4d4] border-gray-300 rounded"
             />
             <label for="remember-me" class="ml-2 block text-sm text-gray-900">
               {{ t.form.rememberMe }}
@@ -139,7 +139,7 @@ const handleSubmit = async () => {
           </div>
 
           <div class="text-sm">
-            <a href="#" class="font-medium text-[#08a4d4] hover:text-blue-500">
+            <a href="#" class="font-medium hover:cursor-pointer text-[#08a4d4] hover:text-blue-500">
               {{ t.form.forgotPassword }}
             </a>
           </div>
