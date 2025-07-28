@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import './assets/style.css'
+import { authMiddleware } from '@/middleware/auth';
 
 // Configure axios globally for Django backend
 import axios from 'axios'
@@ -140,9 +141,6 @@ import {
   BarChart, Home, GraduationCap, User, Plus, Calendar, Briefcase,
   Activity
 } from 'lucide-vue-next'
-
-// Initialize auth middleware
-import { authMiddleware } from '@/middleware/auth'
 
 // Create Vue application
 const app = createApp(App)

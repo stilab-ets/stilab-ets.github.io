@@ -39,7 +39,7 @@ export class ApiFactory {
 
   // Convenience methods for common operations
   public async isAuthenticated(): Promise<boolean> {
-    return this.authAPI.verifyToken();
+    return this.authAPI.isAuthenticated();
   }
 
   public logout(): Promise<void> {

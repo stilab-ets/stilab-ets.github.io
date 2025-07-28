@@ -52,8 +52,6 @@ export abstract class BaseAPI {
       const token = this.getAuthToken();
       if (token) {
         headers.Authorization = `Bearer ${token}`;
-      } else {
-        console.log('No token available for header');
       }
     }
     

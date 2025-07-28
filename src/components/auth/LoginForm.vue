@@ -70,7 +70,7 @@ const handleSubmit = async () => {
       emit('loginSuccess')
       if (dashboardRoute) {
         // console.log(`Redirecting to: ${dashboardRoute}`)
-        window.location.href = "/"
+        //window.location.href = "/"
       }
     } else {
       generalError.value = t.value.errors.loginFailed

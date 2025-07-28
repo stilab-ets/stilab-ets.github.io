@@ -29,22 +29,19 @@ class AuthMiddleware {
 
   async initialize(): Promise<void> {
     this.state.isLoading.value = true;
-    
+
     try {
-      if (authAPI.isAuthenticated()) {
-        try {
-          const response = await authAPI.getCurrentUser();
-          
-          this.state.user.value = response.data;
-          this.state.isAuthenticated.value = true;
-        } catch (error) {
-          this.logout();
-        }
+      const accessToken = localStorage.getItem('access_token');
+      const userData = localStorage.getItem('user');
+
+      if (accessToken && authAPI.isTokenValid(accessToken) && userData) {
+        this.state.user.value = JSON.parse(userData);
+        this.state.isAuthenticated.value = true;
       } else {
-        console.log('No token found');
+        this.logout();
       }
     } catch (error) {
-      console.error('Auth initialization failed:', error);
+      console.error('Auth init failed:', error);
       this.logout();
     } finally {
       this.state.isLoading.value = false;

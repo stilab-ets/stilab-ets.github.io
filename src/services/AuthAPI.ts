@@ -1,4 +1,11 @@
 import { BaseAPI, type ApiResponse } from './BaseAPI';
+import { jwtDecode } from 'jwt-decode';
+
+interface JwtPayload {
+  exp: number;
+  [key: string]: any;
+}
+
 
 export interface LoginCredentials {
   username_or_email: string;
@@ -47,6 +54,10 @@ export class AuthAPI extends BaseAPI {
       localStorage.setItem('refresh_token', response.data.refresh_token);
     }
 
+    if (response.data?.user) {
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+    }
+
     return response;
   }
 
@@ -70,6 +81,7 @@ export class AuthAPI extends BaseAPI {
   async logout(): Promise<void> {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
+    localStorage.removeItem('user');
   }
 
   async getCurrentUser(): Promise<ApiResponse<User>> {   
@@ -78,6 +90,17 @@ export class AuthAPI extends BaseAPI {
 
   isAuthenticated(): boolean {
     const token = localStorage.getItem('access_token');
-    return !!token;
+    return !!token && this.isTokenValid(token);
   }
+
+
+  isTokenValid(token: string): boolean {
+  try {
+      const decoded = jwtDecode<JwtPayload>(token);
+      return decoded.exp * 1000 > Date.now();
+    } catch {
+      return false;
+    }
+  }
+
 }
