@@ -5,15 +5,8 @@ export interface ApiResponse<T = any> {
 }
 
 export interface AuthTokens {
-  access: string;
-  refresh: string;
-}
-
-export interface PaginatedResponse<T> {
-  results: T[];
-  count: number;
-  next?: string;
-  previous?: string;
+  access_token: string;
+  refresh_token: string;
 }
 
 export class ApiError extends Error {
@@ -47,11 +40,6 @@ export abstract class BaseAPI {
     return localStorage.getItem('refresh_token');
   }
 
-  protected setAuthTokens(tokens: AuthTokens): void {
-    localStorage.setItem('access_token', tokens.access);
-    localStorage.setItem('refresh_token', tokens.refresh);
-  }
-
   protected clearAuthTokens(): void {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
@@ -64,40 +52,20 @@ export abstract class BaseAPI {
       const token = this.getAuthToken();
       if (token) {
         headers.Authorization = `Bearer ${token}`;
+      } else {
+        console.log('No token available for header');
       }
     }
     
     return headers;
   }
 
-  protected async refreshAuthToken(): Promise<AuthTokens> {
-    const refreshToken = this.getRefreshToken();
-    if (!refreshToken) {
-      throw new ApiError('No refresh token available', 401);
-    }
-
-    const response = await fetch(`${this.baseURL}/auth/refresh/`, {
-      method: 'POST',
-      headers: this.defaultHeaders,
-      body: JSON.stringify({ refresh: refreshToken }),
-    });
-
-    if (!response.ok) {
-      this.clearAuthTokens();
-      throw new ApiError('Token refresh failed', response.status);
-    }
-
-    const tokens: AuthTokens = await response.json();
-    this.setAuthTokens(tokens);
-    return tokens;
-  }
-
   protected async makeRequest<T>(
     endpoint: string,
-    options: RequestInit = {},
-    retryOnAuth: boolean = true
+    options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
     const url = `${this.baseURL}${endpoint}`;
+    
     const requestOptions: RequestInit = {
       ...options,
       headers: {
@@ -107,24 +75,16 @@ export abstract class BaseAPI {
     };
 
     try {
-      let response = await fetch(url, requestOptions);
+      const response = await fetch(url, requestOptions);
 
-      if (response.status === 401 && retryOnAuth) {
-        try {
-          await this.refreshAuthToken();
-          requestOptions.headers = {
-            ...this.getHeaders(),
-            ...options.headers,
-          };
-          response = await fetch(url, requestOptions);
-        } catch (refreshError) {
-          this.clearAuthTokens();
-          throw new ApiError('Authentication failed', 401);
-        }
+      if (response.status === 401) {
+        this.clearAuthTokens();
+        throw new ApiError('Authentication failed', 401);
       }
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+        console.error('Request failed:', response.status, errorData);
         throw new ApiError(
           errorData.message || 'Request failed',
           response.status,
@@ -133,12 +93,14 @@ export abstract class BaseAPI {
       }
 
       const data = await response.json();
+      
       return {
         data,
         status: response.status,
         message: data.message,
       };
     } catch (error) {
+      console.error('Request error:', error);
       if (error instanceof ApiError) {
         throw error;
       }

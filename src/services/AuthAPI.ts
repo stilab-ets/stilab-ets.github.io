@@ -1,7 +1,7 @@
-import { BaseAPI, type ApiResponse, type AuthTokens } from './BaseAPI';
+import { BaseAPI, type ApiResponse } from './BaseAPI';
 
 export interface LoginCredentials {
-  email: string;
+  username_or_email: string;
   password: string;
 }
 
@@ -11,6 +11,12 @@ export interface RegisterData {
   password: string;
   first_name?: string;
   last_name?: string;
+}
+
+export interface AuthTokens {
+  access_token: string;
+  refresh_token: string;
+  user: User;
 }
 
 export interface User {
@@ -27,17 +33,18 @@ export interface User {
 
 export class AuthAPI extends BaseAPI {
   async login(credentials: LoginCredentials): Promise<ApiResponse<AuthTokens>> {
+    
     const response = await this.makeRequest<AuthTokens>(
-      '/auth/login/',
+      '/api/login',
       {
         method: 'POST',
         body: JSON.stringify(credentials),
-      },
-      false // Don't retry on auth failure for login
+      }
     );
 
     if (response.data) {
-      this.setAuthTokens(response.data);
+      localStorage.setItem('access_token', response.data.access_token);
+      localStorage.setItem('refresh_token', response.data.refresh_token);
     }
 
     return response;
@@ -45,62 +52,32 @@ export class AuthAPI extends BaseAPI {
 
   async register(userData: RegisterData): Promise<ApiResponse<AuthTokens>> {
     const response = await this.makeRequest<AuthTokens>(
-      '/auth/register/',
+      '/api/register',
       {
         method: 'POST',
         body: JSON.stringify(userData),
-      },
-      false
+      }
     );
 
     if (response.data) {
-      this.setAuthTokens(response.data);
+      localStorage.setItem('access_token', response.data.access_token);
+      localStorage.setItem('refresh_token', response.data.refresh_token);
     }
 
     return response;
   }
 
   async logout(): Promise<void> {
-    try {
-      const refreshToken = this.getRefreshToken();
-      if (refreshToken) {
-        await this.post('/auth/logout/', { refresh: refreshToken });
-      }
-    } catch (error) {
-      console.warn('Logout request failed, clearing tokens anyway');
-    } finally {
-      this.clearAuthTokens();
-    }
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
   }
 
-  async getCurrentUser(): Promise<ApiResponse<User>> {
-    return this.get<User>('/api/profile/');
-  }
-
-  async refreshToken(): Promise<ApiResponse<AuthTokens>> {
-    const tokens = await this.refreshAuthToken();
-    return {
-      data: tokens,
-      status: 200,
-      message: 'Token refreshed successfully',
-    };
+  async getCurrentUser(): Promise<ApiResponse<User>> {   
+    return this.get<User>('/api/profile');
   }
 
   isAuthenticated(): boolean {
-    return !!this.getAuthToken();
-  }
-
-  async verifyToken(): Promise<boolean> {
-    if (!this.isAuthenticated()) {
-      return false;
-    }
-
-    try {
-      await this.getCurrentUser();
-      return true;
-    } catch {
-      this.clearAuthTokens();
-      return false;
-    }
+    const token = localStorage.getItem('access_token');
+    return !!token;
   }
 }

@@ -117,7 +117,7 @@ export function useAdminDashboard() {
       
       systemStats.value = {
         totalUsers: members.length,
-        activeUsers: members.filter(m => m.is_active).length,
+        activeUsers: members.filter((m: { is_active: any }) => m.is_active).length,
         pendingContent: publications.length + events.length, // Simplified for now
         systemHealth: isApiHealthy.value ? 100 : 75
       }
@@ -161,7 +161,7 @@ export function useAdminDashboard() {
       pendingContent.value = [
         ...publications
           .slice(0, 5) // Show first 5 as "pending" for demo
-          .map(p => ({
+          .map((p: { id: { toString: () => any }; title: any; authors: any; created_at: string | number | Date }) => ({
             id: p.id.toString(),
             type: 'publication' as const,
             title: p.title,
@@ -170,7 +170,7 @@ export function useAdminDashboard() {
           })),
         ...events
           .slice(0, 3) // Show first 3 as "pending" for demo
-          .map(e => ({
+          .map((e: { id: { toString: () => any }; title: any; speaker: any; created_at: string | number | Date }) => ({
             id: e.id.toString(),
             type: 'event' as const,
             title: e.title,

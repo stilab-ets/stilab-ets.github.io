@@ -84,13 +84,13 @@ import ResearchOverview from '@/components/research/ResearchOverview.vue'
 import FeaturedProjects from '@/components/research/FeaturedProjects.vue'
 import ResearchAreasAccordion from '@/components/research/ResearchAreasAccordion.vue'
 
-import EventsPage from '@/components/events/EventsPage.vue'
+import EventsPage from '@/components/events/EventPage.vue'
 import EventCard from '@/components/events/EventCard.vue'
 
 import TeachingPage from '@/components/teaching/TeachingPage.vue'
 import CourseCard from '@/components/teaching/CourseCard.vue'
 
-import ProjectsPage from '@/components/projects/ProjectsPage.vue'
+import ProjectsPage from '@/components/projects/ProjectPage.vue'
 import ProjectsInfoBanner from '@/components/projects/ProjectInfoBanner.vue'
 import ProjectCard from '@/components/projects/ProjectCard.vue'
 import InterestModal from '@/components/projects/InterestModal.vue'

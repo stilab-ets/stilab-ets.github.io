@@ -32,15 +32,16 @@ class AuthMiddleware {
     
     try {
       if (authAPI.isAuthenticated()) {
-        const isValid = await authAPI.verifyToken();
-        
-        if (isValid) {
+        try {
           const response = await authAPI.getCurrentUser();
+          
           this.state.user.value = response.data;
           this.state.isAuthenticated.value = true;
-        } else {
+        } catch (error) {
           this.logout();
         }
+      } else {
+        console.log('No token found');
       }
     } catch (error) {
       console.error('Auth initialization failed:', error);
@@ -50,17 +51,21 @@ class AuthMiddleware {
     }
   }
 
-  async login(credentials: { email: string; password: string }): Promise<boolean> {
+  async login(credentials: { username_or_email: string; password: string }): Promise<boolean> {
     this.state.isLoading.value = true;
     
     try {
       const response = await authAPI.login(credentials);
       
       if (response.data) {
-        const userResponse = await authAPI.getCurrentUser();
-        this.state.user.value = userResponse.data;
-        this.state.isAuthenticated.value = true;
-        return true;
+        // Use the user data directly from login response
+        if (response.data.user) {
+          this.state.user.value = response.data.user;
+          this.state.isAuthenticated.value = true;
+          return true;
+        } else {
+          return false;
+        }
       }
       
       return false;

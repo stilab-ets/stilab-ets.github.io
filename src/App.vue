@@ -17,9 +17,9 @@ import QuickLinks from './components/home/QuickLinks.vue'
 import PeoplePage from './components/people/PeoplePage.vue'
 import PublicationsPage from './components/publications/PublicationsPage.vue'
 import ResearchPage from './components/research/ResearchPage.vue'
-import EventsPage from './components/events/EventsPage.vue'
+import EventPage from './components/events/EventPage.vue'
 import TeachingPage from './components/teaching/TeachingPage.vue'
-import ProjectsPage from './components/projects/ProjectsPage.vue'
+import ProjectPage from './components/projects/ProjectPage.vue'
 import VacanciesPage from './components/vacancies/VacanciesPage.vue'
 import AwardsPage from './components/awards/AwardsPage.vue'
 
@@ -167,9 +167,9 @@ onUnmounted(() => {
         <PeoplePage v-else-if="currentPage === 'people'" />
         <PublicationsPage v-else-if="currentPage === 'publications'" />
         <ResearchPage v-else-if="currentPage === 'research'" />
-        <EventsPage v-else-if="currentPage === 'events'" />
+        <EventPage v-else-if="currentPage === 'events'" />
         <TeachingPage v-else-if="currentPage === 'teaching'" />
-        <ProjectsPage v-else-if="currentPage === 'projects'" />
+        <ProjectPage v-else-if="currentPage === 'projects'" />
         <VacanciesPage v-else-if="currentPage === 'vacancies'" />
         <AwardsPage v-else-if="currentPage === 'awards'" />
         

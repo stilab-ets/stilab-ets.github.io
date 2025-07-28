@@ -63,7 +63,7 @@ export function useAuth() {
   const registerState = useAPI();
   const userState = useAPI();
 
-  const login = async (credentials: { username: string; password: string }) => {
+  const login = async (credentials: { username_or_email: string; password: string }) => {
     return loginState.execute(() => authAPI.login(credentials));
   };
 

@@ -3,15 +3,17 @@ import { ref, reactive, computed } from 'vue'
 import { Lock, XCircleIcon } from 'lucide-vue-next'
 import { useLanguage } from '@/composables/useLanguage'
 import { useAuthMiddleware } from '@/middleware/auth'
+import { useAuth } from '@/hooks/auth/useAuth'
+const { getDashboardRoute } = useAuth()
 
 interface LoginForm {
-  username: string
+  username_or_email: string
   password: string
   rememberMe: boolean
 }
 
 interface LoginErrors {
-  username?: string
+  username_or_email?: string
   password?: string
 }
 
@@ -26,7 +28,7 @@ const { login } = useAuthMiddleware()
 const t = computed(() => translations.value.auth.login)
 
 const form = reactive<LoginForm>({
-  username: '',
+  username_or_email: '',
   password: '',
   rememberMe: false
 })
@@ -38,8 +40,8 @@ const isSubmitting = ref(false)
 const validateForm = (): boolean => {
   errors.value = {}
   
-  if (!form.username) {
-    errors.value.username = t.value.validation.emailRequired
+  if (!form.username_or_email) {
+    errors.value.username_or_email = t.value.validation.emailRequired
   }
   
   if (!form.password) {
@@ -59,12 +61,17 @@ const handleSubmit = async () => {
   
   try {
     const success = await login({
-      email: form.username,
+      username_or_email: form.username_or_email,
       password: form.password
     })
     
     if (success) {
+      const dashboardRoute = getDashboardRoute.value
       emit('loginSuccess')
+      if (dashboardRoute) {
+        // console.log(`Redirecting to: ${dashboardRoute}`)
+        window.location.href = "/"
+      }
     } else {
       generalError.value = t.value.errors.loginFailed
       emit('loginFailed', t.value.errors.loginFailed)
@@ -93,19 +100,19 @@ const handleSubmit = async () => {
       <form class="mt-8 space-y-6" @submit.prevent="handleSubmit">
         <div class="rounded-md shadow-sm -space-y-px">
           <div>
-            <label for="username" class="sr-only">{{ t.form.email }}</label>
+            <label for="username_or_email" class="sr-only">{{ t.form.email }}</label>
             <input
-              id="username"
-              name="username"
+              id="username_or_email"
+              name="username_or_email"
               type="text"
-              autocomplete="username"
+              autocomplete="username_or_email"
               required
-              v-model="form.username"
+              v-model="form.username_or_email"
               class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] focus:z-10 sm:text-sm"
-              :class="{ 'border-red-500': errors.username }"
+              :class="{ 'border-red-500': errors.username_or_email }"
               :placeholder="t.form.emailPlaceholder"
             />
-            <p v-if="errors.username" class="mt-1 text-sm text-red-600">{{ errors.username }}</p>
+            <p v-if="errors.username_or_email" class="mt-1 text-sm text-red-600">{{ errors.username_or_email }}</p>
           </div>
           <div>
             <label for="password" class="sr-only">{{ t.form.password }}</label>
