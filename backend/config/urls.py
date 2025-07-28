@@ -25,7 +25,7 @@ from backend.views.auth_views import LoginView, RegisterView
 from backend.views.awards_view import AwardsView
 from backend.views.courses_view import CoursesView
 from backend.views.events_view import EventsView
-from backend.views.member_view import MemberListAPI
+from backend.views.member_view import MemberView
 from backend.views.profile_views import ProfileView
 from backend.views.publication_views import PublicationListAPI
 from backend.views.research_views import ResearchAPI
@@ -54,7 +54,7 @@ urlpatterns = [
     path("api/login", LoginView.as_view(), name="login"),
     path("api/publications/", PublicationListAPI.as_view(), name="publication-list"),
     path("api/profile", ProfileView.as_view(), name="profile"),
-    path("api/members", MemberListAPI.as_view(), name="member-list"),
+    path("api/members", MemberView.as_view(), name="member-list"),
     path("api/awards", AwardsView.as_view(), name="awards"),
     path("api/researches", ResearchAPI.as_view(), name="research"),
     path(
