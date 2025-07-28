@@ -1,17 +1,15 @@
 <script setup lang="ts">
-import { useLanguage } from '@/composables/useLanguage'
-import stilLogo from '@/assets/stil-logo-white.png';
+import { useFooterData } from '@/hooks/layout/useFooterData'
+import stilLogo from '@/assets/stil-logo-white.png'
 
-// Access translation system for footer content
-const { t } = useLanguage()
+const { t } = useFooterData()
 </script>
 
 <template>
   <div class="md:col-span-2">
     <!-- Lab branding section with logo and title -->
     <div class="flex items-center w-full mb-6">
-      <div
-        class="rounded-lg flex items-center justify-center">
+      <div class="rounded-lg flex items-center justify-center">
         <img
           :src="stilLogo"
           class="w-32"

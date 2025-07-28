@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
+import { useAwards } from '@/hooks/awards/useAwards'
+import { useFilteredAwards } from '@/hooks/awards/useFilteredAwards'
 
 // UI Components
 import PageHeader from '@/ui/PageHeader.vue'
@@ -12,102 +14,36 @@ import EmptyState from '@/ui/EmptyState.vue'
 import AwardsTimeline from './AwardsTimeline.vue'
 import NotableAchievements from './NotableAchievements.vue'
 
-interface AwardRecipient {
-  id: string
-  member: {
-    first_name: string
-    last_name: string
-    role: string
-    email: string | null
-    phone?: string | null
-    biography?: string | null
-    research_domain?: string | null
-    image_url?: string | null
-    github_url?: string | null
-    linkedin_url?: string | null
-    personal_website?: string | null
-    status?: string | null
-  }
-}
-
-// Extended award data structure
-interface Award {
-  recipients: AwardRecipient[];
-  id: string;
-  title: string;
-  url: string;
-  year: number;
-  organization: string;
-}
-
 // Language and translations
 const { t } = useLanguage()
 
-// State
-const allAwards = ref<Award[]>([]);
-const selectedYear = ref('')
-const selectedOrganization = ref('')
-const selectedMember = ref('')
-const currentYear = new Date().getFullYear()
+// Awards composable
+const {
+  awards: allAwards,
+  isLoading,
+  error,
+  uniqueOrganizations,
+  awardedMembers,
+  availableYears,
+  totalAwards,
+  yearsOfRecognition
+} = useAwards()
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
-// Generate all awards from researchers
-const fetchAwards = async () => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/awards`)
-    if (!response.ok) throw new Error('Failed to fetch awards')
-    const data = await response.json()
-    allAwards.value = Array.isArray(data) ? data : []
-  } catch (error) {
-    console.error('Error fetching awards:', error)
-  }
-}
-onMounted(fetchAwards)
-
-// Computed properties
-const uniqueOrganizations = computed(() => {
- return [...new Set(allAwards.value.map(a => a.organization))].sort()
-})
-
-const awardedMembers = computed(() => {
-  const allRecipients = allAwards.value.flatMap(award => award.recipients || []);
-  const unique = new Map();
-  allRecipients.forEach(recipient => {
-    const key = `${recipient.member.first_name} ${recipient.member.last_name}`;
-    if (!unique.has(key)) unique.set(key, recipient);
-  });
-  return Array.from(unique.values());
-});
-
-const availableYears = computed(() => {
-  return [...new Set(allAwards.value.map(a => a.year))].sort((a, b) => b - a)
-})
-
-const oldestAwardYear = computed(() => {
-  return Math.min(...allAwards.value.map(a => a.year))
-})
-
-const filteredAwards = computed(() => {
-  return allAwards.value.filter(awardData => {
-    const matchesYear = !selectedYear.value || awardData.year.toString() === selectedYear.value
-    const matchesOrg = !selectedOrganization.value || awardData.organization === selectedOrganization.value
-    const matchesMember =
-      !selectedMember.value ||
-      (awardData.recipients &&
-        awardData.recipients.some(
-          r => `${r.member.first_name} ${r.member.last_name}` === selectedMember.value
-        ));
-
-    return matchesYear && matchesOrg && matchesMember
-  })
-})
+// Filtered awards composable
+const {
+  selectedYear,
+  selectedOrganization,
+  selectedMember,
+  filteredAwards,
+  updateFilter
+} = useFilteredAwards({ awards: allAwards })
 
 // Statistics
 const statistics = computed(() => [
-  { value: allAwards.value.length, label: t.value.awards.statistics.totalAwards },
+  { value: totalAwards.value, label: t.value.awards.statistics.totalAwards },
   { value: uniqueOrganizations.value.length, label: t.value.awards.statistics.organizations },
   { value: awardedMembers.value.length, label: t.value.awards.statistics.awardedMembers },
-  { value: currentYear - oldestAwardYear.value + 1, label: t.value.awards.statistics.yearsOfRecognition }
+  { value: yearsOfRecognition.value, label: t.value.awards.statistics.yearsOfRecognition }
 ])
 
 // Filters configuration
@@ -136,9 +72,9 @@ const filters = computed(() => [
     value: selectedMember.value,
     options: [
       { value: '', label: t.value.awards.filters.allMembers },
-      ...awardedMembers.value.map(recipient => ({
-        value: `${recipient.member.first_name} ${recipient.member.last_name}`,
-        label: `${recipient.member.first_name} ${recipient.member.last_name}`
+      ...awardedMembers.value.map(member => ({
+        value: member,
+        label: member
       }))
     ]
   }
@@ -151,21 +87,6 @@ const resultsText = computed(() => {
   if (count === 1) return `1 ${t.value.awards.filters.award} ${t.value.awards.filters.found}`
   return `${count} ${t.value.awards.filters.awards} ${t.value.awards.filters.found}${t.value.awards.filters.found}`
 })
-
-// Methods
-const updateFilter = (filterId: string, value: string) => {
-  switch (filterId) {
-    case 'year':
-      selectedYear.value = value
-      break
-    case 'organization':
-      selectedOrganization.value = value
-      break
-    case 'member':
-      selectedMember.value = value
-      break
-  }
-}
 </script>
 
 <template>
@@ -177,42 +98,67 @@ const updateFilter = (filterId: string, value: string) => {
       highlight-word="Prix"
     />
 
-    <!-- Statistics -->
-    <StatisticsGrid 
-      :statistics="statistics"
-      :columns="4"
-      :title="t.awards.statistics.sectionTitle"
-      background-class="bg-gradient-to-r from-yellow-50 to-orange-50"
-    />
-
-    <!-- Filters -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
-      <SearchAndFilters
-        :filters="filters"
-        :results-text="resultsText"
-        @update-filter="updateFilter"
-      />
+    <!-- Loading State -->
+    <div v-if="isLoading" class="flex justify-center items-center py-12">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#08a4d4]"></div>
+      <span class="ml-2 text-gray-600">{{ t.common.loading }}</span>
     </div>
 
-    <!-- Awards Timeline -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-      <AwardsTimeline 
-        v-if="filteredAwards.length > 0"
-        :awards="filteredAwards"
-      />
-      
-      <!-- Empty State -->
-      <EmptyState 
-        v-else
-        :title="t.awards.empty.title"
-        :message="t.awards.empty.message"
-        icon="star"
-      />
+    <!-- Error State -->
+    <div v-else-if="error" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+        <div class="flex">
+          <div class="text-red-400">
+            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm text-red-700">{{ error }}</p>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Notable Achievements Section -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-      <NotableAchievements :all-awards="allAwards" />
-    </div>
+    <!-- Content -->
+    <template v-else>
+      <!-- Statistics -->
+      <StatisticsGrid 
+        :statistics="statistics"
+        :columns="4"
+        :title="t.awards.statistics.sectionTitle"
+        background-class="bg-gradient-to-r from-yellow-50 to-orange-50"
+      />
+
+      <!-- Filters -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+        <SearchAndFilters
+          :filters="filters"
+          :results-text="resultsText"
+          @update-filter="updateFilter"
+        />
+      </div>
+
+      <!-- Awards Timeline -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+        <AwardsTimeline 
+          v-if="filteredAwards.length > 0"
+          :awards="filteredAwards"
+        />
+        
+        <!-- Empty State -->
+        <EmptyState 
+          v-else
+          :title="t.awards.empty.title"
+          :message="t.awards.empty.message"
+          icon="star"
+        />
+      </div>
+
+      <!-- Notable Achievements Section -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+        <NotableAchievements :all-awards="allAwards" />
+      </div>
+    </template>
   </div>
 </template>

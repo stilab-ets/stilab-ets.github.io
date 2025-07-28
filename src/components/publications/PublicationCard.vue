@@ -1,27 +1,14 @@
 <script setup lang="ts">
+import { ref, computed } from 'vue'
+import { useLanguage } from '@/composables/useLanguage'
+import type { Publication } from '@/services/MainAPI'
+
+// UI Components
 import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
-import { useLanguage } from '@/composables/useLanguage'
-import { ref } from 'vue'
 
 interface Props {
-  publication: {
-    id: string
-    entrytype: string
-    citekey: string
-    title: string
-    author: string
-    journal: string | null
-    booktitle: string | null
-    publisher: string | null
-    year: number
-    volume: string | null
-    number: string | null
-    pages: string | null
-    url: string | null
-    is_approved: boolean
-    bibtex: string
-  }
+  publication: Publication
 }
 
 const props = defineProps<Props>()
@@ -31,14 +18,55 @@ const emit = defineEmits<{
 
 const { t } = useLanguage()
 
-const authors = props.publication.author.split(' and ')
 const showBibtex = ref(false)
 const copySuccess = ref(false)
+
+// Parse authors from the authors string
+const authors = computed(() => {
+  if (!props.publication.authors) return []
+  return props.publication.authors.split(' and ').map(author => author.trim())
+})
+
+// Generate BibTeX format
+const generatedBibtex = computed(() => {
+  const pub = props.publication
+  if (!pub.publication_type || !pub.title) return ''
+  
+  const citekey = generateCitekey()
+  let bibtex = `@${pub.publication_type}{${citekey},\n`
+  
+  if (pub.title) bibtex += `  title={${pub.title}},\n`
+  if (pub.authors) bibtex += `  author={${pub.authors}},\n`
+  if (pub.journal) bibtex += `  journal={${pub.journal}},\n`
+  if (pub.year) bibtex += `  year={${pub.year}},\n`
+  if (pub.doi) bibtex += `  doi={${pub.doi}},\n`
+  if (pub.url) bibtex += `  url={${pub.url}},\n`
+  
+  bibtex += '}'
+  return bibtex
+})
+
+const generateCitekey = (): string => {
+  const pub = props.publication
+  if (!pub.authors || !pub.title) return `pub${pub.id}`
+  
+  const firstAuthor = pub.authors.split(' and ')[0].trim()
+  const lastName = firstAuthor.split(',')[0].trim() || firstAuthor.split(' ').pop()
+  const year = pub.year || new Date().getFullYear()
+  const firstWord = pub.title.split(' ').find(word => 
+    word.length > 3 && !['the', 'and', 'for', 'with'].includes(word.toLowerCase())
+  ) || 'paper'
+  
+  return `${lastName}${year}${firstWord}`.toLowerCase().replace(/[^a-z0-9]/g, '')
+}
 
 const getTypeColor = (type: string) => {
   const colors: Record<string, string> = {
     article: 'bg-blue-100 text-blue-800',
-    booklet: 'bg-green-100 text-green-800',
+    conference: 'bg-green-100 text-green-800',
+    workshop: 'bg-yellow-100 text-yellow-800',
+    thesis: 'bg-purple-100 text-purple-800',
+    book: 'bg-red-100 text-red-800',
   }
   return colors[type] || 'bg-gray-100 text-gray-800'
 }
@@ -62,7 +90,7 @@ const toggleBibtex = () => {
 
 const copyBibtex = async () => {
   try {
-    await navigator.clipboard.writeText(props.publication.bibtex)
+    await navigator.clipboard.writeText(generatedBibtex.value)
     copySuccess.value = true
     setTimeout(() => {
       copySuccess.value = false
@@ -75,7 +103,6 @@ const copyBibtex = async () => {
 
 <template>
   <Card variant="hover">
-    <!-- Publication Card -->
     <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between">
       <div class="flex-1">
         <!-- Title and Type -->
@@ -85,18 +112,22 @@ const copyBibtex = async () => {
           </h3>
           <span :class="[
             'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-            getTypeColor(publication.entrytype)
+            getTypeColor(publication.publication_type)
           ]">
-            {{ getTypeLabel(publication.entrytype) }}
+            {{ getTypeLabel(publication.publication_type) }}
           </span>
         </div>
 
         <!-- Authors -->
-        <div class="mb-3">
+        <div class="mb-3" v-if="authors.length > 0">
           <p class="text-sm text-gray-600">
             <span class="font-medium">{{ t.publications.publicationCard.authors }}:</span>
             <span v-for="(author, index) in authors" :key="author">
-              <button @click="filterByAuthor(author)" class="text-[#08a4d4] hover:underline">
+              <button 
+                @click="filterByAuthor(author)" 
+                class="text-[#08a4d4] hover:underline"
+                type="button"
+              >
                 {{ author }}
               </button>
               <span v-if="index < authors.length - 1">, </span>
@@ -104,18 +135,24 @@ const copyBibtex = async () => {
           </p>
         </div>
 
-        <!-- Venue, Year, Volume, Number, Pages -->
+        <!-- Publication Details -->
         <div class="mb-3 text-sm text-gray-600">
           <span class="font-medium">
-            {{ publication.journal || publication.booktitle || publication.publisher || '-' }}
+            {{ publication.journal || '-' }}
           </span>
-          • {{ publication.year }}
-          <template v-if="publication.volume"> • Vol. {{ publication.volume }}</template>
-          <template v-if="publication.number"> • No. {{ publication.number }}</template>
-          <template v-if="publication.pages"> • pp. {{ publication.pages }}</template>
+          <template v-if="publication.year">
+            • {{ publication.year }}
+          </template>
         </div>
 
-        <!-- Bibtex toggle -->
+        <!-- Abstract -->
+        <div v-if="publication.abstract" class="mb-3">
+          <p class="text-sm text-gray-600 line-clamp-3">
+            {{ publication.abstract }}
+          </p>
+        </div>
+
+        <!-- BibTeX Controls -->
         <div class="mb-4 flex items-center space-x-4">
           <button
             @click="toggleBibtex"
@@ -135,22 +172,20 @@ const copyBibtex = async () => {
           </button>
         </div>
 
-        <!-- Bibtex content -->
+        <!-- BibTeX Content -->
         <pre
           v-if="showBibtex"
           class="mt-2 p-3 bg-gray-100 rounded text-xs whitespace-pre-wrap font-mono overflow-x-auto"
-        >
-{{ publication.bibtex }}
-        </pre>
+        >{{ generatedBibtex }}</pre>
       </div>
 
-      <!-- Links -->
+      <!-- Action Links -->
       <div class="flex flex-col space-y-2 lg:ml-6 lg:flex-shrink-0">
         <Button
-          v-if="publication.url"
+          v-if="publication.url || publication.doi"
           variant="outline"
           size="sm"
-          @click="openLink(publication.url)"
+          @click="openLink(publication.url || `https://doi.org/${publication.doi}`)"
           class="hover:cursor-pointer"
         >
           🔗 {{ t.publications.links.doi }}

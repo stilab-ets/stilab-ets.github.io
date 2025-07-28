@@ -1,7 +1,54 @@
-// src/main.ts
 import { createApp } from 'vue'
 import App from './App.vue'
 import './assets/style.css'
+
+// Configure axios globally for Django backend
+import axios from 'axios'
+axios.defaults.baseURL = 'http://localhost:8000'
+axios.defaults.timeout = 10000
+axios.defaults.headers.common['Content-Type'] = 'application/json'
+axios.defaults.withCredentials = true
+
+// Add request interceptor for auth tokens
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem('access_token')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
+
+// Response interceptor for token refresh
+axios.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config
+    
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true
+      
+      const refreshToken = localStorage.getItem('refresh_token')
+      if (refreshToken) {
+        try {
+          const response = await axios.post('/auth/refresh/', {
+            refresh: refreshToken
+          })
+          
+          const { access } = response.data
+          localStorage.setItem('access_token', access)
+          originalRequest.headers.Authorization = `Bearer ${access}`
+          
+          return axios(originalRequest)
+        } catch (refreshError) {
+          localStorage.removeItem('access_token')
+          localStorage.removeItem('refresh_token')
+        }
+      }
+    }
+    
+    return Promise.reject(error)
+  }
+)
 
 // Layout components
 import Header from '@/components/layout/Header.vue'
@@ -43,9 +90,9 @@ import EventCard from '@/components/events/EventCard.vue'
 import TeachingPage from '@/components/teaching/TeachingPage.vue'
 import CourseCard from '@/components/teaching/CourseCard.vue'
 
-import ProjectsPage from '@/components/projects/ProjectPage.vue'
+import ProjectsPage from '@/components/projects/ProjectsPage.vue'
 import ProjectsInfoBanner from '@/components/projects/ProjectsInfoBanner.vue'
-import ProjectCard from '@/components/projects/ProjectCard.vue'
+import ProjectCard from '@/components/projects/ProjectsCard.vue'
 import InterestModal from '@/components/projects/InterestModal.vue'
 
 import VacanciesPage from '@/components/vacancies/VacanciesPage.vue'
@@ -59,6 +106,13 @@ import NotableAchievements from '@/components/awards/NotableAchievements.vue'
 // Authentication components
 import LoginForm from '@/components/auth/LoginForm.vue'
 import RegisterForm from '@/components/auth/RegisterForm.vue'
+import LoginPage from '@/components/auth/LoginPage.vue'
+
+// Dashboard components
+import AdminDashboard from '@/components/dashboard/AdminDashboard.vue'
+import ProfessorDashboard from '@/components/dashboard/ProfessorDashboard.vue'
+import StudentDashboard from '@/components/dashboard/StudentDashboard.vue'
+import DashboardPage from '@/components/dashboard/DashboardPage.vue'
 
 // Form components
 import PublicationForm from '@/components/forms/PublicationForm.vue'
@@ -79,6 +133,16 @@ import PageHeader from '@/components/ui/PageHeader.vue'
 import SearchAndFilters from '@/components/ui/SearchAndFilters.vue'
 import StatisticsGrid from '@/components/ui/StatisticsGrid.vue'
 import EmptyState from '@/components/ui/EmptyState.vue'
+
+// Lucide icons
+import { 
+  BarChart3, Users, FileText, Settings, TrendingUp, UserPlus, Shield, Cog, 
+  BarChart, Home, GraduationCap, User, Plus, Calendar, Briefcase,
+  Activity
+} from 'lucide-vue-next'
+
+// Initialize auth middleware
+import { authMiddleware } from '@/middleware/auth'
 
 // Create Vue application
 const app = createApp(App)
@@ -139,6 +203,14 @@ app.component('NotableAchievements', NotableAchievements)
 // Register authentication components globally
 app.component('LoginForm', LoginForm)
 app.component('RegisterForm', RegisterForm)
+app.component('LoginPage', LoginPage)
+
+// Register dashboard components globally
+app.component('AdminDashboard', AdminDashboard)
+app.component('ProfessorDashboard', ProfessorDashboard)  
+app.component('StudentDashboard', StudentDashboard)
+app.component('DashboardPage', DashboardPage)
+
 
 // Register form components globally
 app.component('PublicationForm', PublicationForm)
@@ -160,5 +232,30 @@ app.component('SearchAndFilters', SearchAndFilters)
 app.component('StatisticsGrid', StatisticsGrid)
 app.component('EmptyState', EmptyState)
 
-// Mount the application
-app.mount('#app')
+// Register Lucide icons globally
+app.component('BarChart3', BarChart3)
+app.component('Users', Users)
+app.component('FileText', FileText)
+app.component('Settings', Settings)
+app.component('TrendingUp', TrendingUp)
+app.component('UserPlus', UserPlus)
+app.component('Shield', Shield)
+app.component('Cog', Cog)
+app.component('BarChart', BarChart)
+app.component('Home', Home)
+app.component('GraduationCap', GraduationCap)
+app.component('User', User)
+app.component('Plus', Plus)
+app.component('Calendar', Calendar)
+app.component('Briefcase', Briefcase)
+app.component('Activity', Activity)
+
+// Initialize authentication middleware before mounting
+authMiddleware.initialize().then(() => {
+  // Mount the application
+  app.mount('#app')
+}).catch((error) => {
+  console.error('Failed to initialize auth middleware:', error)
+  // Mount anyway but user will need to login
+  app.mount('#app')
+})

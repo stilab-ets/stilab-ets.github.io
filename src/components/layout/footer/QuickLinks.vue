@@ -1,36 +1,10 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useLanguage } from '@/composables/useLanguage'
+import { useFooterData } from '@/hooks/layout/useFooterData'
 
-// Access translation system for footer content
-const { t } = useLanguage()
+const { navigationLinks, t } = useFooterData()
 
-// Navigation links configuration - using translations
-interface NavigationLink {
-  id: string
-  labelKey: keyof typeof t.value.footer.navigation.links
-  page: string
-}
-
-const navigationLinksConfig: NavigationLink[] = [
-  { id: 'team', labelKey: 'team', page: 'people' },
-  { id: 'research', labelKey: 'research', page: 'research' },
-  { id: 'publications', labelKey: 'publications', page: 'publications' },
-  { id: 'events', labelKey: 'events', page: 'events' }
-]
-
-// Computed navigation links with translated labels
-const navigationLinks = computed(() => 
-  navigationLinksConfig.map(link => ({
-    ...link,
-    label: t.value.footer.navigation.links[link.labelKey]
-  }))
-)
-
-// Emit definition for page navigation
 const emit = defineEmits<(e: 'navigateToPage', page: string) => void>()
 
-// Handle navigation clicks and emit to parent
 const handleNavigation = (page: string) => {
   emit('navigateToPage', page)
 }

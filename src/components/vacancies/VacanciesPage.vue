@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
-import { mockVacancies } from '@/data/mockPublications'
+import { mainAPI } from '@/services/ApiFactory'
+import type { Vacancy } from '@/services/MainAPI'
 
 // UI Components
 import PageHeader from '@/ui/PageHeader.vue'
@@ -16,18 +17,41 @@ import VacancyCard from './VacancyCard.vue'
 const { t } = useLanguage()
 
 // State
+const vacancies = ref<Vacancy[]>([])
+const loading = ref(true)
+const error = ref<string | null>(null)
 const selectedType = ref('')
 const selectedTag = ref('')
 const sortBy = ref('deadline-asc')
 
+// Load vacancies from API
+const loadVacancies = async () => {
+  try {
+    loading.value = true
+    error.value = null
+    const response = await mainAPI.getVacancies()
+    vacancies.value = response.data.results.filter(vacancy => vacancy.is_active)
+  } catch (err) {
+    console.error('Failed to load vacancies:', err)
+    error.value = 'Failed to load vacancies'
+  } finally {
+    loading.value = false
+  }
+}
+
+// Lifecycle
+onMounted(() => {
+  loadVacancies()
+})
+
 // Computed
 const availableTags = computed(() => {
-  const allTags = mockVacancies.flatMap(vacancy => vacancy.tags)
+  const allTags = vacancies.value.flatMap(vacancy => vacancy.tags)
   return [...new Set(allTags)].sort()
 })
 
 const filteredVacancies = computed(() => {
-  return mockVacancies.filter(vacancy => {
+  return vacancies.value.filter(vacancy => {
     const matchesType = !selectedType.value || vacancy.type === selectedType.value
     const matchesTag = !selectedTag.value || vacancy.tags.includes(selectedTag.value)
 
@@ -46,7 +70,7 @@ const sortedVacancies = computed(() => {
     case 'type':
       return sorted.sort((a, b) => a.type.localeCompare(b.type))
     case 'recent':
-      return sorted.reverse()
+      return sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     default:
       return sorted
   }
@@ -125,32 +149,56 @@ const updateFilter = (filterId: string, value: string) => {
     <!-- Information Banner -->
     <VacanciesInfoBanner />
 
-    <!-- Filters -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
-      <SearchAndFilters
-        :filters="filters"
-        :results-text="resultsText"
-        @update-filter="updateFilter"
-      />
+    <!-- Loading State -->
+    <div v-if="loading" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="flex justify-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
     </div>
 
-    <!-- Vacancy Cards -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-      <div v-if="sortedVacancies.length > 0" class="space-y-6">
-        <VacancyCard
-          v-for="vacancy in sortedVacancies"
-          :key="vacancy.id"
-          :vacancy="vacancy"
+    <!-- Error State -->
+    <div v-else-if="error" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="bg-red-50 border border-red-200 rounded-md p-4">
+        <div class="flex">
+          <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+          </svg>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-red-800">{{ error }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <template v-else>
+      <!-- Filters -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+        <SearchAndFilters
+          :filters="filters"
+          :results-text="resultsText"
+          @update-filter="updateFilter"
         />
       </div>
 
-      <!-- Empty State -->
-      <EmptyState 
-        v-else
-        :title="t.vacancies.empty.title"
-        :message="t.vacancies.empty.message"
-        icon="briefcase"
-      />
-    </div>
+      <!-- Vacancy Cards -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+        <div v-if="sortedVacancies.length > 0" class="space-y-6">
+          <VacancyCard
+            v-for="vacancy in sortedVacancies"
+            :key="vacancy.id"
+            :vacancy="vacancy"
+          />
+        </div>
+
+        <!-- Empty State -->
+        <EmptyState 
+          v-else
+          :title="t.vacancies.empty.title"
+          :message="t.vacancies.empty.message"
+          icon="briefcase"
+        />
+      </div>
+    </template>
   </div>
 </template>
