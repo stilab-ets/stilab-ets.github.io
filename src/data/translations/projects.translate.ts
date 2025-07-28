@@ -1,4 +1,7 @@
 export interface ProjectsTranslations {
+  interest: {
+    successMessage: string
+  }
   pageTitle: string
   pageSubtitle: string
   infoBox: {
@@ -131,6 +134,9 @@ export const projectsTranslations: ProjectsTranslationDict = {
     empty: {
       title: 'Aucun projet trouvé',
       message: 'Essayez de modifier vos critères de recherche.'
+    },
+    interest: {
+      successMessage: "Succès"
     }
   },
   en: {
@@ -195,6 +201,9 @@ export const projectsTranslations: ProjectsTranslationDict = {
     empty: {
       title: 'No projects found',
       message: 'Try modifying your search criteria.'
+    },
+    interest: {
+      successMessage: "Success"
     }
   }
 } as const

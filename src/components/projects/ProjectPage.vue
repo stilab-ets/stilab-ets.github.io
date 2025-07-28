@@ -1,34 +1,49 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
+
+// Hooks & composables
 import { useLanguage } from '@/composables/useLanguage'
 import { useProjects } from '@/hooks/projects/useProjects'
 import { useProjectFilters } from '@/hooks/projects/useProjectFilters'
 import { useProjectInterest } from '@/hooks/projects/useProjectInterest'
+
+// API
+import { mainAPI } from '@/services/ApiFactory'
 
 // UI Components
 import PageHeader from '@/ui/PageHeader.vue'
 import SearchAndFilters from '@/ui/SearchAndFilters.vue'
 import EmptyState from '@/ui/EmptyState.vue'
 
-// Projects components
+// Project-specific components
 import ProjectsInfoBanner from './ProjectInfoBanner.vue'
 import ProjectCard from './ProjectCard.vue'
 import InterestModal from './InterestModal.vue'
 
+// Language
 const { t } = useLanguage()
-const { projects, loading, error, fetchProjects, submitProjectInterest } = useProjects()
-const projectInterest = useProjectInterest()
+
+// Data and logic
+const {
+  projects,
+  isLoading,
+  error,
+  fetchProjects
+} = useProjects()
 
 const {
   searchQuery,
   selectedDomain,
   selectedStatus,
-  selectedDifficulty,
   availableDomains,
   filteredProjects,
   updateFilter
 } = useProjectFilters(projects.value)
 
+const projectInterest = useProjectInterest()
+const submitProjectInterest = mainAPI.submitProjectInterest
+
+// UI Computed
 const filters = computed(() => [
   {
     id: 'domain',
@@ -36,7 +51,7 @@ const filters = computed(() => [
     value: selectedDomain.value,
     options: [
       { value: '', label: t.value.projects.filters.allDomains },
-      ...availableDomains.value.map(domain => ({ value: domain, label: domain }))
+      ...availableDomains.value.map((domain: any) => ({ value: domain, label: domain }))
     ]
   },
   {
@@ -54,9 +69,8 @@ const filters = computed(() => [
 
 const resultsText = computed(() => {
   const count = filteredProjects.value.length
-  if (count === 0) return `0 ${t.value.projects.results.project} ${t.value.projects.results.found}`
-  if (count === 1) return `1 ${t.value.projects.results.project} ${t.value.projects.results.found}`
-  return `${count} ${t.value.projects.results.projects} ${t.value.projects.results.found}s`
+  const { project, projects, found } = t.value.projects.results
+  return `${count} ${count === 1 ? project : projects} ${found}${count !== 1 ? 's' : ''}`
 })
 
 const handleShowInterest = (project: any) => {
@@ -66,44 +80,38 @@ const handleShowInterest = (project: any) => {
 const handleSubmitInterest = async () => {
   const success = await projectInterest.submitInterest(submitProjectInterest)
   if (success) {
-    alert('Votre demande a été envoyée avec succès ! Le superviseur vous contactera bientôt.')
+    alert(t.value.projects.interest.successMessage)
   }
 }
 
-onMounted(() => {
-  fetchProjects()
-})
+// Load projects on mount
+onMounted(fetchProjects)
 </script>
 
 <template>
   <div class="min-h-screen bg-gray-50">
-    <!-- Page Header -->
-    <PageHeader 
+    <!-- Header -->
+    <PageHeader
       :title="t.projects.pageTitle"
       :subtitle="t.projects.pageSubtitle"
       highlight-word="Master"
     />
 
-    <!-- Information Banner -->
+    <!-- Info Banner -->
     <ProjectsInfoBanner />
 
-    <!-- Error State -->
+    <!-- Error Display -->
     <div v-if="error" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
-      <div class="bg-red-50 border border-red-200 rounded-md p-4">
-        <div class="flex">
-          <div class="flex-shrink-0">
-            <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-            </svg>
-          </div>
-          <div class="ml-3">
-            <h3 class="text-sm font-medium text-red-800">{{ error }}</h3>
-          </div>
-        </div>
+      <div class="bg-red-50 border border-red-200 rounded-md p-4 flex items-start space-x-3">
+        <svg class="h-5 w-5 text-red-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" />
+        </svg>
+        <span class="text-sm text-red-800">{{ error }}</span>
       </div>
     </div>
 
-    <!-- Filters and Search -->
+    <!-- Search & Filters -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
       <SearchAndFilters
         :search-query="searchQuery"
@@ -116,11 +124,11 @@ onMounted(() => {
       />
     </div>
 
-    <!-- Loading State -->
-    <div v-if="loading" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <!-- Loading Spinner -->
+    <div v-if="isLoading" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
       <div class="flex justify-center items-center py-12">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#08a4d4]"></div>
-        <span class="ml-2 text-gray-600">{{ t.common.loading }}</span>
+        <span class="ml-3 text-gray-600">{{ t.common.loading }}</span>
       </div>
     </div>
 
@@ -136,7 +144,7 @@ onMounted(() => {
       </div>
 
       <!-- Empty State -->
-      <EmptyState 
+      <EmptyState
         v-else
         :title="t.projects.empty.title"
         :message="t.projects.empty.message"
@@ -144,7 +152,7 @@ onMounted(() => {
       />
     </div>
 
-    <!-- Interest Form Modal -->
+    <!-- Interest Modal -->
     <InterestModal
       :is-open="projectInterest.isModalOpen.value"
       :project="projectInterest.selectedProject.value"
