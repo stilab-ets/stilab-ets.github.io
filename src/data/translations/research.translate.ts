@@ -61,7 +61,12 @@ export interface ResearchTranslations {
   }
 }
 
-export const researchTranslations = {
+type ResearchTranslationDict = {
+  fr: ResearchTranslations;
+  en: ResearchTranslations;
+};
+
+export const researchTranslations: ResearchTranslationDict = {
   fr: {
     pageTitle: 'Nos Recherches',
     pageSubtitle: 'Découvrez nos axes de recherche et projets innovants en génie logiciel',

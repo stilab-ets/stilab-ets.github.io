@@ -24,7 +24,12 @@ export interface ResearchAreasTranslations {
   }
 }
 
-export const researchAreasTranslations = {
+type ResearchAreasTranslationDict = {
+  fr: ResearchAreasTranslations;
+  en: ResearchAreasTranslations;
+};
+
+export const researchAreasTranslations: ResearchAreasTranslationDict = {
   fr: {
     sectionTitle: {
       part1: 'Nos',

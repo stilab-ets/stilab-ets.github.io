@@ -15,7 +15,12 @@ export interface QuickLinksTranslations {
   }
 }
 
-export const quickLinksTranslations = {
+type QuickLinksTranslationDict = {
+  fr: QuickLinksTranslations;
+  en: QuickLinksTranslations;
+};
+
+export const quickLinksTranslations: QuickLinksTranslationDict = {
   fr: {
     sectionTitle: 'Accès Rapide',
     rapidAccess: 'Accès',
