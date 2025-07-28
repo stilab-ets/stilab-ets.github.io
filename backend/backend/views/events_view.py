@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from ..models.event import Event
+from ..serializers.delete_serializer import DeleteSerializer
 from ..serializers.event_serializer import EventSerializer
 
 
@@ -74,7 +75,7 @@ class EventsView(APIView):
     @swagger_auto_schema(
         operation_id="Delete events",
         operation_description="Deletes an event",
-        responses={200: EventSerializer},
+        responses={204: DeleteSerializer},
         tags=["Events"],
     )
     def delete(self, request):

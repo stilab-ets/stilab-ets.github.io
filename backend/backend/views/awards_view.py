@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 
 from ..models.award import Award
 from ..serializers.award_serializer import AwardSerializer
+from ..serializers.delete_serializer import DeleteSerializer
 
 
 class AwardsView(APIView):
@@ -73,7 +74,7 @@ class AwardsView(APIView):
     @swagger_auto_schema(
         operation_id="Delete awards",
         operation_description="Deletes an award",
-        responses={200: AwardSerializer},
+        responses={204: DeleteSerializer},
         tags=["Awards"],
     )
     def delete(self, request):

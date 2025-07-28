@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 
 from ..models.member import Member
 from ..models.research_project import ResearchProject
+from ..serializers.delete_serializer import DeleteSerializer
 from ..serializers.research_serializer import ResearchSerializer
 
 
@@ -67,7 +68,7 @@ class ResearchAPI(APIView):
     @swagger_auto_schema(
         operation_id="Delete research",
         operation_description="Deletes a research",
-        responses={200: ResearchSerializer},
+        responses={204: DeleteSerializer},
         tags=["Research"],
     )
     def delete(self, request):

@@ -1,3 +1,5 @@
+import uuid
+
 import pytest
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -64,3 +66,22 @@ def test_member_post_success(member_url):
     member = Member.objects.get(email="jane.doe@example.com")
     assert member.first_name == "Jane"
     assert member.role == "MSC"
+
+
+@pytest.mark.django_db
+def test_admin_can_delete_member(member_url):
+    admin_user = User.objects.create_user(username="admin", password="admin123", is_staff=True)
+    client.force_authenticate(user=admin_user)
+
+    member = Member.objects.create(
+        id=uuid.uuid4(),
+        first_name="John",
+        last_name="Doe",
+        role=Member.MemberRole.PHD_STUDENT,
+        status=Member.MemberStatus.CURRENT,
+    )
+
+    response = client.delete(member_url, data={"id": str(member.id)}, format="json")
+
+    assert response.status_code == status.HTTP_204_NO_CONTENT
+    assert not Member.objects.filter(id=member.id).exists()
