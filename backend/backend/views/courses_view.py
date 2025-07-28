@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 
 from ..models.course import Course
 from ..serializers.course_serializer import CourseSerializer
+from ..serializers.delete_serializer import DeleteSerializer
 
 
 class CoursesView(APIView):
@@ -67,7 +68,7 @@ class CoursesView(APIView):
     @swagger_auto_schema(
         operation_id="Delete courses",
         operation_description="Deletes a course",
-        responses={200: CourseSerializer},
+        responses={204: DeleteSerializer},
         tags=["Courses"],
     )
     def delete(self, request):
