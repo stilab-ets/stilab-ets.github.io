@@ -9,7 +9,6 @@ from rest_framework.test import APIClient
 from backend.models.member import Member
 
 pytestmark = pytest.mark.django_db
-client = APIClient()
 
 
 @pytest.fixture
@@ -19,7 +18,7 @@ def member_url():
 
 @pytest.mark.django_db
 def test_get_members_list(member_url):
-    # Create a test user and member
+    client = APIClient()
     user = User.objects.create_user(username="testuser", password="testpass")
     Member.objects.create(
         first_name="John",
@@ -43,6 +42,7 @@ def test_get_members_list(member_url):
 @pytest.mark.django_db
 def test_member_post_success(member_url):
     admin_user = User.objects.create_superuser(username="admin", email="admin@example.com", password="adminpass")
+    client = APIClient()
     client.force_authenticate(user=admin_user)
     data = {
         "first_name": "Jane",
@@ -71,6 +71,7 @@ def test_member_post_success(member_url):
 @pytest.mark.django_db
 def test_admin_can_delete_member(member_url):
     admin_user = User.objects.create_user(username="admin", password="admin123", is_staff=True)
+    client = APIClient()
     client.force_authenticate(user=admin_user)
 
     member = Member.objects.create(
@@ -85,3 +86,54 @@ def test_admin_can_delete_member(member_url):
 
     assert response.status_code == status.HTTP_204_NO_CONTENT
     assert not Member.objects.filter(id=member.id).exists()
+
+
+@pytest.mark.django_db
+def test_member_put_success(member_url):
+    admin_user = User.objects.create_user(username="admin", password="adminpass", is_staff=True)
+    member = Member.objects.create(
+        first_name="John",
+        last_name="Doe",
+        email="john@example.com",
+    )
+    client = APIClient()
+    client.force_authenticate(user=admin_user)
+
+    payload = {
+        "id": str(member.id),
+        "last_name": "Smith",
+        "phone": "456-789-1234",
+        "biography": "biography test",
+        "status": "GRD",
+    }
+
+    response = client.put(member_url, payload, format="json")
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response.data["first_name"] == "John"
+    assert response.data["last_name"] == "Smith"
+    assert response.data["email"] == "john@example.com"
+    assert response.data["phone"] == "456-789-1234"
+    assert response.data["biography"] == "biography test"
+    assert response.data["status"] == "GRD"
+
+
+@pytest.mark.django_db
+def test_member_put_missing_id(member_url):
+    admin_user = User.objects.create_user(username="admin", password="adminpass", is_staff=True)
+    client = APIClient()
+    client.force_authenticate(user=admin_user)
+
+    response = client.put(member_url, {"first_name": "No ID"}, format="json")
+
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert "id" in response.data["error"].lower()
+
+
+@pytest.mark.django_db
+def test_member_put_unauthorized(member_url):
+    client = APIClient()
+    member = Member.objects.create(first_name="John", last_name="Doe")
+    response = client.put(member_url, {"id": str(member.id), "first_name": "Updated"}, format="json")
+
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
