@@ -66,7 +66,7 @@ export function useProjects(): UseProjectsReturn {
     
     try {
       const response = await mainAPI.updateProject(id, data)
-      const index = projects.value.findIndex(p => p.id === id)
+      const index = projects.value.findIndex((p: { id: string }) => p.id === id)
       if (index !== -1) {
         projects.value[index] = response.data
       }
@@ -86,7 +86,7 @@ export function useProjects(): UseProjectsReturn {
     
     try {
       await mainAPI.deleteProject(id)
-      projects.value = projects.value.filter(p => p.id !== id)
+      projects.value = projects.value.filter((p: { id: string }) => p.id !== id)
       return true
     } catch (err: any) {
       error.value = err.message || 'Failed to delete project'
@@ -99,25 +99,25 @@ export function useProjects(): UseProjectsReturn {
 
   // Computed properties
   const availableProjects = computed(() => {
-    return projects.value.filter(project => project.status === 'available')
+    return projects.value.filter((project: { status: string }) => project.status === 'available')
   })
 
   const assignedProjects = computed(() => {
-    return projects.value.filter(project => project.status === 'assigned')
+    return projects.value.filter((project: { status: string }) => project.status === 'assigned')
   })
 
   const completedProjects = computed(() => {
-    return projects.value.filter(project => project.status === 'completed')
+    return projects.value.filter((project: { status: string }) => project.status === 'completed')
   })
 
   const uniqueDomains = computed(() => {
-    const domains = new Set(projects.value.map(project => project.domain).filter(Boolean))
+    const domains = new Set(projects.value.map((project: { domain: any }) => project.domain).filter(Boolean))
     return Array.from(domains).sort()
   })
 
   // Filter function
   const filteredProjects = (searchQuery: string, selectedStatus: string, selectedDifficulty: string): Project[] => {
-    return projects.value.filter((project) => {
+    return projects.value.filter((project: { title: string; abstract: string; domain: string; supervisor: string; co_supervisor: string; status: string; difficulty: string }) => {
       const matchesSearch =
         !searchQuery ||
         project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
