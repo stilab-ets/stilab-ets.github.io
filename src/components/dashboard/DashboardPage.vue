@@ -2,21 +2,31 @@
 import { computed, onMounted } from 'vue'
 import { useUserAuth } from '@/hooks/auth/useUserAuth'
 import { useLanguage } from '@/composables/useLanguage'
+import Card from '@/components/ui/Card.vue'
+import Button from '@/components/ui/Button.vue'
+import AdminDashboard from './AdminDashboard.vue'
+import ProfessorDashboard from './ProfessorDashboard.vue' 
+import StudentDashboard from './StudentDashboard.vue'
 
 const { user, isAuthenticated, isLoading } = useUserAuth()
 const { t } = useLanguage()
 
+// Define emit for navigation
+const emit = defineEmits<{
+  navigate: [page: string]
+}>()
+
 const userRole = computed(() => {
-  if (!user.value) return 'guest'
+  if (!isAuthenticated.value || !user.value) return null
   if (user.value.is_staff) return 'admin'
   
   const roleMap: Record<string, string> = {
     'professor': 'professor',
-    'researcher': 'professor',
-    'postdoc': 'professor',
+    'researcher': 'researcher', // Garde researcher distinct
+    'postdoc': 'researcher',
     'phd': 'student',
     'master': 'student',
-    'engineer': 'professor'
+    'engineer': 'researcher'
   }
   
   return roleMap[user.value.role] || 'student'
@@ -25,11 +35,12 @@ const userRole = computed(() => {
 const dashboardComponent = computed(() => {
   switch (userRole.value) {
     case 'admin':
-      return 'AdminDashboard'
+      return AdminDashboard
     case 'professor':
-      return 'ProfessorDashboard'
+    case 'researcher': // Les deux utilisent le même dashboard
+      return ProfessorDashboard
     case 'student':
-      return 'StudentDashboard'
+      return StudentDashboard
     default:
       return null
   }
@@ -69,7 +80,7 @@ onMounted(() => {
           </p>
           <div class="mt-6">
             <Button 
-              @click="$emit('navigate', 'login')"
+              @click="emit('navigate', 'login')"
               variant="primary"
             >
               Go to Login
@@ -81,7 +92,7 @@ onMounted(() => {
 
     <!-- Dashboard Content -->
     <div v-else-if="dashboardComponent">
-      <component :is="dashboardComponent" />
+      <component :is="dashboardComponent" @navigate="emit('navigate', $event)" />
     </div>
 
     <!-- Unknown Role Fallback -->
@@ -99,7 +110,7 @@ onMounted(() => {
           </p>
           <div class="mt-6">
             <Button 
-              @click="$emit('navigate', 'home')"
+              @click="emit('navigate', 'home')"
               variant="secondary"
             >
               Go to Home

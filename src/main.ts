@@ -115,6 +115,10 @@ import ProfessorDashboard from '@/components/dashboard/ProfessorDashboard.vue'
 import StudentDashboard from '@/components/dashboard/StudentDashboard.vue'
 import DashboardPage from '@/components/dashboard/DashboardPage.vue'
 
+// Admin components
+import AdminInvitationManagement from '@/components/admin/AdminInvitationManagement.vue'
+import InvitationSender from '@/components/admin/InvitationSender.vue'
+
 // Form components
 import PublicationForm from '@/components/publications/PublicationForm.vue'
 import EventForm from '@/components/events/EventForm.vue'
@@ -209,7 +213,9 @@ app.component('ProfessorDashboard', ProfessorDashboard)
 app.component('StudentDashboard', StudentDashboard)
 app.component('DashboardPage', DashboardPage)
 
-
+// Register admin components globally
+app.component('AdminInvitationManagement', AdminInvitationManagement)
+app.component('InvitationSender', InvitationSender)
 
 // Register form components globally
 app.component('PublicationForm', PublicationForm)
