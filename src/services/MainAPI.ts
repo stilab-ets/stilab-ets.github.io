@@ -37,16 +37,20 @@ export interface Member {
 // Publication interface matching SwaggerDoc
 export interface Publication {
   id: string; // UUID
+  entrytype: string;
+  citekey: string;
   title: string;
-  authors?: string | null;
-  journal?: string | null;
-  year?: number | null;
-  doi?: string | null;
-  url?: string | null;
-  volume?: string | null;
-  abstract?: string | null;
-  publication_type?: string | null;
-  bibtex?: string | null;
+  author: string;
+  journal: string | null;
+  booktitle: string | null;
+  publisher: string | null;
+  year: number;
+  volume: string | null;
+  number: string | null;
+  pages: string | null;
+  url: string | null;
+  is_approved: boolean;
+  bibtex: string;
 }
 
 // Award interface matching SwaggerDoc
