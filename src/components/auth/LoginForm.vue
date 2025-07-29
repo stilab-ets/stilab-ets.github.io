@@ -3,8 +3,6 @@ import { ref, reactive, computed } from 'vue'
 import { Lock, XCircleIcon } from 'lucide-vue-next'
 import { useLanguage } from '@/composables/useLanguage'
 import { useAuthMiddleware } from '@/middleware/auth'
-import { useAuth } from '@/hooks/auth/useAuth'
-const { getDashboardRoute } = useAuth()
 
 interface LoginForm {
   username_or_email: string
@@ -80,12 +78,7 @@ const handleSubmit = async () => {
     })
     
     if (success) {
-      const dashboardRoute = getDashboardRoute.value
       emit('loginSuccess')
-      if (dashboardRoute) {
-        // console.log(`Redirecting to: ${dashboardRoute}`)
-        //window.location.href = "/"
-      }
     } else {
       generalError.value = t.value.errors.loginFailed
       emit('loginFailed', t.value.errors.loginFailed)
