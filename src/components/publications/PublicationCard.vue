@@ -21,44 +21,27 @@ const { t } = useLanguage()
 const showBibtex = ref(false)
 const copySuccess = ref(false)
 
-// Parse authors from the authors string
 const authors = computed(() => {
-  if (!props.publication.authors) return []
-  return props.publication.authors.split(' and ').map(author => author.trim())
+  if (!props.publication.author) return []
+  return props.publication.author.split(' and ').map(a => a.trim())
 })
 
-// Generate BibTeX format
 const generatedBibtex = computed(() => {
   const pub = props.publication
-  if (!pub.publication_type || !pub.title) return ''
-  
-  const citekey = generateCitekey()
-  let bibtex = `@${pub.publication_type}{${citekey},\n`
-  
+  let bibtex = `@${pub.entrytype}{${pub.citekey},\n`
   if (pub.title) bibtex += `  title={${pub.title}},\n`
-  if (pub.authors) bibtex += `  author={${pub.authors}},\n`
+  if (pub.author) bibtex += `  author={${pub.author}},\n`
   if (pub.journal) bibtex += `  journal={${pub.journal}},\n`
+  if (pub.booktitle) bibtex += `  booktitle={${pub.booktitle}},\n`
+  if (pub.publisher) bibtex += `  publisher={${pub.publisher}},\n`
   if (pub.year) bibtex += `  year={${pub.year}},\n`
-  if (pub.doi) bibtex += `  doi={${pub.doi}},\n`
+  if (pub.volume) bibtex += `  volume={${pub.volume}},\n`
+  if (pub.number) bibtex += `  number={${pub.number}},\n`
+  if (pub.pages) bibtex += `  pages={${pub.pages}},\n`
   if (pub.url) bibtex += `  url={${pub.url}},\n`
-  
   bibtex += '}'
   return bibtex
 })
-
-const generateCitekey = (): string => {
-  const pub = props.publication
-  if (!pub.authors || !pub.title) return `pub${pub.id}`
-  
-  const firstAuthor = pub.authors.split(' and ')[0].trim()
-  const lastName = firstAuthor.split(',')[0].trim() || firstAuthor.split(' ').pop()
-  const year = pub.year || new Date().getFullYear()
-  const firstWord = pub.title.split(' ').find(word => 
-    word.length > 3 && !['the', 'and', 'for', 'with'].includes(word.toLowerCase())
-  ) || 'paper'
-  
-  return `${lastName}${year}${firstWord}`.toLowerCase().replace(/[^a-z0-9]/g, '')
-}
 
 const getTypeColor = (type: string) => {
   const colors: Record<string, string> = {
@@ -92,9 +75,7 @@ const copyBibtex = async () => {
   try {
     await navigator.clipboard.writeText(generatedBibtex.value)
     copySuccess.value = true
-    setTimeout(() => {
-      copySuccess.value = false
-    }, 1500)
+    setTimeout(() => (copySuccess.value = false), 1500)
   } catch (err) {
     console.error('Failed to copy BibTeX:', err)
   }
@@ -112,9 +93,9 @@ const copyBibtex = async () => {
           </h3>
           <span :class="[
             'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-            getTypeColor(publication.publication_type)
+            getTypeColor(publication.entrytype)
           ]">
-            {{ getTypeLabel(publication.publication_type) }}
+            {{ getTypeLabel(publication.entrytype) }}
           </span>
         </div>
 
@@ -182,10 +163,10 @@ const copyBibtex = async () => {
       <!-- Action Links -->
       <div class="flex flex-col space-y-2 lg:ml-6 lg:flex-shrink-0">
         <Button
-          v-if="publication.url || publication.doi"
+          v-if="publication.url"
           variant="outline"
           size="sm"
-          @click="openLink(publication.url || `https://doi.org/${publication.doi}`)"
+          @click="openLink(publication.url)"
           class="hover:cursor-pointer"
         >
           🔗 {{ t.publications.links.doi }}
