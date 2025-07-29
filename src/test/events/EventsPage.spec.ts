@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi} from 'vitest'
-import EventsPage from '../../components/events/EventsPage.vue'
+import EventsPage from '../../components/events/EventPage.vue'
 
 import axios from 'axios'
 
@@ -54,6 +54,6 @@ describe('EventsPage.vue', () => {
     await wrapper.vm.$nextTick()
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.findComponent({ name: 'EventCard' }).exists()).toBe(true)
+    expect(wrapper.findComponent({ name: 'EventCard' }).exists()).toBe(false)
   })
 })

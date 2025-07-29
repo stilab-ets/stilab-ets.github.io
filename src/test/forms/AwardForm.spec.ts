@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
-import AwardForm from '@/components/forms/AwardForm.vue'
+import AwardForm from '@/components/awards/AwardForm.vue'
 import { nextTick, ref } from 'vue'
 
 vi.mock('@/composables/useLanguage', () => ({

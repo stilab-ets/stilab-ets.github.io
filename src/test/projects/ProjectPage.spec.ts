@@ -1,7 +1,33 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
+import { ref } from 'vue'
+import ProjectPage from '../../components/projects/ProjectPage.vue'
 
-import ProjectPage from '../../components/projects/ProjectsPage.vue'
+vi.mock('../../hooks/projects/useProjects', () => {
+  return {
+    useProjects: () => ({
+      projects: ref([
+        { id: 1, title: 'Project 1' },
+        { id: 2, title: 'Project 2' }
+      ]),
+      isLoading: ref(false),
+      error: ref(null),
+      fetchProjects: () => {}
+    })
+  }
+})
+
+export function useProjects() {
+  const projects = ref([
+    { id: 1, title: 'Project 1' },
+    { id: 2, title: 'Project 2' }
+  ])
+  const isLoading = ref(false)
+  const error = ref(null)
+  const fetchProjects = () => {
+  }
+  return { projects, isLoading, error, fetchProjects }
+}
 
 describe('MScProjectsView.vue', () => {
   it('renders PageHeader with correct title and subtitle', () => {
@@ -16,7 +42,7 @@ describe('MScProjectsView.vue', () => {
 
   it('renders ProjectsInfoBanner component', () => {
     const wrapper = mount(ProjectPage)
-    expect(wrapper.findComponent({ name: 'ProjectsInfoBanner' }).exists()).toBe(true)
+    expect(wrapper.findComponent({ name: 'ProjectInfoBanner' }).exists()).toBe(true)
   })
 
   it('renders SearchAndFilters component with props and emits', () => {
