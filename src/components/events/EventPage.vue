@@ -97,28 +97,16 @@ const mapDomainToType = (domain: string): Event['type'] => {
 
 const statistics = computed(() => [
   {
-    label: t.value.events.stats.totalEvents,
-    value: events.value.length.toString(),
-    icon: 'calendar',
-    color: 'bg-blue-500'
+    label: t.value.events.statistics.totalEvents,
+    value: events.value.length,
   },
   {
-    label: t.value.events.stats.upcomingEvents,
-    value: upcomingEventsCount.value.toString(),
-    icon: 'clock',
-    color: 'bg-green-500'
+    label: t.value.events.statistics.upcomingEvents,
+    value: upcomingEventsCount.value,
   },
   {
-    label: t.value.events.stats.pastEvents,
-    value: pastEvents.value.length.toString(),
-    icon: 'archive',
-    color: 'bg-gray-500'
-  },
-  {
-    label: t.value.events.stats.eventTypes,
-    value: eventTypes.value.length.toString(),
-    icon: 'tag',
-    color: 'bg-purple-500'
+    label: t.value.events.statistics.registrations,
+    value: pastEvents.value.length,
   }
 ])
 
@@ -206,10 +194,11 @@ const handleError = (): void => {
       highlight-word="Événements"
     />
 
-    <!-- Statistics Grid -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <StatisticsGrid :statistics="statistics" />
-    </div>
+    <!-- Statistics -->
+    <StatisticsGrid 
+      :statistics="statistics"
+      :columns="3"
+    />
 
     <!-- Search and Filters -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
