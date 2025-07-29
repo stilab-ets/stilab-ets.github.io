@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import { useLanguage } from '@/composables/useLanguage'
+import { ref, onMounted } from 'vue'
+import { usePublications } from '@/hooks/publications/usePublications'
+import { useProjects } from '@/hooks/projects/useProjects'
+import { useMembers } from '@/hooks/members/useMembers'
+import { useAwards } from '@/hooks/awards/useAwards'
 
 // Props interface matching the data structure from App.vue
 interface StatItem {
@@ -15,6 +20,38 @@ interface Props {
     awards: StatItem
   }
 }
+
+// Publication count
+const publicationCount = ref<number | null>(null)
+const { publications, fetchPublications } = usePublications()
+onMounted(async () => {
+  await fetchPublications()
+  publicationCount.value = publications.value.length
+})
+
+// Projects count
+const projectsCount = ref<number>()
+const { projects, fetchProjects } = useProjects()
+onMounted(async () => {
+  await fetchProjects()
+  projectsCount.value = projects.value.length
+})
+
+// Members count
+const membersCount = ref<number>()
+const { members, fetchMembers } = useMembers()
+onMounted(async () => {
+  await fetchMembers()
+  membersCount.value = members.value.length
+})
+
+// Awards count
+const awardsCount = ref<number>()
+const { awards, fetchAwards } = useAwards()
+onMounted(async () => {
+  await fetchAwards()
+  awardsCount.value = awards.value.length
+})
 
 defineProps<Props>()
 
@@ -32,7 +69,7 @@ const { t } = useLanguage()
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
           <div class="text-center">
             <div class="text-3xl sm:text-4xl md:text-5xl font-bold text-[#08a4d4] mb-2 sm:mb-3">
-              {{ labStats.members.value }}+
+              {{ membersCount !== null ? `${membersCount}+` : '...' }}
             </div>
             <div class="text-gray-600 text-sm sm:text-base lg:text-lg">
               {{ labStats.members.label }}
@@ -40,7 +77,7 @@ const { t } = useLanguage()
           </div>
           <div class="text-center">
             <div class="text-3xl sm:text-4xl md:text-5xl font-bold text-[#08a4d4] mb-2 sm:mb-3">
-              {{ labStats.publications.value }}+
+              {{ publicationCount !== null ? `${publicationCount}+` : '...' }}
             </div>
             <div class="text-gray-600 text-sm sm:text-base lg:text-lg">
               {{ labStats.publications.label }}
@@ -48,7 +85,7 @@ const { t } = useLanguage()
           </div>
           <div class="text-center">
             <div class="text-3xl sm:text-4xl md:text-5xl font-bold text-[#08a4d4] mb-2 sm:mb-3">
-              {{ labStats.projects.value }}+
+              {{ projectsCount !== null ? `${projectsCount}+` : '...' }}
             </div>
             <div class="text-gray-600 text-sm sm:text-base lg:text-lg">
               {{ labStats.projects.label }}
@@ -56,7 +93,7 @@ const { t } = useLanguage()
           </div>
           <div class="text-center">
             <div class="text-3xl sm:text-4xl md:text-5xl font-bold text-[#08a4d4] mb-2 sm:mb-3">
-              {{ labStats.awards.value }}+
+              {{ awardsCount !== null ? `${awardsCount}+` : '...' }}
             </div>
             <div class="text-gray-600 text-sm sm:text-base lg:text-lg">
               {{ labStats.awards.label }}

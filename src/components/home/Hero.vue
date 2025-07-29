@@ -1,6 +1,34 @@
 <script setup lang="ts">
 import { useLanguage } from '@/composables/useLanguage'
 import stilLogo from "@/assets/stil-logo.png"
+import { ref, onMounted } from 'vue'
+import { usePublications } from '@/hooks/publications/usePublications'
+import { useResearch } from '@/hooks/useResearch'
+import { useProjects } from '@/hooks/projects/useProjects'
+
+// Publication count
+const publicationCount = ref<number | null>(null)
+const { publications, fetchPublications } = usePublications()
+onMounted(async () => {
+  await fetchPublications()
+  publicationCount.value = publications.value.length
+})
+
+// Research count
+const researchCount = ref<number | null>(null)
+const { research, fetchResearch } = useResearch()
+onMounted(async () => {
+  await fetchResearch()
+  researchCount.value = research.value.length
+})
+
+// Projects count
+const projectsCount = ref<number>()
+const { projects, fetchProjects } = useProjects()
+onMounted(async () => {
+  await fetchProjects()
+  projectsCount.value = projects.value.length
+})
 
 // Get language utilities for localization
 const { t, currentLanguage } = useLanguage()
@@ -131,21 +159,27 @@ const navigateToPage = (page: string) => {
                     <span class="text-sm font-medium text-gray-700">
                       {{ currentLanguage === 'fr' ? 'Projets actifs' : 'Active projects' }}
                     </span>
-                    <span class="text-lg font-bold text-[#08a4d4]">8+</span>
+                    <span class="text-lg font-bold text-[#08a4d4]">
+                      {{ projectsCount !== null ? `${projectsCount}+` : '...' }}
+                    </span>
                   </div>
                   
                   <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                     <span class="text-sm font-medium text-gray-700">
                       {{ currentLanguage === 'fr' ? 'Publications' : 'Publications' }}
                     </span>
-                    <span class="text-lg font-bold text-[#08a4d4]">45+</span>
+                    <span class="text-lg font-bold text-[#08a4d4]">
+                      {{ publicationCount !== null ? `${publicationCount}+` : '...' }}
+                    </span>
                   </div>
                   
                   <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                     <span class="text-sm font-medium text-gray-700">
                       {{ currentLanguage === 'fr' ? 'Chercheurs' : 'Researchers' }}
                     </span>
-                    <span class="text-lg font-bold text-[#08a4d4]">12+</span>
+                    <span class="text-lg font-bold text-[#08a4d4]">
+                      {{ researchCount !== null ? `${researchCount}+` : '...' }}
+                    </span>
                   </div>
                 </div>
                 
