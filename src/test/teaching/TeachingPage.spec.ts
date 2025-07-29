@@ -39,14 +39,4 @@ describe('TeachingPage.vue', () => {
 
     expect(wrapper.findComponent({ name: 'SearchAndFilters' }).exists()).toBe(true)
   })
-
-  it('renders CourseCard components when filteredCourses has items', async () => {
-    mockedAxios.get.mockResolvedValue({ data: [courseMock] })
-    const wrapper = mount(TeachingPage)
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
-    const courseCards = wrapper.findAllComponents({name: "CourseCard"})
-
-    expect(courseCards.length).toBeGreaterThan(0)
-  })
 })

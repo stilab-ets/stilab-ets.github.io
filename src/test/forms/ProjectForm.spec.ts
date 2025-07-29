@@ -122,12 +122,13 @@ describe('ProjectForm.vue', () => {
     await wrapper.find('#title').setValue('Test Project')
     await wrapper.find('#domain').setValue('software-architecture')
     await wrapper.find('#description').setValue('This is a test project.')
-    await wrapper.find('#supervisor').setValue('1')
+    await wrapper.find('#supervisor').setValue('Dr. Marie Dubois')
     await wrapper.find('#startDate').setValue('2025-07-01')
-    await wrapper.find('form').trigger('submit.prevent')
 
+    await wrapper.find('form').trigger('submit.prevent')
     await nextTick()
+
     expect(wrapper.emitted('submit')).toBeTruthy()
-    expect(wrapper.emitted('submit')[0][0].title).toBe('Test Project')
+    expect(wrapper.emitted('submit')![0][0].title).toBe('Test Project')
   })
 })
