@@ -10,109 +10,26 @@ import StatisticsGrid from '@/components/ui/StatisticsGrid.vue'
 // Research components
 import ResearchOverview from './ResearchOverview.vue'
 import FeaturedProjects from './FeaturedProjects.vue'
-import ResearchAreasAccordion from './ResearchAreasAccordion.vue'
 
 // Language and translations
 const { t } = useLanguage()
 
 // Research composable
-const { 
-  research, 
-  isLoading, 
-  error, 
-  fetchResearch, 
-  activeProjects, 
-  featuredProjects 
-} = useResearch()
+const { research, isLoading, error, fetchResearch } = useResearch()
 
 // Fetch research data on component mount
 onMounted(async () => {
   await fetchResearch()
 })
 
-// Statistics based on research data
-const statistics = computed(() => [
-  { 
-    value: `${activeProjects.value.length}+`, 
-    label: t.value.research.overview.activeProjects 
-  }
-])
-
-// Research areas data
-const researchAreas = computed(() => [
-  {
-    id: '1',
-    name: t.value.research.domains.softwareArchitecture.title,
-    description: t.value.research.domains.softwareArchitecture.description,
-    icon: '🏗️'
-  },
-  {
-    id: '2', 
-    name: t.value.research.domains.artificialIntelligence.title,
-    description: t.value.research.domains.artificialIntelligence.description,
-    icon: '🤖'
-  },
-  {
-    id: '3',
-    name: t.value.research.domains.cybersecurity.title,
-    description: t.value.research.domains.cybersecurity.description,
-    icon: '🔒'
-  },
-  {
-    id: '4',
-    name: t.value.research.domains.devops.title,
-    description: t.value.research.domains.devops.description,
-    icon: '⚙️'
-  },
-  {
-    id: '5',
-    name: t.value.research.domains.cloudComputing.title,
-    description: t.value.research.domains.cloudComputing.description,
-    icon: '☁️'
-  },
-  {
-    id: '6',
-    name: t.value.research.domains.softwareTesting.title,
-    description: t.value.research.domains.softwareTesting.description,
-    icon: '🧪'
-  },
-  {
-    id: '7',
-    name: t.value.research.domains.softwareMaintenance.title,
-    description: t.value.research.domains.softwareMaintenance.description,
-    icon: '🔧'
-  },
-  {
-    id: '8',
-    name: t.value.research.domains.humanComputerInteraction.title,
-    description: t.value.research.domains.humanComputerInteraction.description,
-    icon: '👤'
-  }
-])
-
-// Function to get projects by domain
-const getProjectsByDomain = (domainName: string) => {
-  // For now, return all research projects since the API doesn't have domain filtering
-  return research.value.map(project => ({
-    id: project.id.toString(),
-    title: project.title,
-    description: project.description,
-    leadResearcher: project.team_members[0] || 'Unknown'
-  }))
-}
-const formattedFeaturedProjects = computed(() => {
-  return featuredProjects.value.map(project => ({
-    id: project.id.toString(),
-    title: project.title,
-    start_date: new Date(project.start_date).toLocaleDateString(),
-    end_date: project.end_date ? new Date(project.end_date).toLocaleDateString() : null,
-    description: project.description,
-    funding_source: project.funding_source,
-    funding_amount: project.funding_amount,
-    status: project.status,
-    team_members: project.team_members || []
-  }))
+const featuredProjects = computed(() => {
+  return research.value
 })
+
+// Statistics based on full list
+const statistics = computed(() => [
+  { value: `${research.value.length}+`, label: t.value.research.overview.activeProjects }
+])
 </script>
 
 <template>
@@ -149,13 +66,7 @@ const formattedFeaturedProjects = computed(() => {
       />
 
       <!-- Featured Projects -->
-      <FeaturedProjects :projects="formattedFeaturedProjects" />
-
-      <!-- Research Areas -->
-      <ResearchAreasAccordion 
-        :research-areas="researchAreas" 
-        :get-projects-by-domain="getProjectsByDomain" 
-      />
+      <FeaturedProjects :projects="featuredProjects" />
     </div>
   </div>
 </template>
