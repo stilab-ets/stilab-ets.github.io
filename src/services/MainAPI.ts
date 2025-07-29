@@ -229,23 +229,23 @@ export class MainAPI extends BaseAPI {
 
   // Research
   async getResearch(): Promise<ApiResponse<Research[]>> {
-    return this.get<Research[]>('/api/research');
+    return this.get<Research[]>('/api/researches');
   }
 
   async getResearchProject(id: string): Promise<ApiResponse<Research>> {
-    return this.get<Research>(`/api/research/${id}/`);
+    return this.get<Research>(`/api/researches/${id}/`);
   }
 
   async createResearch(data: Partial<Research>): Promise<ApiResponse<Research>> {
-    return this.post<Research>('/api/research', data);
+    return this.post<Research>('/api/researches', data);
   }
 
   async updateResearch(id: string, data: Partial<Research>): Promise<ApiResponse<Research>> {
-    return this.put<Research>(`/api/research/${id}/`, data);
+    return this.put<Research>(`/api/researches/${id}/`, data);
   }
 
   async deleteResearch(id: string): Promise<ApiResponse<void>> {
-    return this.delete<void>(`/api/research/${id}/`);
+    return this.delete<void>(`/api/researches/${id}/`);
   }
 
   // Courses
