@@ -24,21 +24,21 @@ export function useFooterData() {
     {
       id: 'email',
       icon: '📧',
-      content: 'contact@stil-lab.fr',
+      content: 'ali.ouni@etsmtl.ca',
       type: 'email',
       ariaLabel: 'Adresse email du laboratoire'
     },
     {
       id: 'phone',
       icon: '📞',
-      content: '+33 1 23 45 67 89',
+      content: '+1 514-396-8739',
       type: 'phone',
       ariaLabel: 'Numéro de téléphone du laboratoire'
     },
     {
       id: 'address',
       icon: '📍',
-      content: 'Université de Recherche\nBâtiment Informatique\n75000 Paris',
+      content: ' 1100 rue Notre-Dame Ouest, Montreal',
       type: 'address',
       ariaLabel: 'Adresse du laboratoire'
     }
