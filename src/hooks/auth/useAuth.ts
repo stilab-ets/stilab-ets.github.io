@@ -36,7 +36,8 @@ export function useAuth() {
       'postdoc': 'researcher',
       'phd': 'student',
       'master': 'student',
-      'engineer': 'researcher'
+      'engineer': 'researcher',
+      'admin': 'admin'
     }
     
     return roleMap[user.value.role] || 'student'
@@ -163,7 +164,7 @@ export function useAuth() {
     }
   })
 
-  // Access control functions - updated to include all dashboard routes
+  // Access control functions
   const canAccessPage = (page: string): boolean => {
     const protectedRoutes = ['dashboard', 'admin-dashboard', 'professor-dashboard', 'student-dashboard']
     const adminOnlyRoutes = ['admin-dashboard']
