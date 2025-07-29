@@ -175,7 +175,7 @@ const navigateToPage = (page: string) => {
                   
                   <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                     <span class="text-sm font-medium text-gray-700">
-                      {{ currentLanguage === 'fr' ? 'Chercheurs' : 'Researchers' }}
+                      {{ currentLanguage === 'fr' ? 'Recherches' : 'Researches' }}
                     </span>
                     <span class="text-lg font-bold text-[#08a4d4]">
                       {{ researchCount !== null ? `${researchCount}+` : '...' }}
