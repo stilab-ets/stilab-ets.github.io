@@ -11,7 +11,7 @@ export interface UserPermissions {
   canModerateContent: boolean
 }
 
-export type UserRole = 'admin' | 'professor' | 'researcher' | 'student' | 'guest'
+export type UserRole = 'admin' | 'professor' | 'researcher' | 'student'
 
 export function useAuth() {
   const { 
@@ -24,27 +24,40 @@ export function useAuth() {
     requireAdmin 
   } = useAuthMiddleware()
 
-  // User role determination
-  const userRole = computed((): UserRole => {
-    if (!user.value) return 'guest'
+  // User role determination - returns null when not authenticated
+  const userRole = computed((): UserRole | null => {
+    if (!isAuthenticated.value || !user.value) return null
     if (user.value.is_staff) return 'admin'
     
-    // Map user roles from backend
+    // Map user roles from backend - consistent mapping
     const roleMap: Record<string, UserRole> = {
       'professor': 'professor',
-      'researcher': 'researcher', 
+      'researcher': 'researcher', // Garde le rôle researcher distinct
       'postdoc': 'researcher',
       'phd': 'student',
       'master': 'student',
       'engineer': 'researcher'
     }
     
-    return roleMap[user.value.role] || 'researcher'
+    return roleMap[user.value.role] || 'student'
   })
 
   // User permissions based on role
   const permissions = computed((): UserPermissions => {
     const role = userRole.value
+    
+    // No permissions for unauthenticated users
+    if (!role) {
+      return {
+        canManageUsers: false,
+        canManageContent: false,
+        canAccessSystemSettings: false,
+        canViewReports: false,
+        canCreateContent: false,
+        canEditOwnContent: false,
+        canModerateContent: false
+      }
+    }
     
     switch (role) {
       case 'admin':
@@ -59,7 +72,7 @@ export function useAuth() {
         }
       
       case 'professor':
-      case 'researcher':
+      case 'researcher': // Traite researcher comme professor pour les permissions
         return {
           canManageUsers: false,
           canManageContent: false,
@@ -81,7 +94,7 @@ export function useAuth() {
           canModerateContent: false
         }
       
-      default: // guest
+      default:
         return {
           canManageUsers: false,
           canManageContent: false,
@@ -97,11 +110,11 @@ export function useAuth() {
   // Convenience computed properties
   const isAdmin = computed(() => userRole.value === 'admin')
   const isProfessor = computed(() => userRole.value === 'professor')
-  const isResearcher = computed(() => ['professor', 'researcher'].includes(userRole.value))
+  const isResearcher = computed(() => userRole.value === 'researcher')
+  const isProfessorOrResearcher = computed(() => ['professor', 'researcher'].includes(userRole.value || ''))
   const isStudent = computed(() => userRole.value === 'student')
-  const isGuest = computed(() => userRole.value === 'guest')
 
-  const canAccessDashboard = computed(() => !isGuest.value && isAuthenticated.value)
+  const canAccessDashboard = computed(() => isAuthenticated.value && userRole.value !== null)
 
   // User display information
   const displayName = computed(() => {
@@ -133,16 +146,29 @@ export function useAuth() {
     return hasPermission(permission)
   }
 
-  // Dashboard route determination
+  // Dashboard route determination - now includes all roles
   const getDashboardRoute = computed(() => {
-    if (!canAccessDashboard.value) return null
-    return isAdmin.value ? 'admin-dashboard' : 'professor-dashboard'
+    if (!canAccessDashboard.value || !userRole.value) return null
+    
+    switch (userRole.value) {
+      case 'admin':
+        return 'admin-dashboard'
+      case 'professor':
+      case 'researcher': // Les deux utilisent le professor-dashboard
+        return 'professor-dashboard'
+      case 'student':
+        return 'student-dashboard'
+      default:
+        return 'dashboard'
+    }
   })
 
-  // Access control functions
+  // Access control functions - updated to include all dashboard routes
   const canAccessPage = (page: string): boolean => {
-    const protectedRoutes = ['dashboard', 'admin-dashboard', 'professor-dashboard']
+    const protectedRoutes = ['dashboard', 'admin-dashboard', 'professor-dashboard', 'student-dashboard']
     const adminOnlyRoutes = ['admin-dashboard']
+    const professorResearcherRoutes = ['professor-dashboard']
+    const studentOnlyRoutes = ['student-dashboard']
     
     if (!protectedRoutes.includes(page)) {
       return true // Public page
@@ -152,8 +178,22 @@ export function useAuth() {
       return false // Must be authenticated for protected routes
     }
     
+    // Role-specific access control
     if (adminOnlyRoutes.includes(page)) {
-      return isAdmin.value // Admin-only routes
+      return isAdmin.value
+    }
+    
+    if (professorResearcherRoutes.includes(page)) {
+      return isProfessorOrResearcher.value
+    }
+    
+    if (studentOnlyRoutes.includes(page)) {
+      return isStudent.value
+    }
+    
+    // Generic dashboard - accessible by all authenticated users
+    if (page === 'dashboard') {
+      return true
     }
     
     return true // Authenticated user can access general protected routes
@@ -174,8 +214,8 @@ export function useAuth() {
     isAdmin,
     isProfessor,
     isResearcher,
+    isProfessorOrResearcher,
     isStudent,
-    isGuest,
     
     // Access control
     permissions,

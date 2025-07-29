@@ -1,281 +1,255 @@
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
-import { XCircleIcon } from 'lucide-vue-next'
+import { ref, computed, onMounted, watch } from 'vue'
+import { useInvitationToken } from '@/composables/useInvitationToken'
+import { useRegister } from '@/hooks/auth/useRegister'
+import { useRouteGuard } from '@/composables/useRouteGuard'
 import { useLanguage } from '@/composables/useLanguage'
+import Card from '@/components/ui/Card.vue'
+import PersonalInfoSection from './register/PersonalInfoSection.vue'
+import ProfessionalInfoSection from './register/ProfessionalInfoSection.vue'
+import LinksSection from './register/LinksSection.vue'
+import SecuritySection from './register/SecuritySection.vue'
+import RegistrationActions from './register/RegistrationActions.vue'
 
-interface RegisterForm {
-  firstName: string
-  lastName: string
-  email: string
-  phone: string
-  role: string
-  researchDomain: string
-  biography: string
-  githubUrl: string
-  linkedinUrl: string
-  personalWebsite: string
-  password: string
-  confirmPassword: string
-}
+const { t } = useLanguage()
 
-interface RegisterErrors {
-  [key: string]: string
-}
+// Invitation token management
+const { 
+  tokenData, 
+  isLoading: tokenLoading, 
+  canAccessRegister, 
+  tokenError, 
+  getPrefilledData,
+  clearTokenFromUrl 
+} = useInvitationToken()
 
-const props = defineProps<{
-  invitationToken?: string
-  invitedEmail?: string
+// Registration management
+const { 
+  registerWithToken, 
+  isLoading: registerLoading, 
+  error: registerError,
+  success: registerSuccess,
+  validateFormData,
+  resetState
+} = useRegister()
+
+// Route protection
+const { isAccessDenied, accessError } = useRouteGuard({
+  redirectOnFailure: 'home',
+  showAccessDenied: true
+})
+
+// Define emits
+const emit = defineEmits<{
+  navigate: [page: string]
 }>()
 
-const { t: translations } = useLanguage()
-const t = computed(() => translations.value.auth.register)
-
-const form = reactive<RegisterForm>({
+// Form data sections
+const personalData = ref({
   firstName: '',
   lastName: '',
-  email: props.invitedEmail || '',
-  phone: '',
+  email: '',
+  phone: ''
+})
+
+const professionalData = ref({
   role: '',
   researchDomain: '',
-  biography: '',
+  biography: ''
+})
+
+const linksData = ref({
   githubUrl: '',
   linkedinUrl: '',
-  personalWebsite: '',
+  personalWebsite: ''
+})
+
+const securityData = ref({
   password: '',
   confirmPassword: ''
 })
 
-const errors = ref<RegisterErrors>({})
-const generalError = ref<string>('')
-const isSubmitting = ref(false)
+// Validation errors
+const validationErrors = ref<string[]>([])
 
-const validateForm = (): boolean => {
-  errors.value = {}
-  
-  if (!form.firstName.trim()) {
-    errors.value.firstName = t.value.validation.firstNameRequired
-  }
-  
-  if (!form.lastName.trim()) {
-    errors.value.lastName = t.value.validation.lastNameRequired
-  }
-  
-  if (!form.email) {
-    errors.value.email = t.value.validation.emailRequired
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-    errors.value.email = t.value.validation.emailInvalid
-  }
-  
-  if (!form.role) {
-    errors.value.role = t.value.validation.roleRequired
-  }
-  
-  if (!form.password) {
-    errors.value.password = t.value.validation.passwordRequired
-  } else if (form.password.length < 8) {
-    errors.value.password = t.value.validation.passwordMinLength
-  }
-  
-  if (form.password !== form.confirmPassword) {
-    errors.value.confirmPassword = t.value.validation.passwordMismatch
-  }
-  
-  return Object.keys(errors.value).length === 0
+// Computed form data for validation
+const formData = computed(() => ({
+  firstName: personalData.value.firstName,
+  lastName: personalData.value.lastName,
+  email: personalData.value.email,
+  phone: personalData.value.phone,
+  role: professionalData.value.role,
+  researchDomain: professionalData.value.researchDomain,
+  biography: professionalData.value.biography,
+  githubUrl: linksData.value.githubUrl,
+  linkedinUrl: linksData.value.linkedinUrl,
+  personalWebsite: linksData.value.personalWebsite,
+  password: securityData.value.password,
+  confirmPassword: securityData.value.confirmPassword
+}))
+
+// Form validation
+const isFormValid = computed(() => {
+  return validateFormData(formData.value).length === 0
+})
+
+// Prefill form with invitation data
+const prefillForm = () => {
+  const prefilledData = getPrefilledData()
+  personalData.value.email = prefilledData.email || ''
+  professionalData.value.role = prefilledData.role || ''
 }
 
+// Submit registration
 const handleSubmit = async () => {
-  if (!validateForm()) return
+  if (!isFormValid.value || !tokenData.value) return
 
-  isSubmitting.value = true
-  generalError.value = ''
-  errors.value = {}
+  // Validate the form data
+  const errors = validateFormData(formData.value)
+  if (errors.length > 0) {
+    validationErrors.value = errors
+    return
+  }
 
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: form.email.split('@')[0],
-        email: form.email,
-        password: form.password,
-        first_name: form.firstName,
-        last_name: form.lastName,
-        role: form.role,
-        phone: form.phone,
-        research_domain: form.researchDomain,
-        biography: form.biography,
-        github_url: form.githubUrl,
-        linkedin_url: form.linkedinUrl,
-        personal_website: form.personalWebsite,
-        invitationToken: props.invitationToken,
-      }),
-    })
-
-    if (!response.ok) {
-      const data = await response.json()
-      if (typeof data === 'object') {
-        errors.value = data
-      } else {
-        generalError.value = t.value.errors.registrationFailed
-      }
-      return
-    }
-
-    // Success! Redirect or show success message
-    console.log('Registration successful')
-  } catch (error) {
-    console.error('Registration error:', error)
-    generalError.value = t.value.errors.registrationFailed
-  } finally {
-    isSubmitting.value = false
+  validationErrors.value = []
+  const result = await registerWithToken(formData.value, tokenData.value.token)
+  
+  if (result.success) {
+    clearTokenFromUrl()
+    
+    // Redirect to login after success
+    setTimeout(() => {
+      emit('navigate', 'login')
+    }, 2000)
   }
 }
+
+// Handle cancel
+const handleCancel = () => {
+  emit('navigate', 'home')
+}
+
+// Watch for token data changes to prefill form
+watch(tokenData, (newTokenData) => {
+  if (newTokenData) {
+    prefillForm()
+  }
+}, { immediate: true })
+
+// Initialize on mount
+onMounted(() => {
+  resetState()
+  
+  // Prefill form if token data is already available
+  if (tokenData.value) {
+    prefillForm()
+  }
+})
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8">
-      <div>
-        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          {{ t.title }}
-        </h2>
-        <p class="mt-2 text-center text-sm text-gray-600">
-          {{ t.subtitle }}
+  <div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+      <h2 class="mt-6 text-center text-3xl font-bold text-gray-900">
+        {{ t.auth.register.title }}
+      </h2>
+      <p class="mt-2 text-center text-sm text-gray-600">
+        {{ t.auth.register.subtitle }}
+      </p>
+      
+      <!-- Invitation note -->
+      <div v-if="tokenData" class="mt-4 bg-blue-50 border border-blue-200 rounded-md p-3">
+        <p class="text-sm text-blue-700 text-center">
+          {{ t.auth.register.invitationNote }}
         </p>
       </div>
+    </div>
 
-      <form class="mt-8 space-y-6" @submit.prevent="handleSubmit">
-        <!-- Personal Information -->
-        <div class="space-y-4">
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label for="firstName" class="block text-sm font-medium text-gray-700">
-                {{ t.form.firstName }}
-              </label>
-              <input
-                id="firstName"
-                v-model="form.firstName"
-                type="text"
-                required
-                class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] sm:text-sm"
-                :class="{ 'border-red-500': errors.firstName }"
-                :placeholder="t.form.firstNamePlaceholder"
-              />
-              <p v-if="errors.firstName" class="mt-1 text-sm text-red-600">{{ errors.firstName }}</p>
-            </div>
-
-            <div>
-              <label for="lastName" class="block text-sm font-medium text-gray-700">
-                {{ t.form.lastName }}
-              </label>
-              <input
-                id="lastName"
-                v-model="form.lastName"
-                type="text"
-                required
-                class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] sm:text-sm"
-                :class="{ 'border-red-500': errors.lastName }"
-                :placeholder="t.form.lastNamePlaceholder"
-              />
-              <p v-if="errors.lastName" class="mt-1 text-sm text-red-600">{{ errors.lastName }}</p>
-            </div>
-          </div>
-
-          <div>
-            <label for="username_or_email" class="block text-sm font-medium text-gray-700">
-              {{ t.form.email }}
-            </label>
-            <input
-              id="username_or_email"
-              v-model="form.email"
-              type="email"
-              required
-              :disabled="!!props.invitedEmail"
-              class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] sm:text-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
-              :class="{ 'border-red-500': errors.email }"
-              :placeholder="t.form.emailPlaceholder"
-            />
-            <p v-if="errors.email" class="mt-1 text-sm text-red-600">{{ errors.email }}</p>
-          </div>
-
-          <div>
-            <label for="role" class="block text-sm font-medium text-gray-700">
-              {{ t.form.role }}
-            </label>
-            <select
-              id="role"
-              v-model="form.role"
-              required
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] sm:text-sm"
-              :class="{ 'border-red-500': errors.role }"
-            >
-              <option value="">{{ t.form.selectRole }}</option>
-              <option value="professor">{{ t.roles.professor }}</option>
-              <option value="engineer">{{ t.roles.engineer }}</option>
-              <option value="phd">{{ t.roles.phd }}</option>
-              <option value="msc">{{ t.roles.master }}</option>
-            </select>
-            <p v-if="errors.role" class="mt-1 text-sm text-red-600">{{ errors.role }}</p>
-          </div>
-
-          <div>
-            <label for="password" class="block text-sm font-medium text-gray-700">
-              {{ t.form.password }}
-            </label>
-            <input
-              id="password"
-              v-model="form.password"
-              type="password"
-              required
-              class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] sm:text-sm"
-              :class="{ 'border-red-500': errors.password }"
-              :placeholder="t.form.passwordPlaceholder"
-            />
-            <p v-if="errors.password" class="mt-1 text-sm text-red-600">{{ errors.password }}</p>
-          </div>
-
-          <div>
-            <label for="confirmPassword" class="block text-sm font-medium text-gray-700">
-              {{ t.form.confirmPassword }}
-            </label>
-            <input
-              id="confirmPassword"
-              v-model="form.confirmPassword"
-              type="password"
-              required
-              class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] sm:text-sm"
-              :class="{ 'border-red-500': errors.confirmPassword }"
-              :placeholder="t.form.confirmPasswordPlaceholder"
-            />
-            <p v-if="errors.confirmPassword" class="mt-1 text-sm text-red-600">{{ errors.confirmPassword }}</p>
-          </div>
-        </div>
-
-        <!-- Error Display -->
-        <div v-if="generalError" class="bg-red-50 border border-red-200 rounded-lg p-4">
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-2xl">
+      <Card class="py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <!-- Access denied message -->
+        <div v-if="isAccessDenied" class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
           <div class="flex">
-            <div class="text-red-400">
-              <XCircleIcon class="h-5 w-5" />
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+              </svg>
             </div>
             <div class="ml-3">
-              <p class="text-sm text-red-700">{{ generalError }}</p>
+              <h3 class="text-sm font-medium text-red-800">Access Denied</h3>
+              <div class="mt-2 text-sm text-red-700">
+                <p>{{ accessError || 'You need a valid invitation to register.' }}</p>
+              </div>
             </div>
           </div>
         </div>
 
-        <div>
-          <button
-            type="submit"
-            :disabled="isSubmitting"
-            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#08a4d4] hover:bg-[#066a88] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#08a4d4] disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {{ isSubmitting ? t.form.submitting : t.form.submit }}
-          </button>
+        <!-- Token loading -->
+        <div v-if="tokenLoading" class="text-center py-8">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p class="mt-2 text-sm text-gray-600">Validating invitation...</p>
         </div>
-      </form>
+
+        <!-- Token error -->
+        <div v-if="tokenError" class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
+          <div class="text-sm text-red-700">{{ tokenError }}</div>
+        </div>
+
+        <!-- Registration error -->
+        <div v-if="registerError" class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
+          <div class="text-sm text-red-700">{{ registerError }}</div>
+        </div>
+
+        <!-- Registration form -->
+        <form v-if="canAccessRegister && !tokenLoading" @submit.prevent="handleSubmit" class="space-y-8">
+          <!-- Personal Information Section -->
+          <PersonalInfoSection
+            v-model="personalData"
+            :errors="validationErrors.filter(error => 
+              error.includes('name') || error.includes('email') || error.includes('phone') ||
+              error.includes('nom') || error.includes('prénom')
+            )"
+            :email-disabled="true"
+          />
+
+          <!-- Professional Information Section -->
+          <ProfessionalInfoSection
+            v-model="professionalData"
+            :errors="validationErrors.filter(error => 
+              error.includes('role') || error.includes('domain') || error.includes('biography') ||
+              error.includes('rôle') || error.includes('domaine') || error.includes('biographie')
+            )"
+            :role-disabled="true"
+          />
+
+          <!-- Links Section -->
+          <LinksSection
+            v-model="linksData"
+            :errors="validationErrors.filter(error => 
+              error.includes('url') || error.includes('website') || error.includes('link') ||
+              error.includes('github') || error.includes('linkedin')
+            )"
+          />
+
+          <!-- Security Section -->
+          <SecuritySection
+            v-model="securityData"
+            :errors="validationErrors.filter(error => 
+              error.includes('password') || error.includes('confirm') ||
+              error.includes('mot de passe') || error.includes('confirmer')
+            )"
+          />
+
+          <!-- Actions -->
+          <RegistrationActions
+            :is-form-valid="isFormValid"
+            :is-submitting="registerLoading"
+            :has-success="registerSuccess"
+            @submit="handleSubmit"
+            @cancel="handleCancel"
+          />
+        </form>
+      </Card>
     </div>
   </div>
 </template>

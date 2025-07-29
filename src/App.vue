@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { computed, watch, onMounted, onUnmounted } from 'vue'
 import { useLanguage } from './composables/useLanguage'
 import { useAuthMiddleware } from './middleware/auth'
+import { useNavigation } from './hooks/layout/useNavigation'
+import { useRouteGuard } from './composables/useRouteGuard'
 
 // Layout components
 import Header from './components/layout/Header.vue'
@@ -29,28 +31,52 @@ import LoginPage from './components/auth/LoginPage.vue'
 // Dashboard components
 import AdminDashboard from './components/dashboard/AdminDashboard.vue'
 import ProfessorDashboard from './components/dashboard/ProfessorDashboard.vue'
+import StudentDashboard from './components/dashboard/StudentDashboard.vue'
+import DashboardPage from './components/dashboard/DashboardPage.vue'
 
 // Initialize systems
 const { currentLanguage, t, localizedNavigationItems, setLanguage } = useLanguage()
 const { isAuthenticated, user, isLoading } = useAuthMiddleware()
+const { currentPage, navigateToPage, canAccessRoute, getAccessError } = useNavigation()
+const { isAccessDenied, accessError, safeNavigate } = useRouteGuard({
+  redirectOnFailure: 'login',
+  showAccessDenied: true
+})
 
-// Navigation state
-const currentPage = ref('home')
-
-// User role computed property
+// User role computed property - consistent with useAuth.ts
 const userRole = computed(() => {
   if (!user.value) return 'guest'
   if (user.value.is_staff) return 'admin'
-  return user.value.role || 'professor'
+  
+  // Map user roles from backend - consistent mapping
+  const roleMap: Record<string, string> = {
+    'professor': 'professor',
+    'researcher': 'professor',
+    'postdoc': 'professor',
+    'phd': 'student',
+    'master': 'student',
+    'engineer': 'professor'
+  }
+  
+  return roleMap[user.value.role] || 'student'
 })
 
 // Check if user can access dashboard
 const canAccessDashboard = computed(() => {
-  return isAuthenticated.value && userRole.value !== 'guest'
+  return isAuthenticated.value && userRole.value !== null
 })
 
-// Protected routes that require authentication
-const protectedRoutes = ['dashboard', 'admin-dashboard', 'professor-dashboard']
+// Navigation methods - utilise le système de navigation sécurisé
+const setCurrentPage = (page: string) => {
+  // Tenter une navigation sécurisée
+  if (!safeNavigate(page)) {
+    // Si la navigation échoue, rediriger vers login ou afficher une erreur
+    const error = getAccessError(page)
+    if (error && !isAuthenticated.value) {
+      navigateToPage('login')
+    }
+  }
+}
 
 // Laboratory statistics
 const labStats = computed(() => ({
@@ -59,29 +85,6 @@ const labStats = computed(() => ({
   projects: { value: 8, label: t.value.stats.projects },
   awards: { value: 6, label: t.value.stats.awards }
 }))
-
-// Navigation methods
-const setCurrentPage = (page: string) => {
-  // Check if page requires authentication
-  if (protectedRoutes.includes(page)) {
-    if (!isAuthenticated.value) {
-      currentPage.value = 'login'
-      return
-    }
-    // Check role-specific access
-    if (page === 'admin-dashboard' && userRole.value !== 'admin') {
-      currentPage.value = 'dashboard' // Redirect to appropriate dashboard
-      return
-    }
-    // Redirect to role-specific dashboard
-    if (page === 'dashboard') {
-      page = userRole.value === 'admin' ? 'admin-dashboard' : 'professor-dashboard'
-    }
-  }
-  
-  currentPage.value = page
-  window.scrollTo({ top: 0, behavior: 'smooth' })
-}
 
 // Language change handler
 const handleLanguageChange = (language: string) => {
@@ -107,8 +110,11 @@ const updatePageTitle = () => {
 
 // Authentication state watchers
 watch(isAuthenticated, (newValue) => {
-  if (!newValue && protectedRoutes.includes(currentPage.value)) {
-    currentPage.value = 'home'
+  if (!newValue) {
+    // Vérifier si la page actuelle nécessite une authentification
+    if (!canAccessRoute(currentPage.value)) {
+      navigateToPage('home')
+    }
   }
 })
 
@@ -176,20 +182,39 @@ onUnmounted(() => {
         <!-- Authentication -->
         <LoginPage v-else-if="currentPage === 'login'" @login-success="setCurrentPage('home')" />
         
-        <!-- Dashboard Page -->
+        <!-- Generic Dashboard Page -->
         <DashboardPage 
           v-else-if="currentPage === 'dashboard'" 
           @navigate="setCurrentPage"
         />
-        <!-- Protected Dashboards -->
+        
+        <!-- Role-specific Protected Dashboards -->
         <AdminDashboard 
           v-else-if="currentPage === 'admin-dashboard' && userRole === 'admin'"
           @navigate="setCurrentPage"
         />
         <ProfessorDashboard 
-          v-else-if="currentPage === 'professor-dashboard' && userRole === 'professor'"
+          v-else-if="currentPage === 'professor-dashboard' && (userRole === 'professor' || userRole === 'researcher')"
           @navigate="setCurrentPage"
         />
+        <StudentDashboard 
+          v-else-if="currentPage === 'student-dashboard' && userRole === 'student'"
+          @navigate="setCurrentPage"
+        />
+        
+        <!-- Access Denied for wrong role trying to access dashboard -->
+        <div v-else-if="isAccessDenied" class="container mx-auto px-4 py-8">
+          <div class="text-center">
+            <h1 class="text-2xl font-bold text-gray-800 mb-4">Accès Refusé</h1>
+            <p class="text-gray-600 mb-4">{{ accessError || "Vous n'avez pas les permissions pour accéder à cette page." }}</p>
+            <button 
+              @click="setCurrentPage('home')"
+              class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            >
+              Retour à l'Accueil
+            </button>
+          </div>
+        </div>
         
         <!-- Fallback for invalid routes -->
         <div v-else class="container mx-auto px-4 py-8">
