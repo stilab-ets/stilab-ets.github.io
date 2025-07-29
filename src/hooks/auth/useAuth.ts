@@ -11,99 +11,106 @@ export interface UserPermissions {
   canModerateContent: boolean
 }
 
-export type UserRole = 'admin' | 'professor' | 'researcher' | 'student' | 'guest'
+export type UserRole = 'admin' | 'professor' | 'researcher' | 'student'
+
+/**
+ * Maps raw backend roles and is_staff flag to a standardized frontend UserRole
+ */
+function resolveUserRole(rawRole: string | undefined, isStaff: boolean): UserRole {
+  if (isStaff) return 'admin'
+  if (!rawRole) return 'student'
+
+  const role = rawRole.toUpperCase()
+
+  const roleMap: Record<string, UserRole> = {
+    'PRO': 'professor',
+    'PHD': 'student',
+    'MSC': 'student',
+    'PROFESSOR': 'professor',
+    'RESEARCHER': 'researcher',
+    'POSTDOC': 'researcher',
+    'ENGINEER': 'researcher',
+    'ADMIN': 'admin',
+    'MASTER': 'student',
+    'PHD_STUDENT': 'student'
+  }
+
+  return roleMap[role] || 'student'
+}
+
+/**
+ * Maps a UserRole to corresponding permission set
+ */
+function resolvePermissions(role: UserRole | null): UserPermissions {
+  const base: UserPermissions = {
+    canManageUsers: false,
+    canManageContent: false,
+    canAccessSystemSettings: false,
+    canViewReports: false,
+    canCreateContent: false,
+    canEditOwnContent: false,
+    canModerateContent: false
+  }
+
+  switch (role) {
+    case 'admin':
+      return {
+        ...base,
+        canManageUsers: true,
+        canManageContent: true,
+        canAccessSystemSettings: true,
+        canViewReports: true,
+        canCreateContent: true,
+        canEditOwnContent: true,
+        canModerateContent: true
+      }
+    case 'professor':
+    case 'researcher':
+      return {
+        ...base,
+        canCreateContent: true,
+        canEditOwnContent: true
+      }
+    case 'student':
+      return {
+        ...base,
+        canEditOwnContent: true
+      }
+    default:
+      return base
+  }
+}
 
 export function useAuth() {
-  const { 
-    isAuthenticated, 
-    isLoading, 
-    user, 
-    login, 
-    logout, 
-    requireAuth, 
-    requireAdmin 
+  const {
+    isAuthenticated,
+    isLoading,
+    user,
+    login,
+    logout,
+    requireAuth,
+    requireAdmin
   } = useAuthMiddleware()
 
-  // User role determination
-  const userRole = computed((): UserRole => {
-    if (!user.value) return 'guest'
-    if (user.value.is_staff) return 'admin'
-    
-    // Map user roles from backend
-    const roleMap: Record<string, UserRole> = {
-      'professor': 'professor',
-      'researcher': 'researcher', 
-      'postdoc': 'researcher',
-      'phd': 'student',
-      'master': 'student',
-      'engineer': 'researcher'
-    }
-    
-    return roleMap[user.value.role] || 'researcher'
+  const userRole = computed<UserRole | null>(() => {
+    if (!isAuthenticated.value || !user.value) return null
+    return resolveUserRole(user.value.role, user.value.is_staff ?? false)
   })
 
-  // User permissions based on role
-  const permissions = computed((): UserPermissions => {
-    const role = userRole.value
-    
-    switch (role) {
-      case 'admin':
-        return {
-          canManageUsers: true,
-          canManageContent: true,
-          canAccessSystemSettings: true,
-          canViewReports: true,
-          canCreateContent: true,
-          canEditOwnContent: true,
-          canModerateContent: true
-        }
-      
-      case 'professor':
-      case 'researcher':
-        return {
-          canManageUsers: false,
-          canManageContent: false,
-          canAccessSystemSettings: false,
-          canViewReports: false,
-          canCreateContent: true,
-          canEditOwnContent: true,
-          canModerateContent: false
-        }
-      
-      case 'student':
-        return {
-          canManageUsers: false,
-          canManageContent: false,
-          canAccessSystemSettings: false,
-          canViewReports: false,
-          canCreateContent: false,
-          canEditOwnContent: true,
-          canModerateContent: false
-        }
-      
-      default: // guest
-        return {
-          canManageUsers: false,
-          canManageContent: false,
-          canAccessSystemSettings: false,
-          canViewReports: false,
-          canCreateContent: false,
-          canEditOwnContent: false,
-          canModerateContent: false
-        }
-    }
-  })
+  const permissions = computed(() => resolvePermissions(userRole.value))
 
-  // Convenience computed properties
   const isAdmin = computed(() => userRole.value === 'admin')
   const isProfessor = computed(() => userRole.value === 'professor')
-  const isResearcher = computed(() => ['professor', 'researcher'].includes(userRole.value))
+  const isResearcher = computed(() => userRole.value === 'researcher')
+  const isProfessorOrResearcher = computed(() =>
+    ['professor', 'researcher'].includes(userRole.value || '')
+  )
   const isStudent = computed(() => userRole.value === 'student')
-  const isGuest = computed(() => userRole.value === 'guest')
 
-  const canAccessDashboard = computed(() => !isGuest.value && isAuthenticated.value)
+  const canAccessDashboard = computed(() =>
+    isAuthenticated.value && userRole.value !== null
+  )
 
-  // User display information
   const displayName = computed(() => {
     if (!user.value) return ''
     if (user.value.first_name && user.value.last_name) {
@@ -115,48 +122,48 @@ export function useAuth() {
   const userInitials = computed(() => {
     const name = displayName.value
     if (!name) return 'U'
-    
-    const parts = name.split(' ')
-    if (parts.length >= 2) {
-      return `${parts[0][0]}${parts[1][0]}`.toUpperCase()
-    }
-    return name[0].toUpperCase()
+
+    const parts = name.trim().split(' ')
+    return parts.length >= 2
+      ? `${parts[0][0]}${parts[1][0]}`.toUpperCase()
+      : name[0].toUpperCase()
   })
 
-  // Permission checking functions
-  const hasPermission = (permission: keyof UserPermissions): boolean => {
-    return permissions.value[permission]
-  }
+  const hasPermission = (permission: keyof UserPermissions): boolean =>
+    permissions.value[permission]
 
-  const requirePermission = (permission: keyof UserPermissions): boolean => {
-    if (!isAuthenticated.value) return false
-    return hasPermission(permission)
-  }
+  const requirePermission = (permission: keyof UserPermissions): boolean =>
+    isAuthenticated.value && hasPermission(permission)
 
-  // Dashboard route determination
   const getDashboardRoute = computed(() => {
-    if (!canAccessDashboard.value) return null
-    return isAdmin.value ? 'admin-dashboard' : 'professor-dashboard'
+    if (!canAccessDashboard.value || !userRole.value) return null
+    switch (userRole.value) {
+      case 'admin':
+        return 'admin-dashboard'
+      case 'professor':
+      case 'researcher':
+        return 'professor-dashboard'
+      case 'student':
+        return 'student-dashboard'
+      default:
+        return 'dashboard'
+    }
   })
 
-  // Access control functions
   const canAccessPage = (page: string): boolean => {
-    const protectedRoutes = ['dashboard', 'admin-dashboard', 'professor-dashboard']
+    const protectedRoutes = ['dashboard', 'admin-dashboard', 'professor-dashboard', 'student-dashboard']
     const adminOnlyRoutes = ['admin-dashboard']
-    
-    if (!protectedRoutes.includes(page)) {
-      return true // Public page
-    }
-    
-    if (!isAuthenticated.value) {
-      return false // Must be authenticated for protected routes
-    }
-    
-    if (adminOnlyRoutes.includes(page)) {
-      return isAdmin.value // Admin-only routes
-    }
-    
-    return true // Authenticated user can access general protected routes
+    const professorResearcherRoutes = ['professor-dashboard']
+    const studentOnlyRoutes = ['student-dashboard']
+
+    if (!protectedRoutes.includes(page)) return true
+    if (!isAuthenticated.value) return false
+
+    if (adminOnlyRoutes.includes(page)) return isAdmin.value
+    if (professorResearcherRoutes.includes(page)) return isProfessorOrResearcher.value
+    if (studentOnlyRoutes.includes(page)) return isStudent.value
+
+    return true
   }
 
   return {
@@ -164,24 +171,24 @@ export function useAuth() {
     isAuthenticated,
     isLoading,
     user,
-    
+
     // User info
     userRole,
     displayName,
     userInitials,
-    
+
     // Role checks
     isAdmin,
     isProfessor,
     isResearcher,
+    isProfessorOrResearcher,
     isStudent,
-    isGuest,
-    
+
     // Access control
     permissions,
     canAccessDashboard,
     getDashboardRoute,
-    
+
     // Functions
     login,
     logout,

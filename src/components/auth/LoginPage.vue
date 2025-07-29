@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useLanguage } from '@/composables/useLanguage'
+import { useAuth } from '@/hooks/auth/useAuth'
 import LoginForm from './LoginForm.vue'
+const { getDashboardRoute } = useAuth()
 
 const emit = defineEmits<{
   setCurrentPage: [page: string]
@@ -10,16 +12,13 @@ const { t } = useLanguage()
 
 const handleLoginSuccess = () => {
   // Redirect to dashboard after successful login
-  emit('setCurrentPage', 'dashboard')
+  const dashboardRoute = getDashboardRoute.value
+  emit('setCurrentPage', `${dashboardRoute}`)
 }
 
 const handleLoginFailed = (error: string) => {
   console.warn('Login failed:', error)
   // Error is already displayed in LoginForm component
-}
-
-const handleRegisterRedirect = () => {
-  emit('setCurrentPage', 'register')
 }
 </script>
 
@@ -42,20 +41,6 @@ const handleRegisterRedirect = () => {
             @login-success="handleLoginSuccess" 
             @login-failed="handleLoginFailed"
           />
-        </div>
-        
-
-        <!-- Register link -->
-        <div class="mt-6 text-center">
-          <p class="text-sm text-gray-600">
-            Don't have an account?
-            <button
-              @click="handleRegisterRedirect"
-              class="font-medium text-[#08a4d4] hover:cursor-pointer hover:text-blue-500 transition-colors duration-200"
-            >
-              Contact administrator
-            </button>
-          </p>
         </div>
 
         <!-- Back to home -->

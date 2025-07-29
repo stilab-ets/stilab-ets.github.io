@@ -16,6 +16,8 @@ import { VacanciesTranslations, vacanciesTranslations } from './vacancies.transl
 import { authTranslations, AuthTranslations } from './auth.translate'
 import { dashboardTranslations, DashboardTranslations } from './dashboard.translate'
 import { formsTranslations, FormsTranslations } from './forms'
+import { adminInvitationManagementTranslations, AdminInvitationManagementTranslations } from './adminInvitationManagement.translate'
+import { invitationsTranslations, InvitationsTranslations } from './invitations.translate'
 
 export type LanguageCode = 'en' | 'fr'
 
@@ -38,6 +40,8 @@ export interface Translations {
   auth: AuthTranslations
   forms: FormsTranslations
   dashboard: DashboardTranslations
+  invitations: InvitationsTranslations
+  adminInvitationManagement: AdminInvitationManagementTranslations
 }
 
 export const translations: Record<LanguageCode, Translations> = {
@@ -59,7 +63,9 @@ export const translations: Record<LanguageCode, Translations> = {
     vacancies: vacanciesTranslations.fr,
     auth: authTranslations.fr,
     forms: formsTranslations.fr,
-    dashboard: dashboardTranslations.fr
+    dashboard: dashboardTranslations.fr,
+    invitations: invitationsTranslations.fr,
+    adminInvitationManagement: adminInvitationManagementTranslations.fr
   },
   en: {
     navigation: navigationTranslations.en,
@@ -79,7 +85,9 @@ export const translations: Record<LanguageCode, Translations> = {
     vacancies: vacanciesTranslations.en,
     auth: authTranslations.en,
     forms: formsTranslations.en,
-    dashboard: dashboardTranslations.en
+    dashboard: dashboardTranslations.en,
+    invitations: invitationsTranslations.en,
+    adminInvitationManagement: adminInvitationManagementTranslations.en
   }
 }
 
