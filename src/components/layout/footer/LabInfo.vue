@@ -30,7 +30,7 @@ const { t } = useFooterData()
     
     <!-- Social media links -->
     <div class="flex space-x-4">
-      <a href="https://github.com/stil-lab" 
+      <a href="https://github.com/stilab-ets/stilab-ets.github.io" 
          target="_blank"
          class="text-gray-400 hover:text-white transition-colors"
          aria-label="GitHub du laboratoire STIL">
