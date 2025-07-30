@@ -22,6 +22,7 @@ export interface DashboardTranslations {
       invitations: string
       content: string
       reports: string
+      forms: string
     }
     stats: {
       totalUsers: string
@@ -363,7 +364,8 @@ export const dashboardTranslations: DashboardTranslationDict = {
         users: 'Users',
         invitations: 'Invitations',
         content: 'Content',
-        reports: 'Reports'
+        reports: 'Reports',
+        forms: 'Forms'
       },
       stats: {
         totalUsers: 'Total Users',
@@ -698,7 +700,8 @@ export const dashboardTranslations: DashboardTranslationDict = {
         users: 'Utilisateurs',
         invitations: 'Invitations',
         content: 'Contenu',
-        reports: 'Rapports'
+        reports: 'Rapports',
+        forms: 'Formulaires'
       },
       stats: {
         totalUsers: 'Total des utilisateurs',

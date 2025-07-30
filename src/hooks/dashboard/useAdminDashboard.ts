@@ -54,7 +54,8 @@ export function useAdminDashboard() {
     { id: 'users', label: t.value.dashboard.admin.tabs.users, icon: 'Users', count: users.value.length },
     { id: 'invitations', label: t.value.dashboard.admin.tabs.invitations, icon: 'UserPlus', count: invitations.value.filter(inv => inv.status === 'pending').length },
     { id: 'content', label: t.value.dashboard.admin.tabs.content, icon: 'FileText' },
-    { id: 'reports', label: t.value.dashboard.admin.tabs.reports, icon: 'TrendingUp' }
+    { id: 'reports', label: t.value.dashboard.admin.tabs.reports, icon: 'TrendingUp' },
+    { id: 'forms', label: t.value.dashboard.admin.tabs.forms, icon: 'FilePlus' }
   ]);
 
   const adminStats = computed<AdminStats[]>(() => [

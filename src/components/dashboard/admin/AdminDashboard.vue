@@ -10,6 +10,7 @@ import AdminUserManagement from './AdminUserManagement.vue'
 import AdminContentManagement from './AdminContentManagement.vue'
 import AdminInvitations from './AdminInvitations.vue'
 import AdminReports from './AdminReports.vue'
+import AdminForm from './AdminForm.vue'
 
 const { t } = useLanguage()
 const {
@@ -32,6 +33,8 @@ const currentTabComponent = computed(() => {
       return AdminContentManagement
     case 'reports':
       return AdminReports
+    case 'forms':
+      return AdminForm
     default:
       return AdminOverview
   }
