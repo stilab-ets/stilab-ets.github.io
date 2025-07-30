@@ -1,5 +1,5 @@
 import { ref, computed, readonly } from 'vue'
-import { translations, type LanguageCode, type Translations, navigationItems, type NavItem } from '@/data/translations'
+import { navigationItems, translations, type LanguageCode, type NavItem } from '@/data/translations'
 
 // Global reactive language state
 const currentLanguage = ref<LanguageCode>('en')

@@ -1,3 +1,4 @@
+// hooks/awards/useAwards.ts
 import { ref, computed, readonly, type Ref } from 'vue'
 import { mainAPI } from '@/services/ApiFactory'
 import type { Award } from '@/services/MainAPI'
@@ -99,11 +100,25 @@ export function useAwards(options: UseAwardsOptions = {}): UseAwardsReturn {
     
     try {
       const response = await mainAPI.getAwards()
-      // API returns array directly, not paginated
-      awards.value = response.data || []
+      
+      // Handle both array and object responses
+      let awardsData: ExtendedAward[] = []
+      if (Array.isArray(response.data)) {
+        awardsData = response.data
+      } else if (response.data && typeof response.data === 'object') {
+        awardsData = response.data || []
+      }
+      
+      awards.value = awardsData
     } catch (err: any) {
-      error.value = err.message || 'Failed to fetch awards'
-      console.error('Error fetching awards:', err)
+      // Handle 404s gracefully - awards endpoint might not exist
+      if (err.status === 404) {
+        awards.value = []
+        error.value = null // Don't treat 404 as an error for optional endpoints
+      } else {
+        error.value = err.message || 'Failed to fetch awards'
+        awards.value = [] // Set to empty array on error
+      }
     } finally {
       isLoading.value = false
     }

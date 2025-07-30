@@ -29,11 +29,20 @@ export function usePublications(): UsePublicationsReturn {
     
     try {
       const response = await mainAPI.getPublications()
-      // API returns array directly, not paginated
-      publications.value = response.data || []
+      
+      // Handle both array and object responses
+      let publicationsData: Publication[] = [];
+      if (Array.isArray(response.data)) {
+        publicationsData = response.data;
+      } else if (response.data && typeof response.data === 'object') {
+        publicationsData = response.data || [];
+      }
+      
+      publications.value = publicationsData;
     } catch (err: any) {
       error.value = err.message || 'Failed to fetch publications'
-      console.error('Error fetching publications:', err)
+      // Set to empty array on error to prevent undefined access
+      publications.value = []
     } finally {
       isLoading.value = false
     }
@@ -49,11 +58,12 @@ export function usePublications(): UsePublicationsReturn {
 
     try {
       const response = await mainAPI.createPublication(data)
-      publications.value.unshift(response.data)
+      if (response.data) {
+        publications.value.unshift(response.data)
+      }
       return true
     } catch (err: any) {
       error.value = err.message || 'Failed to create publication'
-      console.error('Error creating publication:', err)
       return false
     } finally {
       isLoading.value = false
@@ -66,14 +76,15 @@ export function usePublications(): UsePublicationsReturn {
 
     try {
       const response = await mainAPI.updatePublication(id, data)
-      const index = publications.value.findIndex(p => p.id === id)
-      if (index !== -1) {
-        publications.value[index] = response.data
+      if (response.data) {
+        const index = publications.value.findIndex(p => p.id === id)
+        if (index !== -1) {
+          publications.value[index] = response.data
+        }
       }
       return true
     } catch (err: any) {
       error.value = err.message || 'Failed to update publication'
-      console.error('Error updating publication:', err)
       return false
     } finally {
       isLoading.value = false
@@ -90,7 +101,6 @@ export function usePublications(): UsePublicationsReturn {
       return true
     } catch (err: any) {
       error.value = err.message || 'Failed to delete publication'
-      console.error('Error deleting publication:', err)
       return false
     } finally {
       isLoading.value = false

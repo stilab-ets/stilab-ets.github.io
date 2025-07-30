@@ -43,10 +43,6 @@ export abstract class BaseAPI {
     return localStorage.getItem('access_token');
   }
 
-  protected getRefreshToken(): string | null {
-    return localStorage.getItem('refresh_token');
-  }
-
   protected clearAuthTokens(): void {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
@@ -60,21 +56,39 @@ export abstract class BaseAPI {
       if (token) {
         headers.Authorization = `Bearer ${token}`;
       }
+      
+      // Add CSRF token for Django
+      const csrfToken = this.getCSRFToken();
+      if (csrfToken) {
+        headers['X-CSRFToken'] = csrfToken;
+      }
     }
     
     return headers;
   }
 
+  protected getCSRFToken(): string | null {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+      const [name, value] = cookie.trim().split('=');
+      if (name === 'csrftoken') {
+        return value;
+      }
+    }
+    return null;
+  }
+
   protected async makeRequest<T>(
     endpoint: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
+    includeAuth: boolean = true
   ): Promise<ApiResponse<T>> {
     const url = `${this.baseURL}${endpoint}`;
     
     const requestOptions: RequestInit = {
       ...options,
       headers: {
-        ...this.getHeaders(),
+        ...this.getHeaders(includeAuth),
         ...options.headers,
       },
     };
@@ -82,63 +96,88 @@ export abstract class BaseAPI {
     try {
       const response = await fetch(url, requestOptions);
 
-      if (response.status === 401) {
+      if (response.status === 401 && includeAuth) {
         this.clearAuthTokens();
         throw new ApiError('Authentication failed', 401);
       }
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('Request failed:', response.status, errorData);
+        let errorData: any = {};
+        const contentType = response.headers.get('content-type');
+        
+        if (contentType && contentType.includes('application/json')) {
+          try {
+            errorData = await response.json();
+          } catch (jsonError) {
+            console.log('[API] Failed to parse error response as JSON:', jsonError);
+          }
+        }
+
         throw new ApiError(
-          errorData.message || 'Request failed',
+          errorData.message || errorData.detail || `Request failed with status ${response.status}`,
           response.status,
           errorData
         );
       }
 
-      const data = await response.json();
+      let data: any;
+      const contentType = response.headers.get('content-type');
+      
+      if (contentType && contentType.includes('application/json')) {
+        try {
+          data = await response.json();
+        } catch (jsonError) {
+          data = null;
+        }
+      } else {
+        data = null;
+      }
+
+      // Handle empty or null responses gracefully
+      if (data === null || data === undefined) {
+        data = (options.method === 'GET' || !options.method) ? [] : {};
+      }
       
       return {
         data,
         status: response.status,
-        message: data.message,
+        message: data?.message,
       };
     } catch (error) {
-      console.error('Request error:', error);
       if (error instanceof ApiError) {
         throw error;
       }
+      
       throw new ApiError('Network error', 0, error);
     }
   }
 
-  protected async get<T>(endpoint: string): Promise<ApiResponse<T>> {
-    return this.makeRequest<T>(endpoint, { method: 'GET' });
+  protected async get<T>(endpoint: string, includeAuth: boolean = true): Promise<ApiResponse<T>> {
+    return this.makeRequest<T>(endpoint, { method: 'GET' }, includeAuth);
   }
 
-  protected async post<T>(endpoint: string, data?: any): Promise<ApiResponse<T>> {
+  protected async post<T>(endpoint: string, data?: any, includeAuth: boolean = true): Promise<ApiResponse<T>> {
     return this.makeRequest<T>(endpoint, {
       method: 'POST',
       body: data ? JSON.stringify(data) : undefined,
-    });
+    }, includeAuth);
   }
 
-  protected async put<T>(endpoint: string, data?: any): Promise<ApiResponse<T>> {
+  protected async put<T>(endpoint: string, data?: any, includeAuth: boolean = true): Promise<ApiResponse<T>> {
     return this.makeRequest<T>(endpoint, {
       method: 'PUT',
       body: data ? JSON.stringify(data) : undefined,
-    });
+    }, includeAuth);
   }
 
-  protected async patch<T>(endpoint: string, data?: any): Promise<ApiResponse<T>> {
+  protected async patch<T>(endpoint: string, data?: any, includeAuth: boolean = true): Promise<ApiResponse<T>> {
     return this.makeRequest<T>(endpoint, {
       method: 'PATCH',
       body: data ? JSON.stringify(data) : undefined,
-    });
+    }, includeAuth);
   }
 
-  protected async delete<T>(endpoint: string): Promise<ApiResponse<T>> {
-    return this.makeRequest<T>(endpoint, { method: 'DELETE' });
+  protected async delete<T>(endpoint: string, includeAuth: boolean = true): Promise<ApiResponse<T>> {
+    return this.makeRequest<T>(endpoint, { method: 'DELETE' }, includeAuth);
   }
 }

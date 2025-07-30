@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, watch, onMounted, onUnmounted } from 'vue'
 import { useLanguage } from './composables/useLanguage'
-import { useAuthMiddleware } from './middleware/auth'
+import { useAuth } from './hooks/auth/useAuth'
 import { useNavigation } from './hooks/layout/useNavigation'
 import { useRouteGuard } from './composables/useRouteGuard'
 
@@ -29,41 +29,43 @@ import AwardsPage from './components/awards/AwardsPage.vue'
 import LoginPage from './components/auth/LoginPage.vue'
 
 // Dashboard components
-import AdminDashboard from './components/dashboard/AdminDashboard.vue'
-import ProfessorDashboard from './components/dashboard/ProfessorDashboard.vue'
-import StudentDashboard from './components/dashboard/StudentDashboard.vue'
+import AdminDashboard from './components/dashboard/admin/AdminDashboard.vue'
+import ProfessorDashboard from './components/dashboard/professor/ProfessorDashboard.vue'
+import StudentDashboard from './components/dashboard/student/StudentDashboard.vue'
 import DashboardPage from './components/dashboard/DashboardPage.vue'
+
+import { authMiddleware } from '@/middleware/auth'
+import PublicationForm from './components/publications/PublicationForm.vue'
+
+
+// Add this navigation event handler to your existing script:
+const handleNavigationEvent = (event: CustomEvent) => {
+  if (event.detail?.page) {
+    navigateToPage(event.detail.page)
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('navigate', handleNavigationEvent as EventListener)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('navigate', handleNavigationEvent as EventListener)
+})
+
+// Initialize auth middleware on app mount
+onMounted(async () => {
+  await authMiddleware.initialize()
+})
 
 // Initialize systems
 const { currentLanguage, t, localizedNavigationItems, setLanguage } = useLanguage()
-const { isAuthenticated, user, isLoading } = useAuthMiddleware()
-const { currentPage, navigateToPage, canAccessRoute, getAccessError } = useNavigation()
+const { isAuthenticated, profile, isLoading, userRole, canAccessDashboard } = useAuth()
+const { currentPage, navigateToPage, canAccessRoute, getAccessError, initializeNavigation } = useNavigation()
+
 const { isAccessDenied, accessError, safeNavigate } = useRouteGuard({
   redirectOnFailure: 'login',
   showAccessDenied: true
-})
-
-// User role computed property - consistent with useAuth.ts
-const userRole = computed(() => {
-  if (!user.value) return 'guest'
-  if (user.value.is_staff) return 'admin'
-  
-  // Map user roles from backend - consistent mapping
-  const roleMap: Record<string, string> = {
-    'professor': 'professor',
-    'researcher': 'professor',
-    'postdoc': 'professor',
-    'phd': 'student',
-    'master': 'student',
-    'engineer': 'professor'
-  }
-  
-  return roleMap[user.value.role] || 'student'
-})
-
-// Check if user can access dashboard
-const canAccessDashboard = computed(() => {
-  return isAuthenticated.value && userRole.value !== null
 })
 
 // Navigation methods - utilise le système de navigation sécurisé
@@ -126,11 +128,19 @@ onMounted(() => {
   document.documentElement.lang = currentLanguage.value
   updatePageTitle()
   
+  // Initialize navigation to handle URL routing
+  const cleanupNavigation = initializeNavigation()
+  
   unwatchPage = watch(currentPage, updatePageTitle)
   unwatchLanguage = watch(currentLanguage, (newLang) => {
     document.documentElement.lang = newLang
     updatePageTitle()
   })
+  
+  // Store cleanup function for navigation
+  return () => {
+    cleanupNavigation()
+  }
 })
 
 onUnmounted(() => {
@@ -153,7 +163,7 @@ onUnmounted(() => {
         :current-page="currentPage" 
         :navigation-items="localizedNavigationItems"
         :current-language="currentLanguage"
-        :user="user"
+        :user="profile"
         :can-access-dashboard="canAccessDashboard"
         @set-current-page="setCurrentPage"
         @language-changed="handleLanguageChange"
@@ -187,18 +197,29 @@ onUnmounted(() => {
           v-else-if="currentPage === 'dashboard'" 
           @navigate="setCurrentPage"
         />
+
+        <PublicationForm
+          v-else-if="currentPage === 'publication-form'"
+          @navigate="setCurrentPage"
+        />
         
         <!-- Role-specific Protected Dashboards -->
         <AdminDashboard 
-          v-else-if="currentPage === 'admin-dashboard' && userRole === 'admin'"
+          v-else-if="currentPage === 'admin-dashboard'"
           @navigate="setCurrentPage"
         />
         <ProfessorDashboard 
-          v-else-if="currentPage === 'professor-dashboard' && (userRole === 'professor' || userRole === 'researcher')"
+          v-else-if="currentPage === 'professor-dashboard'"
           @navigate="setCurrentPage"
         />
         <StudentDashboard 
-          v-else-if="currentPage === 'student-dashboard' && userRole === 'student'"
+          v-else-if="currentPage === 'student-dashboard'"
+          @navigate="setCurrentPage"
+        />
+        
+        <!-- Show generic dashboard if trying to access role-specific but userRole is null -->
+        <DashboardPage 
+          v-else-if="(currentPage === 'admin-dashboard' || currentPage === 'professor-dashboard' || currentPage === 'student-dashboard') && userRole === null"
           @navigate="setCurrentPage"
         />
         
