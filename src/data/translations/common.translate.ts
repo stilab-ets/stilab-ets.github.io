@@ -1,4 +1,7 @@
 export interface CommonTranslations {
+  mustBeLogged: string
+  loginHere: string
+  successMessage: string
   cancel: string
   settings: string
   loading: string
@@ -29,7 +32,10 @@ export const commonTranslations: CommonTranslationDict = {
     address: 'Adresse',
     retry: 'Réessayer',
     settings: "Paramètres",
-    cancel: "Annuler"
+    cancel: "Annuler",
+    mustBeLogged: "Vous devez être connecté pour accéder à ce formulaire",
+    loginHere: "Connectez-vous ici",
+    successMessage: "Succès"
   },
   en: {
     loading: 'Loading...',
@@ -42,6 +48,9 @@ export const commonTranslations: CommonTranslationDict = {
     address: 'Address',
     retry: 'Retry',
     settings: "Settings",
-    cancel: "Cancel"
+    cancel: "Cancel",
+    mustBeLogged: "Must be logged in to acces this form",
+    loginHere: "Login here",
+    successMessage: "Succes"
   }
 } as const
