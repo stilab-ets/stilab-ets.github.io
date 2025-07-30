@@ -3,6 +3,7 @@ import { Member } from './user.types';
 
 // Publication interface matching SwaggerDoc
 export interface Publication {
+  abstract: string;
   id: string; // UUID
   entrytype: string;
   citekey: string;

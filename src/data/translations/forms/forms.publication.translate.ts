@@ -1,5 +1,4 @@
 export interface PublicationFormTranslations {
-  sections: any
   titleCreate: string
   titleEdit: string
   subtitle: string
@@ -29,12 +28,6 @@ export interface PublicationFormTranslations {
     pagesPlaceholder: string
     url: string
     urlPlaceholder: string
-    doi: string
-    doiPlaceholder: string
-    abstract: string
-    abstractPlaceholder: string
-    keywords: string
-    keywordsPlaceholder: string
     cancel: string
     create: string
     update: string
@@ -51,18 +44,13 @@ export interface PublicationFormTranslations {
     title: string
   }
   validation: {
-    authorsRequired: string
     entryTypeRequired: string
     titleRequired: string
     authorRequired: string
-    yearRequired: string
     yearInvalid: string
-    urlInvalid: string
-    doiInvalid: string
   }
   errors: {
     submitFailed: string
-    bibtexParseError: string
   }
   entryTypes: {
     article: string
@@ -84,96 +72,11 @@ export interface PublicationFormTranslations {
   }
 }
 
-export const publicationFormTranslations: Record<'fr' | 'en', PublicationFormTranslations> = {
-  fr: {
-    titleCreate: 'Créer une publication',
-    titleEdit: 'Modifier la publication',
-    subtitle: 'Remplissez les détails ci-dessous',
-    form: {
-      entryType: 'Type d\'entrée',
-      selectEntryType: 'Sélectionnez le type',
-      title: 'Titre',
-      titlePlaceholder: 'Titre de la publication',
-      authors: 'Auteurs',
-      authorsPlaceholder: 'Nom, Prénom and Nom, Prénom',
-      authorsHelp: 'Séparez les auteurs avec "and"',
-      year: 'Année',
-      citekey: 'Clé de citation',
-      citekeyPlaceholder: 'Auto-générée si vide',
-      citekeyHelp: 'Identifiant unique optionnel',
-      journal: 'Journal',
-      journalPlaceholder: 'Journal of AI Research',
-      booktitle: 'Titre du livre',
-      booktitlePlaceholder: 'Nom de la conférence',
-      publisher: 'Éditeur',
-      publisherPlaceholder: 'Springer, IEEE...',
-      volume: 'Volume',
-      volumePlaceholder: '42',
-      number: 'Numéro',
-      numberPlaceholder: '7',
-      pages: 'Pages',
-      pagesPlaceholder: '123-456',
-      url: 'URL',
-      urlPlaceholder: 'https://...',
-      doi: 'DOI',
-      doiPlaceholder: '10.1000/xyz123',
-      abstract: 'Résumé',
-      abstractPlaceholder: 'Résumé de la publication...',
-      keywords: 'Mots-clés',
-      keywordsPlaceholder: 'IA, apprentissage automatique',
-      cancel: 'Annuler',
-      create: 'Créer',
-      update: 'Mettre à jour',
-      submitting: 'En cours...'
-    },
-    bibtexImport: {
-      title: 'Importer depuis BibTeX',
-      description: 'Collez le BibTeX pour remplir le formulaire',
-      placeholder: 'Collez votre entrée BibTeX ici...',
-      parse: 'Analyser',
-      clear: 'Effacer'
-    },
-    preview: {
-      title: 'Aperçu BibTeX'
-    },
-    validation: {
-      entryTypeRequired: 'Le type d\'entrée est requis',
-      titleRequired: 'Le titre est requis',
-      authorRequired: 'L\'auteur est requis',
-      yearRequired: 'L\'année est requise',
-      yearInvalid: 'Année invalide',
-      urlInvalid: 'URL invalide',
-      doiInvalid: 'DOI invalide',
-      authorsRequired: ""
-    },
-    errors: {
-      submitFailed: 'Échec de la soumission',
-      bibtexParseError: 'Erreur d\'analyse BibTeX'
-    },
-    entryTypes: {
-      article: 'Article',
-      book: 'Livre',
-      booklet: 'Livret',
-      conference: 'Conférence',
-      inbook: 'Dans un livre',
-      incollection: 'Dans une collection',
-      inproceedings: 'Dans les actes',
-      manual: 'Manuel',
-      mastersthesis: 'Mémoire de Master',
-      misc: 'Divers',
-      phdthesis: 'Thèse de doctorat',
-      proceedings: 'Actes',
-      techreport: 'Rapport technique',
-      unpublished: 'Non publié',
-      online: 'En ligne',
-      presentation: 'Présentation'
-    },
-    sections: undefined
-  },
+export const publicationFormTranslations: Record<'en' | 'fr', PublicationFormTranslations> = {
   en: {
     titleCreate: 'Create Publication',
     titleEdit: 'Edit Publication',
-    subtitle: 'Fill in the details below',
+    subtitle: 'Fill in the details below.',
     form: {
       entryType: 'Entry Type',
       selectEntryType: 'Select type',
@@ -200,12 +103,6 @@ export const publicationFormTranslations: Record<'fr' | 'en', PublicationFormTra
       pagesPlaceholder: '123-456',
       url: 'URL',
       urlPlaceholder: 'https://...',
-      doi: 'DOI',
-      doiPlaceholder: '10.1000/xyz123',
-      abstract: 'Abstract',
-      abstractPlaceholder: 'Publication abstract...',
-      keywords: 'Keywords',
-      keywordsPlaceholder: 'AI, machine learning',
       cancel: 'Cancel',
       create: 'Create',
       update: 'Update',
@@ -213,7 +110,7 @@ export const publicationFormTranslations: Record<'fr' | 'en', PublicationFormTra
     },
     bibtexImport: {
       title: 'Import from BibTeX',
-      description: 'Paste BibTeX to populate the form',
+      description: 'Paste BibTeX to populate the form.',
       placeholder: 'Paste your BibTeX entry here...',
       parse: 'Parse',
       clear: 'Clear'
@@ -222,18 +119,13 @@ export const publicationFormTranslations: Record<'fr' | 'en', PublicationFormTra
       title: 'Preview BibTeX'
     },
     validation: {
-      entryTypeRequired: 'Entry type is required',
-      titleRequired: 'Title is required',
-      authorRequired: 'Author is required',
-      yearRequired: 'Year is required',
-      yearInvalid: 'Invalid year',
-      urlInvalid: 'Invalid URL',
-      doiInvalid: 'Invalid DOI',
-      authorsRequired: ""
+      entryTypeRequired: 'Entry type is required.',
+      titleRequired: 'Title is required.',
+      authorRequired: 'Author is required.',
+      yearInvalid: 'Invalid year.'
     },
     errors: {
-      submitFailed: 'Failed to submit',
-      bibtexParseError: 'BibTeX parsing error'
+      submitFailed: 'Failed to submit.'
     },
     entryTypes: {
       article: 'Article',
@@ -252,7 +144,79 @@ export const publicationFormTranslations: Record<'fr' | 'en', PublicationFormTra
       unpublished: 'Unpublished',
       online: 'Online',
       presentation: 'Presentation'
+    }
+  },
+  fr: {
+    titleCreate: 'Créer une Publication',
+    titleEdit: 'Modifier la Publication',
+    subtitle: 'Remplissez les détails ci-dessous.',
+    form: {
+      entryType: 'Type d\'Entrée',
+      selectEntryType: 'Sélectionner le type',
+      title: 'Titre',
+      titlePlaceholder: 'Titre de la Publication',
+      authors: 'Auteurs',
+      authorsPlaceholder: 'Nom, Prénom et Nom, Prénom',
+      authorsHelp: 'Séparez les auteurs avec "and"',
+      year: 'Année',
+      citekey: 'Clé de Citation',
+      citekeyPlaceholder: 'Auto-généré si vide',
+      citekeyHelp: 'Identifiant unique optionnel',
+      journal: 'Journal',
+      journalPlaceholder: 'Journal de Recherche IA',
+      booktitle: 'Titre du Livre',
+      booktitlePlaceholder: 'Nom de la Conférence',
+      publisher: 'Éditeur',
+      publisherPlaceholder: 'Springer, IEEE...',
+      volume: 'Volume',
+      volumePlaceholder: '42',
+      number: 'Numéro',
+      numberPlaceholder: '7',
+      pages: 'Pages',
+      pagesPlaceholder: '123-456',
+      url: 'URL',
+      urlPlaceholder: 'https://...',
+      cancel: 'Annuler',
+      create: 'Créer',
+      update: 'Mettre à jour',
+      submitting: 'Envoi en cours...'
     },
-    sections: undefined
+    bibtexImport: {
+      title: 'Importer depuis BibTeX',
+      description: 'Collez le BibTeX pour remplir le formulaire.',
+      placeholder: 'Collez votre entrée BibTeX ici...',
+      parse: 'Analyser',
+      clear: 'Effacer'
+    },
+    preview: {
+      title: 'Aperçu BibTeX'
+    },
+    validation: {
+      entryTypeRequired: 'Le type d\'entrée est requis.',
+      titleRequired: 'Le titre est requis.',
+      authorRequired: 'L\'auteur est requis.',
+      yearInvalid: 'Année invalide.'
+    },
+    errors: {
+      submitFailed: 'Échec de l\'envoi.'
+    },
+    entryTypes: {
+      article: 'Article',
+      book: 'Livre',
+      booklet: 'Livret',
+      conference: 'Conférence',
+      inbook: 'Dans un Livre',
+      incollection: 'Dans une Collection',
+      inproceedings: 'Dans les Actes',
+      manual: 'Manuel',
+      mastersthesis: 'Mémoire de Master',
+      misc: 'Divers',
+      phdthesis: 'Thèse de Doctorat',
+      proceedings: 'Actes',
+      techreport: 'Rapport Technique',
+      unpublished: 'Non Publié',
+      online: 'En Ligne',
+      presentation: 'Présentation'
+    }
   }
 }

@@ -35,6 +35,8 @@ import StudentDashboard from './components/dashboard/student/StudentDashboard.vu
 import DashboardPage from './components/dashboard/DashboardPage.vue'
 
 import { authMiddleware } from '@/middleware/auth'
+import PublicationForm from './components/publications/PublicationForm.vue'
+
 
 // Add this navigation event handler to your existing script:
 const handleNavigationEvent = (event: CustomEvent) => {
@@ -59,7 +61,8 @@ onMounted(async () => {
 // Initialize systems
 const { currentLanguage, t, localizedNavigationItems, setLanguage } = useLanguage()
 const { isAuthenticated, profile, isLoading, userRole, canAccessDashboard } = useAuth()
-const { currentPage, navigateToPage, canAccessRoute, getAccessError } = useNavigation()
+const { currentPage, navigateToPage, canAccessRoute, getAccessError, initializeNavigation } = useNavigation()
+
 const { isAccessDenied, accessError, safeNavigate } = useRouteGuard({
   redirectOnFailure: 'login',
   showAccessDenied: true
@@ -125,11 +128,19 @@ onMounted(() => {
   document.documentElement.lang = currentLanguage.value
   updatePageTitle()
   
+  // Initialize navigation to handle URL routing
+  const cleanupNavigation = initializeNavigation()
+  
   unwatchPage = watch(currentPage, updatePageTitle)
   unwatchLanguage = watch(currentLanguage, (newLang) => {
     document.documentElement.lang = newLang
     updatePageTitle()
   })
+  
+  // Store cleanup function for navigation
+  return () => {
+    cleanupNavigation()
+  }
 })
 
 onUnmounted(() => {
@@ -186,18 +197,23 @@ onUnmounted(() => {
           v-else-if="currentPage === 'dashboard'" 
           @navigate="setCurrentPage"
         />
+
+        <PublicationForm
+          v-else-if="currentPage === 'publication-form'"
+          @navigate="setCurrentPage"
+        />
         
         <!-- Role-specific Protected Dashboards -->
         <AdminDashboard 
-          v-else-if="currentPage === 'admin-dashboard' && userRole === 'admin'"
+          v-else-if="currentPage === 'admin-dashboard'"
           @navigate="setCurrentPage"
         />
         <ProfessorDashboard 
-          v-else-if="currentPage === 'professor-dashboard' && (userRole === 'professor' || userRole === 'researcher')"
+          v-else-if="currentPage === 'professor-dashboard'"
           @navigate="setCurrentPage"
         />
         <StudentDashboard 
-          v-else-if="currentPage === 'student-dashboard' && userRole === 'student'"
+          v-else-if="currentPage === 'student-dashboard'"
           @navigate="setCurrentPage"
         />
         
