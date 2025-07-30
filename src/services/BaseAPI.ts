@@ -43,10 +43,6 @@ export abstract class BaseAPI {
     return localStorage.getItem('access_token');
   }
 
-  protected getRefreshToken(): string | null {
-    return localStorage.getItem('refresh_token');
-  }
-
   protected clearAuthTokens(): void {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
@@ -67,78 +63,131 @@ export abstract class BaseAPI {
 
   protected async makeRequest<T>(
     endpoint: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
+    includeAuth: boolean = true
   ): Promise<ApiResponse<T>> {
     const url = `${this.baseURL}${endpoint}`;
     
     const requestOptions: RequestInit = {
       ...options,
       headers: {
-        ...this.getHeaders(),
+        ...this.getHeaders(includeAuth),
         ...options.headers,
       },
     };
 
+    console.log(`[API] Making ${options.method || 'GET'} request to ${endpoint}`, {
+      includeAuth,
+      hasToken: includeAuth && !!this.getAuthToken()
+    });
+
     try {
       const response = await fetch(url, requestOptions);
 
-      if (response.status === 401) {
+      console.log(`[API] Response for ${endpoint}:`, {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok
+      });
+
+      if (response.status === 401 && includeAuth) {
+        console.log('[API] 401 Unauthorized - clearing tokens');
         this.clearAuthTokens();
         throw new ApiError('Authentication failed', 401);
       }
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('Request failed:', response.status, errorData);
+        let errorData: any = {};
+        const contentType = response.headers.get('content-type');
+        
+        if (contentType && contentType.includes('application/json')) {
+          try {
+            errorData = await response.json();
+          } catch (jsonError) {
+            console.log('[API] Failed to parse error response as JSON:', jsonError);
+          }
+        }
+
+        console.warn(`[API] Request failed for ${endpoint}:`, {
+          status: response.status,
+          statusText: response.statusText,
+          errorData
+        });
+
         throw new ApiError(
-          errorData.message || 'Request failed',
+          errorData.message || errorData.detail || `Request failed with status ${response.status}`,
           response.status,
           errorData
         );
       }
 
-      const data = await response.json();
+      let data: any;
+      const contentType = response.headers.get('content-type');
+      
+      if (contentType && contentType.includes('application/json')) {
+        try {
+          data = await response.json();
+        } catch (jsonError) {
+          console.warn(`[API] Failed to parse response as JSON for ${endpoint}:`, jsonError);
+          data = null;
+        }
+      } else {
+        console.log(`[API] Non-JSON response for ${endpoint}, content-type:`, contentType);
+        data = null;
+      }
+
+      // Handle empty or null responses gracefully
+      if (data === null || data === undefined) {
+        console.log(`[API] Empty response for ${endpoint}, returning empty array/object`);
+        data = (options.method === 'GET' || !options.method) ? [] : {};
+      }
+
+      console.log(`[API] Successfully processed response for ${endpoint}:`, {
+        dataType: Array.isArray(data) ? 'array' : typeof data,
+        dataLength: Array.isArray(data) ? data.length : Object.keys(data || {}).length
+      });
       
       return {
         data,
         status: response.status,
-        message: data.message,
+        message: data?.message,
       };
     } catch (error) {
-      console.error('Request error:', error);
       if (error instanceof ApiError) {
         throw error;
       }
+      
+      console.error(`[API] Network error for ${endpoint}:`, error);
       throw new ApiError('Network error', 0, error);
     }
   }
 
-  protected async get<T>(endpoint: string): Promise<ApiResponse<T>> {
-    return this.makeRequest<T>(endpoint, { method: 'GET' });
+  protected async get<T>(endpoint: string, includeAuth: boolean = true): Promise<ApiResponse<T>> {
+    return this.makeRequest<T>(endpoint, { method: 'GET' }, includeAuth);
   }
 
-  protected async post<T>(endpoint: string, data?: any): Promise<ApiResponse<T>> {
+  protected async post<T>(endpoint: string, data?: any, includeAuth: boolean = true): Promise<ApiResponse<T>> {
     return this.makeRequest<T>(endpoint, {
       method: 'POST',
       body: data ? JSON.stringify(data) : undefined,
-    });
+    }, includeAuth);
   }
 
-  protected async put<T>(endpoint: string, data?: any): Promise<ApiResponse<T>> {
+  protected async put<T>(endpoint: string, data?: any, includeAuth: boolean = true): Promise<ApiResponse<T>> {
     return this.makeRequest<T>(endpoint, {
       method: 'PUT',
       body: data ? JSON.stringify(data) : undefined,
-    });
+    }, includeAuth);
   }
 
-  protected async patch<T>(endpoint: string, data?: any): Promise<ApiResponse<T>> {
+  protected async patch<T>(endpoint: string, data?: any, includeAuth: boolean = true): Promise<ApiResponse<T>> {
     return this.makeRequest<T>(endpoint, {
       method: 'PATCH',
       body: data ? JSON.stringify(data) : undefined,
-    });
+    }, includeAuth);
   }
 
-  protected async delete<T>(endpoint: string): Promise<ApiResponse<T>> {
-    return this.makeRequest<T>(endpoint, { method: 'DELETE' });
+  protected async delete<T>(endpoint: string, includeAuth: boolean = true): Promise<ApiResponse<T>> {
+    return this.makeRequest<T>(endpoint, { method: 'DELETE' }, includeAuth);
   }
 }

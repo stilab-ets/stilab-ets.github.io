@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import './assets/style.css'
-import { authMiddleware } from '@/middleware/auth';
+import { authMiddleware } from '@/middleware/auth'
 
 // Configure axios globally for Django backend
 import axios from 'axios'
@@ -146,121 +146,134 @@ import {
   Activity
 } from 'lucide-vue-next'
 
-// Create Vue application
-const app = createApp(App)
+// Initialize application with auth middleware
+async function initializeApp() {
+  console.log('[MAIN] Starting application initialization...')
+  
+  // Create Vue application
+  const app = createApp(App)
 
-// Register layout components globally
-app.component('Header', Header)
-app.component('Footer', Footer)
-app.component('LogoButton', LogoButton)
-app.component('NavItems', NavItems)
-app.component('MobileMenuToggle', MobileMenuToggle)
-app.component('LanguageToggle', LanguageToggle)
-app.component('UserProfile', UserProfile)
-app.component('LabInfo', LabInfo)
-app.component('QuickLinksFooter', QuickLinks)
-app.component('ContactInfo', ContactInfo)
-app.component('CopyrightFooter', CopyrightFooter)
+  // Register layout components globally
+  app.component('Header', Header)
+  app.component('Footer', Footer)
+  app.component('LogoButton', LogoButton)
+  app.component('NavItems', NavItems)
+  app.component('MobileMenuToggle', MobileMenuToggle)
+  app.component('LanguageToggle', LanguageToggle)
+  app.component('UserProfile', UserProfile)
+  app.component('LabInfo', LabInfo)
+  app.component('QuickLinksFooter', QuickLinks)
+  app.component('ContactInfo', ContactInfo)
+  app.component('CopyrightFooter', CopyrightFooter)
 
-// Register home page components globally
-app.component('Hero', Hero)
-app.component('StatsSection', StatsSection)
-app.component('ResearchAreasPreview', ResearchAreasPreview)
-app.component('QuickLinksHome', QuickLinksHome)
+  // Register home page components globally
+  app.component('Hero', Hero)
+  app.component('StatsSection', StatsSection)
+  app.component('ResearchAreasPreview', ResearchAreasPreview)
+  app.component('QuickLinksHome', QuickLinksHome)
 
-// Register page components globally
-app.component('PeoplePage', PeoplePage)
-app.component('PersonCard', PersonCard)
-app.component('PersonModal', PersonModal)
-app.component('PeopleFilters', PeopleFilters)
+  // Register page components globally
+  app.component('PeoplePage', PeoplePage)
+  app.component('PersonCard', PersonCard)
+  app.component('PersonModal', PersonModal)
+  app.component('PeopleFilters', PeopleFilters)
 
-app.component('PublicationsPage', PublicationsPage)
-app.component('PublicationCard', PublicationCard)
-app.component('PublicationSortOptions', PublicationSortOptions)
+  app.component('PublicationsPage', PublicationsPage)
+  app.component('PublicationCard', PublicationCard)
+  app.component('PublicationSortOptions', PublicationSortOptions)
 
-app.component('ResearchPage', ResearchPage)
-app.component('ResearchOverview', ResearchOverview)
-app.component('FeaturedProjects', FeaturedProjects)
-app.component('ResearchAreasAccordion', ResearchAreasAccordion)
+  app.component('ResearchPage', ResearchPage)
+  app.component('ResearchOverview', ResearchOverview)
+  app.component('FeaturedProjects', FeaturedProjects)
+  app.component('ResearchAreasAccordion', ResearchAreasAccordion)
 
-app.component('EventsPage', EventsPage)
-app.component('EventCard', EventCard)
+  app.component('EventsPage', EventsPage)
+  app.component('EventCard', EventCard)
 
-app.component('TeachingPage', TeachingPage)
-app.component('CourseCard', CourseCard)
+  app.component('TeachingPage', TeachingPage)
+  app.component('CourseCard', CourseCard)
 
-app.component('ProjectsPage', ProjectsPage)
-app.component('ProjectsInfoBanner', ProjectsInfoBanner)
-app.component('ProjectCard', ProjectCard)
-app.component('InterestModal', InterestModal)
+  app.component('ProjectsPage', ProjectsPage)
+  app.component('ProjectsInfoBanner', ProjectsInfoBanner)
+  app.component('ProjectCard', ProjectCard)
+  app.component('InterestModal', InterestModal)
 
-app.component('VacanciesPage', VacanciesPage)
-app.component('VacanciesInfoBanner', VacanciesInfoBanner)
-app.component('VacancyCard', VacancyCard)
+  app.component('VacanciesPage', VacanciesPage)
+  app.component('VacanciesInfoBanner', VacanciesInfoBanner)
+  app.component('VacancyCard', VacancyCard)
 
-app.component('AwardsPage', AwardsPage)
-app.component('AwardsTimeline', AwardsTimeline)
-app.component('NotableAchievements', NotableAchievements)
+  app.component('AwardsPage', AwardsPage)
+  app.component('AwardsTimeline', AwardsTimeline)
+  app.component('NotableAchievements', NotableAchievements)
 
-// Register authentication components globally
-app.component('LoginForm', LoginForm)
-app.component('RegisterForm', RegisterForm)
-app.component('LoginPage', LoginPage)
+  // Register authentication components globally
+  app.component('LoginForm', LoginForm)
+  app.component('RegisterForm', RegisterForm)
+  app.component('LoginPage', LoginPage)
 
-// Register dashboard components globally
-app.component('AdminDashboard', AdminDashboard)
-app.component('ProfessorDashboard', ProfessorDashboard)  
-app.component('StudentDashboard', StudentDashboard)
-app.component('DashboardPage', DashboardPage)
+  // Register dashboard components globally
+  app.component('AdminDashboard', AdminDashboard)
+  app.component('ProfessorDashboard', ProfessorDashboard)  
+  app.component('StudentDashboard', StudentDashboard)
+  app.component('DashboardPage', DashboardPage)
 
-// Register admin components globally
-app.component('AdminInvitationManagement', AdminInvitationManagement)
-app.component('InvitationSender', InvitationSender)
+  // Register admin components globally
+  app.component('AdminInvitationManagement', AdminInvitationManagement)
+  app.component('InvitationSender', InvitationSender)
 
-// Register form components globally
-app.component('PublicationForm', PublicationForm)
-app.component('EventForm', EventForm)
-app.component('ProjectForm', ProjectForm)
-app.component('MemberForm', MemberForm)
-app.component('ResearchForm', ResearchForm)
-app.component('TeachingForm', TeachingForm)
-app.component('AwardForm', AwardForm)
-app.component('VacancyForm', VacancyForm)
-app.component('UserSettingsForm', UserSettingsForm)
-app.component('AdminManagementForm', AdminManagementForm)
+  // Register form components globally
+  app.component('PublicationForm', PublicationForm)
+  app.component('EventForm', EventForm)
+  app.component('ProjectForm', ProjectForm)
+  app.component('MemberForm', MemberForm)
+  app.component('ResearchForm', ResearchForm)
+  app.component('TeachingForm', TeachingForm)
+  app.component('AwardForm', AwardForm)
+  app.component('VacancyForm', VacancyForm)
+  app.component('UserSettingsForm', UserSettingsForm)
+  app.component('AdminManagementForm', AdminManagementForm)
 
-// Register UI components globally
-app.component('Card', Card)
-app.component('Button', Button)
-app.component('PageHeader', PageHeader)
-app.component('SearchAndFilters', SearchAndFilters)
-app.component('StatisticsGrid', StatisticsGrid)
-app.component('EmptyState', EmptyState)
+  // Register UI components globally
+  app.component('Card', Card)
+  app.component('Button', Button)
+  app.component('PageHeader', PageHeader)
+  app.component('SearchAndFilters', SearchAndFilters)
+  app.component('StatisticsGrid', StatisticsGrid)
+  app.component('EmptyState', EmptyState)
 
-// Register Lucide icons globally
-app.component('BarChart3', BarChart3)
-app.component('Users', Users)
-app.component('FileText', FileText)
-app.component('Settings', Settings)
-app.component('TrendingUp', TrendingUp)
-app.component('UserPlus', UserPlus)
-app.component('Shield', Shield)
-app.component('Cog', Cog)
-app.component('BarChart', BarChart)
-app.component('Home', Home)
-app.component('GraduationCap', GraduationCap)
-app.component('User', User)
-app.component('Plus', Plus)
-app.component('Calendar', Calendar)
-app.component('Briefcase', Briefcase)
-app.component('Activity', Activity)
+  // Register Lucide icons globally
+  app.component('BarChart3', BarChart3)
+  app.component('Users', Users)
+  app.component('FileText', FileText)
+  app.component('Settings', Settings)
+  app.component('TrendingUp', TrendingUp)
+  app.component('UserPlus', UserPlus)
+  app.component('Shield', Shield)
+  app.component('Cog', Cog)
+  app.component('BarChart', BarChart)
+  app.component('Home', Home)
+  app.component('GraduationCap', GraduationCap)
+  app.component('User', User)
+  app.component('Plus', Plus)
+  app.component('Calendar', Calendar)
+  app.component('Briefcase', Briefcase)
+  app.component('Activity', Activity)
 
-// Initialize authentication middleware before mounting
-authMiddleware.initialize().then(() => {
+  // Initialize auth middleware before mounting
+  try {
+    await authMiddleware.initialize()
+    console.log('[MAIN] Auth middleware initialized successfully')
+  } catch (error) {
+    console.error('[MAIN] Failed to initialize auth middleware:', error)
+    // Continue mounting even if auth initialization fails
+  }
+
   // Mount the application
   app.mount('#app')
-}).catch((error) => {
-  console.error('Failed to initialize auth middleware:', error)
-  // Mount anyway but user will need to login
-  app.mount('#app')
+  console.log('[MAIN] Application mounted successfully')
+}
+
+// Start the application
+initializeApp().catch(error => {
+  console.error('[MAIN] Application initialization failed:', error)
 })

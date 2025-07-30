@@ -2,21 +2,35 @@ export interface User {
   id: number;
   username: string;
   email: string;
-  first_name?: string;
-  last_name?: string;
+  last_login?: string | null;
+  is_superuser: boolean;
   is_staff: boolean;
   is_active: boolean;
-  is_superuser: boolean;
-  last_login?: string;
   date_joined: string;
   groups: number[];
   user_permissions: number[];
-  memberRole?: string;
-  memberInfo?: { role?: string };
 }
 
+export interface MemberUser {
+  id: number;
+  user: User;
+  first_name: string;
+  last_name: string;
+  role: string;
+  email: string;
+  phone?: string;
+  biography?: string;
+  research_domain?: string;
+  image_url?: string;
+  github_url?: string;
+  linkedin_url?: string;
+  personal_website?: string;
+  status: string;
+}
+
+// Legacy Member interface for compatibility with existing code
 export interface Member {
-  id: string; // UUID
+  id: string;
   user?: User;
   first_name: string;
   last_name: string;

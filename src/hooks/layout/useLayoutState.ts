@@ -1,6 +1,6 @@
 import { ref, computed, watch } from 'vue'
 import { useNavigation, useMobileNavigation } from './useNavigation'
-import { useUserAuth } from '@/hooks/auth/useUserAuth'
+import { useAuth } from '@/hooks/auth/useAuth'
 import { LanguageCode, useLanguage } from '@/composables/useLanguage'
 import { useApiStatus } from '@/hooks/api/useApiStatus'
 import { useErrorHandler } from '@/hooks/api/useErrorHandler'

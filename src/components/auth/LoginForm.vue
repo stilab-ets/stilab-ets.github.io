@@ -2,7 +2,7 @@
 import { ref, reactive, computed } from 'vue'
 import { Lock, XCircleIcon } from 'lucide-vue-next'
 import { useLanguage } from '@/composables/useLanguage'
-import { useAuthMiddleware } from '@/middleware/auth'
+import { useAuth } from '@/hooks/auth/useAuth'
 
 interface LoginForm {
   username_or_email: string
@@ -22,7 +22,7 @@ const emit = defineEmits<{
 }>()
 
 const { t: translations } = useLanguage()
-const { login } = useAuthMiddleware()
+const { login } = useAuth()
 
 const t = computed(() => translations.value.auth.login)
 
@@ -78,6 +78,7 @@ const handleSubmit = async () => {
     })
     
     if (success) {
+      // Fetch profile after successful login
       emit('loginSuccess')
     } else {
       generalError.value = t.value.errors.loginFailed

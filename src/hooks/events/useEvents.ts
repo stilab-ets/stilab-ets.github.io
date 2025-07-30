@@ -43,12 +43,30 @@ export function useEvents(): UseEventsReturn {
       isLoading.value = true
       error.value = null
       
+      console.log('[USE EVENTS] Fetching events...')
       const response = await mainAPI.getEvents()
-      // API returns array directly, not paginated
-      events.value = response.data || []
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Failed to fetch events'
-      console.error('Error fetching events:', err)
+      
+      // Handle both array and object responses
+      let eventsData: Event[] = []
+      if (Array.isArray(response.data)) {
+        eventsData = response.data
+      } else if (response.data && typeof response.data === 'object') {
+        eventsData = response.data || []
+      }
+      
+      events.value = eventsData
+      console.log(`[USE EVENTS] Fetched ${eventsData.length} events`)
+    } catch (err: any) {
+      // Handle 404s gracefully - events endpoint might not exist
+      if (err.status === 404) {
+        console.log('[USE EVENTS] Events endpoint not found (404) - using empty events list')
+        events.value = []
+        error.value = null // Don't treat 404 as an error for optional endpoints
+      } else {
+        error.value = err.message || 'Failed to fetch events'
+        console.error('[USE EVENTS] Error fetching events:', err)
+        events.value = [] // Set to empty array on error
+      }
     } finally {
       isLoading.value = false
     }
@@ -59,14 +77,23 @@ export function useEvents(): UseEventsReturn {
       isLoading.value = true
       error.value = null
 
+      console.log('[USE EVENTS] Creating event...')
       const response = await mainAPI.createEvent(eventData)
       const newEvent = response.data
       
-      events.value.push(newEvent)
+      if (newEvent) {
+        events.value.push(newEvent)
+        console.log('[USE EVENTS] Event created successfully')
+      }
       return newEvent
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Failed to create event'
-      console.error('Error creating event:', err)
+    } catch (err: any) {
+      if (err.status === 404) {
+        error.value = 'Events functionality is not available'
+        console.log('[USE EVENTS] Create event endpoint not found (404)')
+      } else {
+        error.value = err.message || 'Failed to create event'
+        console.error('[USE EVENTS] Error creating event:', err)
+      }
       return null
     } finally {
       isLoading.value = false
@@ -78,18 +105,27 @@ export function useEvents(): UseEventsReturn {
       isLoading.value = true
       error.value = null
 
+      console.log(`[USE EVENTS] Updating event ${id}...`)
       const response = await mainAPI.updateEvent(id, eventData)
       const updatedEvent = response.data
       
-      const index = events.value.findIndex(e => e.id === id)
-      if (index !== -1) {
-        events.value[index] = updatedEvent
+      if (updatedEvent) {
+        const index = events.value.findIndex(e => e.id === id)
+        if (index !== -1) {
+          events.value[index] = updatedEvent
+          console.log('[USE EVENTS] Event updated successfully')
+        }
       }
       
       return updatedEvent
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Failed to update event'
-      console.error('Error updating event:', err)
+    } catch (err: any) {
+      if (err.status === 404) {
+        error.value = 'Event not found or functionality unavailable'
+        console.log('[USE EVENTS] Update event endpoint not found (404)')
+      } else {
+        error.value = err.message || 'Failed to update event'
+        console.error('[USE EVENTS] Error updating event:', err)
+      }
       return null
     } finally {
       isLoading.value = false
@@ -101,12 +137,19 @@ export function useEvents(): UseEventsReturn {
       isLoading.value = true
       error.value = null
 
+      console.log(`[USE EVENTS] Deleting event ${id}...`)
       await mainAPI.deleteEvent(id)
       events.value = events.value.filter(e => e.id !== id)
+      console.log('[USE EVENTS] Event deleted successfully')
       return true
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Failed to delete event'
-      console.error('Error deleting event:', err)
+    } catch (err: any) {
+      if (err.status === 404) {
+        error.value = 'Event not found or functionality unavailable'
+        console.log('[USE EVENTS] Delete event endpoint not found (404)')
+      } else {
+        error.value = err.message || 'Failed to delete event'
+        console.error('[USE EVENTS] Error deleting event:', err)
+      }
       return false
     } finally {
       isLoading.value = false
@@ -117,8 +160,12 @@ export function useEvents(): UseEventsReturn {
     error.value = null
   }
 
-  // Computed properties
+  // Computed properties with null checking
   const upcomingEvents = computed(() => {
+    if (!events.value || !Array.isArray(events.value)) {
+      return []
+    }
+    
     const now = new Date()
     return events.value.filter(event => {
       if (!event.date) return false
@@ -130,6 +177,10 @@ export function useEvents(): UseEventsReturn {
   })
 
   const pastEvents = computed(() => {
+    if (!events.value || !Array.isArray(events.value)) {
+      return []
+    }
+    
     const now = new Date()
     return events.value.filter(event => {
       if (!event.date) return false
@@ -148,12 +199,18 @@ export function useEvents(): UseEventsReturn {
   })
 
   const eventTypes = computed(() => {
+    if (!events.value || !Array.isArray(events.value)) {
+      return []
+    }
     const types = new Set(events.value.map(event => event.domain).filter(Boolean))
     return Array.from(types).sort()
   })
 
   // Filter methods
   const filterByType = (type: string): Event[] => {
+    if (!events.value || !Array.isArray(events.value)) {
+      return []
+    }
     return events.value.filter(event => event.domain === type)
   }
 
@@ -172,7 +229,7 @@ export function useEvents(): UseEventsReturn {
       case 'past':
         return filterByPast()
       default:
-        return events.value
+        return events.value || []
     }
   }
 

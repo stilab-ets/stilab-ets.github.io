@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, watch, onMounted, onUnmounted } from 'vue'
 import { useLanguage } from './composables/useLanguage'
-import { useAuthMiddleware } from './middleware/auth'
+import { useAuth } from './hooks/auth/useAuth'
 import { useNavigation } from './hooks/layout/useNavigation'
 import { useRouteGuard } from './composables/useRouteGuard'
 
@@ -33,24 +33,21 @@ import AdminDashboard from './components/dashboard/admin/AdminDashboard.vue'
 import ProfessorDashboard from './components/dashboard/professor/ProfessorDashboard.vue'
 import StudentDashboard from './components/dashboard/student/StudentDashboard.vue'
 import DashboardPage from './components/dashboard/DashboardPage.vue'
-import { resolveUserRole } from './hooks/auth/useAuth'
+
+import { authMiddleware } from '@/middleware/auth'
+
+// Initialize auth middleware on app mount
+onMounted(async () => {
+  await authMiddleware.initialize()
+})
 
 // Initialize systems
 const { currentLanguage, t, localizedNavigationItems, setLanguage } = useLanguage()
-const { isAuthenticated, user, isLoading } = useAuthMiddleware()
+const { isAuthenticated, profile, isLoading, userRole, canAccessDashboard } = useAuth()
 const { currentPage, navigateToPage, canAccessRoute, getAccessError } = useNavigation()
 const { isAccessDenied, accessError, safeNavigate } = useRouteGuard({
   redirectOnFailure: 'login',
   showAccessDenied: true
-})
-
-const userRole = resolveUserRole(user.value)
-
-console.log(userRole)
-
-// Check if user can access dashboard
-const canAccessDashboard = computed(() => {
-  return isAuthenticated.value && userRole !== null
 })
 
 // Navigation methods - utilise le système de navigation sécurisé
@@ -140,7 +137,7 @@ onUnmounted(() => {
         :current-page="currentPage" 
         :navigation-items="localizedNavigationItems"
         :current-language="currentLanguage"
-        :user="user"
+        :user="profile"
         :can-access-dashboard="canAccessDashboard"
         @set-current-page="setCurrentPage"
         @language-changed="handleLanguageChange"
@@ -186,6 +183,12 @@ onUnmounted(() => {
         />
         <StudentDashboard 
           v-else-if="currentPage === 'student-dashboard' && userRole === 'student'"
+          @navigate="setCurrentPage"
+        />
+        
+        <!-- Show generic dashboard if trying to access role-specific but userRole is null -->
+        <DashboardPage 
+          v-else-if="(currentPage === 'admin-dashboard' || currentPage === 'professor-dashboard' || currentPage === 'student-dashboard') && userRole === null"
           @navigate="setCurrentPage"
         />
         
