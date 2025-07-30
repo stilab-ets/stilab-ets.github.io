@@ -78,7 +78,7 @@ export class AuthAPI extends BaseAPI {
     
     try {
       // Try different possible profile endpoints
-      const endpoints = ['/api/profile', '/api/auth/user/', '/api/user/', '/api/members/me/'];
+      const endpoints = ['/api/profile'];
       
       for (const endpoint of endpoints) {
         try {
