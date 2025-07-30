@@ -1,154 +1,98 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { ref, nextTick } from 'vue'
 import PublicationForm from '@/components/publications/PublicationForm.vue'
-import { nextTick } from 'vue'
+
+vi.mock('@/composables/useAuth', () => ({
+  useAuth: () => ({
+    isLoggedIn: ref(true),
+    user: ref({ id: 1, name: 'Test User' }),
+  }),
+}))
 
 vi.mock('@/composables/useLanguage', () => ({
   useLanguage: () => ({
-    t: {
+    t: ref({
+      common: {
+        mustBeLogged: 'You must be logged in',
+        loginHere: 'Login here',
+      },
       forms: {
         publication: {
           titleCreate: 'Create Publication',
-          titleEdit: 'Edit Publication',
-          subtitle: 'Fill in the details below.',
+          subtitle: 'Fill in the details',
           form: {
             entryType: 'Entry Type',
-            selectEntryType: 'Select type',
-            title: 'Title',
-            titlePlaceholder: 'Publication Title',
-            authors: 'Authors',
-            authorsPlaceholder: 'Last, First and Last, First',
-            authorsHelp: 'Separate authors using "and"',
-            year: 'Year',
             citekey: 'Citekey',
-            citekeyPlaceholder: 'Auto-generated if empty',
-            citekeyHelp: 'Optional unique identifier',
-            journal: 'Journal',
-            journalPlaceholder: 'Journal of AI Research',
-            booktitle: 'Book Title',
-            booktitlePlaceholder: 'Conference Name',
-            publisher: 'Publisher',
-            publisherPlaceholder: 'Springer, IEEE...',
-            volume: 'Volume',
-            volumePlaceholder: '42',
-            number: 'Number',
-            numberPlaceholder: '7',
-            pages: 'Pages',
-            pagesPlaceholder: '123-456',
-            url: 'URL',
-            urlPlaceholder: 'https://...',
-            cancel: 'Cancel',
+            citekeyPlaceholder: 'e.g., smith2023',
+            title: 'Title',
+            titlePlaceholder: 'Publication title',
+            year: 'Year',
             create: 'Create',
-            update: 'Update',
-            submitting: 'Submitting...'
-          },
-          bibtexImport: {
-            title: 'Import from BibTeX',
-            description: 'Paste BibTeX to populate the form.',
-            placeholder: 'Paste your BibTeX entry here...',
-            parse: 'Parse',
-            clear: 'Clear'
-          },
-          preview: {
-            title: 'Preview BibTeX'
-          },
-          validation: {
-            entryTypeRequired: 'Entry type is required.',
-            titleRequired: 'Title is required.',
-            authorRequired: 'Author is required.',
-            yearInvalid: 'Invalid year.'
-          },
-          errors: {
-            submitFailed: 'Failed to submit.'
+            submitting: 'Submitting...',
           },
           entryTypes: {
             article: 'Article',
             book: 'Book',
-            booklet: 'Booklet',
-            conference: 'Conference',
-            inbook: 'In Book',
-            incollection: 'In Collection',
-            inproceedings: 'In Proceedings',
-            manual: 'Manual',
-            mastersthesis: 'Master Thesis',
-            misc: 'Misc',
-            phdthesis: 'PhD Thesis',
-            proceedings: 'Proceedings',
-            techreport: 'Tech Report',
-            unpublished: 'Unpublished',
-            online: 'Online',
-            presentation: 'Presentation'
-          }
-        }
-      },
-      publications: {
-        filters: {
-          sortBy: 'Sort by',
-          year: 'Year',
-          allYears: 'All Years',
-          type: 'Type',
-          allTypes: 'All Types'
+          },
+          validation: {
+            entryTypeRequired: 'Entry type is required',
+            yearInvalid: 'Year must be valid',
+          },
+          errors: {
+            submitFailed: 'Failed to submit',
+          },
+          bibtexImport: {
+            title: 'Import from BibTeX',
+            description: 'Paste BibTeX data to auto-fill the form',
+            placeholder: 'Paste BibTeX here',
+            parse: 'Parse',
+          },
         },
-        results: {
-          publication: 'publication',
-          publications: 'publications'
-        },
-        pageTitle: 'Publications',
-        pageSubtitle: 'Our research publications',
-        empty: {
-          title: 'No publications found',
-          message: 'No publications match your criteria'
-        }
       },
-      common: {
-        retry: 'Retry',
-        loading: 'Loading...'
-      }
-    }
-  })
+    }),
+  }),
 }))
 
-
-describe('PublicationForm.vue', () => {
-  // Test place holder that always passes
-  it('should always pass', () => {
-    expect(true).toBe(true)
-  });
-});
-
-
-/*
 describe('PublicationForm.vue', () => {
   let wrapper: ReturnType<typeof mount>
 
-  beforeEach(() => {
-    wrapper = mount(PublicationForm)
+  beforeEach(async () => {
+    wrapper = mount(PublicationForm, {
+      global: {
+        provide: {
+          error: ref(null),
+          errors: ref({}),
+        },
+      },
+    })
+    await nextTick()
   })
 
-  it('renders title and subtitle', () => {
+  it('renders the form title and subtitle', () => {
     expect(wrapper.text()).toContain('Create Publication')
-    expect(wrapper.text()).toContain('Fill in the details below.')
+    expect(wrapper.text()).toContain('Fill in the details')
   })
 
-  it('shows validation errors on empty required fields', async () => {
+  it('shows validation errors when submitting empty form', async () => {
     await wrapper.find('form').trigger('submit.prevent')
-    await nextTick()
 
-    expect(wrapper.text()).toContain('Entry type is required.')
-    expect(wrapper.text()).toContain('Title is required.')
-    expect(wrapper.text()).toContain('Author is required.')
+    expect(wrapper.text()).toContain('Entry type is required')
   })
 
-  it('validates invalid year', async () => {
-    await wrapper.find('#entrytype').setValue('article')
-    await wrapper.find('#title').setValue('A Great Paper')
-    await wrapper.find('#author').setValue('Smith, John')
-    await wrapper.find('#year').setValue('1800')
+  it('submits form with valid minimal data', async () => {
+    await wrapper.get('select#entrytype').setValue('article')
+    await wrapper.get('input#citekey').setValue('smith2023')
+    await wrapper.get('input#title').setValue('A Great Study')
+    await wrapper.get('input#year').setValue('2023')
 
     await wrapper.find('form').trigger('submit.prevent')
-    await nextTick()
 
-    expect(wrapper.text()).toContain('Invalid year.')
+    expect(wrapper.get('select#entrytype').element.value).toBe('article')
+    expect(wrapper.get('input#citekey').element.value).toBe('smith2023')
+    expect(wrapper.get('input#title').element.value).toBe('A Great Study')
+    expect(wrapper.get('input#year').element.value).toBe('2023')
+
+    expect(wrapper.emitted('submit')).toBeTruthy()
   })
 })
-*/
