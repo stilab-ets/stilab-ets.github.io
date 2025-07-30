@@ -1,128 +1,156 @@
-import { ref, computed } from 'vue'
-import { useProjects } from '@/hooks/projects/useProjects'
-import { useEvents } from '@/hooks/events/useEvents'
-import { useErrorHandler } from '@/hooks/api/useErrorHandler'
+import { ref, computed, onMounted } from 'vue';
+import { useLanguage } from '@/composables/useLanguage';
+import { mainAPI } from '@/services/ApiFactory';
+import type { Project, Event } from '@/services/MainAPI';
 
 interface StudentStats {
-  enrolledProjects: number
-  upcomingEvents: number
-  completedCourses: number
-  submissions: number
+  title: string;
+  value: number | string;
+  icon: string;
+  color: string;
+  change?: {
+    value: number;
+    trend: 'up' | 'down' | 'neutral';
+  };
+}
+
+interface StudentProject {
+  id: string;
+  title: string;
+  status: 'enrolled' | 'completed' | 'pending';
+  progress: number;
+  supervisor: string;
+  deadline: string;
 }
 
 export function useStudentDashboard() {
-  const { projects, fetchProjects } = useProjects()
-  const { upcomingEvents, fetchEvents } = useEvents()
-  const { hasErrors, errors } = useErrorHandler()
-
-  const isLoading = ref(false)
+  const { t } = useLanguage();
+  
+  const projects = ref<Project[]>([]);
+  const events = ref<Event[]>([]);
+  const isLoading = ref(false);
 
   const tabs = computed(() => [
-    { id: 'overview', label: 'Overview', icon: 'BarChart3' },
-    { id: 'projects', label: 'My Projects', icon: 'Briefcase' },
-    { id: 'courses', label: 'Courses', icon: 'GraduationCap' },
-    { id: 'events', label: 'Events', icon: 'Calendar' },
-    { id: 'profile', label: 'Profile', icon: 'User' }
-  ])
+    { id: 'overview', label: t.value.dashboard.student.tabs.overview, icon: 'BarChart3' },
+    { id: 'projects', label: t.value.dashboard.student.tabs.projects, icon: 'Briefcase' },
+    { id: 'courses', label: t.value.dashboard.student.tabs.courses, icon: 'GraduationCap' },
+    { id: 'events', label: t.value.dashboard.student.tabs.events, icon: 'Calendar' },
+    { id: 'profile', label: t.value.dashboard.student.tabs.profile, icon: 'User' }
+  ]);
 
-  const quickActions = computed(() => [
+  const studentStats = computed<StudentStats[]>(() => [
     {
-      title: 'Browse Projects',
-      description: 'Find new research opportunities',
-      icon: 'Plus',
-      action: () => navigateToPage('projects'),
+      title: t.value.dashboard.student.stats.enrolledProjects,
+      value: myProjects.value.filter(p => p.status === 'enrolled').length,
+      icon: 'Briefcase',
       color: 'bg-blue-500'
     },
     {
-      title: 'Register for Events',
-      description: 'Join upcoming seminars and workshops',
+      title: t.value.dashboard.student.stats.upcomingEvents,
+      value: nextEvents.value.length,
       icon: 'Calendar',
-      action: () => navigateToPage('events'),
       color: 'bg-green-500'
     },
     {
-      title: 'View Courses',
-      description: 'Check your enrolled courses',
+      title: t.value.dashboard.student.stats.availableProjects,
+      value: projects.value.filter(p => p.status === 'available').length,
       icon: 'GraduationCap',
-      action: () => console.log('Switch to courses tab'),
       color: 'bg-purple-500'
     },
     {
-      title: 'Update Profile',
-      description: 'Manage your account settings',
-      icon: 'Settings',
-      action: () => console.log('Switch to profile tab'),
+      title: t.value.dashboard.student.stats.totalProjects,
+      value: projects.value.length,
+      icon: 'FileText',
       color: 'bg-orange-500'
     }
-  ])
+  ]);
 
-  const studentStats = computed<StudentStats>(() => ({
-    enrolledProjects: projects.value.filter(p => p.status === 'assigned').length,
-    upcomingEvents: upcomingEvents.value.length,
-    completedCourses: 0, // Would be calculated from actual course data
-    submissions: 0 // Would be calculated from actual submission data
-  }))
+  const myProjects = computed<StudentProject[]>(() => {
+    return projects.value
+      .filter(p => p.status === 'assigned' || p.status === 'completed')
+      .map(project => ({
+        id: project.id,
+        title: project.title,
+        status: project.status === 'completed' ? 'completed' : 'enrolled',
+        progress: project.status === 'completed' ? 100 : Math.floor(Math.random() * 80) + 10,
+        supervisor: project.supervisor || 'Unknown',
+        deadline: typeof project.endDate === 'string' ? project.endDate : project.endDate.toISOString()
+      }));
+  });
 
-  const myProjects = computed(() => 
-    projects.value.filter(p => p.status === 'assigned').slice(0, 3)
-  )
+  const nextEvents = computed(() => {
+    const now = new Date();
+    return events.value
+      .filter(event => event.date && new Date(event.date) > now)
+      .slice(0, 5)
+      .map(event => ({
+        id: event.id,
+        title: event.title,
+        date: event.date || 'Unknown',
+        location: event.location || 'TBD',
+        type: event.type || 'event'
+      }));
+  });
 
-  const nextEvents = computed(() => 
-    upcomingEvents.value
-      .slice()
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-      .slice(0, 3)
-  )
+  const quickActions = computed(() => [
+    {
+      title: t.value.dashboard.student.actions.viewProjects,
+      description: t.value.dashboard.student.actions.viewProjectsDesc,
+      icon: 'Briefcase',
+      action: () => console.log('Switch to projects tab'),
+      color: 'bg-blue-500'
+    },
+    {
+      title: t.value.dashboard.student.actions.checkEvents,
+      description: t.value.dashboard.student.actions.checkEventsDesc,
+      icon: 'Calendar',
+      action: () => console.log('Switch to events tab'),
+      color: 'bg-green-500'
+    },
+    {
+      title: t.value.dashboard.student.actions.updateProfile,
+      description: t.value.dashboard.student.actions.updateProfileDesc,
+      icon: 'User',
+      action: () => console.log('Switch to profile tab'),
+      color: 'bg-purple-500'
+    },
+    {
+      title: t.value.dashboard.student.actions.viewCourses,
+      description: t.value.dashboard.student.actions.viewCoursesDesc,
+      icon: 'GraduationCap',
+      action: () => console.log('Switch to courses tab'),
+      color: 'bg-orange-500'
+    }
+  ]);
 
-  const availableProjects = computed(() => 
-    projects.value.filter(p => p.status === 'available').slice(0, 5)
-  )
+  const loadDashboardData = async () => {
+    isLoading.value = true;
+    try {
+      const [projectsRes, eventsRes] = await Promise.all([
+        mainAPI.getProjects ? mainAPI.getProjects() : Promise.resolve({ data: [] }),
+        mainAPI.getEvents()
+      ]);
 
-  const fetchDashboardData = async () => {
-    isLoading.value = true
-    
-    await Promise.all([
-      fetchProjects(),
-      fetchEvents()
-    ])
-    
-    isLoading.value = false
-  }
+      projects.value = projectsRes.data || [];
+      events.value = eventsRes.data || [];
+    } catch (error) {
+      console.error('Failed to load student dashboard data:', error);
+    } finally {
+      isLoading.value = false;
+    }
+  };
 
-  const navigateToPage = (page: string) => {
-    console.log(`Navigate to ${page}`)
-  }
-
-  const expressInterest = (projectId: number) => {
-    console.log(`Express interest in project ${projectId}`)
-  }
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    })
-  }
+  onMounted(() => {
+    loadDashboardData();
+  });
 
   return {
-    // State
-    isLoading,
-    hasErrors,
-    errors,
-
-    // Computed
     tabs,
-    quickActions,
     studentStats,
     myProjects,
     nextEvents,
-    availableProjects,
-
-    // Methods
-    fetchDashboardData,
-    navigateToPage,
-    expressInterest,
-    formatDate
-  }
+    quickActions,
+    isLoading,
+    loadDashboardData
+  };
 }

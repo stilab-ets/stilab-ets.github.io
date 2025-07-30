@@ -1,4 +1,6 @@
 export interface AuthTranslations {
+  signIn: string
+  logout: string
   login: {
     title: string
     subtitle: string
@@ -164,7 +166,9 @@ export const authTranslations: AuthTranslationDict = {
         registrationFailed: 'Registration failed. Please try again.'
       },
       successRegistrationMessage: 'Registration successful! You can now log in with your new account.'
-    }
+    },
+    logout: "Logout",
+    signIn: "SignIn"
   },
   fr: {
     login: {
@@ -244,6 +248,8 @@ export const authTranslations: AuthTranslationDict = {
         registrationFailed: 'L\'inscription a échoué. Veuillez réessayer.'
       },
       successRegistrationMessage: 'Inscription réussie ! Vous pouvez maintenant vous connecter avec votre nouveau compte.'
-    }
+    },
+    logout: "Déconnection",
+    signIn: "Connexion"
   }
 } as const

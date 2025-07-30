@@ -1,257 +1,236 @@
-import { ref, computed } from 'vue'
-import { useLanguage } from '@/composables/useLanguage'
-import { useApiStatus } from '@/hooks/api/useApiStatus'
-import { useErrorHandler } from '@/hooks/api/useErrorHandler'
-import { mainAPI } from '@/services/ApiFactory'
+import { ref, computed, onMounted } from 'vue';
+import { useLanguage } from '@/composables/useLanguage';
+import { mainAPI } from '@/services/ApiFactory';
+import { useInvitations } from '@/hooks/admin/useInvitations';
+import type { Member, Publication, Event, Research } from '@/services/MainAPI';
 
-interface SystemStats {
-  totalUsers: number
-  activeUsers: number
-  pendingContent: number
-  systemHealth: number
+interface AdminStats {
+  title: string;
+  value: number | string;
+  icon: string;
+  color: string;
 }
 
-interface RecentActivity {
-  id: string
-  type: 'user_registration' | 'content_submission' | 'system_alert'
-  description: string
-  timestamp: Date
-  user?: string
+interface RecentUser {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  initials: string;
+  joined: string;
 }
 
-interface PendingContent {
-  id: string
-  type: 'publication' | 'event' | 'project'
-  title: string
-  author: string
-  submittedAt: Date
+interface RecentContent {
+  id: string;
+  title: string;
+  type: 'publication' | 'event' | 'project' | 'user';
+  author: string;
+  timestamp: string;
+  status: string;
+  icon: string;
+}
+
+interface QuickAction {
+  title: string;
+  description: string;
+  icon: string;
+  action: () => void;
+  color: string;
 }
 
 export function useAdminDashboard() {
-  const { t } = useLanguage()
-  const { isApiHealthy } = useApiStatus()
-  const { handleApiCall, hasErrors, errors } = useErrorHandler()
+  const { t } = useLanguage();
+  const { invitations, fetchInvitations } = useInvitations();
 
-  const isLoading = ref(false)
-  const searchQuery = ref('')
-  const systemStats = ref<SystemStats>({
-    totalUsers: 0,
-    activeUsers: 0,
-    pendingContent: 0,
-    systemHealth: 100
-  })
-  const recentActivity = ref<RecentActivity[]>([])
-  const pendingContent = ref<PendingContent[]>([])
+  const users = ref<Member[]>([]);
+  const publications = ref<Publication[]>([]);
+  const events = ref<Event[]>([]);
+  const projects = ref<Research[]>([]);
+  const isLoading = ref(false);
 
   const tabs = computed(() => [
     { id: 'overview', label: t.value.dashboard.admin.tabs.overview, icon: 'BarChart3' },
-    { id: 'users', label: t.value.dashboard.admin.tabs.users, icon: 'Users' },
+    { id: 'users', label: t.value.dashboard.admin.tabs.users, icon: 'Users', count: users.value.length },
+    { id: 'invitations', label: t.value.dashboard.admin.tabs.invitations, icon: 'UserPlus', count: invitations.value.filter(inv => inv.status === 'pending').length },
     { id: 'content', label: t.value.dashboard.admin.tabs.content, icon: 'FileText' },
-    { id: 'system', label: t.value.dashboard.admin.tabs.system, icon: 'Settings' },
     { id: 'reports', label: t.value.dashboard.admin.tabs.reports, icon: 'TrendingUp' }
-  ])
+  ]);
 
-  const quickActions = computed(() => [
+  const adminStats = computed<AdminStats[]>(() => [
     {
-      title: t.value.dashboard.admin.actions.inviteUser,
-      description: t.value.dashboard.admin.actions.inviteUserDesc,
-      icon: 'UserPlus',
-      action: () => navigateToInvite(),
+      title: t.value.dashboard.admin.stats.totalUsers,
+      value: users.value.length,
+      icon: 'Users',
       color: 'bg-blue-500'
     },
     {
-      title: t.value.dashboard.admin.actions.moderateContent,
-      description: t.value.dashboard.admin.actions.moderateContentDesc,
-      icon: 'Shield',
-      action: () => console.log('Switch to content tab'),
+      title: t.value.dashboard.admin.stats.totalPublications,
+      value: publications.value.length,
+      icon: 'FileText',
       color: 'bg-green-500'
     },
     {
-      title: t.value.dashboard.admin.actions.systemSettings,
-      description: t.value.dashboard.admin.actions.systemSettingsDesc,
-      icon: 'Cog',
-      action: () => console.log('Switch to system tab'),
+      title: t.value.dashboard.admin.stats.activeProjects,
+      value: projects.value.length,
+      icon: 'Briefcase',
+      color: 'bg-purple-500'
+    },
+    {
+      title: t.value.dashboard.admin.stats.pendingInvitations,
+      value: invitations.value.filter(inv => inv.status === 'pending').length,
+      icon: 'UserPlus',
+      color: 'bg-orange-500'
+    }
+  ]);
+
+  const recentUsers = computed<RecentUser[]>(() => {
+    return users.value
+      .slice()
+      .sort((a, b) => new Date(b.user?.date_joined || 0).getTime() - new Date(a.user?.date_joined || 0).getTime())
+      .slice(0, 10)
+      .map(member => ({
+        id: member.id,
+        name: `${member.first_name} ${member.last_name}`.trim(),
+        email: member.email || member.user?.email || '',
+        role: member.user?.is_staff ? 'admin' : member.role || 'student',
+        initials: getInitials(`${member.first_name} ${member.last_name}`.trim()),
+        joined: member.user?.date_joined ? new Date(member.user.date_joined).toLocaleDateString() : t.value.dashboard.admin.overview.unknown
+      }));
+  });
+
+  const recentContent = computed<RecentContent[]>(() => {
+    const content: RecentContent[] = [];
+
+    // Add publications
+    publications.value.slice(0, 3).forEach(pub => {
+      content.push({
+        id: `pub-${pub.id}`,
+        title: pub.title,
+        type: 'publication',
+        author: pub.author || t.value.dashboard.admin.overview.unknown,
+        timestamp: pub.year ? `${pub.year}` : t.value.dashboard.admin.overview.unknown,
+        status: pub.is_approved ? 'published' : 'pending',
+        icon: 'FileText'
+      });
+    });
+
+    // Add events
+    events.value.slice(0, 3).forEach(event => {
+      content.push({
+        id: `event-${event.id}`,
+        title: event.title,
+        type: 'event',
+        author: event.speaker ? `${event.speaker.first_name} ${event.speaker.last_name}` : t.value.dashboard.admin.overview.system,
+        timestamp: event.date || t.value.dashboard.admin.overview.unknown,
+        status: event.is_upcoming ? 'upcoming' : 'past',
+        icon: 'Calendar'
+      });
+    });
+
+    // Add projects
+    projects.value.slice(0, 2).forEach(project => {
+      content.push({
+        id: `project-${project.id}`,
+        title: project.title,
+        type: 'project',
+        author: t.value.dashboard.admin.overview.system,
+        timestamp: project.start_date,
+        status: 'active',
+        icon: 'Briefcase'
+      });
+    });
+
+    return content.sort((a, b) => 
+      new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    );
+  });
+
+  const quickActions = computed<QuickAction[]>(() => [
+    {
+      title: t.value.dashboard.admin.actions.sendInvitation,
+      description: t.value.dashboard.admin.actions.sendInvitationDesc,
+      icon: 'UserPlus',
+      action: () => console.log('Navigate to invitation form'),
+      color: 'bg-blue-500'
+    },
+    {
+      title: t.value.dashboard.admin.actions.manageUsers,
+      description: t.value.dashboard.admin.actions.manageUsersDesc,
+      icon: 'Users',
+      action: () => console.log('Navigate to user management'),
+      color: 'bg-green-500'
+    },
+    {
+      title: t.value.dashboard.admin.actions.manageContent,
+      description: t.value.dashboard.admin.actions.manageContentDesc,
+      icon: 'FileText',
+      action: () => console.log('Navigate to content management'),
       color: 'bg-purple-500'
     },
     {
       title: t.value.dashboard.admin.actions.viewReports,
       description: t.value.dashboard.admin.actions.viewReportsDesc,
-      icon: 'BarChart',
-      action: () => console.log('Switch to reports tab'),
+      icon: 'TrendingUp',
+      action: () => console.log('Navigate to reports'),
       color: 'bg-orange-500'
     }
-  ])
+  ]);
 
-  const contentFilters = computed(() => [
-    {
-      id: 'type',
-      label: 'Content Type',
-      value: '',
-      options: [
-        { value: '', label: 'All Types' },
-        { value: 'publication', label: 'Publications' },
-        { value: 'event', label: 'Events' },
-        { value: 'project', label: 'Projects' }
-      ]
-    }
-  ])
+  const userManagement = computed(() => ({
+    totalUsers: users.value.length,
+    activeUsers: users.value.filter(u => u.user?.is_active).length,
+    adminUsers: users.value.filter(u => u.user?.is_staff).length,
+    recentRegistrations: users.value.filter(u => {
+      if (!u.user?.date_joined) return false;
+      const joinDate = new Date(u.user.date_joined);
+      const weekAgo = new Date();
+      weekAgo.setDate(weekAgo.getDate() - 7);
+      return joinDate > weekAgo;
+    }).length
+  }));
 
-  const filteredPendingContent = computed(() => {
-    return pendingContent.value.filter(item => {
-      const matchesSearch = !searchQuery.value ||
-        item.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-        item.author.toLowerCase().includes(searchQuery.value.toLowerCase())
-      return matchesSearch
-    })
-  })
+  const getInitials = (name: string): string => {
+    const parts = name.trim().split(' ');
+    return parts.length >= 2
+      ? `${parts[0][0]}${parts[1][0]}`.toUpperCase()
+      : name[0]?.toUpperCase() || 'U';
+  };
 
-  const fetchSystemStats = async () => {
-    const membersResponse = await handleApiCall(() => mainAPI.getMembers())
-    const publicationsResponse = await handleApiCall(() => mainAPI.getPublications())
-    const eventsResponse = await handleApiCall(() => mainAPI.getEvents())
-    
-    if (membersResponse && publicationsResponse && eventsResponse) {
-      const members = membersResponse.data.results
-      const publications = publicationsResponse.data.results
-      const events = eventsResponse.data.results
-      
-      systemStats.value = {
-        totalUsers: members.length,
-        activeUsers: members.filter((m: { is_active: any }) => m.is_active).length,
-        pendingContent: publications.length + events.length, // Simplified for now
-        systemHealth: isApiHealthy.value ? 100 : 75
-      }
-    }
-  }
-
-  const fetchRecentActivity = async () => {
-    // Mock data - in real app, this would come from an audit log API
-    recentActivity.value = [
-      {
-        id: '1',
-        type: 'user_registration',
-        description: t.value.dashboard.admin.recentActivity.userRegistered,
-        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
-        user: 'Alice Johnson'
-      },
-      {
-        id: '2',
-        type: 'content_submission',
-        description: t.value.dashboard.admin.recentActivity.contentSubmitted,
-        timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000),
-        user: 'Bob Smith'
-      },
-      {
-        id: '3',
-        type: 'system_alert',
-        description: t.value.dashboard.admin.recentActivity.systemAlert,
-        timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000)
-      }
-    ]
-  }
-
-  const fetchPendingContent = async () => {
-    const publicationsResponse = await handleApiCall(() => mainAPI.getPublications())
-    const eventsResponse = await handleApiCall(() => mainAPI.getEvents())
-    
-    if (publicationsResponse && eventsResponse) {
-      const publications = publicationsResponse.data.results
-      const events = eventsResponse.data.results
-      
-      pendingContent.value = [
-        ...publications
-          .slice(0, 5) // Show first 5 as "pending" for demo
-          .map((p: { id: { toString: () => any }; title: any; authors: any; created_at: string | number | Date }) => ({
-            id: p.id.toString(),
-            type: 'publication' as const,
-            title: p.title,
-            author: p.authors,
-            submittedAt: new Date(p.created_at)
-          })),
-        ...events
-          .slice(0, 3) // Show first 3 as "pending" for demo
-          .map((e: { id: { toString: () => any }; title: any; speaker: any; created_at: string | number | Date }) => ({
-            id: e.id.toString(),
-            type: 'event' as const,
-            title: e.title,
-            author: e.speaker || 'Unknown',
-            submittedAt: new Date(e.created_at)
-          }))
-      ]
-    }
-  }
-
-  const fetchDashboardData = async () => {
-    isLoading.value = true
-    
-    await Promise.all([
-      fetchSystemStats(),
-      fetchRecentActivity(),
-      fetchPendingContent()
-    ])
-    
-    isLoading.value = false
-  }
-
-  const approveContent = async (contentId: string, contentType: string) => {
+  const loadDashboardData = async () => {
+    isLoading.value = true;
     try {
-      if (contentType === 'publication') {
-        const response = await handleApiCall(() => 
-          mainAPI.updatePublication(parseInt(contentId), { title: 'Updated' }) // Simplified update
-        )
-        if (response) {
-          pendingContent.value = pendingContent.value.filter(item => item.id !== contentId)
-        }
-      } else if (contentType === 'event') {
-        const response = await handleApiCall(() => 
-          mainAPI.updateEvent(parseInt(contentId), { title: 'Updated' }) // Simplified update
-        )
-        if (response) {
-          pendingContent.value = pendingContent.value.filter(item => item.id !== contentId)
-        }
-      }
+      const [membersRes, publicationsRes, eventsRes, researchRes] = await Promise.all([
+        mainAPI.getMembers(),
+        mainAPI.getPublications(),
+        mainAPI.getEvents(),
+        mainAPI.getResearch(),
+        fetchInvitations()
+      ]);
+
+      users.value = membersRes.data || [];
+      publications.value = publicationsRes.data || [];
+      events.value = eventsRes.data || [];
+      projects.value = researchRes.data || [];
     } catch (error) {
-      console.error('Failed to approve content:', error)
+      console.error('Failed to load admin dashboard data:', error);
+    } finally {
+      isLoading.value = false;
     }
-  }
+  };
 
-  const navigateToInvite = () => {
-    console.log('Navigate to invite user form')
-  }
-
-  const formatTimestamp = (date: Date) => {
-    return new Intl.RelativeTimeFormat('en', { numeric: 'auto' }).format(
-      Math.floor((date.getTime() - Date.now()) / (1000 * 60 * 60)),
-      'hour'
-    )
-  }
-
-  const updateFilter = (filterId: string, value: string) => {
-    console.log(`Filter ${filterId} updated to:`, value)
-  }
+  onMounted(() => {
+    loadDashboardData();
+  });
 
   return {
-    // State
-    isLoading,
-    searchQuery,
-    systemStats,
-    recentActivity,
-    pendingContent,
-    hasErrors,
-    errors,
-    isApiHealthy,
-
-    // Computed
     tabs,
+    adminStats,
+    recentUsers,
+    recentContent,
     quickActions,
-    contentFilters,
-    filteredPendingContent,
-
-    // Methods
-    fetchDashboardData,
-    approveContent,
-    navigateToInvite,
-    formatTimestamp,
-    updateFilter
-  }
+    userManagement,
+    invitations,
+    isLoading,
+    loadDashboardData
+  };
 }
