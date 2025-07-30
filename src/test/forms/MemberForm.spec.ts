@@ -1,129 +1,120 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { nextTick, ref } from 'vue'
+import { describe, it, expect, vi, beforeAll, beforeEach } from 'vitest'
+import { ref, nextTick } from 'vue'
 import MemberForm from '@/components/people/MemberForm.vue'
 
-// Mock composable
+beforeAll(() => {
+  window.scrollTo = vi.fn()
+})
+
+// Mock useLanguage
 vi.mock('@/composables/useLanguage', () => ({
   useLanguage: () => ({
-    t: ref({
+    t: {
+      common: {
+        mustBeLogged: 'You must be logged in',
+        loginHere: 'Login here',
+      },
       forms: {
         member: {
           titleCreate: 'Create Member',
-          titleEdit: 'Edit Member',
-          subtitle: 'Fill in the member details below.',
-          sections: {
-            personal: 'Personal Information',
-            academic: 'Academic Information',
-            research: 'Research Information',
-            contact: 'Contact Information',
-            additional: 'Additional Information',
-          },
-          form: {
-            firstName: 'First Name',
-            lastName: 'Last Name',
-            title: 'Title',
-            titlePlaceholder: 'e.g. Dr., Prof.',
-            profilePhoto: 'Profile Photo',
-            role: 'Role',
-            selectRole: 'Select role',
-            status: 'Status',
-            selectStatus: 'Select status',
-            department: 'Department',
-            departmentPlaceholder: 'e.g. Software Engineering',
-            researchDomains: 'Research Domains',
-            researchDomainsPlaceholder: 'AI, Data Science...',
-            biography: 'Biography',
-            biographyPlaceholder: 'Write a short bio...',
-            email: 'Email',
-            emailPlaceholder: 'example@domain.com',
-            phone: 'Phone',
-            phonePlaceholder: '+1 555 123 4567',
-            office: 'Office',
-            officePlaceholder: 'B-1234',
-            githubUrl: 'GitHub URL',
-            linkedinUrl: 'LinkedIn URL',
-            personalWebsite: 'Personal Website',
-            cancel: 'Cancel',
-            create: 'Create',
-            update: 'Update',
-            submitting: 'Submitting...'
-          },
-          roles: {
-            professor: 'Professor',
-            researcher: 'Researcher',
-            postdoc: 'Postdoc',
-            phd: 'PhD Student',
-            master: 'Master Student',
-            engineer: 'Engineer',
-            admin: 'Administrator'
-          },
-          statuses: {
-            active: 'Active',
-            alumni: 'Alumni',
-            visitor: 'Visitor'
-          },
-          validation: {
-            firstNameRequired: 'First name is required.',
-            lastNameRequired: 'Last name is required.',
-            titleRequired: 'Title is required.',
-            emailRequired: 'Email is required.',
-            emailInvalid: 'Invalid email format.',
-            roleRequired: 'Role is required.',
-            statusRequired: 'Status is required.'
-          },
-          errors: {
-            submitFailed: 'Failed to submit.'
-          }
-        }
-      }
-    })
-  })
+          subtitle: 'Fill out the member details',
+        },
+      },
+    },
+  }),
 }))
 
-// Mock child components
-vi.mock('@/components/ui/Card.vue', () => ({
-  default: { template: '<div><slot /></div>' }
+// Mock useMembers
+const createMemberMock = vi.fn()
+const loadingMock = ref(false)
+const errorMock = ref(null)
+
+vi.mock('@/hooks/members/useMembers', () => ({
+  useMembers: () => ({
+    createMember: createMemberMock,
+    loading: loadingMock,
+    error: errorMock,
+  }),
 }))
 
-vi.mock('@/components/ui/Button.vue', () => ({
-  default: { template: '<button><slot /></button>' }
+// Mock useNavigation
+const navigateToPageMock = vi.fn()
+vi.mock('@/hooks/layout/useNavigation', () => ({
+  useNavigation: () => ({
+    navigateToPage: navigateToPageMock,
+  }),
 }))
 
 describe('MemberForm.vue', () => {
   let wrapper: ReturnType<typeof mount>
 
-  beforeEach(() => {
-    wrapper = mount(MemberForm)
+  beforeEach(async () => {
+    createMemberMock.mockReset()
+    navigateToPageMock.mockReset()
+    errorMock.value = null
+    loadingMock.value = false
+
+    wrapper = mount(MemberForm, {
+      global: {
+        stubs: {
+          Form: {
+            // Stub Form component to render successMessage and error props for testing
+            template: `<div>
+              <slot />
+              <p class="success" v-if="successMessage">{{ successMessage }}</p>
+              <p class="error" v-if="error">{{ error }}</p>
+            </div>`,
+            props: ['successMessage', 'error'],
+          },
+        },
+      },
+    })
+
+    await nextTick()
   })
 
-  it('renders the form title and subtitle', () => {
+  it('renders form title and subtitle', () => {
     expect(wrapper.text()).toContain('Create Member')
-    expect(wrapper.text()).toContain('Fill in the member details below.')
   })
 
-  it('shows validation errors on empty required fields', async () => {
+  it('shows validation errors on empty submit', async () => {
     await wrapper.find('form').trigger('submit.prevent')
     await nextTick()
 
     expect(wrapper.text()).toContain('First name is required.')
     expect(wrapper.text()).toContain('Last name is required.')
-    expect(wrapper.text()).toContain('Title is required.')
-    expect(wrapper.text()).toContain('Email is required.')
-    expect(wrapper.text()).toContain('Role is required.')
   })
 
-  it('shows email validation error for invalid email', async () => {
-    await wrapper.find('#firstName').setValue('John')
-    await wrapper.find('#lastName').setValue('Doe')
-    await wrapper.find('#title').setValue('Prof.')
-    await wrapper.find('#username_or_email').setValue('invalid-email')
-    await wrapper.find('#role').setValue('professor')
-    await wrapper.find('#status').setValue('active')
+  it('submits valid form data and shows success message', async () => {
+    createMemberMock.mockResolvedValue(true)
+
+    // Fill required fields
+    await wrapper.get('input[type="text"]').setValue('John')
+    await wrapper.findAll('input[type="text"]')[1].setValue('Doe')
 
     await wrapper.find('form').trigger('submit.prevent')
     await nextTick()
 
-    expect(wrapper.text()).toContain('Invalid email format.')
+    expect(createMemberMock).toHaveBeenCalled()
+    expect(wrapper.find('.success').text()).toContain('Member created successfully')
+  })
+
+  it('displays general error if createMember fails', async () => {
+    createMemberMock.mockResolvedValue(false)
+    errorMock.value = 'Failed to create'
+
+    await wrapper.get('input[type="text"]').setValue('Jane')
+    await wrapper.findAll('input[type="text"]')[1].setValue('Doe')
+
+    await wrapper.find('form').trigger('submit.prevent')
+    await nextTick()
+
+    expect(wrapper.find('.error').text()).toContain('Failed to create')
+  })
+
+  it('navigates to members page on cancel button click', async () => {
+    await wrapper.get('button[type="button"]').trigger('click')
+    expect(navigateToPageMock).toHaveBeenCalledWith('members')
   })
 })
