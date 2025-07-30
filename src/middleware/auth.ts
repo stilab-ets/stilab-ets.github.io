@@ -61,7 +61,10 @@ class AuthMiddleware {
           }
         }
 
-        console.log('[AUTH MIDDLEWARE] User authenticated, profile will be fetched on demand');
+        // User is authenticated, so immediately fetch their full profile.
+        console.log('[AUTH MIDDLEWARE] User authenticated, fetching profile immediately...');
+        await this.getCurrentProfile();
+
       } else {
         console.log('[AUTH MIDDLEWARE] No valid authentication found');
         await this.clearAuth();
@@ -74,7 +77,7 @@ class AuthMiddleware {
       console.log('[AUTH MIDDLEWARE] Initialization complete');
     }
   }
-
+  
   async login(credentials: { username_or_email: string; password: string }): Promise<boolean> {
     console.log('[AUTH MIDDLEWARE] Attempting login...');
     this.state.isLoading.value = true;
