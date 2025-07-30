@@ -36,6 +36,22 @@ import DashboardPage from './components/dashboard/DashboardPage.vue'
 
 import { authMiddleware } from '@/middleware/auth'
 
+// Add this navigation event handler to your existing script:
+const handleNavigationEvent = (event: CustomEvent) => {
+  if (event.detail?.page) {
+    console.log('[APP] Handling navigation event:', event.detail.page)
+    navigateToPage(event.detail.page)
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('navigate', handleNavigationEvent as EventListener)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('navigate', handleNavigationEvent as EventListener)
+})
+
 // Initialize auth middleware on app mount
 onMounted(async () => {
   await authMiddleware.initialize()

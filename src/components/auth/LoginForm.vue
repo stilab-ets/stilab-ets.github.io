@@ -22,7 +22,7 @@ const emit = defineEmits<{
 }>()
 
 const { t: translations } = useLanguage()
-const { login } = useAuth()
+const { login, getDashboardRoute, isLoading } = useAuth()
 
 const t = computed(() => translations.value.auth.login)
 
@@ -59,7 +59,7 @@ const validateForm = (): boolean => {
 }
 
 const handleSubmit = async () => {
-  if (!validateForm()) return
+  if (!validateForm() || isSubmitting.value) return
   
   // Emit login event for tests
   emit('login', {
@@ -72,20 +72,37 @@ const handleSubmit = async () => {
   generalError.value = ''
   
   try {
+    console.log('[LOGIN FORM] Attempting login...')
     const success = await login({
       username_or_email: form.username_or_email,
       password: form.password
     })
     
     if (success) {
-      // Fetch profile after successful login
+      console.log('[LOGIN FORM] Login successful, profile should be fetched')
+      
+      // Small delay to ensure profile fetch is complete
+      await new Promise(resolve => setTimeout(resolve, 100))
+      
       emit('loginSuccess')
+      
+      // Get appropriate dashboard route (should now have profile data)
+      const dashboardRoute = getDashboardRoute.value
+      console.log('[LOGIN FORM] Redirecting to dashboard:', dashboardRoute)
+      
+      if (dashboardRoute) {
+        // Emit navigation to parent component
+        window.dispatchEvent(new CustomEvent('navigate', { 
+          detail: { page: dashboardRoute } 
+        }))
+      }
     } else {
+      console.log('[LOGIN FORM] Login failed')
       generalError.value = t.value.errors.loginFailed
       emit('loginFailed', t.value.errors.loginFailed)
     }
   } catch (error) {
-    console.warn('Login error:', error)
+    console.error('[LOGIN FORM] Login error:', error)
     generalError.value = t.value.errors.loginFailed
     emit('loginFailed', t.value.errors.loginFailed)
   } finally {
@@ -175,13 +192,13 @@ const handleSubmit = async () => {
         <div>
           <button
             type="submit"
-            :disabled="isSubmitting"
+            :disabled="isSubmitting || isLoading"
             class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#08a4d4] hover:bg-[#066a88] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#08a4d4] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span class="absolute left-0 inset-y-0 flex items-center pl-3">
               <Lock class="h-5 w-5 text-[#066a88] group-hover:text-[#044c5f]" aria-hidden="true" />
             </span>
-            {{ isSubmitting ? t.form.submitting : t.form.submit }}
+            {{ isSubmitting || isLoading ? t.form.submitting : t.form.submit }}
           </button>
         </div>
       </form>

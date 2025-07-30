@@ -150,6 +150,16 @@ import {
 async function initializeApp() {
   console.log('[MAIN] Starting application initialization...')
   
+
+  try {
+    // Initialize auth middleware before creating the app
+    await authMiddleware.initialize();
+    console.log('[MAIN] Auth middleware initialized successfully');
+  } catch (error) {
+    console.error('[MAIN] Auth middleware initialization failed:', error);
+    // Continue with app creation even if auth fails
+  }
+
   // Create Vue application
   const app = createApp(App)
 
@@ -259,15 +269,6 @@ async function initializeApp() {
   app.component('Briefcase', Briefcase)
   app.component('Activity', Activity)
 
-  // Initialize auth middleware before mounting
-  try {
-    await authMiddleware.initialize()
-    console.log('[MAIN] Auth middleware initialized successfully')
-  } catch (error) {
-    console.error('[MAIN] Failed to initialize auth middleware:', error)
-    // Continue mounting even if auth initialization fails
-  }
-
   // Mount the application
   app.mount('#app')
   console.log('[MAIN] Application mounted successfully')
@@ -275,5 +276,5 @@ async function initializeApp() {
 
 // Start the application
 initializeApp().catch(error => {
-  console.error('[MAIN] Application initialization failed:', error)
-})
+  console.error('[MAIN] Failed to initialize application:', error);
+});

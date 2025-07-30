@@ -71,10 +71,6 @@ export function useAuth() {
     return registerState.execute(() => authAPI.register(userData));
   };
 
-  const getCurrentUser = async () => {
-    return userState.execute(() => authAPI.getCurrentUser());
-  };
-
   const logout = async () => {
     await authAPI.logout();
     loginState.reset();
@@ -93,7 +89,6 @@ export function useAuth() {
     // Actions
     login,
     register,
-    getCurrentUser,
     logout,
     
     // Computed

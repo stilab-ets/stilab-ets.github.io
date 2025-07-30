@@ -4,6 +4,8 @@ import { MemberUser } from './user.types';
 
 interface JwtPayload {
   exp: number;
+  user_id: number;
+  username: string;
   [key: string]: any;
 }
 
@@ -27,6 +29,8 @@ export interface LoginResponse {
     id: number;
     username: string;
     email: string;
+    is_staff?: boolean;
+    is_active?: boolean;
   };
 }
 
@@ -41,9 +45,22 @@ export class AuthAPI extends BaseAPI {
 
     if (response.data) {
       console.log('[AUTH API] Login response received, storing tokens...');
+      
+      // Store tokens
       localStorage.setItem('access_token', response.data.access_token);
       localStorage.setItem('refresh_token', response.data.refresh_token);
-      console.log('[AUTH API] Tokens stored successfully');
+      
+      // Store basic user info including staff status
+      const userInfo = {
+        id: response.data.user.id,
+        username: response.data.user.username,
+        email: response.data.user.email,
+        is_staff: response.data.user.is_staff || false,
+        is_active: response.data.user.is_active || true
+      };
+      
+      localStorage.setItem('basic_user_info', JSON.stringify(userInfo));
+      console.log('[AUTH API] Tokens and user info stored successfully:', userInfo);
     }
 
     return response;
@@ -59,6 +76,16 @@ export class AuthAPI extends BaseAPI {
     if (response.data) {
       localStorage.setItem('access_token', response.data.access_token);
       localStorage.setItem('refresh_token', response.data.refresh_token);
+      
+      const userInfo = {
+        id: response.data.user.id,
+        username: response.data.user.username,
+        email: response.data.user.email,
+        is_staff: response.data.user.is_staff || false,
+        is_active: response.data.user.is_active || true
+      };
+      
+      localStorage.setItem('basic_user_info', JSON.stringify(userInfo));
     }
 
     return response;
@@ -74,54 +101,65 @@ export class AuthAPI extends BaseAPI {
   async getCurrentProfile(): Promise<ApiResponse<MemberUser>> {
     console.log('[AUTH API] Attempting to fetch profile...');
     const token = this.getAuthToken();
-    console.log('[AUTH API] Using token:', token ? `${token.substring(0, 20)}...` : 'null');
+    
+    if (!token || !this.isTokenValid(token)) {
+      throw new Error('No valid authentication token');
+    }
     
     try {
-      // Try different possible profile endpoints
-      const endpoints = ['/api/profile'];
-      
-      for (const endpoint of endpoints) {
-        try {
-          console.log(`[AUTH API] Trying endpoint: ${endpoint}`);
-          const response = await this.get<MemberUser>(endpoint);
-          console.log(`[AUTH API] Profile fetched successfully from ${endpoint}:`, response.data);
-          return response;
-        } catch (error) {
-          console.log(`[AUTH API] Endpoint ${endpoint} failed:`, error);
-          // Continue to next endpoint
-        }
-      }
-      
-      // If all endpoints fail, throw the last error
-      throw new Error('No valid profile endpoint found');
+      console.log('[AUTH API] Fetching from /api/profile endpoint');
+      const response = await this.get<MemberUser>('/api/profile');
+      console.log('[AUTH API] Profile fetched successfully:', response.data);
+      return response;
     } catch (error) {
-      console.error('[AUTH API] All profile endpoints failed:', error);
+      console.error('[AUTH API] Profile fetch failed:', error);
       throw error;
     }
   }
 
-  // Legacy method for backward compatibility
-  async getCurrentUser(): Promise<ApiResponse<MemberUser>> {
-    return this.getCurrentProfile();
-  }
-
   isAuthenticated(): boolean {
     const token = localStorage.getItem('access_token');
-    return !!token && this.isTokenValid(token);
+    const isValid = !!token && this.isTokenValid(token);
+    console.log('[AUTH API] Authentication check:', { hasToken: !!token, isValid });
+    return isValid;
   }
 
   isTokenValid(token: string): boolean {
     try {
       const decoded = jwtDecode<JwtPayload>(token);
       const isValid = decoded.exp * 1000 > Date.now();
-      console.log('[AUTH API] Token validation result:', { 
+      console.log('[AUTH API] Token validation:', { 
         isValid, 
-        expiresAt: new Date(decoded.exp * 1000).toISOString() 
+        expiresAt: new Date(decoded.exp * 1000).toISOString(),
+        userId: decoded.user_id,
+        username: decoded.username
       });
       return isValid;
     } catch (error) {
       console.log('[AUTH API] Token validation failed:', error);
       return false;
+    }
+  }
+
+  getTokenPayload(): JwtPayload | null {
+    const token = this.getAuthToken();
+    if (!token || !this.isTokenValid(token)) {
+      return null;
+    }
+    
+    try {
+      return jwtDecode<JwtPayload>(token);
+    } catch {
+      return null;
+    }
+  }
+
+  getStoredUserInfo(): any | null {
+    try {
+      const stored = localStorage.getItem('basic_user_info');
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
     }
   }
 }

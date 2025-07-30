@@ -2,22 +2,31 @@
 import { useLanguage } from '@/composables/useLanguage'
 import { useAuth } from '@/hooks/auth/useAuth'
 import LoginForm from './LoginForm.vue'
-const { getDashboardRoute } = useAuth()
 
 const emit = defineEmits<{
   setCurrentPage: [page: string]
 }>()
 
 const { t } = useLanguage()
+const { getDashboardRoute } = useAuth()
 
 const handleLoginSuccess = () => {
-  // Redirect to dashboard after successful login
+  console.log('[LOGIN PAGE] Login successful, getting dashboard route...')
+  
+  // Get the appropriate dashboard route
   const dashboardRoute = getDashboardRoute.value
-  emit('setCurrentPage', `${dashboardRoute}`)
+  console.log('[LOGIN PAGE] Dashboard route:', dashboardRoute)
+  
+  if (dashboardRoute) {
+    emit('setCurrentPage', dashboardRoute)
+  } else {
+    // Fallback to generic dashboard
+    emit('setCurrentPage', 'dashboard')
+  }
 }
 
 const handleLoginFailed = (error: string) => {
-  console.warn('Login failed:', error)
+  console.warn('[LOGIN PAGE] Login failed:', error)
   // Error is already displayed in LoginForm component
 }
 </script>
