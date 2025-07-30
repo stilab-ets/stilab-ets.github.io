@@ -36,6 +36,7 @@ import DashboardPage from './components/dashboard/DashboardPage.vue'
 
 import { authMiddleware } from '@/middleware/auth'
 import PublicationForm from './components/publications/PublicationForm.vue'
+import MemberForm from './components/people/MemberForm.vue'
 
 
 // Add this navigation event handler to your existing script:
@@ -200,6 +201,11 @@ onUnmounted(() => {
 
         <PublicationForm
           v-else-if="currentPage === 'publication-form'"
+          @navigate="setCurrentPage"
+        />
+
+        <MemberForm
+          v-else-if="currentPage === 'member-form'"
           @navigate="setCurrentPage"
         />
         
