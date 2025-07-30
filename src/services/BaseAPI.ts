@@ -56,9 +56,26 @@ export abstract class BaseAPI {
       if (token) {
         headers.Authorization = `Bearer ${token}`;
       }
+      
+      // Add CSRF token for Django
+      const csrfToken = this.getCSRFToken();
+      if (csrfToken) {
+        headers['X-CSRFToken'] = csrfToken;
+      }
     }
     
     return headers;
+  }
+
+  protected getCSRFToken(): string | null {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+      const [name, value] = cookie.trim().split('=');
+      if (name === 'csrftoken') {
+        return value;
+      }
+    }
+    return null;
   }
 
   protected async makeRequest<T>(
