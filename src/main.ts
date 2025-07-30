@@ -110,9 +110,9 @@ import RegisterForm from '@/components/auth/RegisterForm.vue'
 import LoginPage from '@/components/auth/LoginPage.vue'
 
 // Dashboard components
-import AdminDashboard from '@/components/dashboard/AdminDashboard.vue'
-import ProfessorDashboard from '@/components/dashboard/ProfessorDashboard.vue'
-import StudentDashboard from '@/components/dashboard/StudentDashboard.vue'
+import AdminDashboard from '@/components/dashboard/admin/AdminDashboard.vue'
+import ProfessorDashboard from '@/components/dashboard/professor/ProfessorDashboard.vue'
+import StudentDashboard from '@/components/dashboard/student/StudentDashboard.vue'
 import DashboardPage from '@/components/dashboard/DashboardPage.vue'
 
 // Admin components

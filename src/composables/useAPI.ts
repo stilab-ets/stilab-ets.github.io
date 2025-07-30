@@ -112,7 +112,7 @@ export function usePublications() {
     return publicationsState.execute(() => mainAPI.getPublications());
   };
 
-  const getPublication = async (id: number) => {
+  const getPublication = async (id: string) => {
     return publicationState.execute(() => mainAPI.getPublication(id));
   };
 
@@ -120,11 +120,11 @@ export function usePublications() {
     return createState.execute(() => mainAPI.createPublication(data));
   };
 
-  const updatePublication = async (id: number, data: any) => {
+  const updatePublication = async (id: string, data: any) => {
     return updateState.execute(() => mainAPI.updatePublication(id, data));
   };
 
-  const deletePublication = async (id: number) => {
+  const deletePublication = async (id: string) => {
     return deleteState.execute(() => mainAPI.deletePublication(id));
   };
 
@@ -153,7 +153,7 @@ export function useMembers() {
     return membersState.execute(() => mainAPI.getMembers());
   };
 
-  const getMember = async (id: number) => {
+  const getMember = async (id: string) => {
     return memberState.execute(() => mainAPI.getMember(id));
   };
 
@@ -161,11 +161,11 @@ export function useMembers() {
     return createState.execute(() => mainAPI.createMember(data));
   };
 
-  const updateMember = async (id: number, data: any) => {
+  const updateMember = async (id: string, data: any) => {
     return updateState.execute(() => mainAPI.updateMember(id, data));
   };
 
-  const deleteMember = async (id: number) => {
+  const deleteMember = async (id: string) => {
     return deleteState.execute(() => mainAPI.deleteMember(id));
   };
 
@@ -194,7 +194,7 @@ export function useAwards() {
     return awardsState.execute(() => mainAPI.getAwards());
   };
 
-  const getAward = async (id: number) => {
+  const getAward = async (id: string) => {
     return awardState.execute(() => mainAPI.getAward(id));
   };
 
@@ -202,11 +202,11 @@ export function useAwards() {
     return createState.execute(() => mainAPI.createAward(data));
   };
 
-  const updateAward = async (id: number, data: any) => {
+  const updateAward = async (id: string, data: any) => {
     return updateState.execute(() => mainAPI.updateAward(id, data));
   };
 
-  const deleteAward = async (id: number) => {
+  const deleteAward = async (id: string) => {
     return deleteState.execute(() => mainAPI.deleteAward(id));
   };
 
@@ -235,7 +235,7 @@ export function useResearch() {
     return researchState.execute(() => mainAPI.getResearch());
   };
 
-  const getResearchProject = async (id: number) => {
+  const getResearchProject = async (id: string) => {
     return projectState.execute(() => mainAPI.getResearchProject(id));
   };
 
@@ -243,11 +243,11 @@ export function useResearch() {
     return createState.execute(() => mainAPI.createResearch(data));
   };
 
-  const updateResearch = async (id: number, data: any) => {
+  const updateResearch = async (id: string, data: any) => {
     return updateState.execute(() => mainAPI.updateResearch(id, data));
   };
 
-  const deleteResearch = async (id: number) => {
+  const deleteResearch = async (id: string) => {
     return deleteState.execute(() => mainAPI.deleteResearch(id));
   };
 
@@ -276,7 +276,7 @@ export function useCourses() {
     return coursesState.execute(() => mainAPI.getCourses());
   };
 
-  const getCourse = async (id: number) => {
+  const getCourse = async (id: string) => {
     return courseState.execute(() => mainAPI.getCourse(id));
   };
 
@@ -284,11 +284,11 @@ export function useCourses() {
     return createState.execute(() => mainAPI.createCourse(data));
   };
 
-  const updateCourse = async (id: number, data: any) => {
+  const updateCourse = async (id: string, data: any) => {
     return updateState.execute(() => mainAPI.updateCourse(id, data));
   };
 
-  const deleteCourse = async (id: number) => {
+  const deleteCourse = async (id: string) => {
     return deleteState.execute(() => mainAPI.deleteCourse(id));
   };
 

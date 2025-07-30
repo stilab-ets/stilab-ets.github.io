@@ -1,11 +1,11 @@
 import { BaseAPI, type ApiResponse } from './BaseAPI';
 import { jwtDecode } from 'jwt-decode';
+import { Member, User } from './user.types';
 
 interface JwtPayload {
   exp: number;
   [key: string]: any;
 }
-
 
 export interface LoginCredentials {
   username_or_email: string;
@@ -24,18 +24,6 @@ export interface AuthTokens {
   access_token: string;
   refresh_token: string;
   user: User;
-}
-
-export interface User {
-  role: string;
-  id: number;
-  username: string;
-  email: string;
-  first_name?: string;
-  last_name?: string;
-  is_staff?: boolean;
-  is_active?: boolean;
-  date_joined?: string;
 }
 
 export class AuthAPI extends BaseAPI {
@@ -86,6 +74,10 @@ export class AuthAPI extends BaseAPI {
 
   async getCurrentUser(): Promise<ApiResponse<User>> {   
     return this.get<User>('/api/profile');
+  }
+
+  async getCurrentMember(): Promise<ApiResponse<Member>> {
+    return this.get<Member>('/api/profile');
   }
 
   isAuthenticated(): boolean {

@@ -1,6 +1,5 @@
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useAuthMiddleware } from '@/middleware/auth'
-import type { User } from '@/services/AuthAPI'
 
 export function useUserAuth() {
   const { 

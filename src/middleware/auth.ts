@@ -1,6 +1,6 @@
 import { ref, type Ref } from 'vue';
 import { authAPI } from '@/services/ApiFactory';
-import type { User } from '@/services/AuthAPI';
+import { User } from '@/services/user.types';
 
 interface AuthState {
   user: Ref<User | null>;
@@ -54,15 +54,23 @@ class AuthMiddleware {
     try {
       const response = await authAPI.login(credentials);
       
-      if (response.data) {
-        // Use the user data directly from login response
-        if (response.data.user) {
-          this.state.user.value = response.data.user;
-          this.state.isAuthenticated.value = true;
-          return true;
-        } else {
-          return false;
+      if (response.data && response.data.user) {
+        this.state.user.value = response.data.user;
+        
+        // Récupérer les infos Member pour obtenir le vrai rôle
+        try {
+          const memberResponse = await authAPI.getCurrentMember();
+          if (memberResponse.data) {
+            if (memberResponse.data.role !== null) {
+              this.state.user.value.memberRole = memberResponse.data.role;
+            }
+          }
+        } catch (error) {
+          console.warn('Failed to fetch member info:', error);
         }
+        
+        this.state.isAuthenticated.value = true;
+        return true;
       }
       
       return false;

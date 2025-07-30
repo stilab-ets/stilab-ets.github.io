@@ -1,5 +1,6 @@
 import { computed } from 'vue'
 import { useAuthMiddleware } from '@/middleware/auth'
+import { User } from '@/services/user.types'
 
 export interface UserPermissions {
   canManageUsers: boolean
@@ -11,20 +12,26 @@ export interface UserPermissions {
   canModerateContent: boolean
 }
 
-export type UserRole = 'admin' | 'professor' | 'researcher' | 'student'
+export type UserRole = 'admin' | 'professor' | 'researcher' | 'student' | null
 
 /**
  * Maps raw backend roles and is_staff flag to a standardized frontend UserRole
  */
-function resolveUserRole(rawRole: string | undefined, isStaff: boolean): UserRole {
-  if (isStaff) return 'admin'
-  if (!rawRole) return 'student'
+export function resolveUserRole(user: User | null): UserRole {
+  if (!user) return null
+  
+  // Utiliser is_staff pour admin
+  if (user.is_staff) return 'admin'
+  
+  // Utiliser le rôle Member si disponible
+  const memberRole = user.memberRole || user.memberInfo?.role
+  if (!memberRole) return 'student'
 
-  const role = rawRole.toUpperCase()
+  const role = memberRole.toUpperCase()
 
   const roleMap: Record<string, UserRole> = {
     'PRO': 'professor',
-    'PHD': 'student',
+    'PHD': 'student', 
     'MSC': 'student',
     'PROFESSOR': 'professor',
     'RESEARCHER': 'researcher',
@@ -94,9 +101,9 @@ export function useAuth() {
 
   const userRole = computed<UserRole | null>(() => {
     if (!isAuthenticated.value || !user.value) return null
-    return resolveUserRole(user.value.role, user.value.is_staff ?? false)
+    return resolveUserRole(user.value as User)
   })
-
+  
   const permissions = computed(() => resolvePermissions(userRole.value))
 
   const isAdmin = computed(() => userRole.value === 'admin')

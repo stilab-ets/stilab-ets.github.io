@@ -29,10 +29,11 @@ import AwardsPage from './components/awards/AwardsPage.vue'
 import LoginPage from './components/auth/LoginPage.vue'
 
 // Dashboard components
-import AdminDashboard from './components/dashboard/AdminDashboard.vue'
-import ProfessorDashboard from './components/dashboard/ProfessorDashboard.vue'
-import StudentDashboard from './components/dashboard/StudentDashboard.vue'
+import AdminDashboard from './components/dashboard/admin/AdminDashboard.vue'
+import ProfessorDashboard from './components/dashboard/professor/ProfessorDashboard.vue'
+import StudentDashboard from './components/dashboard/student/StudentDashboard.vue'
 import DashboardPage from './components/dashboard/DashboardPage.vue'
+import { resolveUserRole } from './hooks/auth/useAuth'
 
 // Initialize systems
 const { currentLanguage, t, localizedNavigationItems, setLanguage } = useLanguage()
@@ -43,27 +44,13 @@ const { isAccessDenied, accessError, safeNavigate } = useRouteGuard({
   showAccessDenied: true
 })
 
-// User role computed property - consistent with useAuth.ts
-const userRole = computed(() => {
-  if (!user.value) return 'guest'
-  if (user.value.is_staff) return 'admin'
-  
-  // Map user roles from backend - consistent mapping
-  const roleMap: Record<string, string> = {
-    'professor': 'professor',
-    'researcher': 'professor',
-    'postdoc': 'professor',
-    'phd': 'student',
-    'master': 'student',
-    'engineer': 'professor'
-  }
-  
-  return roleMap[user.value.role] || 'student'
-})
+const userRole = resolveUserRole(user.value)
+
+console.log(userRole)
 
 // Check if user can access dashboard
 const canAccessDashboard = computed(() => {
-  return isAuthenticated.value && userRole.value !== null
+  return isAuthenticated.value && userRole !== null
 })
 
 // Navigation methods - utilise le système de navigation sécurisé
