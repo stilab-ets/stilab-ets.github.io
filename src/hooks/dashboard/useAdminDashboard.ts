@@ -2,7 +2,8 @@ import { ref, computed, onMounted } from 'vue';
 import { useLanguage } from '@/composables/useLanguage';
 import { mainAPI } from '@/services/ApiFactory';
 import { useInvitations } from '@/hooks/admin/useInvitations';
-import type { Member, Publication, Event, Research } from '@/services/MainAPI';
+import type { Publication, Event, Research } from '@/services/MainAPI';
+import { Member } from '@/services/user.types';
 
 interface AdminStats {
   title: string;

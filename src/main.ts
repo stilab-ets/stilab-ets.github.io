@@ -157,7 +157,6 @@ async function initializeApp() {
     console.log('[MAIN] Auth middleware initialized successfully');
   } catch (error) {
     console.error('[MAIN] Auth middleware initialization failed:', error);
-    // Continue with app creation even if auth fails
   }
 
   // Create Vue application

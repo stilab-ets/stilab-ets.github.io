@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import { useAuth } from '@/hooks/auth/useAuth'
 import { useLanguage } from '@/composables/useLanguage'
 import Card from '@/components/ui/Card.vue'
@@ -16,47 +16,30 @@ const {
   isAuthenticated, 
   isLoading, 
   userRole, 
-  canAccessDashboard, 
-  isAdmin, 
-  isProfessorOrResearcher, 
-  isStudent,
-  basicUserInfo,
-  getDashboardRoute 
+  canAccessDashboard,
+  basicUserInfo
 } = useAuth()
 
 const { t } = useLanguage()
 
 const dashboardComponent = computed(() => {
-  console.log('[DASHBOARD PAGE] Determining dashboard component:', {
-    userRole: userRole.value,
-    isAdmin: isAdmin.value,
-    isProfessorOrResearcher: isProfessorOrResearcher.value,
-    isStudent: isStudent.value,
-    basicUserInfo: basicUserInfo.value
-  })
-
   // Use staff status from basic user info first
   if (basicUserInfo.value?.is_staff) {
-    console.log('[DASHBOARD PAGE] Using admin dashboard (staff user)')
     return AdminDashboard
   }
 
   // Then check computed role
   switch (userRole.value) {
     case 'admin':
-      console.log('[DASHBOARD PAGE] Using admin dashboard (admin role)')
       return AdminDashboard
     case 'professor':
     case 'researcher':
-      console.log('[DASHBOARD PAGE] Using professor dashboard')
       return ProfessorDashboard
     case 'student':
-      console.log('[DASHBOARD PAGE] Using student dashboard')
       return StudentDashboard
     default:
       // Default to student dashboard for authenticated users
       if (basicUserInfo.value) {
-        console.log('[DASHBOARD PAGE] Using student dashboard (default for authenticated user)')
         return StudentDashboard
       }
       return null
@@ -65,28 +48,13 @@ const dashboardComponent = computed(() => {
 
 const shouldRedirectToLogin = computed(() => {
   const shouldRedirect = !isAuthenticated.value && !isLoading.value
-  console.log('[DASHBOARD PAGE] Should redirect to login:', {
-    shouldRedirect,
-    isAuthenticated: isAuthenticated.value,
-    isLoading: isLoading.value
-  })
   return shouldRedirect
 })
 
 const handleLoginRedirect = () => {
-  console.log('[DASHBOARD PAGE] Redirecting to login')
   emit('navigate', 'login')
 }
 
-onMounted(() => {
-  console.log('[DASHBOARD PAGE] Component mounted:', {
-    isAuthenticated: isAuthenticated.value,
-    isLoading: isLoading.value,
-    canAccessDashboard: canAccessDashboard.value,
-    userRole: userRole.value,
-    dashboardRoute: getDashboardRoute.value
-  })
-})
 </script>
 
 <template>

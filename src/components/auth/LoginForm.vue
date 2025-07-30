@@ -72,14 +72,12 @@ const handleSubmit = async () => {
   generalError.value = ''
   
   try {
-    console.log('[LOGIN FORM] Attempting login...')
     const success = await login({
       username_or_email: form.username_or_email,
       password: form.password
     })
     
     if (success) {
-      console.log('[LOGIN FORM] Login successful, profile should be fetched')
       
       // Small delay to ensure profile fetch is complete
       await new Promise(resolve => setTimeout(resolve, 100))
@@ -88,7 +86,6 @@ const handleSubmit = async () => {
       
       // Get appropriate dashboard route (should now have profile data)
       const dashboardRoute = getDashboardRoute.value
-      console.log('[LOGIN FORM] Redirecting to dashboard:', dashboardRoute)
       
       if (dashboardRoute) {
         // Emit navigation to parent component
@@ -97,12 +94,10 @@ const handleSubmit = async () => {
         }))
       }
     } else {
-      console.log('[LOGIN FORM] Login failed')
       generalError.value = t.value.errors.loginFailed
       emit('loginFailed', t.value.errors.loginFailed)
     }
   } catch (error) {
-    console.error('[LOGIN FORM] Login error:', error)
     generalError.value = t.value.errors.loginFailed
     emit('loginFailed', t.value.errors.loginFailed)
   } finally {

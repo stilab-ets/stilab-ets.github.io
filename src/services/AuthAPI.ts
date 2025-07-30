@@ -36,16 +36,13 @@ export interface LoginResponse {
 
 export class AuthAPI extends BaseAPI {
   async login(credentials: LoginCredentials): Promise<ApiResponse<LoginResponse>> {
-    console.log('[AUTH API] Attempting login request...');
     const response = await this.post<LoginResponse>(
       '/api/login',
       credentials,
       false // Don't include auth header for login
     );
 
-    if (response.data) {
-      console.log('[AUTH API] Login response received, storing tokens...');
-      
+    if (response.data) {      
       // Store tokens
       localStorage.setItem('access_token', response.data.access_token);
       localStorage.setItem('refresh_token', response.data.refresh_token);
@@ -60,7 +57,6 @@ export class AuthAPI extends BaseAPI {
       };
       
       localStorage.setItem('basic_user_info', JSON.stringify(userInfo));
-      console.log('[AUTH API] Tokens and user info stored successfully:', userInfo);
     }
 
     return response;
@@ -92,14 +88,12 @@ export class AuthAPI extends BaseAPI {
   }
 
   async logout(): Promise<void> {
-    console.log('[AUTH API] Clearing stored tokens...');
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('basic_user_info');
   }
 
   async getCurrentProfile(): Promise<ApiResponse<MemberUser>> {
-    console.log('[AUTH API] Attempting to fetch profile...');
     const token = this.getAuthToken();
     
     if (!token || !this.isTokenValid(token)) {
@@ -107,12 +101,9 @@ export class AuthAPI extends BaseAPI {
     }
     
     try {
-      console.log('[AUTH API] Fetching from /api/profile endpoint');
       const response = await this.get<MemberUser>('/api/profile');
-      console.log('[AUTH API] Profile fetched successfully:', response.data);
       return response;
     } catch (error) {
-      console.error('[AUTH API] Profile fetch failed:', error);
       throw error;
     }
   }
@@ -120,7 +111,6 @@ export class AuthAPI extends BaseAPI {
   isAuthenticated(): boolean {
     const token = localStorage.getItem('access_token');
     const isValid = !!token && this.isTokenValid(token);
-    console.log('[AUTH API] Authentication check:', { hasToken: !!token, isValid });
     return isValid;
   }
 
@@ -128,15 +118,8 @@ export class AuthAPI extends BaseAPI {
     try {
       const decoded = jwtDecode<JwtPayload>(token);
       const isValid = decoded.exp * 1000 > Date.now();
-      console.log('[AUTH API] Token validation:', { 
-        isValid, 
-        expiresAt: new Date(decoded.exp * 1000).toISOString(),
-        userId: decoded.user_id,
-        username: decoded.username
-      });
       return isValid;
     } catch (error) {
-      console.log('[AUTH API] Token validation failed:', error);
       return false;
     }
   }

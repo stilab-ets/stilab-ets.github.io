@@ -18,24 +18,20 @@ export type UserRole = 'admin' | 'professor' | 'researcher' | 'student' | null
  * Resolve user role based on staff status and profile information
  */
 function resolveUserRole(profile: MemberUser | null, basicUserInfo: any | null): UserRole {
-  console.log('[USE AUTH] Resolving user role:', { profile, basicUserInfo });
   
   // Check if user is staff (admin) from basic user info first
   if (basicUserInfo?.is_staff) {
-    console.log('[USE AUTH] User is staff (admin) from basic info');
     return 'admin';
   }
   
   // Check staff status from profile
   if (profile?.user?.is_staff) {
-    console.log('[USE AUTH] User is staff (admin) from profile');
     return 'admin';
   }
   
   // If not staff, check profile role for other types
   if (profile?.role) {
     const role = profile.role.toUpperCase();
-    console.log('[USE AUTH] Profile has role:', role);
     
     const roleMap: Record<string, UserRole> = {
       'PROFESSOR': 'professor',
@@ -52,18 +48,15 @@ function resolveUserRole(profile: MemberUser | null, basicUserInfo: any | null):
 
     const mappedRole = roleMap[role];
     if (mappedRole) {
-      console.log('[USE AUTH] Mapped role:', mappedRole);
       return mappedRole;
     }
   }
   
   // Default to student for authenticated users
   if (basicUserInfo) {
-    console.log('[USE AUTH] Defaulting to student for authenticated user');
     return 'student';
   }
 
-  console.log('[USE AUTH] No role could be determined');
   return null;
 }
 
@@ -126,13 +119,6 @@ export function useAuth() {
 
   const userRole = computed<UserRole | null>(() => {
     const role = resolveUserRole(profile.value, basicUserInfo.value);
-    console.log('[USE AUTH] Computed user role:', { 
-      role, 
-      hasProfile: !!profile.value,
-      hasBasicInfo: !!basicUserInfo.value,
-      isStaff: basicUserInfo.value?.is_staff,
-      profileRole: profile.value?.role 
-    });
     return role;
   })
   
@@ -153,12 +139,6 @@ export function useAuth() {
   const canAccessDashboard = computed(() => {
     const hasAuth = isAuthenticated.value;
     const hasBasicInfo = basicUserInfo.value !== null;
-    
-    console.log('[USE AUTH] Dashboard access check:', { 
-      hasAuth, 
-      hasBasicInfo,
-      userRole: userRole.value 
-    });
     
     return hasAuth && hasBasicInfo;
   })
@@ -189,38 +169,21 @@ export function useAuth() {
 
   const getDashboardRoute = computed(() => {
     if (!isAuthenticated.value || !basicUserInfo.value) {
-      console.log('[USE AUTH] Not authenticated - no dashboard access');
       return null;
     }
     
-    console.log('[USE AUTH] Getting dashboard route:', {
-      isStaff: basicUserInfo.value.is_staff,
-      userRole: userRole.value,
-      hasProfile: !!profile.value,
-      profileRole: profile.value?.role
-    });
-    
-    // Staff users always get admin dashboard
-    if (basicUserInfo.value.is_staff) {
-      console.log('[USE AUTH] Routing to admin dashboard (staff user)');
-      return 'admin-dashboard';
-    }
-    
-    // Non-staff users get role-based dashboards
+    // ALWAYS use the computed userRole for consistent logic for all user types.
     const role = userRole.value;
-    console.log('[USE AUTH] Routing based on role:', role);
     
     switch (role) {
+      case 'admin':
+        return 'admin-dashboard';
       case 'professor':
       case 'researcher':
-        console.log('[USE AUTH] Routing to professor dashboard');
         return 'professor-dashboard';
       case 'student':
-        console.log('[USE AUTH] Routing to student dashboard');
         return 'student-dashboard';
       default:
-        // Default to student dashboard for authenticated users
-        console.log('[USE AUTH] No specific role, defaulting to student dashboard');
         return 'student-dashboard';
     }
   })

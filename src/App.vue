@@ -39,7 +39,6 @@ import { authMiddleware } from '@/middleware/auth'
 // Add this navigation event handler to your existing script:
 const handleNavigationEvent = (event: CustomEvent) => {
   if (event.detail?.page) {
-    console.log('[APP] Handling navigation event:', event.detail.page)
     navigateToPage(event.detail.page)
   }
 }

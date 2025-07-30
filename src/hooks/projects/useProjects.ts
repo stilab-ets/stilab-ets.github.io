@@ -32,7 +32,6 @@ export function useProjects(): UseProjectsReturn {
     error.value = null
     
     try {
-      console.log('[USE PROJECTS] Fetching projects...')
       const response = await mainAPI.getProjects()
       
       // Handle both array and object responses
@@ -44,16 +43,13 @@ export function useProjects(): UseProjectsReturn {
       }
       
       projects.value = projectsData
-      console.log(`[USE PROJECTS] Fetched ${projectsData.length} projects`)
     } catch (err: any) {
       // Handle 404s gracefully - projects endpoint might not exist
       if (err.status === 404) {
-        console.log('[USE PROJECTS] Projects endpoint not found (404) - using empty projects list')
         projects.value = []
         error.value = null // Don't treat 404 as an error for optional endpoints
       } else {
         error.value = err.message || 'Failed to fetch projects'
-        console.error('[USE PROJECTS] Error fetching projects:', err)
         projects.value = [] // Set to empty array on error
       }
     } finally {
@@ -66,20 +62,16 @@ export function useProjects(): UseProjectsReturn {
     error.value = null
     
     try {
-      console.log('[USE PROJECTS] Creating project...')
       const response = await mainAPI.createProject(data)
       if (response.data) {
         projects.value.push(response.data)
-        console.log('[USE PROJECTS] Project created successfully')
       }
       return true
     } catch (err: any) {
       if (err.status === 404) {
         error.value = 'Projects functionality is not available'
-        console.log('[USE PROJECTS] Create project endpoint not found (404)')
       } else {
         error.value = err.message || 'Failed to create project'
-        console.error('[USE PROJECTS] Error creating project:', err)
       }
       return false
     } finally {
@@ -92,23 +84,19 @@ export function useProjects(): UseProjectsReturn {
     error.value = null
     
     try {
-      console.log(`[USE PROJECTS] Updating project ${id}...`)
       const response = await mainAPI.updateProject(id, data)
       if (response.data) {
         const index = projects.value.findIndex((p: { id: string }) => p.id === id)
         if (index !== -1) {
           projects.value[index] = response.data
-          console.log('[USE PROJECTS] Project updated successfully')
         }
       }
       return true
     } catch (err: any) {
       if (err.status === 404) {
         error.value = 'Project not found or functionality unavailable'
-        console.log('[USE PROJECTS] Update project endpoint not found (404)')
       } else {
         error.value = err.message || 'Failed to update project'
-        console.error('[USE PROJECTS] Error updating project:', err)
       }
       return false
     } finally {
@@ -121,18 +109,14 @@ export function useProjects(): UseProjectsReturn {
     error.value = null
     
     try {
-      console.log(`[USE PROJECTS] Deleting project ${id}...`)
       await mainAPI.deleteProject(id)
       projects.value = projects.value.filter((p: { id: string }) => p.id !== id)
-      console.log('[USE PROJECTS] Project deleted successfully')
       return true
     } catch (err: any) {
       if (err.status === 404) {
         error.value = 'Project not found or functionality unavailable'
-        console.log('[USE PROJECTS] Delete project endpoint not found (404)')
       } else {
         error.value = err.message || 'Failed to delete project'
-        console.error('[USE PROJECTS] Error deleting project:', err)
       }
       return false
     } finally {

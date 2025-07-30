@@ -43,7 +43,6 @@ export function useEvents(): UseEventsReturn {
       isLoading.value = true
       error.value = null
       
-      console.log('[USE EVENTS] Fetching events...')
       const response = await mainAPI.getEvents()
       
       // Handle both array and object responses
@@ -55,16 +54,13 @@ export function useEvents(): UseEventsReturn {
       }
       
       events.value = eventsData
-      console.log(`[USE EVENTS] Fetched ${eventsData.length} events`)
     } catch (err: any) {
       // Handle 404s gracefully - events endpoint might not exist
       if (err.status === 404) {
-        console.log('[USE EVENTS] Events endpoint not found (404) - using empty events list')
         events.value = []
         error.value = null // Don't treat 404 as an error for optional endpoints
       } else {
         error.value = err.message || 'Failed to fetch events'
-        console.error('[USE EVENTS] Error fetching events:', err)
         events.value = [] // Set to empty array on error
       }
     } finally {
@@ -77,22 +73,18 @@ export function useEvents(): UseEventsReturn {
       isLoading.value = true
       error.value = null
 
-      console.log('[USE EVENTS] Creating event...')
       const response = await mainAPI.createEvent(eventData)
       const newEvent = response.data
       
       if (newEvent) {
         events.value.push(newEvent)
-        console.log('[USE EVENTS] Event created successfully')
       }
       return newEvent
     } catch (err: any) {
       if (err.status === 404) {
         error.value = 'Events functionality is not available'
-        console.log('[USE EVENTS] Create event endpoint not found (404)')
       } else {
         error.value = err.message || 'Failed to create event'
-        console.error('[USE EVENTS] Error creating event:', err)
       }
       return null
     } finally {
@@ -105,7 +97,6 @@ export function useEvents(): UseEventsReturn {
       isLoading.value = true
       error.value = null
 
-      console.log(`[USE EVENTS] Updating event ${id}...`)
       const response = await mainAPI.updateEvent(id, eventData)
       const updatedEvent = response.data
       
@@ -113,7 +104,6 @@ export function useEvents(): UseEventsReturn {
         const index = events.value.findIndex(e => e.id === id)
         if (index !== -1) {
           events.value[index] = updatedEvent
-          console.log('[USE EVENTS] Event updated successfully')
         }
       }
       
@@ -121,10 +111,8 @@ export function useEvents(): UseEventsReturn {
     } catch (err: any) {
       if (err.status === 404) {
         error.value = 'Event not found or functionality unavailable'
-        console.log('[USE EVENTS] Update event endpoint not found (404)')
       } else {
         error.value = err.message || 'Failed to update event'
-        console.error('[USE EVENTS] Error updating event:', err)
       }
       return null
     } finally {
@@ -137,18 +125,14 @@ export function useEvents(): UseEventsReturn {
       isLoading.value = true
       error.value = null
 
-      console.log(`[USE EVENTS] Deleting event ${id}...`)
       await mainAPI.deleteEvent(id)
       events.value = events.value.filter(e => e.id !== id)
-      console.log('[USE EVENTS] Event deleted successfully')
       return true
     } catch (err: any) {
       if (err.status === 404) {
         error.value = 'Event not found or functionality unavailable'
-        console.log('[USE EVENTS] Delete event endpoint not found (404)')
       } else {
         error.value = err.message || 'Failed to delete event'
-        console.error('[USE EVENTS] Error deleting event:', err)
       }
       return false
     } finally {

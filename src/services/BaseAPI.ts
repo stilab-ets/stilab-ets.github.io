@@ -76,22 +76,10 @@ export abstract class BaseAPI {
       },
     };
 
-    console.log(`[API] Making ${options.method || 'GET'} request to ${endpoint}`, {
-      includeAuth,
-      hasToken: includeAuth && !!this.getAuthToken()
-    });
-
     try {
       const response = await fetch(url, requestOptions);
 
-      console.log(`[API] Response for ${endpoint}:`, {
-        status: response.status,
-        statusText: response.statusText,
-        ok: response.ok
-      });
-
       if (response.status === 401 && includeAuth) {
-        console.log('[API] 401 Unauthorized - clearing tokens');
         this.clearAuthTokens();
         throw new ApiError('Authentication failed', 401);
       }
@@ -108,12 +96,6 @@ export abstract class BaseAPI {
           }
         }
 
-        console.warn(`[API] Request failed for ${endpoint}:`, {
-          status: response.status,
-          statusText: response.statusText,
-          errorData
-        });
-
         throw new ApiError(
           errorData.message || errorData.detail || `Request failed with status ${response.status}`,
           response.status,
@@ -128,24 +110,16 @@ export abstract class BaseAPI {
         try {
           data = await response.json();
         } catch (jsonError) {
-          console.warn(`[API] Failed to parse response as JSON for ${endpoint}:`, jsonError);
           data = null;
         }
       } else {
-        console.log(`[API] Non-JSON response for ${endpoint}, content-type:`, contentType);
         data = null;
       }
 
       // Handle empty or null responses gracefully
       if (data === null || data === undefined) {
-        console.log(`[API] Empty response for ${endpoint}, returning empty array/object`);
         data = (options.method === 'GET' || !options.method) ? [] : {};
       }
-
-      console.log(`[API] Successfully processed response for ${endpoint}:`, {
-        dataType: Array.isArray(data) ? 'array' : typeof data,
-        dataLength: Array.isArray(data) ? data.length : Object.keys(data || {}).length
-      });
       
       return {
         data,
@@ -157,7 +131,6 @@ export abstract class BaseAPI {
         throw error;
       }
       
-      console.error(`[API] Network error for ${endpoint}:`, error);
       throw new ApiError('Network error', 0, error);
     }
   }

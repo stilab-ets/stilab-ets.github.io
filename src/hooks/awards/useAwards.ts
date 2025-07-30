@@ -99,7 +99,6 @@ export function useAwards(options: UseAwardsOptions = {}): UseAwardsReturn {
     error.value = null
     
     try {
-      console.log('[USE AWARDS] Fetching awards...')
       const response = await mainAPI.getAwards()
       
       // Handle both array and object responses
@@ -111,16 +110,13 @@ export function useAwards(options: UseAwardsOptions = {}): UseAwardsReturn {
       }
       
       awards.value = awardsData
-      console.log(`[USE AWARDS] Fetched ${awardsData.length} awards`)
     } catch (err: any) {
       // Handle 404s gracefully - awards endpoint might not exist
       if (err.status === 404) {
-        console.log('[USE AWARDS] Awards endpoint not found (404) - using empty awards list')
         awards.value = []
         error.value = null // Don't treat 404 as an error for optional endpoints
       } else {
         error.value = err.message || 'Failed to fetch awards'
-        console.error('[USE AWARDS] Error fetching awards:', err)
         awards.value = [] // Set to empty array on error
       }
     } finally {

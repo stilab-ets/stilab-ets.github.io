@@ -11,11 +11,9 @@ const { t } = useLanguage()
 const { getDashboardRoute } = useAuth()
 
 const handleLoginSuccess = () => {
-  console.log('[LOGIN PAGE] Login successful, getting dashboard route...')
   
   // Get the appropriate dashboard route
   const dashboardRoute = getDashboardRoute.value
-  console.log('[LOGIN PAGE] Dashboard route:', dashboardRoute)
   
   if (dashboardRoute) {
     emit('setCurrentPage', dashboardRoute)
@@ -27,7 +25,6 @@ const handleLoginSuccess = () => {
 
 const handleLoginFailed = (error: string) => {
   console.warn('[LOGIN PAGE] Login failed:', error)
-  // Error is already displayed in LoginForm component
 }
 </script>
 
