@@ -37,6 +37,6 @@ describe('ResearchPage.vue', () => {
     const projectsProp = featured.props('projects')
     expect(Array.isArray(projectsProp)).toBe(true)
     expect(projectsProp.length).toBeLessThanOrEqual(4)
-    expect(projectsProp.every(p => p.status === 'active')).toBe(true)
+    expect(projectsProp.every((p: { status: string }) => p.status === 'active')).toBe(true)
   })
 })
