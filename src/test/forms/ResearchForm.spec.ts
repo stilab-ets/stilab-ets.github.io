@@ -1,115 +1,147 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { describe, it, expect, vi, beforeAll, beforeEach } from 'vitest'
+import { ref, nextTick } from 'vue'
 import ResearchForm from '@/components/research/ResearchForm.vue'
-import { nextTick, ref } from 'vue'
 
+// Mock scrollTo to prevent errors
+beforeAll(() => {
+  window.scrollTo = vi.fn()
+})
+
+// --- Mocks --- //
+
+// Mock useLanguage
 vi.mock('@/composables/useLanguage', () => ({
   useLanguage: () => ({
-    t: ref({
+    t: {
       forms: {
         research: {
-          subtitle: 'Fill in the research project details.',
           titleCreate: 'Create Research Project',
-          titleEdit: 'Edit Research Project',
-          form: {
-            update: 'Update',
-            create: 'Create',
-            submitting: 'Submitting...',
-            cancel: 'Cancel',
-            title: 'Title',
-            titlePlaceholder: 'Enter title',
-            domain: 'Domain',
-            selectDomain: 'Select a domain',
-            status: 'Status',
-            selectStatus: 'Select a status',
-            description: 'Description',
-            descriptionPlaceholder: 'Enter description',
-            objectives: 'Objectives',
-            objectivesPlaceholder: 'Enter objectives',
-            methodology: 'Methodology',
-            methodologyPlaceholder: 'Enter methodology',
-            leader: 'Leader',
-            selectLeader: 'Select a leader',
-            participants: 'Participants',
-            selectParticipants: 'Select participants',
-            budget: 'Budget',
-            budgetPlaceholder: 'Enter budget',
-            funding: 'Funding',
-            fundingPlaceholder: 'Enter funding',
-            githubUrl: 'GitHub URL',
-            websiteUrl: 'Website URL',
-            startDate: 'Start Date',
-            endDate: 'End Date',
-          },
-          validation: {
-            titleRequired: 'Title is required.',
-            domainRequired: 'Domain is required.',
-            statusRequired: 'Status is required.',
-            descriptionRequired: 'Description is required.',
-            leaderRequired: 'Leader is required.',
-            startDateRequired: 'Start date is required.',
-            endDateAfterStart: 'End date must be after start date.'
-          },
-          errors: {
-            submitFailed: 'Submit failed, please try again.'
-          },
-          sections: {
-            basic: 'Basic Information',
-            description: 'Project Description',
-            team: 'Team Members',
-            resources: 'Resources & Funding',
-            timeline: 'Timeline'
-          },
-          domains: {
-            softwareArchitecture: 'Software Architecture',
-            artificialIntelligence: 'Artificial Intelligence',
-            cybersecurity: 'Cybersecurity',
-            devops: 'DevOps',
-            cloudComputing: 'Cloud Computing',
-            softwareTesting: 'Software Testing',
-            distributedSystems: 'Distributed Systems',
-            blockchain: 'Blockchain'
-          },
-          statuses: {
-            planned: 'Planned',
-            active: 'Active',
-            completed: 'Completed'
-          }
-        }
-      }
-    })
-  })
+          subtitle: 'Add a new research project entry',
+        },
+      },
+    },
+  }),
 }))
 
-vi.mock('@/components/ui/Card.vue', () => ({
-  default: { template: '<div><slot /></div>' }
+// Mock useResearch
+const createResearchMock = vi.fn()
+const isLoadingMock = ref(false)
+const errorMock = ref(null)
+
+vi.mock('@/hooks/useResearch', () => ({
+  useResearch: () => ({
+    createResearch: createResearchMock,
+    isLoading: isLoadingMock,
+    error: errorMock,
+  }),
 }))
 
-vi.mock('@/components/ui/Button.vue', () => ({
-  default: { template: '<button><slot /></button>' }
+// Mock useMembers
+const fetchMembersMock = vi.fn()
+const membersMock = ref([
+  { id: '1', first_name: 'Alice', last_name: 'Smith' },
+  { id: '2', first_name: 'Bob', last_name: 'Jones' },
+])
+
+vi.mock('@/hooks/members/useMembers', () => ({
+  useMembers: () => ({
+    members: membersMock,
+    fetchMembers: fetchMembersMock,
+  }),
+}))
+
+// Mock useNavigation
+const navigateToPageMock = vi.fn()
+
+vi.mock('@/hooks/layout/useNavigation', () => ({
+  useNavigation: () => ({
+    navigateToPage: navigateToPageMock,
+  }),
 }))
 
 describe('ResearchForm.vue', () => {
   let wrapper: ReturnType<typeof mount>
 
-  beforeEach(() => {
-    wrapper = mount(ResearchForm)
+  beforeEach(async () => {
+    createResearchMock.mockReset()
+    navigateToPageMock.mockReset()
+    errorMock.value = null
+    isLoadingMock.value = false
+
+    wrapper = mount(ResearchForm, {
+      global: {
+        stubs: {
+          Form: {
+            template: `<div>
+              <slot />
+              <p class="success" v-if="successMessage">{{ successMessage }}</p>
+              <p class="error" v-if="error">{{ error }}</p>
+            </div>`,
+            props: ['successMessage', 'error'],
+          },
+          Button: true,
+        },
+      },
+    })
+
+    await nextTick()
   })
 
-  it('renders form title and subtitle', () => {
-    expect(wrapper.text()).toContain('Create Research Project')
-    expect(wrapper.text()).toContain('Fill in the research project details.')
-  })
-
-  it('shows validation errors for required fields', async () => {
+  it('shows validation errors on empty submit', async () => {
     await wrapper.find('form').trigger('submit.prevent')
     await nextTick()
 
-    const text = wrapper.text()
-    expect(text).toContain('Domain is required.')
-    expect(text).toContain('Description is required.')
-    expect(text).toContain('Leader is required.')
-    expect(text).toContain('Start date is required.')
+    expect(wrapper.text()).toContain('Title is required.')
+    expect(wrapper.text()).toContain('Start date is required.')
+    expect(wrapper.text()).toContain('Description is required.')
   })
 
+  it('submits valid form data and shows success message', async () => {
+    createResearchMock.mockResolvedValue(true)
+
+    await wrapper.get('input[type="text"]').setValue('AI Research')
+    await wrapper.get('input[type="date"]').setValue('2025-01-01')
+    await wrapper.find('textarea').setValue('Description of the project')
+
+    await wrapper.find('form').trigger('submit.prevent')
+    await nextTick()
+
+    expect(createResearchMock).toHaveBeenCalled()
+    expect(wrapper.find('.success').text()).toContain('Research project created successfully')
+  })
+
+  it('displays general error if createResearch fails', async () => {
+    createResearchMock.mockResolvedValue(false)
+    errorMock.value = 'Creation failed'
+
+    await wrapper.get('input[type="text"]').setValue('ML Research')
+    await wrapper.get('input[type="date"]').setValue('2025-01-01')
+    await wrapper.find('textarea').setValue('Machine learning research description')
+
+    await wrapper.find('form').trigger('submit.prevent')
+    await nextTick()
+
+    expect(wrapper.find('.error').text()).toContain('Creation failed')
+  })
+
+  it('validates project_url and github_url formats', async () => {
+    await wrapper.get('input[type="text"]').setValue('Bad URL Test')
+    await wrapper.get('input[type="date"]').setValue('2025-01-01')
+    await wrapper.find('textarea').setValue('Some description')
+    await wrapper.findAll('input[type="url"]')[0].setValue('invalid-url')
+    await wrapper.findAll('input[type="url"]')[1].setValue('http:/bad.url')
+
+    await wrapper.find('form').trigger('submit.prevent')
+    await nextTick()
+
+    expect(wrapper.text()).toContain('Invalid URL format.')
+  })
+
+  it('displays participants from members list', () => {
+    const options = wrapper.findAll('select option')
+    expect(options).toHaveLength(2)
+    expect(options[0].text()).toContain('Alice Smith')
+    expect(options[1].text()).toContain('Bob Jones')
+  })
 })
