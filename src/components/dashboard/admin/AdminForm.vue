@@ -2,8 +2,9 @@
 import { ref } from 'vue'
 import PublicationForm from '@/components/publications/PublicationForm.vue'
 import MemberForm from '@/components/people/MemberForm.vue'
+import ResearchForm from '@/components/research/ResearchForm.vue'
 
-const currentPage = ref<'form-list' | 'publication-form' | 'member-form'>('form-list')
+const currentPage = ref<'form-list' | 'publication-form' | 'member-form' | 'research-form'>('form-list')
 
 function setCurrentPage(page: typeof currentPage.value) {
   currentPage.value = page
@@ -21,6 +22,9 @@ function setCurrentPage(page: typeof currentPage.value) {
         </button>
         <button class="btn btn-primary" @click="setCurrentPage('member-form')">
           Member Form
+        </button>
+        <button class="btn btn-primary" @click="setCurrentPage('research-form')">
+          Research Form
         </button>
       </div>
     </div>
@@ -42,5 +46,11 @@ function setCurrentPage(page: typeof currentPage.value) {
       v-else-if="currentPage === 'member-form'"
       @navigate="setCurrentPage"
     />
+
+    <ResearchForm
+      v-else-if="currentPage === 'research-form'"
+      @navigate="setCurrentPage"
+    />
+
   </div>
 </template>
