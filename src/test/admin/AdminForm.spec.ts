@@ -3,6 +3,7 @@ import { mount } from '@vue/test-utils'
 import AdminForm from '@/components/dashboard/admin/AdminForm.vue'
 import PublicationForm from '@/components/publications/PublicationForm.vue'
 import MemberForm from '@/components/people/MemberForm.vue'
+import ResearchForm from '@/components/research/ResearchForm.vue'
 
 describe('AdminForm.vue', () => {
   it('renders form list initially', () => {
@@ -10,7 +11,7 @@ describe('AdminForm.vue', () => {
     // Check the buttons for each form exist
     expect(wrapper.text()).toContain('Available Forms')
     expect(wrapper.find('button.btn-primary').exists()).toBe(true)
-    expect(wrapper.findAll('button.btn-primary').length).toBe(2)
+    expect(wrapper.findAll('button.btn-primary').length).toBe(3)
   })
 
   it('shows PublicationForm when clicking Publication Form button', async () => {
@@ -21,6 +22,7 @@ describe('AdminForm.vue', () => {
 
     expect(wrapper.findComponent(PublicationForm).exists()).toBe(true)
     expect(wrapper.findComponent(MemberForm).exists()).toBe(false)
+    expect(wrapper.findComponent(ResearchForm).exists()).toBe(false)
 
     // Back button should appear
     expect(wrapper.find('button.btn-secondary').exists()).toBe(true)
@@ -34,6 +36,21 @@ describe('AdminForm.vue', () => {
 
     expect(wrapper.findComponent(MemberForm).exists()).toBe(true)
     expect(wrapper.findComponent(PublicationForm).exists()).toBe(false)
+    expect(wrapper.findComponent(ResearchForm).exists()).toBe(false)
+
+    // Back button should appear
+    expect(wrapper.find('button.btn-secondary').exists()).toBe(true)
+  })
+
+  it('shows ResearchForm when clicking Research Form button', async () => {
+    const wrapper = mount(AdminForm)
+
+    const researchButton = wrapper.findAll('button.btn-primary')[2]
+    await researchButton.trigger('click')
+
+    expect(wrapper.findComponent(ResearchForm).exists()).toBe(true)
+    expect(wrapper.findComponent(PublicationForm).exists()).toBe(false)
+    expect(wrapper.findComponent(MemberForm).exists()).toBe(false)
 
     // Back button should appear
     expect(wrapper.find('button.btn-secondary').exists()).toBe(true)
