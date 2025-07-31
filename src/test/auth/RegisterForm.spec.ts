@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import RegisterForm from '@/components/auth/RegisterForm.vue' // adjust path if needed
+import RegisterForm from '@/components/auth/RegisterForm.vue'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 // Mock composables
