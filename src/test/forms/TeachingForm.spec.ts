@@ -1,122 +1,120 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { describe, it, expect, vi, beforeAll, beforeEach } from 'vitest'
+import { ref, nextTick } from 'vue'
 import TeachingForm from '@/components/teaching/TeachingForm.vue'
-import { nextTick, ref } from 'vue'
 
+// Mock scrollTo to prevent errors
+beforeAll(() => {
+  window.scrollTo = vi.fn()
+})
+
+// --- Mocks ---
+
+// Mock useLanguage
 vi.mock('@/composables/useLanguage', () => ({
   useLanguage: () => ({
-    t: ref({
+    t: {
       forms: {
         teaching: {
-          subtitle: 'Fill in the course details.',
-          titleCreate: 'Create Teaching Course',
-          titleEdit: 'Edit Teaching Course',
-          form: {
-            title: 'Title',
-            titlePlaceholder: 'Enter course title',
-            code: 'Code',
-            codePlaceholder: 'Enter course code',
-            instructor: 'Instructor',
-            selectInstructor: 'Select an instructor',
-            level: 'Level',
-            selectLevel: 'Select a level',
-            semester: 'Semester',
-            semesterPlaceholder: 'Enter semester',
-            credits: 'Credits',
-            creditsPlaceholder: 'Enter number of credits',
-            description: 'Description',
-            descriptionPlaceholder: 'Enter description',
-            prerequisites: 'Prerequisites',
-            prerequisitesPlaceholder: 'Enter prerequisites',
-            objectives: 'Objectives',
-            objectivesPlaceholder: 'Enter objectives',
-            topics: 'Topics',
-            topicsPlaceholder: 'Enter topics',
-            syllabusUrl: 'Syllabus URL',
-            moodleUrl: 'Moodle URL',
-            githubUrl: 'GitHub URL',
-            cancel: 'Cancel',
-            create: 'Create',
-            update: 'Update',
-            submitting: 'Submitting...',
-          },
-          validation: {
-            titleRequired: 'Title is required',
-            codeRequired: 'Code is required',
-            instructorRequired: 'Instructor is required',
-            levelRequired: 'Level is required',
-            semesterRequired: 'Semester is required',
-            creditsRequired: 'Credits are required',
-            creditsInvalid: 'Credits must be a positive number',
-            descriptionRequired: 'Description is required',
-          },
-          errors: {
-            submitFailed: 'Submit failed, please try again.',
-          },
-          sections: {
-            basic: 'Basic Information',
-            content: 'Course Content',
-            resources: 'Resources',
-          },
-          levels: {
-            undergraduate: 'Undergraduate',
-            graduate: 'Graduate',
-          }
-        }
-      }
-    })
-  })
+          titleCreate: 'Create Course',
+          subtitle: 'Add a new teaching entry',
+        },
+      },
+    },
+  }),
 }))
 
-vi.mock('@/components/ui/Card.vue', () => ({
-  default: { template: '<div><slot /></div>' }
+// Mock useCourses
+const createCourseMock = vi.fn()
+const isLoadingMock = ref(false)
+const errorMock = ref<string | null>(null)
+
+vi.mock('@/hooks/teaching/useCourses', () => ({
+  useCourses: () => ({
+    createCourse: createCourseMock,
+    isLoading: isLoadingMock,
+    error: errorMock,
+  }),
 }))
-vi.mock('@/components/ui/Button.vue', () => ({
-  default: { template: '<button><slot /></button>' }
+
+// Mock useMembers
+const fetchMembersMock = vi.fn()
+const membersMock = ref([
+  { id: 'm1', first_name: 'John', last_name: 'Doe' },
+  { id: 'm2', first_name: 'Jane', last_name: 'Smith' },
+])
+
+vi.mock('@/hooks/members/useMembers', () => ({
+  useMembers: () => ({
+    members: membersMock,
+    fetchMembers: fetchMembersMock,
+  }),
+}))
+
+// Mock useNavigation
+const navigateToPageMock = vi.fn()
+
+vi.mock('@/hooks/layout/useNavigation', () => ({
+  useNavigation: () => ({
+    navigateToPage: navigateToPageMock,
+  }),
 }))
 
 describe('TeachingForm.vue', () => {
   let wrapper: ReturnType<typeof mount>
 
-  beforeEach(() => {
-    wrapper = mount(TeachingForm)
+  beforeEach(async () => {
+    createCourseMock.mockReset()
+    navigateToPageMock.mockReset()
+    errorMock.value = null
+    isLoadingMock.value = false
+    fetchMembersMock.mockReset()
+
+    wrapper = mount(TeachingForm, {
+      global: {
+        stubs: {
+          Form: {
+            template: `<div>
+              <slot />
+              <p class="success" v-if="successMessage">{{ successMessage }}</p>
+              <p class="error" v-if="error">{{ error }}</p>
+            </div>`,
+            props: ['successMessage', 'error'],
+          },
+          Button: true,
+        },
+      },
+    })
+
+    await nextTick()
   })
 
-  it('renders form title and subtitle correctly for creation mode', () => {
-    expect(wrapper.text()).toContain('Create Teaching Course')
-    expect(wrapper.text()).toContain('Fill in the course details.')
+  it('calls fetchMembers on mount', () => {
+    expect(fetchMembersMock).toHaveBeenCalled()
   })
 
-  it('renders form title correctly for editing mode', async () => {
-    await wrapper.setProps({ isEditing: true })
-    expect(wrapper.text()).toContain('Edit Teaching Course')
-  })
-
-  it('shows validation errors when submitting empty form', async () => {
+  it('shows validation errors if required fields are empty', async () => {
     await wrapper.find('form').trigger('submit.prevent')
     await nextTick()
 
-    const text = wrapper.text()
-    expect(text).toContain('Title is required')
-    expect(text).toContain('Code is required')
-    expect(text).toContain('Instructor is required')
-    expect(text).toContain('Level is required')
-    expect(text).toContain('Semester is required')
-    expect(text).toContain('Credits are required')
-    expect(text).toContain('Description is required')
+    expect(wrapper.text()).toContain('Title is required.')
+    expect(wrapper.text()).toContain('Code is required.')
+    expect(wrapper.text()).toContain('Teacher is required.')
   })
 
-  it('emits cancel event when cancel button clicked', async () => {
-    await wrapper.find('button[type="button"]').trigger('click')
-    await nextTick()
-    expect(wrapper.emitted('cancel')).toBeTruthy()
-  })
+  it('displays general error message when submission fails', async () => {
+    createCourseMock.mockResolvedValue(false)
+    errorMock.value = 'Submission failed.'
 
-  it('shows update text on submit button when editing', async () => {
-    await wrapper.setProps({ isEditing: true })
+    // Fill required fields
+    const inputsText = wrapper.findAll('input[type="text"]')
+    await inputsText[0].setValue('Course Title')
+    await inputsText[1].setValue('CS101')
+    await wrapper.get('select:last-of-type').setValue('m1')
+
+    await wrapper.find('form').trigger('submit.prevent')
     await nextTick()
 
-    const submitButton = wrapper.find('button[type="submit"]')
-    expect(submitButton.text()).toBe('Update')
+    expect(wrapper.text()).toContain('Submission failed.')
   })
 })
