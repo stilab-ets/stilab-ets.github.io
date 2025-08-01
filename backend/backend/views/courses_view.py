@@ -38,11 +38,9 @@ class CoursesView(APIView):
         tags=["Courses"],
     )
     def post(self, request):
-        existing = Course.objects.filter(id=request.data.get("id")) | Course.objects.filter(citekey=request.data.get("citekey"))
-
-        if existing.exists():
+        if Course.objects.filter(id=request.data.get("id")).exists():
             return Response(
-                {"error": "A course with this ID or citekey already exists."},
+                {"error": "A course with this ID already exists."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -60,16 +58,12 @@ class CoursesView(APIView):
         tags=["Courses"],
     )
     def put(self, request):
-        existing = Course.objects.filter(id=request.data.get("id")) | Course.objects.filter(citekey=request.data.get("citekey"))
+        course_id = request.data.get("id")
+        if not course_id:
+            return Response({"error": "Course ID is required."}, status=status.HTTP_400_BAD_REQUEST)
 
-        if not existing.exists():
-            return Response(
-                {"error": "The course you are trying to update does not exists"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        course = existing.first()
-        serializer = CourseSerializer(instance=course, data=request.data)
+        course = get_object_or_404(Course, id=course_id)
+        serializer = CourseSerializer(instance=course, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
