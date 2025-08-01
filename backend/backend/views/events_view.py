@@ -58,12 +58,16 @@ class EventsView(APIView):
         tags=["Events"],
     )
     def put(self, request):
-        event_id = request.data.get("id")
-        if not event_id:
-            return Response({"error": "Event ID is required."}, status=status.HTTP_400_BAD_REQUEST)
+        existing = Event.objects.filter(id=request.data.get("id")) | Event.objects.filter(citekey=request.data.get("citekey"))
 
-        event = get_object_or_404(Event, id=event_id)
-        serializer = EventSerializer(instance=event, data=request.data, partial=True)
+        if not existing.exists():
+            return Response(
+                {"error": "The event you are trying to update does not exists"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        event = existing.first()
+        serializer = EventSerializer(instance=event, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
