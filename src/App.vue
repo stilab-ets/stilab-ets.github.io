@@ -39,6 +39,7 @@ import PublicationForm from './components/publications/PublicationForm.vue'
 import MemberForm from './components/people/MemberForm.vue'
 import ResearchForm from './components/research/ResearchForm.vue'
 import TeachingForm from './components/teaching/TeachingForm.vue'
+import EventForm from './components/events/EventForm.vue'
 
 
 // Add this navigation event handler to your existing script:
@@ -221,6 +222,11 @@ onUnmounted(() => {
           @navigate="setCurrentPage"
         />
         
+        <EventForm
+          v-else-if="currentPage === 'event-form'"
+          @navigate="setCurrentPage"
+        />
+
         <!-- Role-specific Protected Dashboards -->
         <AdminDashboard 
           v-else-if="currentPage === 'admin-dashboard'"

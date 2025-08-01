@@ -4,8 +4,9 @@ import PublicationForm from '@/components/publications/PublicationForm.vue'
 import MemberForm from '@/components/people/MemberForm.vue'
 import ResearchForm from '@/components/research/ResearchForm.vue'
 import TeachingForm from '@/components/teaching/TeachingForm.vue'
+import EventForm from '@/components/events/EventForm.vue'
 
-const currentPage = ref<'form-list' | 'publication-form' | 'member-form' | 'research-form' | 'teaching-form'>('form-list')
+const currentPage = ref<'form-list' | 'publication-form' | 'member-form' | 'research-form' | 'teaching-form' | 'event-form'>('form-list')
 
 function setCurrentPage(page: typeof currentPage.value) {
   currentPage.value = page
@@ -29,6 +30,9 @@ function setCurrentPage(page: typeof currentPage.value) {
         </button>
         <button class="btn btn-primary" @click="setCurrentPage('teaching-form')">
           Teaching Form
+        </button>
+        <button class="btn btn-primary" @click="setCurrentPage('event-form')">
+          Event Form
         </button>
       </div>
     </div>
@@ -58,6 +62,11 @@ function setCurrentPage(page: typeof currentPage.value) {
 
     <TeachingForm
       v-else-if="currentPage === 'teaching-form'"
+      @navigate="setCurrentPage"
+    />
+
+    <EventForm
+      v-else-if="currentPage === 'event-form'"
       @navigate="setCurrentPage"
     />
 

@@ -26,8 +26,8 @@ class EventsView(APIView):
         tags=["Events"],
     )
     def get(self, request):
-        courses = get_list_or_404(Event)
-        serializer = EventSerializer(courses, many=True)
+        events = get_list_or_404(Event)
+        serializer = EventSerializer(events, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -38,11 +38,9 @@ class EventsView(APIView):
         tags=["Events"],
     )
     def post(self, request):
-        existing = Event.objects.filter(id=request.data.get("id")) | Event.objects.filter(citekey=request.data.get("citekey"))
-
-        if existing.exists():
+        if Event.objects.filter(id=request.data.get("id")).exists():
             return Response(
-                {"error": "An event with this ID or citekey already exists."},
+                {"error": "An event with this ID already exists."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -60,16 +58,12 @@ class EventsView(APIView):
         tags=["Events"],
     )
     def put(self, request):
-        existing = Event.objects.filter(id=request.data.get("id")) | Event.objects.filter(citekey=request.data.get("citekey"))
+        event_id = request.data.get("id")
+        if not event_id:
+            return Response({"error": "Event ID is required."}, status=status.HTTP_400_BAD_REQUEST)
 
-        if not existing.exists():
-            return Response(
-                {"error": "The event you are trying to update does not exists"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        event = existing.first()
-        serializer = EventSerializer(instance=event, data=request.data)
+        event = get_object_or_404(Event, id=event_id)
+        serializer = EventSerializer(instance=event, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
