@@ -39,28 +39,17 @@ def test_courses_get_success(mock_get_object, mock_serializer, courses_url):
 @patch("backend.views.courses_view.CourseSerializer")
 @patch("backend.views.courses_view.Course")
 def test_courses_post_success(mock_course_model, mock_serializer, courses_url):
-    mock_queryset_1 = MagicMock()
-    mock_queryset_2 = MagicMock()
-    mock_combined_queryset = MagicMock()
-
-    # Each filter call returns a separate mock
-    mock_course_model.objects.filter.side_effect = [mock_queryset_1, mock_queryset_2]
-
-    # The OR operation between querysets returns a combined queryset mock
-    mock_queryset_1.__or__.return_value = mock_combined_queryset
-    mock_combined_queryset.exists.return_value = False
+    mock_course_model.objects.filter.return_value.exists.return_value = False
 
     mock_course_instance = MagicMock()
     mock_serializer_instance = MagicMock()
 
     mock_serializer_instance.is_valid.return_value = True
     mock_serializer_instance.save.return_value = mock_course_instance
-    mock_serializer_instance.data = {"title": "Dev", "url": "Test"}
+    mock_serializer_instance.data = {"title": "Dev", "url": "http://example.com"}
     mock_serializer.return_value = mock_serializer_instance
 
-    mock_course_model.objects.create.return_value = mock_course_instance
-
-    data = {"title": "Dev", "url": "Test", "year": 2025, "organization": "test"}
+    data = {"title": "Dev", "url": "http://example.com", "year": 2025}
 
     client.force_authenticate(user=MagicMock())
     response = client.post(courses_url, data, format="json")
@@ -68,9 +57,7 @@ def test_courses_post_success(mock_course_model, mock_serializer, courses_url):
     assert response.status_code == status.HTTP_201_CREATED
     assert response.data["title"] == "Dev"
 
-    assert mock_course_model.objects.filter.call_count == 2
-    mock_combined_queryset.exists.assert_called_once()
-
+    mock_course_model.objects.filter.assert_called_once_with(id=None)
     mock_serializer.assert_called_once_with(data=data)
     mock_serializer_instance.is_valid.assert_called_once()
     mock_serializer_instance.save.assert_called_once()
