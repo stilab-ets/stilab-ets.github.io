@@ -5,6 +5,7 @@ import PublicationForm from '@/components/publications/PublicationForm.vue'
 import MemberForm from '@/components/people/MemberForm.vue'
 import ResearchForm from '@/components/research/ResearchForm.vue'
 import TeachingForm from '@/components/teaching/TeachingForm.vue'
+import EventForm from '@/components/events/EventForm.vue'
 
 describe('AdminForm.vue', () => {
   it('renders form list initially', () => {
@@ -12,7 +13,7 @@ describe('AdminForm.vue', () => {
     // Check the buttons for each form exist
     expect(wrapper.text()).toContain('Available Forms')
     expect(wrapper.find('button.btn-primary').exists()).toBe(true)
-    expect(wrapper.findAll('button.btn-primary').length).toBe(4)
+    expect(wrapper.findAll('button.btn-primary').length).toBe(5)
   })
 
   it('shows PublicationForm when clicking Publication Form button', async () => {
@@ -24,6 +25,8 @@ describe('AdminForm.vue', () => {
     expect(wrapper.findComponent(PublicationForm).exists()).toBe(true)
     expect(wrapper.findComponent(MemberForm).exists()).toBe(false)
     expect(wrapper.findComponent(ResearchForm).exists()).toBe(false)
+    expect(wrapper.findComponent(TeachingForm).exists()).toBe(false)
+    expect(wrapper.findComponent(EventForm).exists()).toBe(false)
 
     // Back button should appear
     expect(wrapper.find('button.btn-secondary').exists()).toBe(true)
@@ -38,6 +41,8 @@ describe('AdminForm.vue', () => {
     expect(wrapper.findComponent(MemberForm).exists()).toBe(true)
     expect(wrapper.findComponent(PublicationForm).exists()).toBe(false)
     expect(wrapper.findComponent(ResearchForm).exists()).toBe(false)
+    expect(wrapper.findComponent(TeachingForm).exists()).toBe(false)
+    expect(wrapper.findComponent(EventForm).exists()).toBe(false)
 
     // Back button should appear
     expect(wrapper.find('button.btn-secondary').exists()).toBe(true)
@@ -52,6 +57,8 @@ describe('AdminForm.vue', () => {
     expect(wrapper.findComponent(ResearchForm).exists()).toBe(true)
     expect(wrapper.findComponent(PublicationForm).exists()).toBe(false)
     expect(wrapper.findComponent(MemberForm).exists()).toBe(false)
+    expect(wrapper.findComponent(TeachingForm).exists()).toBe(false)
+    expect(wrapper.findComponent(EventForm).exists()).toBe(false)
 
     // Back button should appear
     expect(wrapper.find('button.btn-secondary').exists()).toBe(true)
@@ -65,6 +72,20 @@ describe('AdminForm.vue', () => {
     expect(wrapper.findComponent(PublicationForm).exists()).toBe(false)
     expect(wrapper.findComponent(MemberForm).exists()).toBe(false)
     expect(wrapper.findComponent(ResearchForm).exists()).toBe(false)
+    expect(wrapper.findComponent(EventForm).exists()).toBe(false)
+    // Back button should appear
+    expect(wrapper.find('button.btn-secondary').exists()).toBe(true)
+  })
+
+  it('shows EventForm when clicking Event Form button', async () => {
+    const wrapper = mount(AdminForm)
+    const eventButton = wrapper.findAll('button.btn-primary')[4]
+    await eventButton.trigger('click')
+    expect(wrapper.findComponent(EventForm).exists()).toBe(true)
+    expect(wrapper.findComponent(PublicationForm).exists()).toBe(false)
+    expect(wrapper.findComponent(MemberForm).exists()).toBe(false)
+    expect(wrapper.findComponent(ResearchForm).exists()).toBe(false)
+    expect(wrapper.findComponent(TeachingForm).exists()).toBe(false)
     // Back button should appear
     expect(wrapper.find('button.btn-secondary').exists()).toBe(true)
   })

@@ -1,505 +1,248 @@
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
-import { XCircleIcon, XIcon, PlusIcon } from 'lucide-vue-next'
-import { useLanguage } from '@/composables/useLanguage';
+import { ref, computed, onMounted } from 'vue'
+import { useEvents } from '@/hooks/events/useEvents'
+import { useMembers } from '@/hooks/members/useMembers'
+import { useNavigation } from '@/hooks/layout/useNavigation'
+import { useLanguage } from '@/composables/useLanguage'
+import Form from '@/components/ui/Form.vue'
+import Button from '@/components/ui/Button.vue'
 
-interface EventForm {
-  title: string
-  type: string
-  speaker: string
-  date: string
-  time: string
-  duration: string
-  location: string
-  description: string
-  requiresRegistration: boolean
-  capacity: number | null
-  registrationDeadline: string
-  registrationUrl: string
-  tags: string[]
-  meetingUrl: string
-  recordingUrl: string
-  visibility: 'public' | 'internal' | 'private'
-}
+const { t } = useLanguage()
+const { createEvent, isLoading, error } = useEvents()
+const { members, fetchMembers } = useMembers()
+const { navigateToPage } = useNavigation()
 
-interface EventErrors {
-  [key: string]: string
-}
+onMounted(fetchMembers)
 
-const props = defineProps<{
-  initialData?: Partial<EventForm>
-  isEditing?: boolean
-}>()
-
-const emit = defineEmits<{
-  submit: [data: EventForm]
-  cancel: []
-}>()
-
-const { t: translations } = useLanguage()
-const t = computed(() => translations.value.forms.events)
-
-const form = reactive<EventForm>({
+const formData = ref({
   title: '',
-  type: '',
-  speaker: '',
+  domain: '',
+  location: '',
   date: '',
   time: '',
-  duration: '',
-  location: '',
   description: '',
-  requiresRegistration: false,
-  capacity: null,
-  registrationDeadline: '',
-  registrationUrl: '',
-  tags: [],
-  meetingUrl: '',
-  recordingUrl: '',
-  visibility: 'public',
-  ...props.initialData
+  speaker: '',
+  registration_url: '',
+  capacity: null as number | null,
+  tags: [] as string[],
+  tagsString: '',
 })
 
-const errors = ref<EventErrors>({})
-const generalError = ref<string>('')
 const isSubmitting = ref(false)
-const newTag = ref('')
+const errors = ref<Record<string, string>>({})
+const successMessage = ref('')
 
-const validateForm = (): boolean => {
+const validateURL = (url: string) =>
+  /^https?:\/\/[^\s$.?#].[^\s]*$/.test(url)
+
+const validateForm = () => {
   errors.value = {}
-  
-  if (!form.title.trim()) {
-    errors.value.title = t.value.validation.titleRequired
+
+  if (!formData.value.title.trim()) {
+    errors.value.title = 'Title is required.'
   }
-  
-  if (!form.type) {
-    errors.value.type = t.value.validation.typeRequired
+
+  if (formData.value.description && formData.value.description.trim().length < 1) {
+    errors.value.description = 'Description must be at least 1 character.'
   }
-  
-  if (!form.date) {
-    errors.value.date = t.value.validation.dateRequired
-  } else {
-    const eventDate = new Date(form.date)
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    
-    if (eventDate < today) {
-      errors.value.date = t.value.validation.dateInPast
+
+  if (formData.value.location && formData.value.location.trim().length < 1) {
+    errors.value.location = 'Location must be at least 1 character.'
+  }
+
+  if (!formData.value.domain) {
+    errors.value.domain = 'Domain is required.'
+  }
+
+  if (!formData.value.speaker) {
+    errors.value.speaker = 'Speaker is required.'
+  }
+
+  if (formData.value.registration_url && !validateURL(formData.value.registration_url)) {
+    errors.value.registration_url = 'Invalid URL format.'
+  }
+
+  if (formData.value.capacity !== null) {
+    if (formData.value.capacity < 0 || formData.value.capacity > 2147483647) {
+      errors.value.capacity = 'Capacity must be between 0 and 2147483647.'
     }
   }
-  
-  if (!form.location.trim()) {
-    errors.value.location = t.value.validation.locationRequired
-  }
-  
-  if (!form.description.trim()) {
-    errors.value.description = t.value.validation.descriptionRequired
-  }
-  
-  if (form.requiresRegistration) {
-    if (form.registrationDeadline) {
-      const deadlineDate = new Date(form.registrationDeadline)
-      const eventDate = new Date(form.date)
-      
-      if (deadlineDate >= eventDate) {
-        errors.value.registrationDeadline = t.value.validation.deadlineAfterEvent
-      }
+
+  if (Array.isArray(formData.value.tags)) {
+    const invalidTags = formData.value.tags.filter(
+      tag => tag.length < 1 || tag.length > 50
+    )
+    if (invalidTags.length > 0) {
+      errors.value.tags = 'Each tag must be between 1 and 50 characters.'
     }
   }
-  
+
   return Object.keys(errors.value).length === 0
 }
 
-const addTag = () => {
-  const tag = newTag.value.trim()
-  if (tag && !form.tags.includes(tag)) {
-    form.tags.push(tag)
-    newTag.value = ''
-  }
-}
 
-const removeTag = (index: number) => {
-  form.tags.splice(index, 1)
-}
-
-const handleSubmit = async () => {
+const submitForm = async () => {
   if (!validateForm()) return
-  
+
   isSubmitting.value = true
-  generalError.value = ''
-  
+  successMessage.value = ''
+
   try {
-    emit('submit', { ...form })
-  } catch (error) {
-    generalError.value = t.value.errors.submitFailed
+    formData.value.tags = formData.value.tagsString
+      .split(',')
+      .map(tag => tag.trim())
+      .filter(tag => tag.length > 0)
+
+    const payload = {
+      title: formData.value.title,
+      domain: formData.value.domain,
+      location: formData.value.location,
+      date: formData.value.date,
+      time: formData.value.time,
+      description: formData.value.description,
+      speaker_id: formData.value.speaker,
+      registration_url: formData.value.registration_url,
+      capacity: formData.value.capacity,
+      tags: formData.value.tags,
+    }
+
+    const success = await createEvent(payload)
+
+    if (success) {
+      successMessage.value = 'Event created successfully! Redirecting...'
+      setTimeout(() => navigateToPage('dashboard'), 2000)
+    } else {
+      errors.value.general = error.value || 'Submission failed.'
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  } catch (err) {
+    console.error('Error creating event:', err)
+    errors.value.general = 'Unexpected error occurred.'
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   } finally {
     isSubmitting.value = false
   }
 }
+
+const formError = computed(() => errors.value.general || error.value)
 </script>
 
 <template>
-  <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg">
-    <div class="px-6 py-4 border-b border-gray-200">
-      <h2 class="text-2xl font-bold text-gray-900">
-        {{ isEditing ? t.titleEdit : t.titleCreate }}
-      </h2>
-      <p class="mt-1 text-sm text-gray-600">
-        {{ t.subtitle }}
-      </p>
-    </div>
+  <Form
+    :title="'Create Event'"
+    :subtitle="'Add a new event to the calendar'"
+    :success-message="successMessage"
+    :error="formError"
+  >
+    <form @submit.prevent="submitForm" class="space-y-8">
+      <!-- Title -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Title *</label>
+        <input
+          v-model="formData.title"
+          type="text"
+          class="w-full p-3 border rounded-lg"
+          :class="{ 'border-red-500': errors.title }"
+        />
+        <p v-if="errors.title" class="text-sm text-red-600">{{ errors.title }}</p>
+      </div>
 
-    <form @submit.prevent="handleSubmit" class="p-6">
-      <div class="space-y-6">
-        <!-- Basic Information -->
-        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          <div class="sm:col-span-2">
-            <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.form.title }}
-            </label>
-            <input
-              id="title"
-              type="text"
-              v-model="form.title"
-              required
-              class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              :class="{ 'border-red-500': errors.title }"
-              :placeholder="t.form.titlePlaceholder"
-            />
-            <p v-if="errors.title" class="mt-1 text-sm text-red-600">{{ errors.title }}</p>
-          </div>
+      <!-- Domain -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Domain *</label>
+        <select v-model="formData.domain" class="w-full p-3 border rounded-lg" :class="{ 'border-red-500': errors.domain }">
+          <option value="">Select type</option>
+          <option value="SMN">Seminar</option>
+          <option value="WRK">Workshop</option>
+          <option value="CNF">Conference</option>
+          <option value="DFN">Defense</option>
+          <option value="MTG">Meeting</option>
+          <option value="CLL">Colloquium</option>
+          <option value="MST">Masterclass</option>
+        </select>
+        <p v-if="errors.domain" class="text-sm text-red-600">{{ errors.domain }}</p>
+      </div>
 
-          <div>
-            <label for="type" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.form.type }}
-            </label>
-            <select
-              id="type"
-              v-model="form.type"
-              required
-              class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              :class="{ 'border-red-500': errors.type }"
-            >
-              <option value="">{{ t.form.selectType }}</option>
-              <option value="seminar">{{ t.eventTypes.seminar }}</option>
-              <option value="workshop">{{ t.eventTypes.workshop }}</option>
-              <option value="conference">{{ t.eventTypes.conference }}</option>
-              <option value="defense">{{ t.eventTypes.defense }}</option>
-              <option value="meeting">{{ t.eventTypes.meeting }}</option>
-              <option value="colloquium">{{ t.eventTypes.colloquium }}</option>
-              <option value="masterclass">{{ t.eventTypes.masterclass }}</option>
-            </select>
-            <p v-if="errors.type" class="mt-1 text-sm text-red-600">{{ errors.type }}</p>
-          </div>
-
-          <div>
-            <label for="speaker" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.form.speaker }}
-            </label>
-            <input
-              id="speaker"
-              type="text"
-              v-model="form.speaker"
-              class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              :placeholder="t.form.speakerPlaceholder"
-            />
-          </div>
-        </div>
-
-        <!-- Date and Time -->
-        <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
-          <div>
-            <label for="date" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.form.date }}
-            </label>
-            <input
-              id="date"
-              type="date"
-              v-model="form.date"
-              required
-              class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              :class="{ 'border-red-500': errors.date }"
-            />
-            <p v-if="errors.date" class="mt-1 text-sm text-red-600">{{ errors.date }}</p>
-          </div>
-
-          <div>
-            <label for="time" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.form.time }}
-            </label>
-            <input
-              id="time"
-              type="time"
-              v-model="form.time"
-              class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            />
-          </div>
-
-          <div>
-            <label for="duration" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.form.duration }}
-            </label>
-            <select
-              id="duration"
-              v-model="form.duration"
-              class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            >
-              <option value="">{{ t.form.selectDuration }}</option>
-              <option value="30">30 {{ t.form.minutes }}</option>
-              <option value="60">1 {{ t.form.hour }}</option>
-              <option value="90">1.5 {{ t.form.hours }}</option>
-              <option value="120">2 {{ t.form.hours }}</option>
-              <option value="180">3 {{ t.form.hours }}</option>
-              <option value="240">4 {{ t.form.hours }}</option>
-              <option value="480">{{ t.form.fullDay }}</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Location -->
+      <!-- Location, Date, Time -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <label for="location" class="block text-sm font-medium text-gray-700 mb-2">
-            {{ t.form.location }}
-          </label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+          <input v-model="formData.location" type="text" class="w-full p-3 border rounded-lg" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+          <input v-model="formData.date" type="date" class="w-full p-3 border rounded-lg" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Time</label>
+          <input v-model="formData.time" type="time" class="w-full p-3 border rounded-lg" />
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+        <textarea v-model="formData.description" rows="4" class="w-full p-3 border rounded-lg"></textarea>
+      </div>
+
+      <!-- Speaker -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Speaker *</label>
+        <select
+          v-model="formData.speaker"
+          class="w-full p-3 border rounded-lg"
+          :class="{ 'border-red-500': errors.speaker }"
+        >
+          <option value="">Select a speaker</option>
+          <option v-for="member in members" :key="member.id" :value="member.id">
+            {{ member.first_name }} {{ member.last_name }}
+          </option>
+        </select>
+        <p v-if="errors.speaker" class="text-sm text-red-600">{{ errors.speaker }}</p>
+      </div>
+
+      <!-- Registration URL + Capacity -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Registration URL</label>
           <input
-            id="location"
-            type="text"
-            v-model="form.location"
-            required
-            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            :class="{ 'border-red-500': errors.location }"
-            :placeholder="t.form.locationPlaceholder"
+            v-model="formData.registration_url"
+            type="url"
+            class="w-full p-3 border rounded-lg"
+            :class="{ 'border-red-500': errors.registration_url }"
           />
-          <p v-if="errors.location" class="mt-1 text-sm text-red-600">{{ errors.location }}</p>
+          <p v-if="errors.registration_url" class="text-sm text-red-600">
+            {{ errors.registration_url }}
+          </p>
         </div>
-
-        <!-- Description -->
         <div>
-          <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
-            {{ t.form.description }}
-          </label>
-          <textarea
-            id="description"
-            rows="4"
-            v-model="form.description"
-            required
-            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            :class="{ 'border-red-500': errors.description }"
-            :placeholder="t.form.descriptionPlaceholder"
-          ></textarea>
-          <p v-if="errors.description" class="mt-1 text-sm text-red-600">{{ errors.description }}</p>
-        </div>
-
-        <!-- Registration Settings -->
-        <div class="border-t pt-6">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">{{ t.registration.title }}</h3>
-          
-          <div class="space-y-4">
-            <div class="flex items-center">
-              <input
-                id="requiresRegistration"
-                type="checkbox"
-                v-model="form.requiresRegistration"
-                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label for="requiresRegistration" class="ml-2 block text-sm text-gray-900">
-                {{ t.registration.required }}
-              </label>
-            </div>
-
-            <div v-if="form.requiresRegistration" class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              <div>
-                <label for="capacity" class="block text-sm font-medium text-gray-700 mb-2">
-                  {{ t.registration.capacity }}
-                </label>
-                <input
-                  id="capacity"
-                  type="number"
-                  v-model="form.capacity"
-                  min="1"
-                  class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  :placeholder="t.registration.capacityPlaceholder"
-                />
-              </div>
-
-              <div>
-                <label for="registrationDeadline" class="block text-sm font-medium text-gray-700 mb-2">
-                  {{ t.registration.deadline }}
-                </label>
-                <input
-                  id="registrationDeadline"
-                  type="date"
-                  v-model="form.registrationDeadline"
-                  class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                />
-              </div>
-
-              <div class="sm:col-span-2">
-                <label for="registrationUrl" class="block text-sm font-medium text-gray-700 mb-2">
-                  {{ t.registration.url }}
-                </label>
-                <input
-                  id="registrationUrl"
-                  type="url"
-                  v-model="form.registrationUrl"
-                  class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  :placeholder="t.registration.urlPlaceholder"
-                />
-                <p class="mt-1 text-xs text-gray-500">{{ t.registration.urlHelp }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tags -->
-        <div>
-          <label for="tags" class="block text-sm font-medium text-gray-700 mb-2">
-            {{ t.form.tags }}
-          </label>
-          <div class="flex flex-wrap gap-2 mb-2">
-            <span
-              v-for="(tag, index) in form.tags"
-              :key="index"
-              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
-            >
-              {{ tag }}
-              <button
-                type="button"
-                @click="removeTag(index)"
-                class="ml-1.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-blue-400 hover:bg-blue-200 hover:text-blue-500 focus:outline-none focus:bg-blue-500 focus:text-white"
-              >
-                <XIcon class="h-3 w-3" />
-              </button>
-            </span>
-          </div>
-          <div class="flex">
-            <input
-              id="tagInput"
-              type="text"
-              v-model="newTag"
-              @keydown.enter.prevent="addTag"
-              @keydown.comma.prevent="addTag"
-              class="block w-full px-3 py-2 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              :placeholder="t.form.tagsPlaceholder"
-            />
-            <button
-              type="button"
-              @click="addTag"
-              class="px-3 py-2 border border-l-0 border-gray-300 rounded-r-md bg-gray-50 text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <PlusIcon class="h-4 w-4" />
-            </button>
-          </div>
-          <p class="mt-1 text-xs text-gray-500">{{ t.form.tagsHelp }}</p>
-        </div>
-
-        <!-- Additional Links -->
-        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          <div>
-            <label for="meetingUrl" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.form.meetingUrl }}
-            </label>
-            <input
-              id="meetingUrl"
-              type="url"
-              v-model="form.meetingUrl"
-              class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              :placeholder="t.form.meetingUrlPlaceholder"
-            />
-          </div>
-
-          <div>
-            <label for="recordingUrl" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.form.recordingUrl }}
-            </label>
-            <input
-              id="recordingUrl"
-              type="url"
-              v-model="form.recordingUrl"
-              class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              :placeholder="t.form.recordingUrlPlaceholder"
-            />
-          </div>
-        </div>
-
-        <!-- Visibility Settings -->
-        <div class="border-t pt-6">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">{{ t.visibility.title }}</h3>
-          
-          <div class="space-y-3">
-            <div class="flex items-center">
-              <input
-                id="isPublic"
-                type="radio"
-                value="public"
-                v-model="form.visibility"
-                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-              />
-              <label for="isPublic" class="ml-2 block text-sm text-gray-900">
-                {{ t.visibility.public }}
-              </label>
-            </div>
-            
-            <div class="flex items-center">
-              <input
-                id="isInternal"
-                type="radio"
-                value="internal"
-                v-model="form.visibility"
-                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-              />
-              <label for="isInternal" class="ml-2 block text-sm text-gray-900">
-                {{ t.visibility.internal }}
-              </label>
-            </div>
-            
-            <div class="flex items-center">
-              <input
-                id="isPrivate"
-                type="radio"
-                value="private"
-                v-model="form.visibility"
-                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-              />
-              <label for="isPrivate" class="ml-2 block text-sm text-gray-900">
-                {{ t.visibility.private }}
-              </label>
-            </div>
-          </div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Capacity</label>
+          <input v-model.number="formData.capacity" type="number" min="1" class="w-full p-3 border rounded-lg" />
         </div>
       </div>
 
-      <!-- Error Display -->
-      <div v-if="generalError" class="mt-6 rounded-md bg-red-50 p-4">
-        <div class="flex">
-          <div class="flex-shrink-0">
-            <XCircleIcon class="h-5 w-5 text-red-400" />
-          </div>
-          <div class="ml-3">
-            <h3 class="text-sm font-medium text-red-800">
-              {{ generalError }}
-            </h3>
-          </div>
-        </div>
+      <!-- Tags -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Tags (comma-separated)</label>
+        <input
+          v-model="formData.tagsString"
+          type="text"
+          class="w-full p-3 border rounded-lg"
+          :class="{ 'border-red-500': errors.tags }"
+        />
+        <p v-if="errors.tags" class="text-sm text-red-600">{{ errors.tags }}</p>
       </div>
 
-      <!-- Submit Buttons -->
-      <div class="mt-8 flex justify-end space-x-3">
-        <button
-          type="button"
-          @click="$emit('cancel')"
-          class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-        >
-          {{ t.form.cancel }}
-        </button>
-        
-        <button
-          type="submit"
-          :disabled="isSubmitting"
-          class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {{ isSubmitting ? t.form.submitting : (isEditing ? t.form.update : t.form.create) }}
-        </button>
+      <!-- Actions -->
+      <div class="flex flex-col md:flex-row justify-between gap-4 pt-6">
+        <Button type="submit" :disabled="isSubmitting || isLoading" class="w-full md:w-auto">
+          <span v-if="isSubmitting || isLoading">Submitting...</span>
+          <span v-else>Create Event</span>
+        </Button>
+        <Button type="button" variant="secondary" class="w-full md:w-auto" @click="navigateToPage('events')">
+          Cancel
+        </Button>
       </div>
     </form>
-  </div>
+  </Form>
 </template>

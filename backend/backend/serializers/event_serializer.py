@@ -4,6 +4,7 @@ from rest_framework import serializers
 
 from ..models.event import Event
 from ..models.event_participant import EventParticipant
+from ..models.member import Member
 from ..serializers.member_serializer import MemberSerializer
 
 
@@ -16,10 +17,10 @@ class EventParticipantSerializer(serializers.ModelSerializer):
 
 
 class EventSerializer(serializers.ModelSerializer):
-    participants = serializers.SerializerMethodField()
+    participants = serializers.SerializerMethodField(read_only=True)
     speaker = MemberSerializer(read_only=True)
-    domain = serializers.SerializerMethodField()
-    is_upcoming = serializers.SerializerMethodField()
+    speaker_id = serializers.PrimaryKeyRelatedField(queryset=Member.objects.all(), source="speaker", write_only=True)
+    is_upcoming = serializers.SerializerMethodField(read_only=True)
 
     def get_participants(self, obj):
         participants = EventParticipant.objects.filter(event=obj)
@@ -43,6 +44,7 @@ class EventSerializer(serializers.ModelSerializer):
             "location",
             "time",
             "speaker",
+            "speaker_id",
             "registration_url",
             "capacity",
             "tags",
