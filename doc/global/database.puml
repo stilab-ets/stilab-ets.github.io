@@ -108,10 +108,14 @@ entity AwardRecipient {
 
 entity Course {
   primary_key(id): UUID
-  foreign_key(member_id): UUID
-  url: VARCHAR
+  foreign_key(teacher_id): UUID
   title: VARCHAR
-  year: VARCHAR
+  url: VARCHAR
+  year: INTEGER
+  code: VARCHAR
+  level: VARCHAR
+  semester: VARCHAR
+  description: TEXT
 }
 
 User ||--o{ Member : owns >
