@@ -17,6 +17,8 @@ rectangle "Système de gestion du labo" {
   usecase "CU05 - Authentification et gestion de session" as CU05
   usecase "CU06 - Gérer son profil personnel" as CU06
   usecase "CU07 - Recherche et filtrage de contenu" as CU07
+  usecase "CU08 - Gérer les prix" as CU08
+  usecase "CU09 - Gérer les cours" as CU09
 }
 
 ' Admin-specific use cases
@@ -29,6 +31,8 @@ Admin --> CU03
 Admin --> CU05
 Admin --> CU06
 Admin --> CU07
+Admin --> CU08
+Admin --> CU09
 
 ' Membre use cases
 Membre --> CU05
