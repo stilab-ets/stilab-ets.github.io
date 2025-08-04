@@ -41,6 +41,11 @@ interface UseAwardsReturn {
   oldestAwardYear: Readonly<Ref<number>>
   totalAwards: Readonly<Ref<number>>
   yearsOfRecognition: Readonly<Ref<number>>
+  getAwardById: (id: string) => Award | undefined
+  createAward: (data: Partial<Award>) => Promise<boolean>
+  updateAward: (id: string, data: Partial<Award>) => Promise<boolean>
+  deleteAward: (id: string) => Promise<boolean>
+
 }
 
 export function useAwards(options: UseAwardsOptions = {}): UseAwardsReturn {
@@ -124,6 +129,64 @@ export function useAwards(options: UseAwardsOptions = {}): UseAwardsReturn {
     }
   }
 
+  const getAwardById = (id: string): Award | undefined => {
+    return awards.value.find(r => r.id === id)
+  }
+
+  const createAward = async (data: Partial<Award>): Promise<boolean> => {
+    isLoading.value = true
+    error.value = null
+    
+    try {
+      const response = await mainAPI.createAward(data)
+      awards.value.push(response.data)
+      return true
+    } catch (err: any) {
+      error.value = err.message || 'Failed to create an award'
+      console.error('Error creating an award:', err)
+      return false
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  const updateAward = async (id: string, data: Partial<Award>): Promise<boolean> => {
+    isLoading.value = true
+    error.value = null
+    
+    try {
+      const response = await mainAPI.updateAward(id, data)
+      const index = awards.value.findIndex(r => r.id === id)
+      if (index !== -1) {
+        awards.value[index] = response.data
+      }
+      return true
+    } catch (err: any) {
+      error.value = err.message || 'Failed to update award'
+      console.error('Error updating award:', err)
+      return false
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  const deleteAward = async (id: string): Promise<boolean> => {
+    isLoading.value = true
+    error.value = null
+    
+    try {
+      await mainAPI.deleteAward(id)
+      awards.value = awards.value.filter(r => r.id !== id)
+      return true
+    } catch (err: any) {
+      error.value = err.message || 'Failed to delete award'
+      console.error('Error deleting award:', err)
+      return false
+    } finally {
+      isLoading.value = false
+    }
+  }
+
   const refreshAwards = async (): Promise<void> => {
     await fetchAwards()
   }
@@ -139,6 +202,10 @@ export function useAwards(options: UseAwardsOptions = {}): UseAwardsReturn {
     availableYears,
     oldestAwardYear,
     totalAwards,
-    yearsOfRecognition
+    yearsOfRecognition,
+    getAwardById,
+    createAward,
+    updateAward,
+    deleteAward,
   }
 }

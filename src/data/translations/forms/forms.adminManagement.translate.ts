@@ -12,6 +12,7 @@ export interface AdminManagementFormTranslations {
     users: string
     system: string
     content: string
+    availableForms: string
   }
   form: {
     labName: string
@@ -25,6 +26,13 @@ export interface AdminManagementFormTranslations {
     saving: string
     save: string
     cancel: string
+    publicationForm: string
+    memberForm: string
+    researchForm: string
+    teachingForm: string
+    eventForm: string
+    awardForm: string
+
   }
   contentManagement: {
     title: string
@@ -299,7 +307,8 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       maintenance: 'Maintenance',
       users: 'Utilisateurs',
       system: 'Système',
-      content: 'Contenu'
+      content: 'Contenu',
+      availableForms: 'Formulaires disponibles',
     },
     form: {
       labName: 'Nom du laboratoire',
@@ -312,7 +321,13 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       requireApproval: 'Approbation requise',
       saving: "Sauvegarde en cours...",
       save: "Sauvegarder",
-      cancel: "Annuler"
+      cancel: "Annuler",
+      publicationForm: "Formulaire de publication",
+      memberForm: "Formulaire de membre",
+      researchForm: "Formulaire de recherche",
+      teachingForm: "Formulaire d'enseignement",
+      eventForm: "Formulaire d'évenement",
+      awardForm: "Formulaire de prix"
     },
     contentManagement: {
       title: 'Gestion du contenu',
@@ -586,7 +601,8 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       maintenance: 'Maintenance',
       users: 'Users',
       system: 'System',
-      content: 'Content'
+      content: 'Content',
+      availableForms: 'Available Forms',
     },
     form: {
       labName: 'Laboratory Name',
@@ -599,7 +615,13 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       requireApproval: 'Require Approval',
       saving: "Saving...",
       save: "Save",
-      cancel: "Cancel"
+      cancel: "Cancel",
+      publicationForm: "Publication Form",
+      memberForm: "Member Form",
+      researchForm: "Research Form",
+      teachingForm: "Teaching Form",
+      eventForm: "Event Form",
+      awardForm: "Award Form"
     },
     contentManagement: {
       title: 'Content Management',
