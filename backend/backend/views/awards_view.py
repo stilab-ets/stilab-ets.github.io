@@ -38,14 +38,16 @@ class AwardsView(APIView):
         tags=["Awards"],
     )
     def post(self, request):
-        existing = Award.objects.filter(id=request.data.get("id")) | Award.objects.filter(citekey=request.data.get("citekey"))
+        existing = Award.objects.filter(id=request.data.get("id"))
 
         if existing.exists():
             return Response(
-                {"error": "An award with this ID or citekey already exists."},
+                {"error": "An award with this ID."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        print("HELLOW ORLDLD")
+        print(request.data)
         serializer = AwardSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -60,7 +62,7 @@ class AwardsView(APIView):
         tags=["Awards"],
     )
     def put(self, request):
-        existing = Award.objects.filter(id=request.data.get("id")) | Award.objects.filter(citekey=request.data.get("citekey"))
+        existing = Award.objects.filter(id=request.data.get("id"))
 
         if not existing.exists():
             return Response(

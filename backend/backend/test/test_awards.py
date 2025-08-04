@@ -57,12 +57,12 @@ def test_awards_post_success(mock_award_model, mock_serializer, awards_url):
 
     mock_serializer_instance.is_valid.return_value = True
     mock_serializer_instance.save.return_value = mock_award_instance
-    mock_serializer_instance.data = {"title": "Dev", "url": "Test", "year": 2025, "organization": "test"}
+    mock_serializer_instance.data = {"title": "Dev", "url": "Test", "year": 2025, "organization": "test", "recipients": []}
     mock_serializer.return_value = mock_serializer_instance
 
     mock_award_model.objects.create.return_value = mock_award_instance
 
-    data = {"title": "Dev", "url": "Test", "year": 2025, "organization": "test"}
+    data = {"title": "Dev", "url": "Test", "year": 2025, "organization": "test", "recipients": []}
 
     client.force_authenticate(user=MagicMock())
     response = client.post(awards_url, data, format="json")
@@ -70,7 +70,7 @@ def test_awards_post_success(mock_award_model, mock_serializer, awards_url):
     assert response.status_code == status.HTTP_201_CREATED
     assert response.data["title"] == "Dev"
 
-    assert mock_award_model.objects.filter.call_count == 2
+    assert mock_award_model.objects.filter.call_count == 1
     mock_combined_queryset.exists.assert_called_once()
 
     mock_serializer.assert_called_once_with(data=data)
@@ -106,7 +106,7 @@ def test_awards_put_success(mock_award_model, mock_serializer, awards_url):
     assert response.status_code == status.HTTP_200_OK
     assert response.data["title"] == "Dev"
 
-    assert mock_award_model.objects.filter.call_count == 2
+    assert mock_award_model.objects.filter.call_count == 1
     mock_combined_queryset.exists.assert_called_once()
     mock_combined_queryset.first.assert_called_once()
 
