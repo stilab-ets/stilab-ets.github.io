@@ -46,7 +46,6 @@ class AwardsView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        print("HELLOW ORLDLD")
         print(request.data)
         serializer = AwardSerializer(data=request.data)
         if serializer.is_valid():

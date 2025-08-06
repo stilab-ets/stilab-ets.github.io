@@ -6,18 +6,12 @@ from ..models.award_recipient import AwardRecipient
 from ..models.member import Member
 
 
-class AwardRecipientSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AwardRecipient
-        fields = ["member"]
+class AwardRecipientSerializer(serializers.Serializer):
+    id = serializers.UUIDField()
 
 
 class AwardSerializer(serializers.ModelSerializer):
-    recipients = serializers.SerializerMethodField()
-
-    def get_recipients(self, obj):
-        recipients = AwardRecipient.objects.filter(award=obj)
-        return AwardRecipientSerializer(recipients, many=True).data
+    recipients = AwardRecipientSerializer(many=True, required=False)
 
     class Meta:
         model = Award
