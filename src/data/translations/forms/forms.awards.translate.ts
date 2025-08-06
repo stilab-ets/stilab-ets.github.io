@@ -5,7 +5,7 @@ export interface AwardsFormTranslations {
   sections: {
     basic: string
     details: string
-    recipient: string
+    recipients: string
     recognition: string
   }
   form: {
@@ -16,7 +16,7 @@ export interface AwardsFormTranslations {
     organization: string
     organizationPlaceholder: string
     year: string
-    recipient: string
+    recipients: string
     selectRecipient: string
     coRecipients: string
     selectCoRecipients: string
@@ -101,7 +101,7 @@ export const awardsFormTranslations: Record<'fr' | 'en', AwardsFormTranslations>
     sections: {
       basic: 'Informations de base',
       details: 'Détails du prix',
-      recipient: 'Lauréat',
+      recipients: 'Lauréats',
       recognition: 'Reconnaissance'
     },
     form: {
@@ -112,7 +112,7 @@ export const awardsFormTranslations: Record<'fr' | 'en', AwardsFormTranslations>
       organization: 'Organisation',
       organizationPlaceholder: 'Organisme décernant le prix',
       year: 'Année',
-      recipient: 'Lauréat principal',
+      recipients: 'Lauréats principaux',
       selectRecipient: 'Sélectionnez le lauréat',
       coRecipients: 'Co-lauréats',
       selectCoRecipients: 'Sélectionnez les co-lauréats',
@@ -195,7 +195,7 @@ export const awardsFormTranslations: Record<'fr' | 'en', AwardsFormTranslations>
     sections: {
       basic: 'Basic Information',
       details: 'Award Details',
-      recipient: 'Recipient',
+      recipients: 'Recipients',
       recognition: 'Recognition'
     },
     form: {
@@ -206,7 +206,7 @@ export const awardsFormTranslations: Record<'fr' | 'en', AwardsFormTranslations>
       organization: 'Organization',
       organizationPlaceholder: 'Awarding organization',
       year: 'Year',
-      recipient: 'Main Recipient',
+      recipients: 'Recipients',
       selectRecipient: 'Select recipient',
       coRecipients: 'Co-recipients',
       selectCoRecipients: 'Select co-recipients',

@@ -1,8 +1,21 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
+
+import { useMembers } from '@/hooks/members/useMembers'
+import { useAwards } from '@/hooks/awards/useAwards'
 import { useLanguage } from '@/composables/useLanguage'
+import { useNavigation } from '@/hooks/layout/useNavigation'
+
+import Form from '@/components/ui/Form.vue'
 import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
+
+const { t } = useLanguage()
+const { createAward, isLoading, error } = useAwards()
+const { members, fetchMembers } = useMembers()
+const { navigateToPage } = useNavigation()
+
+onMounted(fetchMembers)
 
 interface Props {
   isEditing?: boolean
@@ -19,15 +32,13 @@ const emit = defineEmits<{
   cancel: []
 }>()
 
-const { t } = useLanguage()
 
 // Form state
 const formData = ref({
   title: '',
-  category: '',
   organization: '',
   year: new Date().getFullYear().toString(),
-  recipient: '',
+  recipients: [] as string[],
   description: '',
   url: ''
 })
@@ -35,14 +46,7 @@ const formData = ref({
 const errors = ref<Record<string, string>>({})
 const isSubmitting = ref(false)
 const generalError = ref('')
-
-// Mock data for recipients
-const mockMembers = [
-  { id: '1', name: 'Dr. Marie Dubois' },
-  { id: '2', name: 'Prof. Jean Martin' },
-  { id: '3', name: 'Dr. Sarah Chen' },
-  { id: '4', name: 'Alex Rodriguez' }
-]
+const successMessage = ref('')
 
 // Initialize form with initial data
 watch(() => props.initialData, (newData) => {
@@ -59,10 +63,6 @@ const validateForm = () => {
     errors.value.title = t.value.forms.awards.validation.titleRequired
   }
   
-  if (!formData.value.category) {
-    errors.value.category = t.value.forms.awards.validation.categoryRequired
-  }
-  
   if (!formData.value.organization.trim()) {
     errors.value.organization = t.value.forms.awards.validation.organizationRequired
   }
@@ -77,24 +77,52 @@ const validateForm = () => {
     }
   }
   
-  if (!formData.value.recipient) {
-    errors.value.recipient = t.value.forms.awards.validation.recipientRequired
+  if (formData.value.recipients.length == 0) {
+    errors.value.recipients = t.value.forms.awards.validation.recipientRequired
   }
   
   return Object.keys(errors.value).length === 0
 }
 
 // Form submission
-const handleSubmit = async () => {
+const submitForm = async () => {
   if (!validateForm()) return
   
   isSubmitting.value = true
   generalError.value = ''
   
   try {
-    emit('submit', { ...formData.value })
+    const payload = {
+      ...formData.value,
+      recipients: formData.value.recipients.map(id => ({ id })),
+    }
+
+    const success = await createAward(payload)
+
+    
+    if (success) {
+      successMessage.value = 'Award created successfully! Redirecting...'
+
+      formData.value = { 
+        title: '',
+        organization: '',
+        year: '',
+        recipients: [],
+        description: '',
+        url: ''
+      }
+
+      setTimeout(() => navigateToPage('dashboard'), 2000)
+    }
+    else {
+      errors.value.general = error.value || 'Submission failed.'
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
   } catch (error) {
-    generalError.value = t.value.forms.awards.errors.submitFailed
+
+    errors.value.general = 'Unexpected error occurred.'
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+
   } finally {
     isSubmitting.value = false
   }
@@ -115,17 +143,19 @@ const submitButtonText = computed(() =>
     ? t.value.forms.awards.form.update
     : t.value.forms.awards.form.create
 )
+
+const formError = computed(() => errors.value.general || error.value)
+
 </script>
 
 <template>
-  <div class="max-w-4xl mx-auto p-6">
-    <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-900">{{ formTitle }}</h1>
-      <p class="text-lg text-gray-600 mt-2">{{ t.forms.awards.subtitle }}</p>
-    </div>
-
-    <form @submit.prevent="handleSubmit" class="space-y-8">
-      <!-- Basic Information -->
+  <Form
+    :title="t.forms.awards.titleCreate"
+    :subtitle="t.forms.awards.subtitle"
+    :success-message="successMessage"
+    :error="formError"
+  >
+    <form @submit.prevent="submitForm" class="space-y-8">
       <Card>
         <h2 class="text-xl font-semibold text-gray-900 mb-6">
           {{ t.forms.awards.sections.basic }}
@@ -146,29 +176,6 @@ const submitButtonText = computed(() =>
             />
             <p v-if="errors.title" class="text-red-600 text-sm mt-1">
               {{ errors.title }}
-            </p>
-          </div>
-
-          <div>
-            <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ t.forms.awards.form.category }}
-            </label>
-            <select
-              id="category"
-              v-model="formData.category"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              :class="{ 'border-red-500': errors.category }"
-            >
-              <option value="">{{ t.forms.awards.form.selectCategory }}</option>
-              <option value="publication">{{ t.forms.awards.categories.publication }}</option>
-              <option value="research">{{ t.forms.awards.categories.research }}</option>
-              <option value="teaching">{{ t.forms.awards.categories.teaching }}</option>
-              <option value="service">{{ t.forms.awards.categories.service }}</option>
-              <option value="career">{{ t.forms.awards.categories.career }}</option>
-              <option value="excellence">{{ t.forms.awards.categories.excellence }}</option>
-            </select>
-            <p v-if="errors.category" class="text-red-600 text-sm mt-1">
-              {{ errors.category }}
             </p>
           </div>
 
@@ -247,53 +254,45 @@ const submitButtonText = computed(() =>
       <!-- Recipient Information -->
       <Card>
         <h2 class="text-xl font-semibold text-gray-900 mb-6">
-          {{ t.forms.awards.sections.recipient }}
+          {{ t.forms.awards.sections.recipients }}
         </h2>
-        
         <div>
-          <label for="recipient" class="block text-sm font-medium text-gray-700 mb-2">
-            {{ t.forms.awards.form.recipient }}
-          </label>
           <select
-            id="recipient"
-            v-model="formData.recipient"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            :class="{ 'border-red-500': errors.recipient }"
+            id="recipients"
+            v-model="formData.recipients"
+            multiple
+            class="w-full p-3 border rounded-lg h-40"
           >
-            <option value="">{{ t.forms.awards.form.selectRecipient }}</option>
-            <option v-for="member in mockMembers" :key="member.id" :value="member.id">
-              {{ member.name }}
+            <option
+              v-for="member in members"
+              :key="member.id"
+              :value="member.id"
+            >
+              {{ member.first_name }} {{ member.last_name }}
             </option>
           </select>
-          <p v-if="errors.recipient" class="text-red-600 text-sm mt-1">
-            {{ errors.recipient }}
-          </p>
+        </div>
+
+        <!-- Error Display -->
+        <div v-if="generalError" class="bg-red-50 border border-red-200 rounded-lg p-4">
+          <p class="text-red-800">{{ generalError }}</p>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex flex-col md:flex-row justify-between gap-4 pt-6">
+          <Button type="submit" :disabled="isSubmitting || isLoading" class="w-full md:w-auto">
+              {{ isSubmitting ? t.forms.awards.form.submitting : submitButtonText }}
+          </Button>
+
+          <Button 
+            type="button" 
+            variant="secondary" 
+            class="w-full md:w-auto" @click="navigateToPage('awards')">
+
+            {{ t.forms.awards.form.cancel }}
+          </Button>
         </div>
       </Card>
-
-      <!-- Error Display -->
-      <div v-if="generalError" class="bg-red-50 border border-red-200 rounded-lg p-4">
-        <p class="text-red-800">{{ generalError }}</p>
-      </div>
-
-      <!-- Form Actions -->
-      <div class="flex justify-end space-x-4">
-        <Button
-          type="button"
-          variant="secondary"
-          @click="handleCancel"
-          :disabled="isSubmitting"
-        >
-          {{ t.forms.awards.form.cancel }}
-        </Button>
-        
-        <Button
-          type="submit"
-          :disabled="isSubmitting"
-        >
-          {{ isSubmitting ? t.forms.awards.form.submitting : submitButtonText }}
-        </Button>
-      </div>
     </form>
-  </div>
+  </Form>
 </template>
