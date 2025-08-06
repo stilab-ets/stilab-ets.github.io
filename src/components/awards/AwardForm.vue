@@ -258,6 +258,7 @@ const formError = computed(() => errors.value.general || error.value)
         </h2>
         <div>
           <select
+            id="recipients"
             v-model="formData.recipients"
             multiple
             class="w-full p-3 border rounded-lg h-40"

@@ -31,6 +31,7 @@ export interface Award {
   amount?: number | null;
   url?: string | null;
   year?: number | null;
+  organization?: string | null;
 }
 
 // Course interface matching SwaggerDoc

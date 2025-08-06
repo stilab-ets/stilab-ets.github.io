@@ -3,9 +3,21 @@ import { mount } from '@vue/test-utils'
 import AwardForm from '@/components/awards/AwardForm.vue'
 import { nextTick, ref } from 'vue'
 
+
+vi.mock('@/composables/useAuth', () => ({
+  useAuth: () => ({
+    isLoggedIn: ref(true),
+    user: ref({ id: 1, name: 'Test User' }),
+  }),
+}))
+
 vi.mock('@/composables/useLanguage', () => ({
   useLanguage: () => ({
     t: ref({
+      common: {
+        mustBeLogged: 'You must be logged in',
+        loginHere: 'Login here',
+      },
       forms: {
         awards: {
           titleCreate: 'Create Award',
@@ -77,20 +89,39 @@ describe('AwardForm.vue', () => {
     await nextTick()
 
     expect(wrapper.text()).toContain('Title is required.')
-    expect(wrapper.text()).toContain('Category is required.')
     expect(wrapper.text()).toContain('Organization is required.')
   })
 
   it('validates invalid year', async () => {
     await wrapper.find('#title').setValue('Best Research Paper')
-    await wrapper.find('#category').setValue('research')
     await wrapper.find('#organization').setValue('IEEE')
     await wrapper.find('#year').setValue('1800')
-    await wrapper.find('#recipient').setValue('1')
+    await wrapper.find('#recipients').setValue('1')
 
     await wrapper.find('form').trigger('submit.prevent')
     await nextTick()
 
     expect(wrapper.text()).toContain('Invalid year.')
+  })
+
+  it('initializes form with props.initialData', async () => {
+    const wrapperWithProps = mount(AwardForm, {
+      props: {
+        initialData: {
+          title: 'Existing Title',
+          organization: 'ACM',
+          year: '2023',
+          recipients: ['1'],
+          url: 'https://example.com',
+          description: 'Existing award',
+        }
+      }
+    })
+
+    await nextTick()
+
+    expect(wrapperWithProps.find('#title').element.value).toBe('Existing Title')
+    expect(wrapperWithProps.find('#organization').element.value).toBe('ACM')
+    expect(wrapperWithProps.find('#year').element.value).toBe('2023')
   })
 })

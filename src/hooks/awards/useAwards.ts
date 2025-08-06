@@ -5,20 +5,18 @@ import type { Award } from '@/services/MainAPI'
 
 export interface AwardRecipient {
   id: string
-  member: {
-    first_name: string
-    last_name: string
-    role: string
-    email: string | null
-    phone?: string | null
-    biography?: string | null
-    research_domain?: string | null
-    image_url?: string | null
-    github_url?: string | null
-    linkedin_url?: string | null
-    personal_website?: string | null
-    status?: string | null
-  }
+  first_name: string
+  last_name: string
+  role: string
+  email: string | null
+  phone?: string | null
+  biography?: string | null
+  research_domain?: string | null
+  image_url?: string | null
+  github_url?: string | null
+  linkedin_url?: string | null
+  personal_website?: string | null
+  status?: string | null
 }
 
 export interface ExtendedAward extends Award {
@@ -58,7 +56,7 @@ export function useAwards(options: UseAwardsOptions = {}): UseAwardsReturn {
 
   // Computed values
   const uniqueOrganizations = computed(() => {
-    return [...new Set(awards.value.map(award => award.award_type || 'Unknown'))].sort()
+    return [...new Set(awards.value.map(award => award.organization || 'Unknown'))].sort()
   })
 
   const awardedMembers = computed(() => {
@@ -66,7 +64,7 @@ export function useAwards(options: UseAwardsOptions = {}): UseAwardsReturn {
     awards.value.forEach(award => {
       if (award.recipients) {
         award.recipients.forEach(recipient => {
-          const fullName = `${recipient.member.first_name} ${recipient.member.last_name}`
+          const fullName = `${recipient.first_name} ${recipient.last_name}`
           if (!members.includes(fullName)) {
             members.push(fullName)
           }
