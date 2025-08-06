@@ -281,8 +281,7 @@ const formError = computed(() => errors.value.general || error.value)
         <!-- Form Actions -->
         <div class="flex flex-col md:flex-row justify-between gap-4 pt-6">
           <Button type="submit" :disabled="isSubmitting || isLoading" class="w-full md:w-auto">
-            <span v-if="isSubmitting || isLoading">Submitting...</span>
-            <span v-else>Create Award</span>
+              {{ isSubmitting ? t.forms.awards.form.submitting : submitButtonText }}
           </Button>
 
           <Button 
@@ -290,7 +289,7 @@ const formError = computed(() => errors.value.general || error.value)
             variant="secondary" 
             class="w-full md:w-auto" @click="navigateToPage('awards')">
 
-            Cancel
+            {{ t.forms.awards.form.cancel }}
           </Button>
         </div>
       </Card>
