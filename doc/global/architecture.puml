@@ -1,20 +1,20 @@
 @startuml
 !define RECTANGLE class
 
-title Architecture de l'application Web du projet PFE-025
+title STIL overview architecture
 
-node "Render (Hébergement Backend)" {
-    node "Application Backend" as BE {
+node "Render" {
+    node "Backend" as BE {
         component "Django REST API" as Django
     }
-    node "Application Frontend" as FE {
+    node "Frontend" as FE {
         component "Vue.js\nTailwindCSS" as Vue
     }
 
-    database "Base de données PostgreSQL" as DB
+    database "PostgreSQL Database" as DB
 }
 
-Vue --> Django : Requêtes HTTP\n(Axios / Fetch)
-Django --> DB : Requêtes SQL\n(ORM Django)
+Vue --> Django : HTTP Request\n(Axios / Fetch)
+Django --> DB : SQL Request\n(ORM Django)
 
 @enduml

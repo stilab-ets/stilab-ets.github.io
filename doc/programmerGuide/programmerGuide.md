@@ -1,8 +1,6 @@
 # Programmer Guide
 
 > **Project Name:** Software Technology and Intelligence Research Lab (STIL)  
-> **Version:** 1.0  
-> **Last updated:** 2025-07-17  
 > **Author(s):** 
 The Minh Luong, Jean-Philippe Mongeau, Francis Leroux-Contant, Alexander Barcenes Flores, Hugo Rhéaume-Simard 
 
@@ -13,8 +11,8 @@ The Minh Luong, Jean-Philippe Mongeau, Francis Leroux-Contant, Alexander Barcene
 [1. Introduction](#1-introduction)  
 [2. Technologies Used](#2-technologies-used)   
 [3. Architecture Overview](#3-architecture-overview)  
-[4. Development Environment Setup](#4-development-environment-setup)  
-[5. Project Structure](#5-project-structure)  
+[4. Project Structure](#4-project-structure)  
+[5. Development Environment Setup](#5-development-environment-setup)  
 [6. Importing data](#6-importing-data)   
 [7. Using the API](#7-using-the-api)  
 [8. Contribution Guidelines](#8-contribution-guidelines)  
@@ -44,33 +42,52 @@ An interactive web platform to centralize, manage, and showcase the scientific a
 
 High-level description of the system architecture.
 
-```plantuml
-@startuml
-!define RECTANGLE class
+![architecture](assets/architecture.png)
 
-title STIL overview architecture
+## 4. Project Structure
+### Backend
+```bash
+backend/
+├─ backend/
+│   ├─ admin/
+│   ├─ management/
+│   ├─ migrations/
+│   ├─ models/
+│   ├─ serializers/
+│   ├─ services/
+│   ├─ templates/
+│   ├─ test/
+│   ├─ views/
+├─ config/
+├─ logs/
+└
+```
 
-node "Docker" {
-    node "Backend" as BE {
-        component "Django REST API" as Django
-    }
-    node "Frontend" as FE {
-        component "Vue.js\nTailwindCSS" as Vue
-    }
-
-    database "PostgreSQL Database" as DB
-}
-
-Vue --> Django : HTTP Request\n(Axios / Fetch)
-Django --> DB : SQL Request\n(ORM Django)
-
-@enduml
-
+### Frontend
+```bash
+src/
+├─ assets/
+├─ components/
+│  └─ publications/
+│      ├─ index.ts
+│      ├─ PublicationCard.vue
+│      ├─ PublicationSortOptions.vue
+│      └─ PublicationsPage.vue
+├─ composables/
+├─ data/
+├─ middleware/
+├─ test/
+│  └─ publications/
+│      ├─ index.ts
+│      ├─ PublicationCard.spec.ts
+│      ├─ PublicationSortOptions.spec.ts
+│      └─ PublicationsPage.spec.ts
+└
 ```
 
 ---
 
-## 4. Development Environment Setup
+## 5. Development Environment Setup
 
 Steps to set up the project locally.   
 Clone the project
@@ -155,47 +172,6 @@ npm run test
 - Python 3.13
 - Docker
 ---
-
-## 5. Project Structure
-### Backend
-```bash
-backend/
-├─ backend/
-│   ├─ admin/
-│   ├─ management/
-│   ├─ migrations/
-│   ├─ models/
-│   ├─ serializers/
-│   ├─ services/
-│   ├─ templates/
-│   ├─ test/
-│   ├─ views/
-├─ config/
-├─ logs/
-└
-```
-
-### Frontend
-```bash
-src/
-├─ assets/
-├─ components/
-│  └─ publications/
-│      ├─ index.ts
-│      ├─ PublicationCard.vue
-│      ├─ PublicationSortOptions.vue
-│      └─ PublicationsPage.vue
-├─ composables/
-├─ data/
-├─ middleware/
-├─ test/
-│  └─ publications/
-│      ├─ index.ts
-│      ├─ PublicationCard.spec.ts
-│      ├─ PublicationSortOptions.spec.ts
-│      └─ PublicationsPage.spec.ts
-└
-```
 
 ---
 
