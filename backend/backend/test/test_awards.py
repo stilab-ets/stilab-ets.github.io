@@ -41,16 +41,11 @@ def test_awards_get_success(mock_get_object, mock_serializer, awards_url):
 @patch("backend.views.awards_view.AwardSerializer")
 @patch("backend.views.awards_view.Award")
 def test_awards_post_success(mock_award_model, mock_serializer, awards_url):
-    mock_queryset_1 = MagicMock()
-    mock_queryset_2 = MagicMock()
-    mock_combined_queryset = MagicMock()
+    mock_queryset = MagicMock()
 
-    # Each filter call returns a separate mock
-    mock_award_model.objects.filter.side_effect = [mock_queryset_1, mock_queryset_2]
+    mock_queryset.exists.return_value = False
 
-    # The OR operation between querysets returns a combined queryset mock
-    mock_queryset_1.__or__.return_value = mock_combined_queryset
-    mock_combined_queryset.exists.return_value = False
+    mock_award_model.objects.filter.return_value = mock_queryset
 
     mock_award_instance = MagicMock()
     mock_serializer_instance = MagicMock()
@@ -71,7 +66,6 @@ def test_awards_post_success(mock_award_model, mock_serializer, awards_url):
     assert response.data["title"] == "Dev"
 
     assert mock_award_model.objects.filter.call_count == 1
-    mock_combined_queryset.exists.assert_called_once()
 
     mock_serializer.assert_called_once_with(data=data)
     mock_serializer_instance.is_valid.assert_called_once()
@@ -81,21 +75,17 @@ def test_awards_post_success(mock_award_model, mock_serializer, awards_url):
 @patch("backend.views.awards_view.AwardSerializer")
 @patch("backend.views.awards_view.Award")
 def test_awards_put_success(mock_award_model, mock_serializer, awards_url):
-    mock_queryset_1 = MagicMock()
-    mock_queryset_2 = MagicMock()
-    mock_combined_queryset = MagicMock()
-
-    mock_award_model.objects.filter.side_effect = [mock_queryset_1, mock_queryset_2]
-    mock_queryset_1.__or__.return_value = mock_combined_queryset
-    mock_combined_queryset.exists.return_value = True
+    mock_queryset = MagicMock()
+    mock_award_model.objects.filter.return_value = mock_queryset
 
     mock_award_instance = MagicMock()
-    mock_combined_queryset.first.return_value = mock_award_instance
+    mock_queryset.exists.return_value = True
+    mock_queryset.first.return_value = mock_award_instance
 
     mock_serializer_instance = MagicMock()
     mock_serializer_instance.is_valid.return_value = True
     mock_serializer_instance.save.return_value = mock_award_instance
-    mock_serializer_instance.data = {"title": "Dev", "url": "Test", "year": 2025, "organization": "test"}
+    mock_serializer_instance.data = {"id": 1, "title": "Dev", "url": "Test", "year": 2025, "organization": "test"}
     mock_serializer.return_value = mock_serializer_instance
 
     data = {"id": 1, "title": "Dev", "url": "Test", "year": 2025, "organization": "test"}
@@ -106,9 +96,9 @@ def test_awards_put_success(mock_award_model, mock_serializer, awards_url):
     assert response.status_code == status.HTTP_200_OK
     assert response.data["title"] == "Dev"
 
-    assert mock_award_model.objects.filter.call_count == 1
-    mock_combined_queryset.exists.assert_called_once()
-    mock_combined_queryset.first.assert_called_once()
+    mock_award_model.objects.filter.assert_called_once_with(id=1)
+    mock_queryset.exists.assert_called_once()
+    mock_queryset.first.assert_called_once()
 
     mock_serializer.assert_called_once_with(instance=mock_award_instance, data=data)
     mock_serializer_instance.is_valid.assert_called_once()
