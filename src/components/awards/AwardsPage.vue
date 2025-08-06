@@ -55,12 +55,12 @@ const filteredAwards = computed(() => {
       (!award.year && award.date_received && new Date(award.date_received).getFullYear().toString() === selectedYear.value)
     
     const matchesOrganization = !selectedOrganization.value || 
-      (award.award_type && award.award_type === selectedOrganization.value)
+      (award.organization && award.organization === selectedOrganization.value)
     
     const matchesMember = !selectedMember.value ||
       (award.recipients && Array.isArray(award.recipients) && award.recipients.some(recipient => 
-        recipient && recipient.member && 
-        `${recipient.member.first_name} ${recipient.member.last_name}` === selectedMember.value
+        recipient && recipient && 
+        `${recipient.first_name} ${recipient.last_name}` === selectedMember.value
       ))
     
     const matchesSearch = !searchQuery.value ||
@@ -271,7 +271,7 @@ const updateFilter = (filterId: string, value: string) => {
     <template v-else>
       <!-- Statistics -->
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <StatisticsGrid :statistics="statistics" />
+        <StatisticsGrid :statistics="statistics" :columns="4" />
       </div>
 
       <!-- Search and Filters -->

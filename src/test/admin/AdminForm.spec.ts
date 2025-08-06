@@ -13,7 +13,7 @@ describe('AdminForm.vue', () => {
     // Check the buttons for each form exist
     expect(wrapper.text()).toContain('Available Forms')
     expect(wrapper.find('button.btn-primary').exists()).toBe(true)
-    expect(wrapper.findAll('button.btn-primary').length).toBe(5)
+    expect(wrapper.findAll('button.btn-primary').length).toBe(6)
   })
 
   it('shows PublicationForm when clicking Publication Form button', async () => {
