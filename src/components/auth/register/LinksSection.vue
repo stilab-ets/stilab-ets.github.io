@@ -4,6 +4,10 @@ import { useLanguage } from '@/composables/useLanguage'
 interface LinksData {
   githubUrl: string
   linkedinUrl: string
+  stackoverflowUrl: string
+  twitterxUrl: string
+  googlescholarUrl: string
+  dblpUrl: string
   personalWebsite: string
 }
 
@@ -77,6 +81,94 @@ const updateField = (field: keyof LinksData, value: string) => {
           @input="updateField('linkedinUrl', ($event.target as HTMLInputElement).value)"
           type="url"
           placeholder="https://linkedin.com/in/username"
+          class="pl-10 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+        />
+      </div>
+    </div>
+
+    <!-- StackOverflow URL -->
+    <div>
+      <label for="stackoverflowUrl" class="block text-sm font-medium text-gray-700">
+        {{ t.auth.register.form.stackoverflowUrl }}
+      </label>
+      <div class="mt-1 relative rounded-md shadow-sm">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <svg class="h-4 w-4 text-gray-400" fill="currentColor" viewBox="0 0 100 100">
+            <path class="st0" d="M84.4 93.8V70.6h7.7v30.9H22.6V70.6h7.7v23.2z"/><path class="st1" d="M38.8 68.4l37.8 7.9 1.6-7.6-37.8-7.9-1.6 7.6zm5-18l35 16.3 3.2-7-35-16.4-3.2 7.1zm9.7-17.2l29.7 24.7 4.9-5.9-29.7-24.7-4.9 5.9zm19.2-18.3l-6.2 4.6 23 31 6.2-4.6-23-31zM38 86h38.6v-7.7H38V86z"/>
+          </svg>
+        </div>
+        <input
+          id="stackoverflowUrl"
+          :value="modelValue.stackoverflowUrl"
+          @input="updateField('stackoverflowUrl', ($event.target as HTMLInputElement).value)"
+          type="url"
+          placeholder="https://stackoverflow.com/users/userid/username"
+          class="pl-10 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+        />
+      </div>
+    </div>
+
+    <!-- Twitter/X URL -->
+    <div>
+      <label for="twitterxUrl" class="block text-sm font-medium text-gray-700">
+        {{ t.auth.register.form.twitterxUrl }}
+      </label>
+      <div class="mt-1 relative rounded-md shadow-sm">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <svg class="h-4 w-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M178.57 127.15 290.27 0h-26.46l-97.03 110.38L89.34 0H0l117.13 166.93L0 300.25h26.46l102.4-116.59 81.8 116.59h89.34M36.01 19.54H76.66l187.13 262.13h-40.66"/>
+          </svg>
+        </div>
+        <input
+          id="twitterxUrl"
+          :value="modelValue.twitterxUrl"
+          @input="updateField('twitterxUrl', ($event.target as HTMLInputElement).value)"
+          type="url"
+          placeholder="https://x.com/username"
+          class="pl-10 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+        />
+      </div>
+    </div>
+
+    <!-- Google Scholar URL -->
+    <div>
+      <label for="googlescholarUrl" class="block text-sm font-medium text-gray-700">
+        {{ t.auth.register.form.googlescholarUrl }}
+      </label>
+      <div class="mt-1 relative rounded-md shadow-sm">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <svg class="h-4 w-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill="#4285f4" d="M256 411.12L0 202.667 256 0z"/><path fill="#356ac3" d="M256 411.12l256-208.453L256 0z"/><circle fill="#a0c3ff" cx="256" cy="362.667" r="149.333"/><path fill="#76a7fa" d="M121.037 298.667c23.968-50.453 75.392-85.334 134.963-85.334s110.995 34.881 134.963 85.334H121.037z"/>
+          </svg>
+        </div>
+        <input
+          id="googlescholarUrl"
+          :value="modelValue.googlescholarUrl"
+          @input="updateField('googlescholarUrl', ($event.target as HTMLInputElement).value)"
+          type="url"
+          placeholder="https://scholar.google.ca/citations?user=userid&hl=en"
+          class="pl-10 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+        />
+      </div>
+    </div>
+
+    <!-- DBLP URL -->
+    <div>
+      <label for="dblpUrl" class="block text-sm font-medium text-gray-700">
+        {{ t.auth.register.form.dblpUrl }}
+      </label>
+      <div class="mt-1 relative rounded-md shadow-sm">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <svg class="h-4 w-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M3.075.002c-.096.013-.154.092-.094.31L4.97 7.73 3.1 8.6s-.56.26-.4.85l2.45 9.159s.16.59.72.33l6.169-2.869 1.3-.61s.52-.24.42-.79l-.01-.06-1.13-4.22-.658-2.45-.672-2.49v-.04s-.16-.59-.84-1L3.5.141s-.265-.16-.425-.139zM18.324 5.03a.724.724 0 0 0-.193.06l-5.602 2.6.862 3.2 1.09 4.08.01.06c.05.47-.411.79-.411.79l-1.88.87.5 1.89.04.1c.07.17.28.6.81.91l6.95 4.269s.68.41.52-.17l-1.981-7.4 1.861-.86s.56-.26.4-.85L18.85 5.42s-.116-.452-.526-.39z"/>
+          </svg>
+        </div>
+        <input
+          id="dblpUrl"
+          :value="modelValue.dblpUrl"
+          @input="updateField('dblpUrl', ($event.target as HTMLInputElement).value)"
+          type="url"
+          placeholder="https://dblp.org/pid/id/userid-1.html"
           class="pl-10 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         />
       </div>

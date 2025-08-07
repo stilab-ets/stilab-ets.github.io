@@ -30,6 +30,10 @@ const formData = ref({
   biography: '',
   githubUrl: '',
   linkedinUrl: '',
+  stackoverflowUrl: '',
+  twitterxUrl: '',
+  googlescholarUrl: '',
+  dblpUrl: '',
   personalWebsite: '',
   profilePhoto: null as File | null,
   language: 'fr',
@@ -320,6 +324,54 @@ const handleCancel = () => {
               <input
                 id="linkedinUrl"
                 v-model="formData.linkedinUrl"
+                type="url"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+
+            <div>
+              <label for="stackoverflowUrl" class="block text-sm font-medium text-gray-700 mb-2">
+                {{ t.forms.userSettings.form.stackoverflowUrl }}
+              </label>
+              <input
+                id="stackoverflowUrl"
+                v-model="formData.stackoverflowUrl"
+                type="url"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+
+            <div>
+              <label for="twitterxUrl" class="block text-sm font-medium text-gray-700 mb-2">
+                {{ t.forms.userSettings.form.twitterxUrl }}
+              </label>
+              <input
+                id="twitterxUrl"
+                v-model="formData.twitterxUrl"
+                type="url"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+
+            <div>
+              <label for="googlescholarUrl" class="block text-sm font-medium text-gray-700 mb-2">
+                {{ t.forms.userSettings.form.googlescholarUrl }}
+              </label>
+              <input
+                id="googlescholarUrl"
+                v-model="formData.googlescholarUrl"
+                type="url"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            
+            <div>
+              <label for="dblpUrl" class="block text-sm font-medium text-gray-700 mb-2">
+                {{ t.forms.userSettings.form.dblpUrl }}
+              </label>
+              <input
+                id="dblpUrl"
+                v-model="formData.dblpUrl"
                 type="url"
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />

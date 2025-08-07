@@ -36,6 +36,14 @@ export interface MemberFormTranslations {
     githubUrlPlaceholder: string
     linkedinUrl: string
     linkedinUrlPlaceholder: string
+    stackoverflowUrl: string
+    stackoverflowUrlPlaceholder: string
+    twitterxUrl: string
+    twitterxUrlPlaceholder: string
+    googlescholarUrl: string
+    googlescholarUrlPlaceholder: string
+    dblpUrl: string
+    dblpUrlPlaceholder: string
     personalWebsite: string
     personalWebsitePlaceholder: string
     orcidId: string
@@ -127,6 +135,14 @@ export const memberFormTranslations: Record<'fr' | 'en', MemberFormTranslations>
       githubUrlPlaceholder: 'https://github.com/username',
       linkedinUrl: 'LinkedIn',
       linkedinUrlPlaceholder: 'https://linkedin.com/in/username',
+      stackoverflowUrl: 'Stack Overflow',
+      stackoverflowUrlPlaceholder: 'https://stackoverflow.com/users/userid/username',
+      twitterxUrl: 'Twitter/X',
+      twitterxUrlPlaceholder: 'https://x.com/username',
+      googlescholarUrl: 'Google Scholar',
+      googlescholarUrlPlaceholder: 'https://scholar.google.ca/citations?user=userid&hl=en',
+      dblpUrl: 'DBLP',
+      dblpUrlPlaceholder: 'https://dblp.org/pid/id/userid-1.html',
       personalWebsite: 'Site web personnel',
       personalWebsitePlaceholder: 'https://website.com',
       orcidId: 'ORCID iD',
@@ -216,6 +232,14 @@ export const memberFormTranslations: Record<'fr' | 'en', MemberFormTranslations>
       githubUrlPlaceholder: 'https://github.com/username',
       linkedinUrl: 'LinkedIn',
       linkedinUrlPlaceholder: 'https://linkedin.com/in/username',
+      stackoverflowUrl: 'Stack Overflow',
+      stackoverflowUrlPlaceholder: 'https://stackoverflow.com/users/userid/username',
+      twitterxUrl: 'Twitter/X',
+      twitterxUrlPlaceholder: 'https://x.com/username',
+      googlescholarUrl: 'Google Scholar',
+      googlescholarUrlPlaceholder: 'https://scholar.google.ca/citations?user=userid&hl=en',
+      dblpUrl: 'DBLP',
+      dblpUrlPlaceholder: 'https://dblp.org/pid/id/userid-1.html',
       personalWebsite: 'Personal Website',
       personalWebsitePlaceholder: 'https://website.com',
       orcidId: 'ORCID iD',

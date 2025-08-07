@@ -21,6 +21,10 @@ const formData = ref({
   image_url: '',
   github_url: '',
   linkedin_url: '',
+  stackoverflow_url: '',
+  twitter_x_url: '',
+  google_scholar_url: '',
+  dblp_url: '',
   personal_website: '',
   status: '',
 })
@@ -82,6 +86,10 @@ const submitForm = async () => {
         image_url: '',
         github_url: '',
         linkedin_url: '',
+        stackoverflow_url: '',
+        twitter_x_url: '',
+        google_scholar_url: '',
+        dblp_url: '',
         personal_website: '',
         status: '',
       }
@@ -209,6 +217,21 @@ const formError = computed(() => errors.value.general || error.value)
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">LinkedIn</label>
           <input v-model="formData.linkedin_url" type="url" class="w-full p-3 border rounded-lg" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Stack Overflow</label>
+          <input v-model="formData.stackoverflow_url" type="url" class="w-full p-3 border rounded-lg" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Twitter/X</label>
+          <input v-model="formData.twitter_x_url" type="url" class="w-full p-3 border rounded-lg" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Google Scholar</label>
+          <input v-model="formData.google_scholar_url" type="url" class="w-full p-3 border rounded-lg" />
+        </div>        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">DBLP</label>
+          <input v-model="formData.dblp_url" type="url" class="w-full p-3 border rounded-lg" />
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Personal Website</label>

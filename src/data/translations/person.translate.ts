@@ -28,6 +28,10 @@ export interface PersonTranslations {
     externalLinks: string
     github: string
     linkedin: string
+    stackoverflowUrl: string
+    twitterxUrl: string
+    googlescholarUrl: string
+    dblpUrl: string
     website: string
   }
   results: {
@@ -83,6 +87,10 @@ export const personTranslations: PersonTranslationDict = {
       externalLinks: 'Liens externes',
       github: 'GitHub',
       linkedin: 'LinkedIn',
+      stackoverflowUrl: 'Stack Overflow',
+      twitterxUrl: 'Twitter/X',
+      googlescholarUrl: 'Google Scholar',
+      dblpUrl: 'DBLP',
       website: 'Site Web'
     },
     results: {
@@ -131,6 +139,9 @@ export const personTranslations: PersonTranslationDict = {
       externalLinks: 'External links',
       github: 'GitHub',
       linkedin: 'LinkedIn',
+      stackoverflowUrl: 'Stack Overflow',
+      twitterxUrl: 'Twitter/X',
+      googlescholarUrl: 'Google Scholar',
       website: 'Website'
     },
     results: {
