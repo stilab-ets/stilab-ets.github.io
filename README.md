@@ -34,8 +34,6 @@ Please follow the [User Guide](https://github.com/stilab-ets/stilab-ets.github.i
 | DevOps           | Docker, GitHub Actions, Render       |
 | Testing          | Vitest, Pytest           |
 
-### 📄 License
+### License
 
 This project is licensed under the [MIT License](LICENSE.txt).
-
-✨ This project is evolving. Team members are encouraged to propose new ideas or features.
