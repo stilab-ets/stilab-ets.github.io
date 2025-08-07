@@ -8,7 +8,12 @@ export default defineConfig({
     tsconfigPaths()
   ],
   server: {
-    port: 5173
+    host: "0.0.0.0",
+    port: 5173,
+    watch: {
+      usePolling: true,
+      ignored: ['**/node_modules/**']
+    },
   },
   test: {
     globals: true,

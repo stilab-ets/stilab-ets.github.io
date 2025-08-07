@@ -159,6 +159,14 @@ npm install
 ```sh
 npm run dev
 ```
+
+Or
+
+```bash
+docker compose build
+docker compose up [--build] [-d] # --build to skip the first command, -d to run in detached mode
+```
+
 The application will be available locally at http://localhost:5173/
 
 3. Run unit tests with coverage:
