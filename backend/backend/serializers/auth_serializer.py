@@ -23,6 +23,10 @@ class RegisterSerializer(serializers.Serializer):
     image_url = serializers.URLField(required=False, allow_blank=True)
     github_url = serializers.URLField(required=False, allow_blank=True)
     linkedin_url = serializers.URLField(required=False, allow_blank=True)
+    stackoverflow_url = serializers.URLField(required=False, allow_blank=True)
+    twitter_x_url = serializers.URLField(required=False, allow_blank=True)
+    google_scholar_url = serializers.URLField(required=False, allow_blank=True)
+    dblp_url = serializers.URLField(required=False, allow_blank=True)
     personal_website = serializers.URLField(required=False, allow_blank=True)
 
     def create(self, validated_data):
@@ -31,6 +35,10 @@ class RegisterSerializer(serializers.Serializer):
         research_domain = validated_data.pop("research_domain", "")
         github_url = validated_data.pop("github_url", "")
         linkedin_url = validated_data.pop("linkedin_url", "")
+        stackoverflow_url = validated_data.pop("stackoverflow_url", "")
+        twitter_x_url = validated_data.pop("twitter_x_url", "")
+        google_scholar_url = validated_data.pop("google_scholar_url", "")
+        dblp_url = validated_data.pop("dblp_url", "")
         personal_website = validated_data.pop("personal_website", "")
         with transaction.atomic():
             user = User.objects.create_user(
@@ -49,6 +57,10 @@ class RegisterSerializer(serializers.Serializer):
                 research_domain=research_domain,
                 github_url=github_url,
                 linkedin_url=linkedin_url,
+                stackoverflow_url=stackoverflow_url,
+                twitter_x_url=twitter_x_url,
+                google_scholar_url=google_scholar_url,
+                dblp_url=dblp_url,
                 personal_website=personal_website,
             )
 
