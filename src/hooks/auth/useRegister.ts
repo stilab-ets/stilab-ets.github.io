@@ -12,6 +12,10 @@ interface RegisterData {
   phone?: string
   githubUrl?: string
   linkedinUrl?: string
+  stackoverflowUrl?: string
+  twitterxUrl?: string
+  googlescholarUrl?: string
+  dblpUrl?: string
   personalWebsite?: string
 }
 
@@ -52,6 +56,10 @@ export function useRegister() {
           phone: formData.phone,
           github_url: formData.githubUrl,
           linkedin_url: formData.linkedinUrl,
+          stackoverflow_url: formData.stackoverflowUrl,
+          twitterx_url: formData.twitterxUrl,
+          googlescholar_url: formData.googlescholarUrl,
+          dblp_url: formData.dblpUrl,
           personal_website: formData.personalWebsite,
           invitation_token: invitationToken
         })

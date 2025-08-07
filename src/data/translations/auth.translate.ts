@@ -53,6 +53,10 @@ export interface AuthTranslations {
       biographyPlaceholder: string
       githubUrl: string
       linkedinUrl: string
+      stackoverflowUrl: string
+      twitterxUrl: string
+      googlescholarUrl: string
+      dblpUrl: string
       personalWebsite: string
       password: string
       confirmPassword: string
@@ -135,6 +139,10 @@ export const authTranslations: AuthTranslationDict = {
         biographyPlaceholder: 'Tell us about your research interests and background...',
         githubUrl: 'GitHub URL',
         linkedinUrl: 'LinkedIn URL',
+        stackoverflowUrl: 'Stack Overflow URL',
+        twitterxUrl: 'Twitter/X URL',
+        googlescholarUrl: 'Google Scholar URL',
+        dblpUrl: 'DBLP URL',
         personalWebsite: 'Personal Website',
         password: 'Password',
         confirmPassword: 'Confirm Password',
@@ -217,6 +225,10 @@ export const authTranslations: AuthTranslationDict = {
         biographyPlaceholder: 'Parlez-nous de vos intérêts de recherche et votre parcours...',
         githubUrl: 'URL GitHub',
         linkedinUrl: 'URL LinkedIn',
+        stackoverflowUrl: 'URL Stack Overflow',
+        twitterxUrl: 'URL Twitter/X',
+        googlescholarUrl: 'URL Google Scholar',
+        dblpUrl: 'URL DBLP',
         personalWebsite: 'Site web personnel',
         password: 'Mot de passe',
         confirmPassword: 'Confirmer le mot de passe',

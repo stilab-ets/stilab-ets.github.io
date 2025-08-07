@@ -24,6 +24,10 @@ export interface MemberUser {
   image_url?: string;
   github_url?: string;
   linkedin_url?: string;
+  stackoverflowUrl?: string;
+  twitterxUrl?: string;
+  googlescholarUrl?: string;
+  dblpUrl?: string;
   personal_website?: string;
   status: string;
 }
@@ -42,6 +46,10 @@ export interface Member {
   image_url?: string | null;
   github_url?: string | null;
   linkedin_url?: string | null;
+  stackoverflowUrl?: string | null;
+  twitterxUrl?: string | null;
+  googlescholarUrl?: string | null;
+  dblpUrl?: string | null;
   personal_website?: string | null;
   status?: string | null;
 }

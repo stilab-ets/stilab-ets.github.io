@@ -15,6 +15,10 @@ export interface AwardRecipient {
   image_url?: string | null
   github_url?: string | null
   linkedin_url?: string | null
+  stackoverflowUrl?: string | null
+  twitterxUrl?: string | null
+  googlescholarUrl?: string | null
+  dblpUrl?: string | null
   personal_website?: string | null
   status?: string | null
 }

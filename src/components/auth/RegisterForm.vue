@@ -61,6 +61,10 @@ const professionalData = ref({
 const linksData = ref({
   githubUrl: '',
   linkedinUrl: '',
+  stackoverflowUrl: '',
+  twitterxUrl: '',
+  googlescholarUrl: '',
+  dblpUrl: '',
   personalWebsite: ''
 })
 
@@ -83,7 +87,10 @@ const formData = computed(() => ({
   biography: professionalData.value.biography,
   githubUrl: linksData.value.githubUrl,
   linkedinUrl: linksData.value.linkedinUrl,
-  personalWebsite: linksData.value.personalWebsite,
+  stackoverflowUrl: linksData.value.stackoverflowUrl,
+  twitterxUrl: linksData.value.twitterxUrl,
+  googlescholarUrl: linksData.value.googlescholarUrl,
+  dblpUrl: linksData.value.dblpUrl,
   password: securityData.value.password,
   confirmPassword: securityData.value.confirmPassword
 }))
@@ -227,7 +234,8 @@ onMounted(() => {
             v-model="linksData"
             :errors="validationErrors.filter(error => 
               error.includes('url') || error.includes('website') || error.includes('link') ||
-              error.includes('github') || error.includes('linkedin')
+              error.includes('github') || error.includes('linkedin') || error.includes('stackoverflow') 
+              || error.includes('twitterx') || error.includes('googlescholar') || error.includes('dblp') 
             )"
           />
 
