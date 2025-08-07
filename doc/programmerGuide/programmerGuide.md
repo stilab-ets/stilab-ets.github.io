@@ -15,7 +15,8 @@ The Minh Luong, Jean-Philippe Mongeau, Francis Leroux-Contant, Alexander Barcene
 [5. Development Environment Setup](#5-development-environment-setup)  
 [6. Importing data](#6-importing-data)   
 [7. Using the API](#7-using-the-api)  
-[8. Contribution Guidelines](#8-contribution-guidelines)  
+[8. Create an Admin user](#8-create-an-admin-user)  
+[9. Contribution Guidelines](#9-contribution-guidelines)  
 
 ---
 
@@ -206,10 +207,43 @@ docker compose exec backend python manage.py insert_legacy_data
 
 After starting the backend application, you can find the API documentations at http://localhost:8000/swagger
 
+---
+
+## 8. Create an Admin user
+To create an Administrator user who can access to the administrator dashboard in the frontend, follow these steps:   
+1. Create a superuser and note the email and password: 
+```bash
+docker compose exec backend python manage.py createsuperuser
+```
+2. Access the Django admin panel (log in with the created superuser). The admin panel is available at http://localhost:8000/admin after starting the backend.
+3. After logging in, you should see this panel :   
+![django-admin-panel](assets/django_admin_panel.png)   
+4. Click on Members and create a new member.
+5. Go to pgAdmin at http://localhost:5050/   
+    pgAdmin login credentials:   
+    User: `admin@admin.com`  
+    Password: `admin123`
+6. Find the id (primary key) of your superuser (from auth_user)
+```sql
+SELECT * FROM auth_user;
+```
+7. Find the id (primary key) of the created member at step 4 (from backend_member)
+```sql
+SELECT * FROM backend_member;
+```
+8. Run this command to link the superuser with the created member : 
+```sql
+UPDATE backend_member
+SET user_id = <superuser id>
+WHERE id = '<backend_member id>';
+```
+9. Sign in in the frontend application as your superuser.
+10. Administrator dashboard should be available.   
+![admin-dashboard](assets/admin_dashboard.png)   
 
 ---
 
-## 8. Contribution Guidelines
+## 9. Contribution Guidelines
 
 - Create a branch
 ```bash
