@@ -27,15 +27,14 @@ An interactive web platform to centralize, manage, and showcase the scientific a
 
 ## 2. Technologies Used
 
-![TypeScript](https://img.shields.io/badge/-TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)
-![Vue.js](https://img.shields.io/badge/-Vue.js-4FC08D?style=flat&logo=vuedotjs&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/-Tailwind_CSS-38B2AC?style=flat&logo=tailwindcss&logoColor=white)
-![Python](https://img.shields.io/badge/-Python-3776AB?style=flat&logo=python&logoColor=white)
-![Django](https://img.shields.io/badge/-Django-092E20?style=flat&logo=django&logoColor=white)
-![Vitest](https://img.shields.io/badge/-Vitest-6E9F18?style=flat&logo=vitest&logoColor=white)
-![Pytest](https://img.shields.io/badge/-Pytest-0A9EDC?style=flat&logo=pytest&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/-PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white)
-![Docker](https://img.shields.io/badge/-Docker-2496ED?style=flat&logo=docker&logoColor=white)
+| Layer            | Technology                  |
+| ---------------- | ------------------------------------ |
+| Frontend         | VueJS + TypeScript                   |
+| Backend          | Python, Django                       |
+| Authentication   | JWT       |
+| Database         | PostgreSQL                           |
+| DevOps           | Docker, GitHub Actions, Render       |
+| Testing          | Vitest, Pytest           |
 
 ---
 ## 3. Architecture Overview
