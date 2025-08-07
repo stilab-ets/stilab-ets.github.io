@@ -14,6 +14,10 @@ entity Member {
   image_url: TEXT
   github_url: TEXT
   linkedin_url: TEXT
+  stackoverflow_url: TEXT
+  twitter_x_url: TEXT
+  google_scholar_url: TEXT
+  dblp_url: TEXT
   personal_website: TEXT
   user_id: UUID
   status: VARCHAR
