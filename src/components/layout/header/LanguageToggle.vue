@@ -1,16 +1,19 @@
 <script setup lang="ts">
-import { useLanguageToggle } from '@/hooks/layout/useLanguageToggle'
+import { useLanguageToggle } from '@/hooks/layout/useLanguageToggle';
 
-const props = withDefaults(defineProps<{
-  currentLanguage?: string
-  isMobile?: boolean
-  showLabels?: boolean
-}>(), {
-  isMobile: false,
-  showLabels: false
-})
+const props = withDefaults(
+  defineProps<{
+    currentLanguage?: string;
+    isMobile?: boolean;
+    showLabels?: boolean;
+  }>(),
+  {
+    isMobile: false,
+    showLabels: false,
+  }
+);
 
-const emit = defineEmits<(e: 'languageChanged', language: string) => void>()
+const emit = defineEmits<(e: 'languageChanged', language: string) => void>();
 
 const {
   availableLanguages,
@@ -18,17 +21,17 @@ const {
   otherLanguages,
   isDropdownOpen,
   toggleDropdown,
-  closeDropdown
-} = useLanguageToggle(props.currentLanguage || 'en')
+  closeDropdown,
+} = useLanguageToggle(props.currentLanguage || 'en');
 
 const selectLanguage = (languageCode: string) => {
-  emit('languageChanged', languageCode)
-  closeDropdown()
-}
+  emit('languageChanged', languageCode);
+  closeDropdown();
+};
 
 const handleMobileLanguageChange = (languageCode: string) => {
-  emit('languageChanged', languageCode)
-}
+  emit('languageChanged', languageCode);
+};
 </script>
 
 <template>
@@ -45,12 +48,14 @@ const handleMobileLanguageChange = (languageCode: string) => {
             'flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:cursor-pointer',
             language.code === currentLanguage
               ? 'bg-[#08a4d4] text-white'
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200',
           ]"
           :aria-label="language.ariaLabel"
         >
           <span class="text-base" aria-hidden="true">{{ language.flag }}</span>
-          <span v-if="showLabels" class="uppercase tracking-wide">{{ language.code }}</span>
+          <span v-if="showLabels" class="uppercase tracking-wide">{{
+            language.code
+          }}</span>
         </button>
       </div>
     </div>
@@ -66,17 +71,24 @@ const handleMobileLanguageChange = (languageCode: string) => {
       aria-haspopup="true"
     >
       <span class="text-lg" aria-hidden="true">{{ currentLang.flag }}</span>
-      <span class="text-sm font-medium uppercase tracking-wide">{{ currentLang.code }}</span>
-      
-      <svg 
-        class="w-4 h-4 transition-transform duration-200" 
+      <span class="text-sm font-medium uppercase tracking-wide">{{
+        currentLang.code
+      }}</span>
+
+      <svg
+        class="w-4 h-4 transition-transform duration-200"
         :class="{ 'rotate-180': isDropdownOpen }"
-        fill="none" 
-        stroke="currentColor" 
+        fill="none"
+        stroke="currentColor"
         viewBox="0 0 24 24"
         aria-hidden="true"
       >
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M19 9l-7 7-7-7"
+        />
       </svg>
     </button>
 

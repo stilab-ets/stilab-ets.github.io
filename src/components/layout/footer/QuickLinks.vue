@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { useFooterData } from '@/hooks/layout/useFooterData'
+import { useFooterData } from '@/hooks/layout/useFooterData';
 
-const { navigationLinks, t } = useFooterData()
+const { navigationLinks, t } = useFooterData();
 
-const emit = defineEmits<(e: 'navigateToPage', page: string) => void>()
+const emit = defineEmits<(e: 'navigateToPage', page: string) => void>();
 
 const handleNavigation = (page: string) => {
-  emit('navigateToPage', page)
-}
+  emit('navigateToPage', page);
+};
 </script>
 
 <template>
@@ -16,7 +16,7 @@ const handleNavigation = (page: string) => {
     <nav aria-label="Navigation rapide du pied de page">
       <ul class="space-y-3">
         <li v-for="link in navigationLinks" :key="link.id">
-          <button 
+          <button
             @click="handleNavigation(link.page)"
             class="text-gray-300 hover:text-white hover:cursor-pointer transition-colors text-left focus:outline-none focus:text-white"
             :aria-label="`Aller à la section ${link.label}`"

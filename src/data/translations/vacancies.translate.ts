@@ -73,7 +73,7 @@ export const vacanciesTranslations: VacanciesTranslationDict = {
       whyJoinUs: 'Pourquoi nous rejoindre ?',
       benefits: [
         'Recherche de pointe en génie logiciel',
-        'Collaboration avec l\'industrie',
+        "Collaboration avec l'industrie",
         'Équipe internationale et dynamique',
         'Équipements et technologies modernes',
       ],
@@ -118,7 +118,7 @@ export const vacanciesTranslations: VacanciesTranslationDict = {
     },
     deadlineStatus: {
       deadlinePassed: 'Date limite dépassée',
-      deadlineToday: 'Date limite aujourd\'hui',
+      deadlineToday: "Date limite aujourd'hui",
       deadlineTomorrow: 'Date limite demain',
       daysRemaining: 'jours restants',
     },

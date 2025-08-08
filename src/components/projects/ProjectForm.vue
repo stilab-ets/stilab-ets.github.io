@@ -1,43 +1,43 @@
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
-import { useLanguage } from '@/composables/useLanguage'
-import type { Project } from '@/services/MainAPI'
+import { ref, reactive, computed } from 'vue';
+import { useLanguage } from '@/composables/useLanguage';
+import type { Project } from '@/services/MainAPI';
 
 // UI Components
-import Card from '@/components/ui/Card.vue'
-import Button from '@/components/ui/Button.vue'
+import Card from '@/components/ui/Card.vue';
+import Button from '@/components/ui/Button.vue';
 
 interface ProjectFormData {
-  type: string
-  title: string
-  domain: string
-  description: string
-  supervisor: string
-  cosupervisor: string
-  requirements: string[]
-  objectives: string[]
-  startDate: string | Date
-  endDate: string | Date
-  difficulty: string
-  status: string
+  type: string;
+  title: string;
+  domain: string;
+  description: string;
+  supervisor: string;
+  cosupervisor: string;
+  requirements: string[];
+  objectives: string[];
+  startDate: string | Date;
+  endDate: string | Date;
+  difficulty: string;
+  status: string;
 }
 
 interface ProjectErrors {
-  [key: string]: string
+  [key: string]: string;
 }
 
 const props = defineProps<{
-  initialData?: Partial<Project>
-  isEditing?: boolean
-}>()
+  initialData?: Partial<Project>;
+  isEditing?: boolean;
+}>();
 
 const emit = defineEmits<{
-  submit: [data: ProjectFormData]
-  cancel: []
-}>()
+  submit: [data: ProjectFormData];
+  cancel: [];
+}>();
 
-const { t: translations } = useLanguage()
-const t = computed(() => translations.value.forms.project)
+const { t: translations } = useLanguage();
+const t = computed(() => translations.value.forms.project);
 
 // Initialize form with default values to ensure reactivity
 const form = reactive<ProjectFormData>({
@@ -47,119 +47,130 @@ const form = reactive<ProjectFormData>({
   description: props.initialData?.description || '',
   supervisor: props.initialData?.supervisor || '',
   cosupervisor: props.initialData?.cosupervisor || '',
-  requirements: Array.isArray(props.initialData?.requirements) ? [...props.initialData.requirements] : [],
-  objectives: Array.isArray(props.initialData?.objectives) ? [...props.initialData.objectives] : [],
+  requirements: Array.isArray(props.initialData?.requirements)
+    ? [...props.initialData.requirements]
+    : [],
+  objectives: Array.isArray(props.initialData?.objectives)
+    ? [...props.initialData.objectives]
+    : [],
   startDate: props.initialData?.startDate || '',
   endDate: props.initialData?.endDate || '',
   difficulty: props.initialData?.difficulty || 'intermediate',
-  status: props.initialData?.status || 'planned'
-})
+  status: props.initialData?.status || 'planned',
+});
 
-const errors = ref<ProjectErrors>({})
-const generalError = ref<string>('')
-const isSubmitting = ref(false)
-const newRequirement = ref('')
-const newObjective = ref('')
+const errors = ref<ProjectErrors>({});
+const generalError = ref<string>('');
+const isSubmitting = ref(false);
+const newRequirement = ref('');
+const newObjective = ref('');
 
 // Mock supervisors - replace with actual API call or prop
 const supervisors = [
   { id: '1', name: 'Dr. Marie Dubois' },
   { id: '2', name: 'Prof. Jean Martin' },
-  { id: '3', name: 'Dr. Sarah Chen' }
-]
+  { id: '3', name: 'Dr. Sarah Chen' },
+];
 
 // Project domains
 const domains = [
-  { value: 'software-architecture', label: t.value.domains.softwareArchitecture },
+  {
+    value: 'software-architecture',
+    label: t.value.domains.softwareArchitecture,
+  },
   { value: 'machine-learning', label: 'Machine Learning' },
   { value: 'web-development', label: 'Web Development' },
   { value: 'mobile-development', label: 'Mobile Development' },
-  { value: 'data-science', label: 'Data Science' }
-]
+  { value: 'data-science', label: 'Data Science' },
+];
 
 // Validation function
 const validateForm = (): boolean => {
-  errors.value = {}
-  
+  errors.value = {};
+
   if (!form.title.trim()) {
-    errors.value.title = t.value.validation.titleRequired
+    errors.value.title = t.value.validation.titleRequired;
   }
-  
+
   if (!form.domain) {
-    errors.value.domain = t.value.validation.domainRequired
+    errors.value.domain = t.value.validation.domainRequired;
   }
-  
+
   if (!form.description.trim()) {
-    errors.value.description = t.value.validation.descriptionRequired
+    errors.value.description = t.value.validation.descriptionRequired;
   }
-  
+
   if (!form.supervisor) {
-    errors.value.supervisor = t.value.validation.supervisorRequired
+    errors.value.supervisor = t.value.validation.supervisorRequired;
   }
-  
+
   if (!form.startDate) {
-    errors.value.startDate = t.value.validation.startDateRequired
+    errors.value.startDate = t.value.validation.startDateRequired;
   }
-  
-  if (form.endDate && form.startDate && new Date(form.endDate) <= new Date(form.startDate)) {
-    errors.value.endDate = t.value.validation.endDateAfterStart
+
+  if (
+    form.endDate &&
+    form.startDate &&
+    new Date(form.endDate) <= new Date(form.startDate)
+  ) {
+    errors.value.endDate = t.value.validation.endDateAfterStart;
   }
-  
-  return Object.keys(errors.value).length === 0
-}
+
+  return Object.keys(errors.value).length === 0;
+};
 
 // Add requirement
 const addRequirement = () => {
   if (newRequirement.value.trim()) {
-    form.requirements.push(newRequirement.value.trim())
-    newRequirement.value = ''
+    form.requirements.push(newRequirement.value.trim());
+    newRequirement.value = '';
   }
-}
+};
 
 // Remove requirement
 const removeRequirement = (index: number) => {
-  form.requirements.splice(index, 1)
-}
+  form.requirements.splice(index, 1);
+};
 
 // Add objective
 const addObjective = () => {
   if (newObjective.value.trim()) {
-    form.objectives.push(newObjective.value.trim())
-    newObjective.value = ''
+    form.objectives.push(newObjective.value.trim());
+    newObjective.value = '';
   }
-}
+};
 
 // Remove objective
 const removeObjective = (index: number) => {
-  form.objectives.splice(index, 1)
-}
+  form.objectives.splice(index, 1);
+};
 
 // Form submission
 const handleSubmit = async () => {
-  if (!validateForm()) return
-  
-  isSubmitting.value = true
-  generalError.value = ''
-  
+  if (!validateForm()) return;
+
+  isSubmitting.value = true;
+  generalError.value = '';
+
   try {
-    emit('submit', { ...form })
+    emit('submit', { ...form });
   } catch (error: any) {
-    generalError.value = error.message || t.value.errors.submitFailed
+    generalError.value = error.message || t.value.errors.submitFailed;
   } finally {
-    isSubmitting.value = false
+    isSubmitting.value = false;
   }
-}
+};
 
 // Handle cancel
 const handleCancel = () => {
-  emit('cancel')
-}
+  emit('cancel');
+};
 
 // Submit button text
 const submitButtonText = computed(() => {
-  if (isSubmitting.value) return t.value.form.submitting
-  return props.isEditing ? t.value.form.update : t.value.form.create
-})
+  if (isSubmitting.value) return t.value.form.submitting;
+  return props.isEditing ? t.value.form.update : t.value.form.create;
+});
 </script>
 
 <template>
@@ -177,13 +188,17 @@ const submitButtonText = computed(() => {
     <!-- Form Content -->
     <form @submit.prevent="handleSubmit" class="p-6">
       <div class="space-y-8">
-        
         <!-- Project Type -->
         <Card>
-          <h3 class="text-lg font-medium text-gray-900 mb-4">{{ t.sections.type }}</h3>
-          
+          <h3 class="text-lg font-medium text-gray-900 mb-4">
+            {{ t.sections.type }}
+          </h3>
+
           <div>
-            <label for="type" class="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              for="type"
+              class="block text-sm font-medium text-gray-700 mb-2"
+            >
               {{ t.form.type }}
             </label>
             <select
@@ -199,11 +214,16 @@ const submitButtonText = computed(() => {
 
         <!-- Basic Information -->
         <Card>
-          <h3 class="text-lg font-medium text-gray-900 mb-4">{{ t.sections.basic }}</h3>
-          
+          <h3 class="text-lg font-medium text-gray-900 mb-4">
+            {{ t.sections.basic }}
+          </h3>
+
           <div class="space-y-6">
             <div>
-              <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                for="title"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >
                 {{ t.form.title }}
               </label>
               <input
@@ -214,11 +234,16 @@ const submitButtonText = computed(() => {
                 class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 :class="{ 'border-red-500': errors.title }"
               />
-              <p v-if="errors.title" class="mt-1 text-sm text-red-600">{{ errors.title }}</p>
+              <p v-if="errors.title" class="mt-1 text-sm text-red-600">
+                {{ errors.title }}
+              </p>
             </div>
 
             <div>
-              <label for="domain" class="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                for="domain"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >
                 {{ t.form.domain }}
               </label>
               <select
@@ -229,15 +254,24 @@ const submitButtonText = computed(() => {
                 :class="{ 'border-red-500': errors.domain }"
               >
                 <option value="">Select a domain</option>
-                <option v-for="domain in domains" :key="domain.value" :value="domain.value">
+                <option
+                  v-for="domain in domains"
+                  :key="domain.value"
+                  :value="domain.value"
+                >
                   {{ domain.label }}
                 </option>
               </select>
-              <p v-if="errors.domain" class="mt-1 text-sm text-red-600">{{ errors.domain }}</p>
+              <p v-if="errors.domain" class="mt-1 text-sm text-red-600">
+                {{ errors.domain }}
+              </p>
             </div>
 
             <div>
-              <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                for="description"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >
                 {{ t.form.description }}
               </label>
               <textarea
@@ -248,18 +282,25 @@ const submitButtonText = computed(() => {
                 class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 :class="{ 'border-red-500': errors.description }"
               />
-              <p v-if="errors.description" class="mt-1 text-sm text-red-600">{{ errors.description }}</p>
+              <p v-if="errors.description" class="mt-1 text-sm text-red-600">
+                {{ errors.description }}
+              </p>
             </div>
           </div>
         </Card>
 
         <!-- Supervision -->
         <Card>
-          <h3 class="text-lg font-medium text-gray-900 mb-4">{{ t.sections.supervision }}</h3>
-          
+          <h3 class="text-lg font-medium text-gray-900 mb-4">
+            {{ t.sections.supervision }}
+          </h3>
+
           <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div>
-              <label for="supervisor" class="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                for="supervisor"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >
                 {{ t.form.supervisor }}
               </label>
               <select
@@ -270,15 +311,24 @@ const submitButtonText = computed(() => {
                 :class="{ 'border-red-500': errors.supervisor }"
               >
                 <option value="">Select a supervisor</option>
-                <option v-for="supervisor in supervisors" :key="supervisor.id" :value="supervisor.name">
+                <option
+                  v-for="supervisor in supervisors"
+                  :key="supervisor.id"
+                  :value="supervisor.name"
+                >
                   {{ supervisor.name }}
                 </option>
               </select>
-              <p v-if="errors.supervisor" class="mt-1 text-sm text-red-600">{{ errors.supervisor }}</p>
+              <p v-if="errors.supervisor" class="mt-1 text-sm text-red-600">
+                {{ errors.supervisor }}
+              </p>
             </div>
 
             <div>
-              <label for="cosupervisor" class="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                for="cosupervisor"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >
                 {{ t.form.cosupervisor }}
               </label>
               <select
@@ -287,7 +337,11 @@ const submitButtonText = computed(() => {
                 class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               >
                 <option value="">Select a co-supervisor (optional)</option>
-                <option v-for="supervisor in supervisors" :key="supervisor.id" :value="supervisor.name">
+                <option
+                  v-for="supervisor in supervisors"
+                  :key="supervisor.id"
+                  :value="supervisor.name"
+                >
                   {{ supervisor.name }}
                 </option>
               </select>
@@ -297,8 +351,10 @@ const submitButtonText = computed(() => {
 
         <!-- Requirements -->
         <Card>
-          <h3 class="text-lg font-medium text-gray-900 mb-4">{{ t.sections.requirements }}</h3>
-          
+          <h3 class="text-lg font-medium text-gray-900 mb-4">
+            {{ t.sections.requirements }}
+          </h3>
+
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">
               {{ t.form.requirements }}
@@ -339,8 +395,10 @@ const submitButtonText = computed(() => {
 
         <!-- Objectives (for MSc projects) -->
         <Card v-if="form.type === 'msc'">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">{{ t.sections.objectives }}</h3>
-          
+          <h3 class="text-lg font-medium text-gray-900 mb-4">
+            {{ t.sections.objectives }}
+          </h3>
+
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">
               {{ t.form.objectives }}
@@ -381,11 +439,16 @@ const submitButtonText = computed(() => {
 
         <!-- Timeline -->
         <Card>
-          <h3 class="text-lg font-medium text-gray-900 mb-4">{{ t.sections.timeline }}</h3>
-          
+          <h3 class="text-lg font-medium text-gray-900 mb-4">
+            {{ t.sections.timeline }}
+          </h3>
+
           <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div>
-              <label for="startDate" class="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                for="startDate"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >
                 {{ t.form.startDate }}
               </label>
               <input
@@ -396,11 +459,16 @@ const submitButtonText = computed(() => {
                 class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 :class="{ 'border-red-500': errors.startDate }"
               />
-              <p v-if="errors.startDate" class="mt-1 text-sm text-red-600">{{ errors.startDate }}</p>
+              <p v-if="errors.startDate" class="mt-1 text-sm text-red-600">
+                {{ errors.startDate }}
+              </p>
             </div>
 
             <div>
-              <label for="endDate" class="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                for="endDate"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >
                 {{ t.form.endDate }}
               </label>
               <input
@@ -410,13 +478,18 @@ const submitButtonText = computed(() => {
                 class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 :class="{ 'border-red-500': errors.endDate }"
               />
-              <p v-if="errors.endDate" class="mt-1 text-sm text-red-600">{{ errors.endDate }}</p>
+              <p v-if="errors.endDate" class="mt-1 text-sm text-red-600">
+                {{ errors.endDate }}
+              </p>
             </div>
           </div>
         </Card>
 
         <!-- Error Display -->
-        <div v-if="generalError" class="bg-red-50 border border-red-200 rounded-lg p-4">
+        <div
+          v-if="generalError"
+          class="bg-red-50 border border-red-200 rounded-lg p-4"
+        >
           <p class="text-red-800">{{ generalError }}</p>
         </div>
 
@@ -430,11 +503,8 @@ const submitButtonText = computed(() => {
           >
             {{ t.form.cancel }}
           </Button>
-          
-          <Button
-            type="submit"
-            :disabled="isSubmitting"
-          >
+
+          <Button type="submit" :disabled="isSubmitting">
             {{ submitButtonText }}
           </Button>
         </div>

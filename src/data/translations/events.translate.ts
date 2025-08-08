@@ -1,52 +1,52 @@
 export interface EventsTranslations {
-  stats: any
-  results: any
-  pageTitle: string
-  pageSubtitle: string
+  stats: any;
+  results: any;
+  pageTitle: string;
+  pageSubtitle: string;
   statistics: {
-    upcomingEvents: string
-    registrations: string
-    totalEvents: string
-  }
+    upcomingEvents: string;
+    registrations: string;
+    totalEvents: string;
+  };
   filters: {
-    view: any
-    type: any
-    eventType: string
-    allTypes: string
-    period: string
-    all: string
-    upcoming: string
-    past: string
-  }
+    view: any;
+    type: any;
+    eventType: string;
+    allTypes: string;
+    period: string;
+    all: string;
+    upcoming: string;
+    past: string;
+  };
   eventTypes: {
-    seminar: string
-    workshop: string
-    conference: string
-    defense: string
-    meeting: string
-    colloquium: string
-    masterclass: string
-  }
+    seminar: string;
+    workshop: string;
+    conference: string;
+    defense: string;
+    meeting: string;
+    colloquium: string;
+    masterclass: string;
+  };
   eventCard: {
-    capacityFull: any
-    speaker: string
-    registrations: string
-    registrationOpen: string
-    limitedSeats: string
-    register: string
-    full: string
-    capacity: string
-  }
+    capacityFull: any;
+    speaker: string;
+    registrations: string;
+    registrationOpen: string;
+    limitedSeats: string;
+    register: string;
+    full: string;
+    capacity: string;
+  };
   sections: {
-    upcomingEvents: string
-    pastEvents: string
-  }
+    upcomingEvents: string;
+    pastEvents: string;
+  };
   empty: {
-    noUpcoming: string
-    noUpcomingMessage: string
-    noPast: string
-    noPastMessage: string
-  }
+    noUpcoming: string;
+    noUpcomingMessage: string;
+    noPast: string;
+    noPastMessage: string;
+  };
 }
 
 type EventsTranslationDict = {
@@ -57,21 +57,22 @@ type EventsTranslationDict = {
 export const eventsTranslations: EventsTranslationDict = {
   fr: {
     pageTitle: 'Événements & Actualités',
-    pageSubtitle: 'Découvrez nos séminaires, workshops, soutenances et événements du laboratoire',
+    pageSubtitle:
+      'Découvrez nos séminaires, workshops, soutenances et événements du laboratoire',
     statistics: {
       upcomingEvents: 'Événements à venir',
       registrations: 'Inscriptions',
-      totalEvents: 'Total événements'
+      totalEvents: 'Total événements',
     },
     filters: {
-      eventType: 'Type d\'événement',
+      eventType: "Type d'événement",
       allTypes: 'Tous les types',
       period: 'Période',
       all: 'Tous',
       upcoming: 'À venir',
       past: 'Passés',
       view: 'Vue',
-      type: 'Type'
+      type: 'Type',
     },
     eventTypes: {
       seminar: 'Séminaires',
@@ -80,38 +81,40 @@ export const eventsTranslations: EventsTranslationDict = {
       defense: 'Soutenances',
       meeting: 'Réunions',
       colloquium: 'Colloques',
-      masterclass: 'Masterclass'
+      masterclass: 'Masterclass',
     },
     eventCard: {
       speaker: 'Intervenant',
       registrations: 'Inscriptions',
       registrationOpen: 'Inscription ouverte',
       limitedSeats: 'Places limitées',
-      register: 'S\'inscrire',
+      register: "S'inscrire",
       full: 'Complet',
       capacity: 'Capacité',
-      capacityFull: undefined
+      capacityFull: undefined,
     },
     sections: {
       upcomingEvents: 'Événements à venir',
-      pastEvents: 'Événements passés'
+      pastEvents: 'Événements passés',
     },
     empty: {
       noUpcoming: 'Aucun événement à venir',
-      noUpcomingMessage: 'Consultez nos événements passés ou revenez plus tard.',
+      noUpcomingMessage:
+        'Consultez nos événements passés ou revenez plus tard.',
       noPast: 'Aucun événement passé trouvé',
-      noPastMessage: 'Essayez de modifier vos filtres.'
+      noPastMessage: 'Essayez de modifier vos filtres.',
     },
     stats: 'Statistiques',
-    results: 'Résultats'
+    results: 'Résultats',
   },
   en: {
     pageTitle: 'Events & News',
-    pageSubtitle: 'Discover our seminars, workshops, defenses and laboratory events',
+    pageSubtitle:
+      'Discover our seminars, workshops, defenses and laboratory events',
     statistics: {
       upcomingEvents: 'Upcoming events',
       registrations: 'Registrations',
-      totalEvents: 'Total events'
+      totalEvents: 'Total events',
     },
     filters: {
       eventType: 'Event type',
@@ -121,7 +124,7 @@ export const eventsTranslations: EventsTranslationDict = {
       upcoming: 'Upcoming',
       past: 'Past',
       view: undefined,
-      type: undefined
+      type: undefined,
     },
     eventTypes: {
       seminar: 'Seminars',
@@ -130,7 +133,7 @@ export const eventsTranslations: EventsTranslationDict = {
       defense: 'Defenses',
       meeting: 'Meetings',
       colloquium: 'Colloquiums',
-      masterclass: 'Masterclasses'
+      masterclass: 'Masterclasses',
     },
     eventCard: {
       speaker: 'Speaker',
@@ -140,19 +143,19 @@ export const eventsTranslations: EventsTranslationDict = {
       register: 'Register',
       full: 'Full',
       capacity: 'Capacity',
-      capacityFull: undefined
+      capacityFull: undefined,
     },
     sections: {
       upcomingEvents: 'Upcoming events',
-      pastEvents: 'Past events'
+      pastEvents: 'Past events',
     },
     empty: {
       noUpcoming: 'No upcoming events',
       noUpcomingMessage: 'Check our past events or come back later.',
       noPast: 'No past events found',
-      noPastMessage: 'Try modifying your filters.'
+      noPastMessage: 'Try modifying your filters.',
     },
     stats: 'Statistics',
-    results: 'Results'
-  }
-} as const
+    results: 'Results',
+  },
+} as const;

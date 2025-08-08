@@ -1,1 +1,1 @@
-export { useVacancies } from './useVacancies'
+export { useVacancies } from './useVacancies';

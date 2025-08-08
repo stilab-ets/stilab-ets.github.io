@@ -50,12 +50,38 @@ export function useAdminDashboard() {
   const isLoading = ref(false);
 
   const tabs = computed(() => [
-    { id: 'overview', label: t.value.dashboard.admin.tabs.overview, icon: 'BarChart3' },
-    { id: 'users', label: t.value.dashboard.admin.tabs.users, icon: 'Users', count: users.value.length },
-    { id: 'invitations', label: t.value.dashboard.admin.tabs.invitations, icon: 'UserPlus', count: invitations.value.filter(inv => inv.status === 'pending').length },
-    { id: 'content', label: t.value.dashboard.admin.tabs.content, icon: 'FileText' },
-    { id: 'reports', label: t.value.dashboard.admin.tabs.reports, icon: 'TrendingUp' },
-    { id: 'forms', label: t.value.dashboard.admin.tabs.forms, icon: 'FilePlus' }
+    {
+      id: 'overview',
+      label: t.value.dashboard.admin.tabs.overview,
+      icon: 'BarChart3',
+    },
+    {
+      id: 'users',
+      label: t.value.dashboard.admin.tabs.users,
+      icon: 'Users',
+      count: users.value.length,
+    },
+    {
+      id: 'invitations',
+      label: t.value.dashboard.admin.tabs.invitations,
+      icon: 'UserPlus',
+      count: invitations.value.filter((inv) => inv.status === 'pending').length,
+    },
+    {
+      id: 'content',
+      label: t.value.dashboard.admin.tabs.content,
+      icon: 'FileText',
+    },
+    {
+      id: 'reports',
+      label: t.value.dashboard.admin.tabs.reports,
+      icon: 'TrendingUp',
+    },
+    {
+      id: 'forms',
+      label: t.value.dashboard.admin.tabs.forms,
+      icon: 'FilePlus',
+    },
   ]);
 
   const adminStats = computed<AdminStats[]>(() => [
@@ -63,40 +89,48 @@ export function useAdminDashboard() {
       title: t.value.dashboard.admin.stats.totalUsers,
       value: users.value.length,
       icon: 'Users',
-      color: 'bg-blue-500'
+      color: 'bg-blue-500',
     },
     {
       title: t.value.dashboard.admin.stats.totalPublications,
       value: publications.value.length,
       icon: 'FileText',
-      color: 'bg-green-500'
+      color: 'bg-green-500',
     },
     {
       title: t.value.dashboard.admin.stats.activeProjects,
       value: projects.value.length,
       icon: 'Briefcase',
-      color: 'bg-purple-500'
+      color: 'bg-purple-500',
     },
     {
       title: t.value.dashboard.admin.stats.pendingInvitations,
-      value: invitations.value.filter(inv => inv.status === 'pending').length,
+      value: invitations.value.filter((inv) => inv.status === 'pending').length,
       icon: 'UserPlus',
-      color: 'bg-orange-500'
-    }
+      color: 'bg-orange-500',
+    },
   ]);
 
   const recentUsers = computed<RecentUser[]>(() => {
     return users.value
       .slice()
-      .sort((a, b) => new Date(b.user?.date_joined || 0).getTime() - new Date(a.user?.date_joined || 0).getTime())
+      .sort(
+        (a, b) =>
+          new Date(b.user?.date_joined || 0).getTime() -
+          new Date(a.user?.date_joined || 0).getTime()
+      )
       .slice(0, 10)
-      .map(member => ({
+      .map((member) => ({
         id: member.id,
         name: `${member.first_name} ${member.last_name}`.trim(),
         email: member.email || member.user?.email || '',
         role: member.user?.is_staff ? 'admin' : member.role || 'student',
-        initials: getInitials(`${member.first_name} ${member.last_name}`.trim()),
-        joined: member.user?.date_joined ? new Date(member.user.date_joined).toLocaleDateString() : t.value.dashboard.admin.overview.unknown
+        initials: getInitials(
+          `${member.first_name} ${member.last_name}`.trim()
+        ),
+        joined: member.user?.date_joined
+          ? new Date(member.user.date_joined).toLocaleDateString()
+          : t.value.dashboard.admin.overview.unknown,
       }));
   });
 
@@ -104,33 +138,37 @@ export function useAdminDashboard() {
     const content: RecentContent[] = [];
 
     // Add publications
-    publications.value.slice(0, 3).forEach(pub => {
+    publications.value.slice(0, 3).forEach((pub) => {
       content.push({
         id: `pub-${pub.id}`,
         title: pub.title,
         type: 'publication',
         author: pub.author || t.value.dashboard.admin.overview.unknown,
-        timestamp: pub.year ? `${pub.year}` : t.value.dashboard.admin.overview.unknown,
+        timestamp: pub.year
+          ? `${pub.year}`
+          : t.value.dashboard.admin.overview.unknown,
         status: pub.is_approved ? 'published' : 'pending',
-        icon: 'FileText'
+        icon: 'FileText',
       });
     });
 
     // Add events
-    events.value.slice(0, 3).forEach(event => {
+    events.value.slice(0, 3).forEach((event) => {
       content.push({
         id: `event-${event.id}`,
         title: event.title,
         type: 'event',
-        author: event.speaker ? `${event.speaker.first_name} ${event.speaker.last_name}` : t.value.dashboard.admin.overview.system,
+        author: event.speaker
+          ? `${event.speaker.first_name} ${event.speaker.last_name}`
+          : t.value.dashboard.admin.overview.system,
         timestamp: event.date || t.value.dashboard.admin.overview.unknown,
         status: event.is_upcoming ? 'upcoming' : 'past',
-        icon: 'Calendar'
+        icon: 'Calendar',
       });
     });
 
     // Add projects
-    projects.value.slice(0, 2).forEach(project => {
+    projects.value.slice(0, 2).forEach((project) => {
       content.push({
         id: `project-${project.id}`,
         title: project.title,
@@ -138,12 +176,13 @@ export function useAdminDashboard() {
         author: t.value.dashboard.admin.overview.system,
         timestamp: project.start_date,
         status: 'active',
-        icon: 'Briefcase'
+        icon: 'Briefcase',
       });
     });
 
-    return content.sort((a, b) => 
-      new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    return content.sort(
+      (a, b) =>
+        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
   });
 
@@ -153,42 +192,42 @@ export function useAdminDashboard() {
       description: t.value.dashboard.admin.actions.sendInvitationDesc,
       icon: 'UserPlus',
       action: () => console.log('Navigate to invitation form'),
-      color: 'bg-blue-500'
+      color: 'bg-blue-500',
     },
     {
       title: t.value.dashboard.admin.actions.manageUsers,
       description: t.value.dashboard.admin.actions.manageUsersDesc,
       icon: 'Users',
       action: () => console.log('Navigate to user management'),
-      color: 'bg-green-500'
+      color: 'bg-green-500',
     },
     {
       title: t.value.dashboard.admin.actions.manageContent,
       description: t.value.dashboard.admin.actions.manageContentDesc,
       icon: 'FileText',
       action: () => console.log('Navigate to content management'),
-      color: 'bg-purple-500'
+      color: 'bg-purple-500',
     },
     {
       title: t.value.dashboard.admin.actions.viewReports,
       description: t.value.dashboard.admin.actions.viewReportsDesc,
       icon: 'TrendingUp',
       action: () => console.log('Navigate to reports'),
-      color: 'bg-orange-500'
-    }
+      color: 'bg-orange-500',
+    },
   ]);
 
   const userManagement = computed(() => ({
     totalUsers: users.value.length,
-    activeUsers: users.value.filter(u => u.user?.is_active).length,
-    adminUsers: users.value.filter(u => u.user?.is_staff).length,
-    recentRegistrations: users.value.filter(u => {
+    activeUsers: users.value.filter((u) => u.user?.is_active).length,
+    adminUsers: users.value.filter((u) => u.user?.is_staff).length,
+    recentRegistrations: users.value.filter((u) => {
       if (!u.user?.date_joined) return false;
       const joinDate = new Date(u.user.date_joined);
       const weekAgo = new Date();
       weekAgo.setDate(weekAgo.getDate() - 7);
       return joinDate > weekAgo;
-    }).length
+    }).length,
   }));
 
   const getInitials = (name: string): string => {
@@ -201,13 +240,14 @@ export function useAdminDashboard() {
   const loadDashboardData = async () => {
     isLoading.value = true;
     try {
-      const [membersRes, publicationsRes, eventsRes, researchRes] = await Promise.all([
-        mainAPI.getMembers(),
-        mainAPI.getPublications(),
-        mainAPI.getEvents(),
-        mainAPI.getResearch(),
-        fetchInvitations()
-      ]);
+      const [membersRes, publicationsRes, eventsRes, researchRes] =
+        await Promise.all([
+          mainAPI.getMembers(),
+          mainAPI.getPublications(),
+          mainAPI.getEvents(),
+          mainAPI.getResearch(),
+          fetchInvitations(),
+        ]);
 
       users.value = membersRes.data || [];
       publications.value = publicationsRes.data || [];
@@ -233,6 +273,6 @@ export function useAdminDashboard() {
     userManagement,
     invitations,
     isLoading,
-    loadDashboardData
+    loadDashboardData,
   };
 }

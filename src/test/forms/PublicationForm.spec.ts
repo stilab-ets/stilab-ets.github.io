@@ -1,14 +1,14 @@
-import { mount } from '@vue/test-utils'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { ref, nextTick } from 'vue'
-import PublicationForm from '@/components/publications/PublicationForm.vue'
+import { mount } from '@vue/test-utils';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { ref, nextTick } from 'vue';
+import PublicationForm from '@/components/publications/PublicationForm.vue';
 
 vi.mock('@/composables/useAuth', () => ({
   useAuth: () => ({
     isLoggedIn: ref(true),
     user: ref({ id: 1, name: 'Test User' }),
   }),
-}))
+}));
 
 vi.mock('@/composables/useLanguage', () => ({
   useLanguage: () => ({
@@ -52,10 +52,10 @@ vi.mock('@/composables/useLanguage', () => ({
       },
     }),
   }),
-}))
+}));
 
 describe('PublicationForm.vue', () => {
-  let wrapper: ReturnType<typeof mount>
+  let wrapper: ReturnType<typeof mount>;
 
   beforeEach(async () => {
     wrapper = mount(PublicationForm, {
@@ -65,34 +65,34 @@ describe('PublicationForm.vue', () => {
           errors: ref({}),
         },
       },
-    })
-    await nextTick()
-  })
+    });
+    await nextTick();
+  });
 
   it('renders the form title and subtitle', () => {
-    expect(wrapper.text()).toContain('Create Publication')
-    expect(wrapper.text()).toContain('Fill in the details')
-  })
+    expect(wrapper.text()).toContain('Create Publication');
+    expect(wrapper.text()).toContain('Fill in the details');
+  });
 
   it('shows validation errors when submitting empty form', async () => {
-    await wrapper.find('form').trigger('submit.prevent')
+    await wrapper.find('form').trigger('submit.prevent');
 
-    expect(wrapper.text()).toContain('Entry type is required')
-  })
+    expect(wrapper.text()).toContain('Entry type is required');
+  });
 
   it('submits form with valid minimal data', async () => {
-    await wrapper.get('select#entrytype').setValue('article')
-    await wrapper.get('input#citekey').setValue('smith2023')
-    await wrapper.get('input#title').setValue('A Great Study')
-    await wrapper.get('input#year').setValue('2023')
+    await wrapper.get('select#entrytype').setValue('article');
+    await wrapper.get('input#citekey').setValue('smith2023');
+    await wrapper.get('input#title').setValue('A Great Study');
+    await wrapper.get('input#year').setValue('2023');
 
-    await wrapper.find('form').trigger('submit.prevent')
+    await wrapper.find('form').trigger('submit.prevent');
 
-    expect(wrapper.get('select#entrytype').element.value).toBe('article')
-    expect(wrapper.get('input#citekey').element.value).toBe('smith2023')
-    expect(wrapper.get('input#title').element.value).toBe('A Great Study')
-    expect(wrapper.get('input#year').element.value).toBe('2023')
+    expect(wrapper.get('select#entrytype').element.value).toBe('article');
+    expect(wrapper.get('input#citekey').element.value).toBe('smith2023');
+    expect(wrapper.get('input#title').element.value).toBe('A Great Study');
+    expect(wrapper.get('input#year').element.value).toBe('2023');
 
-    expect(wrapper.emitted('submit')).toBeTruthy()
-  })
-})
+    expect(wrapper.emitted('submit')).toBeTruthy();
+  });
+});

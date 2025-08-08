@@ -1,40 +1,43 @@
 <script setup lang="ts">
-import { useLanguage } from '@/composables/useLanguage'
-import { useAuth } from '@/hooks/auth/useAuth'
-import LoginForm from './LoginForm.vue'
+import { useLanguage } from '@/composables/useLanguage';
+import { useAuth } from '@/hooks/auth/useAuth';
+import LoginForm from './LoginForm.vue';
 
 const emit = defineEmits<{
-  setCurrentPage: [page: string]
-}>()
+  setCurrentPage: [page: string];
+}>();
 
-const { t } = useLanguage()
-const { getDashboardRoute } = useAuth()
+const { t } = useLanguage();
+const { getDashboardRoute } = useAuth();
 
 const handleLoginSuccess = () => {
-  
   // Get the appropriate dashboard route
-  const dashboardRoute = getDashboardRoute.value
-  
+  const dashboardRoute = getDashboardRoute.value;
+
   if (dashboardRoute) {
-    emit('setCurrentPage', dashboardRoute)
+    emit('setCurrentPage', dashboardRoute);
   } else {
     // Fallback to generic dashboard
-    emit('setCurrentPage', 'dashboard')
+    emit('setCurrentPage', 'dashboard');
   }
-}
+};
 
 const handleLoginFailed = (error: string) => {
-  console.warn('[LOGIN PAGE] Login failed:', error)
-}
+  console.warn('[LOGIN PAGE] Login failed:', error);
+};
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+  <div
+    class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4"
+  >
     <div class="max-w-md w-full">
       <div class="block bg-white rounded-xl shadow-xl p-8">
         <!-- Logo and title -->
         <div class="text-center mb-8">
-          <div class="mx-auto w-16 h-16 bg-[#08a4d4] rounded-full flex items-center justify-center mb-4">
+          <div
+            class="mx-auto w-16 h-16 bg-[#08a4d4] rounded-full flex items-center justify-center mb-4"
+          >
             <span class="text-white text-2xl font-bold">S</span>
           </div>
           <h1 class="text-2xl font-bold text-gray-900 mb-2">STIL Lab</h1>
@@ -43,8 +46,8 @@ const handleLoginFailed = (error: string) => {
 
         <!-- Login form -->
         <div class="flex items-center justify-center">
-          <LoginForm 
-            @login-success="handleLoginSuccess" 
+          <LoginForm
+            @login-success="handleLoginSuccess"
             @login-failed="handleLoginFailed"
           />
         </div>

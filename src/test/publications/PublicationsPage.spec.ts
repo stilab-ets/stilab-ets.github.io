@@ -1,7 +1,7 @@
-import { mount } from '@vue/test-utils'
-import { describe, it, expect, vi } from 'vitest'
-import { ref, computed } from 'vue'
-import PublicationsPage from '@/components/publications/PublicationsPage.vue'
+import { mount } from '@vue/test-utils';
+import { describe, it, expect, vi } from 'vitest';
+import { ref, computed } from 'vue';
+import PublicationsPage from '@/components/publications/PublicationsPage.vue';
 
 const samplePublications = [
   {
@@ -9,16 +9,16 @@ const samplePublications = [
     title: 'Vue for Beginners',
     year: 2023,
     entrytype: 'journal',
-    authors: ['Alice']
+    authors: ['Alice'],
   },
   {
     id: '2',
     title: 'Advanced Vue Patterns',
     year: 2022,
     entrytype: 'conference',
-    authors: ['Bob']
-  }
-]
+    authors: ['Bob'],
+  },
+];
 
 vi.mock('@/composables/useLanguage', () => ({
   useLanguage: () => ({
@@ -30,28 +30,28 @@ vi.mock('@/composables/useLanguage', () => ({
           year: 'Year',
           type: 'Type',
           allYears: 'All years',
-          allTypes: 'All types'
+          allTypes: 'All types',
         },
         search: {
           label: 'Search publications',
-          placeholder: 'Enter a title or keyword'
+          placeholder: 'Enter a title or keyword',
         },
         results: {
           publication: 'publication',
-          publications: 'publications'
+          publications: 'publications',
         },
         empty: {
           title: 'No results found',
-          message: 'Try adjusting your filters or search query.'
-        }
+          message: 'Try adjusting your filters or search query.',
+        },
       },
       common: {
         retry: 'Retry',
-        loading: 'Loading...'
-      }
-    })
-  })
-}))
+        loading: 'Loading...',
+      },
+    }),
+  }),
+}));
 
 vi.mock('@/hooks/publications/usePublications', () => ({
   usePublications: () => ({
@@ -59,38 +59,43 @@ vi.mock('@/hooks/publications/usePublications', () => ({
     isLoading: ref(false),
     error: ref(null),
     fetchPublications: vi.fn(),
-    clearError: vi.fn()
-  })
-}))
+    clearError: vi.fn(),
+  }),
+}));
 
 vi.mock('@/hooks/publications/usePublicationFilters', () => ({
   usePublicationFilters: () => {
-    const searchQuery = ref('')
-    const selectedYear = ref('')
-    const selectedType = ref('')
-    const sortBy = ref('year-desc')
-    const availableYears = ref([2023, 2022])
-    const availableEntryTypes = ref(['journal', 'conference'])
+    const searchQuery = ref('');
+    const selectedYear = ref('');
+    const selectedType = ref('');
+    const sortBy = ref('year-desc');
+    const availableYears = ref([2023, 2022]);
+    const availableEntryTypes = ref(['journal', 'conference']);
 
-    const resultsCount = computed(() =>
-      samplePublications.filter(p =>
-        (!selectedYear.value || p.year.toString() === selectedYear.value) &&
-        (!selectedType.value || p.entrytype === selectedType.value) &&
-        (!searchQuery.value || p.title.toLowerCase().includes(searchQuery.value.toLowerCase()))
-      ).length
-    )
+    const resultsCount = computed(
+      () =>
+        samplePublications.filter(
+          (p) =>
+            (!selectedYear.value || p.year.toString() === selectedYear.value) &&
+            (!selectedType.value || p.entrytype === selectedType.value) &&
+            (!searchQuery.value ||
+              p.title.toLowerCase().includes(searchQuery.value.toLowerCase()))
+        ).length
+    );
 
     const sortedPublications = computed(() => {
-      let pubs = samplePublications.filter(p =>
-        (!selectedYear.value || p.year.toString() === selectedYear.value) &&
-        (!selectedType.value || p.entrytype === selectedType.value) &&
-        (!searchQuery.value || p.title.toLowerCase().includes(searchQuery.value.toLowerCase()))
-      )
+      let pubs = samplePublications.filter(
+        (p) =>
+          (!selectedYear.value || p.year.toString() === selectedYear.value) &&
+          (!selectedType.value || p.entrytype === selectedType.value) &&
+          (!searchQuery.value ||
+            p.title.toLowerCase().includes(searchQuery.value.toLowerCase()))
+      );
       if (sortBy.value === 'title-asc') {
-        pubs = pubs.sort((a, b) => a.title.localeCompare(b.title))
+        pubs = pubs.sort((a, b) => a.title.localeCompare(b.title));
       }
-      return pubs
-    })
+      return pubs;
+    });
 
     return {
       searchQuery,
@@ -102,15 +107,15 @@ vi.mock('@/hooks/publications/usePublicationFilters', () => ({
       availableEntryTypes,
       resultsCount,
       updateFilter: (filterId: string, value: string) => {
-        if (filterId === 'year') selectedYear.value = value
-        if (filterId === 'type') selectedType.value = value
+        if (filterId === 'year') selectedYear.value = value;
+        if (filterId === 'type') selectedType.value = value;
       },
       filterByAuthor: (author: string) => {
-        searchQuery.value = author
-      }
-    }
-  }
-}))
+        searchQuery.value = author;
+      },
+    };
+  },
+}));
 
 describe('PublicationsPage.vue', () => {
   it('renders correctly with publications', () => {
@@ -120,16 +125,16 @@ describe('PublicationsPage.vue', () => {
           SearchAndFilters: true,
           EmptyState: true,
           PublicationCard: true,
-          PublicationSortOptions: true
-        }
-      }
-    })
+          PublicationSortOptions: true,
+        },
+      },
+    });
 
-    expect(wrapper.exists()).toBe(true)
-    expect(wrapper.text()).toContain('Publications')
-    expect(wrapper.text()).not.toContain('Loading...')
-    expect(wrapper.text()).not.toContain('No results found')
-  })
+    expect(wrapper.exists()).toBe(true);
+    expect(wrapper.text()).toContain('Publications');
+    expect(wrapper.text()).not.toContain('Loading...');
+    expect(wrapper.text()).not.toContain('No results found');
+  });
 
   it('renders SearchAndFilters component', () => {
     const wrapper = mount(PublicationsPage, {
@@ -138,13 +143,15 @@ describe('PublicationsPage.vue', () => {
           SearchAndFilters: true,
           EmptyState: true,
           PublicationCard: true,
-          PublicationSortOptions: true
-        }
-      }
-    })
+          PublicationSortOptions: true,
+        },
+      },
+    });
 
-    expect(wrapper.findComponent({ name: 'SearchAndFilters' }).exists()).toBe(true)
-  })
+    expect(wrapper.findComponent({ name: 'SearchAndFilters' }).exists()).toBe(
+      true
+    );
+  });
 
   it('renders PublicationSortOptions component', () => {
     const wrapper = mount(PublicationsPage, {
@@ -153,13 +160,15 @@ describe('PublicationsPage.vue', () => {
           SearchAndFilters: true,
           EmptyState: true,
           PublicationCard: true,
-          PublicationSortOptions: true
-        }
-      }
-    })
+          PublicationSortOptions: true,
+        },
+      },
+    });
 
-    expect(wrapper.findComponent({ name: 'PublicationSortOptions' }).exists()).toBe(true)
-  })
+    expect(
+      wrapper.findComponent({ name: 'PublicationSortOptions' }).exists()
+    ).toBe(true);
+  });
 
   it('renders a PublicationCard for each publication', () => {
     const wrapper = mount(PublicationsPage, {
@@ -168,12 +177,12 @@ describe('PublicationsPage.vue', () => {
           SearchAndFilters: true,
           EmptyState: true,
           PublicationCard: true,
-          PublicationSortOptions: true
-        }
-      }
-    })
+          PublicationSortOptions: true,
+        },
+      },
+    });
 
-    const cards = wrapper.findAllComponents({ name: 'PublicationCard' })
-    expect(cards.length).toBe(samplePublications.length)
-  })
-})
+    const cards = wrapper.findAllComponents({ name: 'PublicationCard' });
+    expect(cards.length).toBe(samplePublications.length);
+  });
+});

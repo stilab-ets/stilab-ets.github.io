@@ -1,78 +1,81 @@
 export interface PublicationFormTranslations {
-  titleCreate: string
-  titleEdit: string
-  subtitle: string
+  titleCreate: string;
+  titleEdit: string;
+  subtitle: string;
   form: {
-    entryType: string
-    selectEntryType: string
-    title: string
-    titlePlaceholder: string
-    authors: string
-    authorsPlaceholder: string
-    authorsHelp: string
-    year: string
-    citekey: string
-    citekeyPlaceholder: string
-    citekeyHelp: string
-    journal: string
-    journalPlaceholder: string
-    booktitle: string
-    booktitlePlaceholder: string
-    publisher: string
-    publisherPlaceholder: string
-    volume: string
-    volumePlaceholder: string
-    number: string
-    numberPlaceholder: string
-    pages: string
-    pagesPlaceholder: string
-    url: string
-    urlPlaceholder: string
-    cancel: string
-    create: string
-    update: string
-    submitting: string
-  }
+    entryType: string;
+    selectEntryType: string;
+    title: string;
+    titlePlaceholder: string;
+    authors: string;
+    authorsPlaceholder: string;
+    authorsHelp: string;
+    year: string;
+    citekey: string;
+    citekeyPlaceholder: string;
+    citekeyHelp: string;
+    journal: string;
+    journalPlaceholder: string;
+    booktitle: string;
+    booktitlePlaceholder: string;
+    publisher: string;
+    publisherPlaceholder: string;
+    volume: string;
+    volumePlaceholder: string;
+    number: string;
+    numberPlaceholder: string;
+    pages: string;
+    pagesPlaceholder: string;
+    url: string;
+    urlPlaceholder: string;
+    cancel: string;
+    create: string;
+    update: string;
+    submitting: string;
+  };
   bibtexImport: {
-    title: string
-    description: string
-    placeholder: string
-    parse: string
-    clear: string
-  }
+    title: string;
+    description: string;
+    placeholder: string;
+    parse: string;
+    clear: string;
+  };
   preview: {
-    title: string
-  }
+    title: string;
+  };
   validation: {
-    entryTypeRequired: string
-    titleRequired: string
-    authorRequired: string
-    yearInvalid: string
-  }
+    entryTypeRequired: string;
+    titleRequired: string;
+    authorRequired: string;
+    yearInvalid: string;
+  };
   errors: {
-    submitFailed: string
-  }
+    submitFailed: string;
+  };
   entryTypes: {
-    article: string
-    book: string
-    booklet: string
-    conference: string
-    inbook: string
-    incollection: string
-    inproceedings: string
-    manual: string
-    mastersthesis: string
-    misc: string
-    phdthesis: string
-    proceedings: string
-    techreport: string
-    unpublished: string
-    online: string
-    presentation: string
-  }
+    article: string;
+    book: string;
+    booklet: string;
+    conference: string;
+    inbook: string;
+    incollection: string;
+    inproceedings: string;
+    manual: string;
+    mastersthesis: string;
+    misc: string;
+    phdthesis: string;
+    proceedings: string;
+    techreport: string;
+    unpublished: string;
+    online: string;
+    presentation: string;
+  };
 }
 
-export const publicationFormTranslations: Record<'en' | 'fr', PublicationFormTranslations> = {
+export const publicationFormTranslations: Record<
+  'en' | 'fr',
+  PublicationFormTranslations
+> = {
   en: {
     titleCreate: 'Create Publication',
     titleEdit: 'Edit Publication',
@@ -106,26 +109,26 @@ export const publicationFormTranslations: Record<'en' | 'fr', PublicationFormTra
       cancel: 'Cancel',
       create: 'Create',
       update: 'Update',
-      submitting: 'Submitting...'
+      submitting: 'Submitting...',
     },
     bibtexImport: {
       title: 'Import from BibTeX',
       description: 'Paste BibTeX to populate the form.',
       placeholder: 'Paste your BibTeX entry here...',
       parse: 'Parse',
-      clear: 'Clear'
+      clear: 'Clear',
     },
     preview: {
-      title: 'Preview BibTeX'
+      title: 'Preview BibTeX',
     },
     validation: {
       entryTypeRequired: 'Entry type is required.',
       titleRequired: 'Title is required.',
       authorRequired: 'Author is required.',
-      yearInvalid: 'Invalid year.'
+      yearInvalid: 'Invalid year.',
     },
     errors: {
-      submitFailed: 'Failed to submit.'
+      submitFailed: 'Failed to submit.',
     },
     entryTypes: {
       article: 'Article',
@@ -143,15 +146,15 @@ export const publicationFormTranslations: Record<'en' | 'fr', PublicationFormTra
       techreport: 'Tech Report',
       unpublished: 'Unpublished',
       online: 'Online',
-      presentation: 'Presentation'
-    }
+      presentation: 'Presentation',
+    },
   },
   fr: {
     titleCreate: 'Créer une Publication',
     titleEdit: 'Modifier la Publication',
     subtitle: 'Remplissez les détails ci-dessous.',
     form: {
-      entryType: 'Type d\'Entrée',
+      entryType: "Type d'Entrée",
       selectEntryType: 'Sélectionner le type',
       title: 'Titre',
       titlePlaceholder: 'Titre de la Publication',
@@ -179,26 +182,26 @@ export const publicationFormTranslations: Record<'en' | 'fr', PublicationFormTra
       cancel: 'Annuler',
       create: 'Créer',
       update: 'Mettre à jour',
-      submitting: 'Envoi en cours...'
+      submitting: 'Envoi en cours...',
     },
     bibtexImport: {
       title: 'Importer depuis BibTeX',
       description: 'Collez le BibTeX pour remplir le formulaire.',
       placeholder: 'Collez votre entrée BibTeX ici...',
       parse: 'Analyser',
-      clear: 'Effacer'
+      clear: 'Effacer',
     },
     preview: {
-      title: 'Aperçu BibTeX'
+      title: 'Aperçu BibTeX',
     },
     validation: {
-      entryTypeRequired: 'Le type d\'entrée est requis.',
+      entryTypeRequired: "Le type d'entrée est requis.",
       titleRequired: 'Le titre est requis.',
-      authorRequired: 'L\'auteur est requis.',
-      yearInvalid: 'Année invalide.'
+      authorRequired: "L'auteur est requis.",
+      yearInvalid: 'Année invalide.',
     },
     errors: {
-      submitFailed: 'Échec de l\'envoi.'
+      submitFailed: "Échec de l'envoi.",
     },
     entryTypes: {
       article: 'Article',
@@ -216,7 +219,7 @@ export const publicationFormTranslations: Record<'en' | 'fr', PublicationFormTra
       techreport: 'Rapport Technique',
       unpublished: 'Non Publié',
       online: 'En Ligne',
-      presentation: 'Présentation'
-    }
-  }
-}
+      presentation: 'Présentation',
+    },
+  },
+};

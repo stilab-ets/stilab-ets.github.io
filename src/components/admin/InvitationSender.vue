@@ -1,61 +1,67 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useInvitationManagement } from '@/hooks/invitations/useInvitationManagement'
-import { useLanguage } from '@/composables/useLanguage'
-import { invitationsTranslations } from '@/data/translations/invitations.translate'
-import SingleInvitationForm from './invitation/SingleInvitationForm.vue'
-import BulkInvitationForm from './invitation/BulkInvitationForm.vue'
+import { ref, computed } from 'vue';
+import { useInvitationManagement } from '@/hooks/invitations/useInvitationManagement';
+import { useLanguage } from '@/composables/useLanguage';
+import { invitationsTranslations } from '@/data/translations/invitations.translate';
+import SingleInvitationForm from './invitation/SingleInvitationForm.vue';
+import BulkInvitationForm from './invitation/BulkInvitationForm.vue';
 
 // Define emits
 const emit = defineEmits<{
-  'invitation-sent': []
-}>()
+  'invitation-sent': [];
+}>();
 
-const { currentLanguage } = useLanguage()
-const t = computed(() => invitationsTranslations[currentLanguage.value].sender)
+const { currentLanguage } = useLanguage();
+const t = computed(() => invitationsTranslations[currentLanguage.value].sender);
 
-const { sendInvitation, isLoading, error } = useInvitationManagement()
+const { sendInvitation, isLoading, error } = useInvitationManagement();
 
 // Active form type
-const activeForm = ref<'single' | 'bulk'>('single')
+const activeForm = ref<'single' | 'bulk'>('single');
 
 // Handle single invitation
-const handleSingleInvitation = async (data: { email: string; role: string }) => {
-  const success = await sendInvitation(data.email)
-  
+const handleSingleInvitation = async (data: {
+  email: string;
+  role: string;
+}) => {
+  const success = await sendInvitation(data.email);
+
   if (success) {
-    emit('invitation-sent')
+    emit('invitation-sent');
   }
-}
+};
 
 // Handle bulk invitations
-const handleBulkInvitations = async (data: { emails: string[]; role: string }) => {
+const handleBulkInvitations = async (data: {
+  emails: string[];
+  role: string;
+}) => {
   // Process each email individually
   const results = {
     success: [] as string[],
-    errors: [] as string[]
-  }
+    errors: [] as string[],
+  };
 
   for (const email of data.emails) {
-    const success = await sendInvitation(email)
-    
+    const success = await sendInvitation(email);
+
     if (success) {
-      results.success.push(email)
+      results.success.push(email);
     } else {
-      results.errors.push(`${email}: ${error.value || 'Failed to send'}`)
+      results.errors.push(`${email}: ${error.value || 'Failed to send'}`);
     }
   }
 
   // Emit success if at least one invitation was sent
   if (results.success.length > 0) {
-    emit('invitation-sent')
+    emit('invitation-sent');
   }
-}
+};
 
 // Toggle between single and bulk forms
 const setActiveForm = (form: 'single' | 'bulk') => {
-  activeForm.value = form
-}
+  activeForm.value = form;
+};
 </script>
 
 <template>
@@ -69,7 +75,7 @@ const setActiveForm = (form: 'single' | 'bulk') => {
             'px-4 py-2 text-sm font-medium rounded-md transition-colors',
             activeForm === 'single'
               ? 'bg-white text-gray-900 shadow-sm'
-              : 'text-gray-500 hover:text-gray-700'
+              : 'text-gray-500 hover:text-gray-700',
           ]"
         >
           Single Invitation
@@ -80,7 +86,7 @@ const setActiveForm = (form: 'single' | 'bulk') => {
             'px-4 py-2 text-sm font-medium rounded-md transition-colors',
             activeForm === 'bulk'
               ? 'bg-white text-gray-900 shadow-sm'
-              : 'text-gray-500 hover:text-gray-700'
+              : 'text-gray-500 hover:text-gray-700',
           ]"
         >
           Bulk Invitations

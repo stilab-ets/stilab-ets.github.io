@@ -1,109 +1,112 @@
 export interface ResearchFormTranslations {
-  titleEdit: string
-  titleCreate: string
-  subtitle: string
+  titleEdit: string;
+  titleCreate: string;
+  subtitle: string;
   sections: {
-    basic: string
-    details: string
-    team: string
-    resources: string
-    outcomes: string
-    description: string
-    timeline: string
-  }
+    basic: string;
+    details: string;
+    team: string;
+    resources: string;
+    outcomes: string;
+    description: string;
+    timeline: string;
+  };
   form: {
-    title: string
-    titlePlaceholder: string
-    domain: string
-    selectDomain: string
-    description: string
-    descriptionPlaceholder: string
-    objectives: string
-    objectivesPlaceholder: string
-    methodology: string
-    methodologyPlaceholder: string
-    expectedResults: string
-    expectedResultsPlaceholder: string
-    leadResearcher: string
-    selectLeadResearcher: string
-    participants: string
-    selectParticipants: string
-    collaborators: string
-    collaboratorsPlaceholder: string
-    startDate: string
-    endDate: string
-    budget: string
-    budgetPlaceholder: string
-    fundingSource: string
-    fundingSourcePlaceholder: string
-    equipment: string
-    equipmentPlaceholder: string
-    publications: string
-    patents: string
-    software: string
-    datasets: string
-    status: string
-    selectStatus: string
-    priority: string
-    selectPriority: string
-    keywords: string
-    keywordsPlaceholder: string
-    leader: string
-    selectLeader: string
-    funding: string
-    fundingPlaceholder: string
-    githubUrl: string
-    websiteUrl: string
-    cancel: string
-    create: string
-    update: string
-    submitting: string
-  }
+    title: string;
+    titlePlaceholder: string;
+    domain: string;
+    selectDomain: string;
+    description: string;
+    descriptionPlaceholder: string;
+    objectives: string;
+    objectivesPlaceholder: string;
+    methodology: string;
+    methodologyPlaceholder: string;
+    expectedResults: string;
+    expectedResultsPlaceholder: string;
+    leadResearcher: string;
+    selectLeadResearcher: string;
+    participants: string;
+    selectParticipants: string;
+    collaborators: string;
+    collaboratorsPlaceholder: string;
+    startDate: string;
+    endDate: string;
+    budget: string;
+    budgetPlaceholder: string;
+    fundingSource: string;
+    fundingSourcePlaceholder: string;
+    equipment: string;
+    equipmentPlaceholder: string;
+    publications: string;
+    patents: string;
+    software: string;
+    datasets: string;
+    status: string;
+    selectStatus: string;
+    priority: string;
+    selectPriority: string;
+    keywords: string;
+    keywordsPlaceholder: string;
+    leader: string;
+    selectLeader: string;
+    funding: string;
+    fundingPlaceholder: string;
+    githubUrl: string;
+    websiteUrl: string;
+    cancel: string;
+    create: string;
+    update: string;
+    submitting: string;
+  };
   domains: {
-    softwareArchitecture: string
-    artificialIntelligence: string
-    cybersecurity: string
-    devops: string
-    cloudComputing: string
-    softwareTesting: string
-    softwareMaintenance: string
-    humanComputerInteraction: string
-    distributedSystems: string
-    blockchain: string
-  }
+    softwareArchitecture: string;
+    artificialIntelligence: string;
+    cybersecurity: string;
+    devops: string;
+    cloudComputing: string;
+    softwareTesting: string;
+    softwareMaintenance: string;
+    humanComputerInteraction: string;
+    distributedSystems: string;
+    blockchain: string;
+  };
   statuses: {
-    proposal: string
-    approved: string
-    active: string
-    completed: string
-    suspended: string
-    cancelled: string
-    planned: string
-  }
+    proposal: string;
+    approved: string;
+    active: string;
+    completed: string;
+    suspended: string;
+    cancelled: string;
+    planned: string;
+  };
   priorities: {
-    low: string
-    medium: string
-    high: string
-    critical: string
-  }
+    low: string;
+    medium: string;
+    high: string;
+    critical: string;
+  };
   validation: {
-    leaderRequired: string
-    titleRequired: string
-    domainRequired: string
-    descriptionRequired: string
-    objectivesRequired: string
-    leadResearcherRequired: string
-    startDateRequired: string
-    endDateAfterStart: string
-    budgetInvalid: string
-    statusRequired: string
-  }
+    leaderRequired: string;
+    titleRequired: string;
+    domainRequired: string;
+    descriptionRequired: string;
+    objectivesRequired: string;
+    leadResearcherRequired: string;
+    startDateRequired: string;
+    endDateAfterStart: string;
+    budgetInvalid: string;
+    statusRequired: string;
+  };
   errors: {
-    submitFailed: string
-  }
+    submitFailed: string;
+  };
 }
 
-export const researchFormTranslations: Record<'fr' | 'en', ResearchFormTranslations> = {
+export const researchFormTranslations: Record<
+  'fr' | 'en',
+  ResearchFormTranslations
+> = {
   fr: {
     titleEdit: 'Modifier la recherche',
     titleCreate: 'Créer un projet de recherche',
@@ -115,7 +118,7 @@ export const researchFormTranslations: Record<'fr' | 'en', ResearchFormTranslati
       resources: 'Ressources',
       outcomes: 'Résultats attendus',
       description: 'Description',
-      timeline: 'Planning'
+      timeline: 'Planning',
     },
     form: {
       title: 'Titre',
@@ -163,7 +166,7 @@ export const researchFormTranslations: Record<'fr' | 'en', ResearchFormTranslati
       cancel: 'Annuler',
       create: 'Créer',
       update: 'Mettre à jour',
-      submitting: 'En cours...'
+      submitting: 'En cours...',
     },
     domains: {
       softwareArchitecture: 'Architecture logicielle',
@@ -175,7 +178,7 @@ export const researchFormTranslations: Record<'fr' | 'en', ResearchFormTranslati
       softwareMaintenance: 'Maintenance logicielle',
       humanComputerInteraction: 'Interaction homme-machine',
       distributedSystems: 'Systèmes distribués',
-      blockchain: 'Blockchain'
+      blockchain: 'Blockchain',
     },
     statuses: {
       proposal: 'Proposition',
@@ -184,13 +187,13 @@ export const researchFormTranslations: Record<'fr' | 'en', ResearchFormTranslati
       completed: 'Terminé',
       suspended: 'Suspendu',
       cancelled: 'Annulé',
-      planned: 'Planifié'
+      planned: 'Planifié',
     },
     priorities: {
       low: 'Faible',
       medium: 'Moyenne',
       high: 'Élevée',
-      critical: 'Critique'
+      critical: 'Critique',
     },
     validation: {
       leaderRequired: 'Le responsable est requis',
@@ -202,11 +205,11 @@ export const researchFormTranslations: Record<'fr' | 'en', ResearchFormTranslati
       startDateRequired: 'La date de début est requise',
       endDateAfterStart: 'La date de fin doit être après le début',
       budgetInvalid: 'Budget invalide',
-      statusRequired: 'Le statut est requis'
+      statusRequired: 'Le statut est requis',
     },
     errors: {
-      submitFailed: 'Échec de la soumission'
-    }
+      submitFailed: 'Échec de la soumission',
+    },
   },
   en: {
     titleEdit: 'Edit Research',
@@ -219,7 +222,7 @@ export const researchFormTranslations: Record<'fr' | 'en', ResearchFormTranslati
       resources: 'Resources',
       outcomes: 'Expected Outcomes',
       description: 'Description',
-      timeline: 'Timeline'
+      timeline: 'Timeline',
     },
     form: {
       title: 'Title',
@@ -267,7 +270,7 @@ export const researchFormTranslations: Record<'fr' | 'en', ResearchFormTranslati
       cancel: 'Cancel',
       create: 'Create',
       update: 'Update',
-      submitting: 'Submitting...'
+      submitting: 'Submitting...',
     },
     domains: {
       softwareArchitecture: 'Software Architecture',
@@ -279,7 +282,7 @@ export const researchFormTranslations: Record<'fr' | 'en', ResearchFormTranslati
       softwareMaintenance: 'Software Maintenance',
       humanComputerInteraction: 'Human-Computer Interaction',
       distributedSystems: 'Distributed Systems',
-      blockchain: 'Blockchain'
+      blockchain: 'Blockchain',
     },
     statuses: {
       proposal: 'Proposal',
@@ -288,13 +291,13 @@ export const researchFormTranslations: Record<'fr' | 'en', ResearchFormTranslati
       completed: 'Completed',
       suspended: 'Suspended',
       cancelled: 'Cancelled',
-      planned: 'Planned'
+      planned: 'Planned',
     },
     priorities: {
       low: 'Low',
       medium: 'Medium',
       high: 'High',
-      critical: 'Critical'
+      critical: 'Critical',
     },
     validation: {
       leaderRequired: 'Leader is required',
@@ -306,10 +309,10 @@ export const researchFormTranslations: Record<'fr' | 'en', ResearchFormTranslati
       startDateRequired: 'Start date is required',
       endDateAfterStart: 'End date must be after start date',
       budgetInvalid: 'Invalid budget',
-      statusRequired: 'Status is required'
+      statusRequired: 'Status is required',
     },
     errors: {
-      submitFailed: 'Failed to submit'
-    }
-  }
-} as const
+      submitFailed: 'Failed to submit',
+    },
+  },
+} as const;

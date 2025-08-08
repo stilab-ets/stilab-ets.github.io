@@ -1,54 +1,54 @@
 export interface PersonTranslations {
-  pageTitle: string
-  pageSubtitle: string
+  pageTitle: string;
+  pageSubtitle: string;
   search: {
-    placeholder: string
-    label: string
-    domainLabel: string
-    statusLabel: string
-    allDomains: string
-    allStatuses: string
-    active: string
-    alumni: string
-    visitors: string
-  }
+    placeholder: string;
+    label: string;
+    domainLabel: string;
+    statusLabel: string;
+    allDomains: string;
+    allStatuses: string;
+    active: string;
+    alumni: string;
+    visitors: string;
+  };
   card: {
-    researchDomains: string
+    researchDomains: string;
     status: {
-      active: string
-      alumni: string
-      visitor: string
-    }
-  }
+      active: string;
+      alumni: string;
+      visitor: string;
+    };
+  };
   modal: {
-    biography: string
-    researchDomains: string
-    awards: string
-    teaching: string
-    externalLinks: string
-    github: string
-    linkedin: string
-    stackoverflowUrl: string
-    twitterxUrl: string
-    googlescholarUrl: string
-    dblpUrl: string
-    website: string
-  }
+    biography: string;
+    researchDomains: string;
+    awards: string;
+    teaching: string;
+    externalLinks: string;
+    github: string;
+    linkedin: string;
+    stackoverflowUrl: string;
+    twitterxUrl: string;
+    googlescholarUrl: string;
+    dblpUrl: string;
+    website: string;
+  };
   results: {
-    member: string
-    members: string
-    found: string
-    noResults: string
-  }
+    member: string;
+    members: string;
+    found: string;
+    noResults: string;
+  };
   sections: {
-    phd: string
-    msc: string
-    pro: string
-  }
+    phd: string;
+    msc: string;
+    pro: string;
+  };
   empty: {
-    title: string
-    message: string
-  }
+    title: string;
+    message: string;
+  };
 }
 
 type PersonTranslationDict = {
@@ -59,7 +59,8 @@ type PersonTranslationDict = {
 export const personTranslations: PersonTranslationDict = {
   fr: {
     pageTitle: 'Notre Équipe',
-    pageSubtitle: 'Découvrez les chercheurs et doctorants qui forment notre laboratoire de génie logiciel',
+    pageSubtitle:
+      'Découvrez les chercheurs et doctorants qui forment notre laboratoire de génie logiciel',
     search: {
       placeholder: 'Nom, titre, domaine de recherche...',
       label: 'Rechercher un membre',
@@ -69,15 +70,15 @@ export const personTranslations: PersonTranslationDict = {
       allStatuses: 'Tous',
       active: 'Actifs',
       alumni: 'Alumni',
-      visitors: 'Visiteurs'
+      visitors: 'Visiteurs',
     },
     card: {
       researchDomains: 'Domaines de recherche',
       status: {
         active: 'Actif',
         alumni: 'Alumni',
-        visitor: 'Visiteur'
-      }
+        visitor: 'Visiteur',
+      },
     },
     modal: {
       biography: 'Biographie',
@@ -91,7 +92,7 @@ export const personTranslations: PersonTranslationDict = {
       twitterxUrl: 'Twitter/X',
       googlescholarUrl: 'Google Scholar',
       dblpUrl: 'DBLP',
-      website: 'Site Web'
+      website: 'Site Web',
     },
     results: {
       member: 'membre',
@@ -102,16 +103,17 @@ export const personTranslations: PersonTranslationDict = {
     sections: {
       phd: 'Doctorants',
       msc: 'Masters',
-      pro: 'Professeurs'
+      pro: 'Professeurs',
     },
     empty: {
       title: 'Aucun membre trouvé',
-      message: 'Essayez de modifier vos critères de recherche.'
-    }
+      message: 'Essayez de modifier vos critères de recherche.',
+    },
   },
   en: {
     pageTitle: 'Our Team',
-    pageSubtitle: 'Meet the researchers and PhD students who form our software engineering laboratory',
+    pageSubtitle:
+      'Meet the researchers and PhD students who form our software engineering laboratory',
     search: {
       placeholder: 'Name, title, research domain...',
       label: 'Search for a member',
@@ -121,15 +123,15 @@ export const personTranslations: PersonTranslationDict = {
       allStatuses: 'All',
       active: 'Active',
       alumni: 'Alumni',
-      visitors: 'Visitors'
+      visitors: 'Visitors',
     },
     card: {
       researchDomains: 'Research domains',
       status: {
         active: 'Active',
         alumni: 'Alumni',
-        visitor: 'Visitor'
-      }
+        visitor: 'Visitor',
+      },
     },
     modal: {
       biography: 'Biography',
@@ -142,7 +144,7 @@ export const personTranslations: PersonTranslationDict = {
       stackoverflowUrl: 'Stack Overflow',
       twitterxUrl: 'Twitter/X',
       googlescholarUrl: 'Google Scholar',
-      website: 'Website'
+      website: 'Website',
     },
     results: {
       member: 'member',
@@ -153,11 +155,11 @@ export const personTranslations: PersonTranslationDict = {
     sections: {
       phd: 'PhD Students',
       msc: 'Masters',
-      pro: 'Professors'
+      pro: 'Professors',
     },
     empty: {
       title: 'No members found',
-      message: 'Try modifying your search criteria.'
-    }
-  }
-} as const
+      message: 'Try modifying your search criteria.',
+    },
+  },
+} as const;

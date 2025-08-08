@@ -1,12 +1,12 @@
-import { mount } from '@vue/test-utils'
-import { describe, it, expect, vi, beforeAll, beforeEach } from 'vitest'
-import { ref, nextTick } from 'vue'
-import EventForm from '@/components/events/EventForm.vue'
+import { mount } from '@vue/test-utils';
+import { describe, it, expect, vi, beforeAll, beforeEach } from 'vitest';
+import { ref, nextTick } from 'vue';
+import EventForm from '@/components/events/EventForm.vue';
 
 // Mock scrollTo to prevent errors
 beforeAll(() => {
-  window.scrollTo = vi.fn()
-})
+  window.scrollTo = vi.fn();
+});
 
 // --- Mocks ---
 
@@ -22,12 +22,12 @@ vi.mock('@/composables/useLanguage', () => ({
       },
     },
   }),
-}))
+}));
 
 // Mock useEvents
-const createEventMock = vi.fn()
-const isLoadingMock = ref(false)
-const errorMock = ref<string | null>(null)
+const createEventMock = vi.fn();
+const isLoadingMock = ref(false);
+const errorMock = ref<string | null>(null);
 
 vi.mock('@/hooks/events/useEvents', () => ({
   useEvents: () => ({
@@ -35,40 +35,40 @@ vi.mock('@/hooks/events/useEvents', () => ({
     isLoading: isLoadingMock,
     error: errorMock,
   }),
-}))
+}));
 
 // Mock useMembers
-const fetchMembersMock = vi.fn()
+const fetchMembersMock = vi.fn();
 const membersMock = ref([
   { id: 'm1', first_name: 'Alice', last_name: 'Johnson' },
   { id: 'm2', first_name: 'Bob', last_name: 'Smith' },
-])
+]);
 
 vi.mock('@/hooks/members/useMembers', () => ({
   useMembers: () => ({
     members: membersMock,
     fetchMembers: fetchMembersMock,
   }),
-}))
+}));
 
 // Mock useNavigation
-const navigateToPageMock = vi.fn()
+const navigateToPageMock = vi.fn();
 
 vi.mock('@/hooks/layout/useNavigation', () => ({
   useNavigation: () => ({
     navigateToPage: navigateToPageMock,
   }),
-}))
+}));
 
 describe('EventForm.vue', () => {
-  let wrapper: ReturnType<typeof mount>
+  let wrapper: ReturnType<typeof mount>;
 
   beforeEach(async () => {
-    createEventMock.mockReset()
-    navigateToPageMock.mockReset()
-    errorMock.value = null
-    isLoadingMock.value = false
-    fetchMembersMock.mockReset()
+    createEventMock.mockReset();
+    navigateToPageMock.mockReset();
+    errorMock.value = null;
+    isLoadingMock.value = false;
+    fetchMembersMock.mockReset();
 
     wrapper = mount(EventForm, {
       global: {
@@ -84,21 +84,21 @@ describe('EventForm.vue', () => {
           Button: true,
         },
       },
-    })
+    });
 
-    await nextTick()
-  })
+    await nextTick();
+  });
 
   it('calls fetchMembers on mount', () => {
-    expect(fetchMembersMock).toHaveBeenCalled()
-  })
+    expect(fetchMembersMock).toHaveBeenCalled();
+  });
 
   it('shows validation errors if required fields are empty', async () => {
-    await wrapper.find('form').trigger('submit.prevent')
-    await nextTick()
+    await wrapper.find('form').trigger('submit.prevent');
+    await nextTick();
 
-    expect(wrapper.text()).toContain('Title is required.')
-    expect(wrapper.text()).toContain('Domain is required.')
-    expect(wrapper.text()).toContain('Speaker is required.')
-  })
-})
+    expect(wrapper.text()).toContain('Title is required.');
+    expect(wrapper.text()).toContain('Domain is required.');
+    expect(wrapper.text()).toContain('Speaker is required.');
+  });
+});

@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { computed } from 'vue'
-import LoginPage from '@/components/auth/LoginPage.vue'
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { mount } from '@vue/test-utils';
+import { computed } from 'vue';
+import LoginPage from '@/components/auth/LoginPage.vue';
 
 // Mock composables
 vi.mock('@/composables/useLanguage', () => ({
@@ -21,16 +21,16 @@ vi.mock('@/composables/useLanguage', () => ({
       },
     })),
   }),
-}))
+}));
 
 vi.mock('@/hooks/auth/useAuth', () => ({
   useAuth: () => ({
     getDashboardRoute: { value: 'dashboard/research' },
   }),
-}))
+}));
 
 describe('LoginPage.vue', () => {
-  let wrapper: ReturnType<typeof mount>
+  let wrapper: ReturnType<typeof mount>;
 
   const mountComponent = (options = {}) => {
     return mount(LoginPage, {
@@ -46,33 +46,38 @@ describe('LoginPage.vue', () => {
         },
       },
       ...options,
-    })
-  }
+    });
+  };
 
   beforeEach(() => {
-    wrapper = mountComponent()
-  })
+    wrapper = mountComponent();
+  });
 
   it('renders the title and subtitle', () => {
-    expect(wrapper.text()).toContain('STIL Lab')
-    expect(wrapper.text()).toContain('Welcome back!')
-  })
+    expect(wrapper.text()).toContain('STIL Lab');
+    expect(wrapper.text()).toContain('Welcome back!');
+  });
 
   it('emits setCurrentPage with dashboard route on login success', async () => {
-    await wrapper.find('#success').trigger('click')
-    expect(wrapper.emitted('setCurrentPage')?.[0]).toEqual(['dashboard/research'])
-  })
+    await wrapper.find('#success').trigger('click');
+    expect(wrapper.emitted('setCurrentPage')?.[0]).toEqual([
+      'dashboard/research',
+    ]);
+  });
 
   it('logs a warning on login failure', async () => {
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
-    await wrapper.find('#fail').trigger('click')
-    expect(warnSpy).toHaveBeenCalledWith('[LOGIN PAGE] Login failed:', 'Invalid credentials')
-    warnSpy.mockRestore()
-  })
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    await wrapper.find('#fail').trigger('click');
+    expect(warnSpy).toHaveBeenCalledWith(
+      '[LOGIN PAGE] Login failed:',
+      'Invalid credentials'
+    );
+    warnSpy.mockRestore();
+  });
 
   it('emits setCurrentPage with "home" when clicking back to home', async () => {
-    const button = wrapper.find('button:not(#success):not(#fail)')
-    await button.trigger('click')
-    expect(wrapper.emitted('setCurrentPage')?.[0]).toEqual(['home'])
-  })
-})
+    const button = wrapper.find('button:not(#success):not(#fail)');
+    await button.trigger('click');
+    expect(wrapper.emitted('setCurrentPage')?.[0]).toEqual(['home']);
+  });
+});

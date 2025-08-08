@@ -1,6 +1,6 @@
-import { mount } from '@vue/test-utils'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import UserProfile from '../../../components/layout/header/UserProfile.vue'
+import { mount } from '@vue/test-utils';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import UserProfile from '../../../components/layout/header/UserProfile.vue';
 
 /*vi.mock('@/hooks/auth/useUserAuth', () => {
   return {
@@ -146,10 +146,10 @@ describe('UserProfile.vue', () => {
 
     expect(wrapper.text()).toContain(initials)
   })*/
- describe('UserProfile.vue', () => {
-  // Test place holder that always passes
-  it('should always pass -- needs to refactor the test', () => {
-    expect(true).toBe(true)
+  describe('UserProfile.vue', () => {
+    // Test place holder that always passes
+    it('should always pass -- needs to refactor the test', () => {
+      expect(true).toBe(true);
+    });
   });
 });
-})

@@ -37,19 +37,43 @@ interface UpcomingEvent {
 
 export function useProfessorDashboard() {
   const { t } = useLanguage();
-  
+
   const publications = ref<Publication[]>([]);
   const projects = ref<Research[]>([]);
   const events = ref<Event[]>([]);
   const isLoading = ref(false);
 
   const tabs = computed(() => [
-    { id: 'overview', label: t.value.dashboard.professor.tabs.overview, icon: 'BarChart3' },
-    { id: 'publications', label: t.value.dashboard.professor.tabs.publications, icon: 'FileText' },
-    { id: 'teaching', label: t.value.dashboard.professor.tabs.teaching, icon: 'GraduationCap' },
-    { id: 'research', label: t.value.dashboard.professor.tabs.research, icon: 'TrendingUp' },
-    { id: 'students', label: t.value.dashboard.professor.tabs.students, icon: 'Users' },
-    { id: 'profile', label: t.value.dashboard.professor.tabs.profile, icon: 'User' }
+    {
+      id: 'overview',
+      label: t.value.dashboard.professor.tabs.overview,
+      icon: 'BarChart3',
+    },
+    {
+      id: 'publications',
+      label: t.value.dashboard.professor.tabs.publications,
+      icon: 'FileText',
+    },
+    {
+      id: 'teaching',
+      label: t.value.dashboard.professor.tabs.teaching,
+      icon: 'GraduationCap',
+    },
+    {
+      id: 'research',
+      label: t.value.dashboard.professor.tabs.research,
+      icon: 'TrendingUp',
+    },
+    {
+      id: 'students',
+      label: t.value.dashboard.professor.tabs.students,
+      icon: 'Users',
+    },
+    {
+      id: 'profile',
+      label: t.value.dashboard.professor.tabs.profile,
+      icon: 'User',
+    },
   ]);
 
   const professorStats = computed<ProfessorStats[]>(() => [
@@ -57,26 +81,26 @@ export function useProfessorDashboard() {
       title: t.value.dashboard.professor.stats.publications,
       value: publications.value.length,
       icon: 'FileText',
-      color: 'bg-blue-500'
+      color: 'bg-blue-500',
     },
     {
       title: t.value.dashboard.professor.stats.activeProjects,
       value: activeProjects.value.length,
       icon: 'Briefcase',
-      color: 'bg-green-500'
+      color: 'bg-green-500',
     },
     {
       title: t.value.dashboard.professor.stats.totalProjects,
       value: projects.value.length,
       icon: 'TrendingUp',
-      color: 'bg-purple-500'
+      color: 'bg-purple-500',
     },
     {
       title: t.value.dashboard.professor.stats.upcomingEvents,
       value: upcomingEvents.value.length,
       icon: 'Calendar',
-      color: 'bg-orange-500'
-    }
+      color: 'bg-orange-500',
+    },
   ]);
 
   const recentPublications = computed<RecentPublication[]>(() => {
@@ -84,33 +108,33 @@ export function useProfessorDashboard() {
       .slice()
       .sort((a, b) => (b.year || 0) - (a.year || 0))
       .slice(0, 10)
-      .map(pub => ({
+      .map((pub) => ({
         id: pub.id,
         title: pub.title,
         status: pub.is_approved ? 'published' : 'pending',
-        date: pub.year ? pub.year.toString() : 'Unknown'
+        date: pub.year ? pub.year.toString() : 'Unknown',
       }));
   });
 
   const activeProjects = computed<ActiveProject[]>(() => {
-    return projects.value.map(project => ({
+    return projects.value.map((project) => ({
       id: project.id,
       title: project.title,
       deadline: project.end_date || 'No deadline',
-      status: 'active'
+      status: 'active',
     }));
   });
 
   const upcomingEvents = computed<UpcomingEvent[]>(() => {
     const now = new Date();
     return events.value
-      .filter(event => event.date && new Date(event.date) > now)
+      .filter((event) => event.date && new Date(event.date) > now)
       .slice(0, 10)
-      .map(event => ({
+      .map((event) => ({
         id: event.id,
         title: event.title,
         date: event.date || 'Unknown',
-        type: event.type || 'conference'
+        type: event.type || 'conference',
       }));
   });
 
@@ -120,29 +144,29 @@ export function useProfessorDashboard() {
       description: t.value.dashboard.professor.actions.addPublicationDesc,
       icon: 'Plus',
       action: () => console.log('Navigate to publication form'),
-      color: 'bg-blue-500'
+      color: 'bg-blue-500',
     },
     {
       title: t.value.dashboard.professor.actions.createEvent,
       description: t.value.dashboard.professor.actions.createEventDesc,
       icon: 'Calendar',
       action: () => console.log('Navigate to event form'),
-      color: 'bg-green-500'
+      color: 'bg-green-500',
     },
     {
       title: t.value.dashboard.professor.actions.manageProject,
       description: t.value.dashboard.professor.actions.manageProjectDesc,
       icon: 'Briefcase',
       action: () => console.log('Switch to research tab'),
-      color: 'bg-purple-500'
+      color: 'bg-purple-500',
     },
     {
       title: t.value.dashboard.professor.actions.updateProfile,
       description: t.value.dashboard.professor.actions.updateProfileDesc,
       icon: 'Settings',
       action: () => console.log('Switch to profile tab'),
-      color: 'bg-orange-500'
-    }
+      color: 'bg-orange-500',
+    },
   ]);
 
   const loadDashboardData = async () => {
@@ -151,7 +175,7 @@ export function useProfessorDashboard() {
       const [publicationsRes, projectsRes, eventsRes] = await Promise.all([
         mainAPI.getPublications(),
         mainAPI.getResearch(),
-        mainAPI.getEvents()
+        mainAPI.getEvents(),
       ]);
 
       publications.value = publicationsRes.data || [];
@@ -176,6 +200,6 @@ export function useProfessorDashboard() {
     upcomingEvents,
     quickActions,
     isLoading,
-    loadDashboardData
+    loadDashboardData,
   };
 }

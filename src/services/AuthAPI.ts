@@ -35,27 +35,29 @@ export interface LoginResponse {
 }
 
 export class AuthAPI extends BaseAPI {
-  async login(credentials: LoginCredentials): Promise<ApiResponse<LoginResponse>> {
+  async login(
+    credentials: LoginCredentials
+  ): Promise<ApiResponse<LoginResponse>> {
     const response = await this.post<LoginResponse>(
       '/api/login',
       credentials,
       false // Don't include auth header for login
     );
 
-    if (response.data) {      
+    if (response.data) {
       // Store tokens
       localStorage.setItem('access_token', response.data.access_token);
       localStorage.setItem('refresh_token', response.data.refresh_token);
-      
+
       // Store basic user info including staff status
       const userInfo = {
         id: response.data.user.id,
         username: response.data.user.username,
         email: response.data.user.email,
         is_staff: response.data.user.is_staff || false,
-        is_active: response.data.user.is_active || true
+        is_active: response.data.user.is_active || true,
       };
-      
+
       localStorage.setItem('basic_user_info', JSON.stringify(userInfo));
     }
 
@@ -72,15 +74,15 @@ export class AuthAPI extends BaseAPI {
     if (response.data) {
       localStorage.setItem('access_token', response.data.access_token);
       localStorage.setItem('refresh_token', response.data.refresh_token);
-      
+
       const userInfo = {
         id: response.data.user.id,
         username: response.data.user.username,
         email: response.data.user.email,
         is_staff: response.data.user.is_staff || false,
-        is_active: response.data.user.is_active || true
+        is_active: response.data.user.is_active || true,
       };
-      
+
       localStorage.setItem('basic_user_info', JSON.stringify(userInfo));
     }
 
@@ -95,11 +97,11 @@ export class AuthAPI extends BaseAPI {
 
   async getCurrentProfile(): Promise<ApiResponse<MemberUser>> {
     const token = this.getAuthToken();
-    
+
     if (!token || !this.isTokenValid(token)) {
       throw new Error('No valid authentication token');
     }
-    
+
     try {
       const response = await this.get<MemberUser>('/api/profile');
       return response;
@@ -129,7 +131,7 @@ export class AuthAPI extends BaseAPI {
     if (!token || !this.isTokenValid(token)) {
       return null;
     }
-    
+
     try {
       return jwtDecode<JwtPayload>(token);
     } catch {

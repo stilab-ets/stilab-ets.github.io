@@ -1,49 +1,49 @@
 export interface TeachingTranslations {
-  stats: any
-  results: any
-  pageTitle: string
-  pageSubtitle: string
+  stats: any;
+  results: any;
+  pageTitle: string;
+  pageSubtitle: string;
   statistics: {
-    coursesOffered: string
-    instructors: string
-    studyLevels: string
-  }
+    coursesOffered: string;
+    instructors: string;
+    studyLevels: string;
+  };
   search: {
-    label: string
-    placeholder: string
-  }
+    label: string;
+    placeholder: string;
+  };
   filters: {
-    level: string
-    allLevels: string
-    semester: string
-    allSemesters: string
-  }
+    level: string;
+    allLevels: string;
+    semester: string;
+    allSemesters: string;
+  };
   levels: {
-    undergraduate: string
-    graduate: string
-  }
+    undergraduate: string;
+    graduate: string;
+  };
   courseCard: {
-    instructor: string
-    semester: string
-    prerequisites: string
-    objectives: string
-    topics: string
-    credits: string
-  }
+    instructor: string;
+    semester: string;
+    prerequisites: string;
+    objectives: string;
+    topics: string;
+    credits: string;
+  };
   links: {
-    syllabus: string
-    moodle: string
-    github: string
-  }
+    syllabus: string;
+    moodle: string;
+    github: string;
+  };
   empty: {
-    title: string
-    message: string
-  }
+    title: string;
+    message: string;
+  };
   semesters: {
-    fall: string
-    summer: string
-    winter: string
-  }
+    fall: string;
+    summer: string;
+    winter: string;
+  };
 }
 
 type TeachingTranslationDict = {
@@ -54,25 +54,26 @@ type TeachingTranslationDict = {
 export const teachingTranslations: TeachingTranslationDict = {
   fr: {
     pageTitle: 'Enseignement',
-    pageSubtitle: 'Découvrez les cours dispensés par les membres de notre laboratoire',
+    pageSubtitle:
+      'Découvrez les cours dispensés par les membres de notre laboratoire',
     statistics: {
       coursesOffered: 'Cours proposés',
       instructors: 'Enseignants',
-      studyLevels: 'Niveaux d\'étude'
+      studyLevels: "Niveaux d'étude",
     },
     search: {
       label: 'Rechercher un cours',
-      placeholder: 'Titre, code, enseignant...'
+      placeholder: 'Titre, code, enseignant...',
     },
     filters: {
       level: 'Niveau',
       allLevels: 'Tous les niveaux',
       semester: 'Semestre',
-      allSemesters: 'Tous les semestres'
+      allSemesters: 'Tous les semestres',
     },
     levels: {
       undergraduate: 'Licence',
-      graduate: 'Master'
+      graduate: 'Master',
     },
     courseCard: {
       instructor: 'Enseignant',
@@ -80,24 +81,24 @@ export const teachingTranslations: TeachingTranslationDict = {
       prerequisites: 'Prérequis',
       objectives: 'Objectifs',
       topics: 'Sujets abordés',
-      credits: 'ECTS'
+      credits: 'ECTS',
     },
     links: {
       syllabus: 'Syllabus',
       moodle: 'Moodle',
-      github: 'GitHub'
+      github: 'GitHub',
     },
     empty: {
       title: 'Aucun cours trouvé',
-      message: 'Essayez de modifier vos critères de recherche.'
+      message: 'Essayez de modifier vos critères de recherche.',
     },
     semesters: {
       fall: 'Automne',
       summer: 'Été',
-      winter: 'Hiver'
+      winter: 'Hiver',
     },
     stats: 'Statistiques',
-    results: 'Résultats'
+    results: 'Résultats',
   },
   en: {
     pageTitle: 'Teaching',
@@ -105,21 +106,21 @@ export const teachingTranslations: TeachingTranslationDict = {
     statistics: {
       coursesOffered: 'Courses offered',
       instructors: 'Instructors',
-      studyLevels: 'Study levels'
+      studyLevels: 'Study levels',
     },
     search: {
       label: 'Search courses',
-      placeholder: 'Title, code, instructor...'
+      placeholder: 'Title, code, instructor...',
     },
     filters: {
       level: 'Level',
       allLevels: 'All levels',
       semester: 'Semester',
-      allSemesters: 'All semesters'
+      allSemesters: 'All semesters',
     },
     levels: {
       undergraduate: 'Undergraduate',
-      graduate: 'Graduate'
+      graduate: 'Graduate',
     },
     courseCard: {
       instructor: 'Instructor',
@@ -127,23 +128,23 @@ export const teachingTranslations: TeachingTranslationDict = {
       prerequisites: 'Prerequisites',
       objectives: 'Objectives',
       topics: 'Topics covered',
-      credits: 'ECTS'
+      credits: 'ECTS',
     },
     links: {
       syllabus: 'Syllabus',
       moodle: 'Moodle',
-      github: 'GitHub'
+      github: 'GitHub',
     },
     empty: {
       title: 'No courses found',
-      message: 'Try modifying your search criteria.'
+      message: 'Try modifying your search criteria.',
     },
     semesters: {
       fall: 'Fall',
       summer: 'Summer',
-      winter: 'Winter'
+      winter: 'Winter',
     },
     stats: 'Statistics',
-    results: 'Results'
-  }
-} as const
+    results: 'Results',
+  },
+} as const;

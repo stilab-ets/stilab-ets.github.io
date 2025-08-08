@@ -1,15 +1,14 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
-import AwardForm from '@/components/awards/AwardForm.vue'
-import { nextTick, ref } from 'vue'
-
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { mount } from '@vue/test-utils';
+import AwardForm from '@/components/awards/AwardForm.vue';
+import { nextTick, ref } from 'vue';
 
 vi.mock('@/composables/useAuth', () => ({
   useAuth: () => ({
     isLoggedIn: ref(true),
     user: ref({ id: 1, name: 'Test User' }),
   }),
-}))
+}));
 
 vi.mock('@/composables/useLanguage', () => ({
   useLanguage: () => ({
@@ -26,7 +25,7 @@ vi.mock('@/composables/useLanguage', () => ({
           sections: {
             basic: 'Basic Information',
             details: 'Award Details',
-            recipient: 'Recipient Information'
+            recipient: 'Recipient Information',
           },
           form: {
             title: 'Title',
@@ -45,7 +44,7 @@ vi.mock('@/composables/useLanguage', () => ({
             cancel: 'Cancel',
             create: 'Create',
             update: 'Update',
-            submitting: 'Submitting...'
+            submitting: 'Submitting...',
           },
           categories: {
             publication: 'Publication',
@@ -53,7 +52,7 @@ vi.mock('@/composables/useLanguage', () => ({
             teaching: 'Teaching',
             service: 'Service',
             career: 'Career',
-            excellence: 'Excellence'
+            excellence: 'Excellence',
           },
           validation: {
             titleRequired: 'Title is required.',
@@ -61,48 +60,48 @@ vi.mock('@/composables/useLanguage', () => ({
             organizationRequired: 'Organization is required.',
             yearRequired: 'Year is required.',
             yearInvalid: 'Invalid year.',
-            recipientRequired: 'Recipient is required.'
+            recipientRequired: 'Recipient is required.',
           },
           errors: {
-            submitFailed: 'Failed to submit.'
-          }
-        }
-      }
-    })
-  })
-}))
+            submitFailed: 'Failed to submit.',
+          },
+        },
+      },
+    }),
+  }),
+}));
 
 describe('AwardForm.vue', () => {
-  let wrapper: ReturnType<typeof mount>
+  let wrapper: ReturnType<typeof mount>;
 
   beforeEach(() => {
-    wrapper = mount(AwardForm)
-  })
+    wrapper = mount(AwardForm);
+  });
 
   it('renders title and subtitle', () => {
-    expect(wrapper.text()).toContain('Create Award')
-    expect(wrapper.text()).toContain('Fill in the award details below.')
-  })
+    expect(wrapper.text()).toContain('Create Award');
+    expect(wrapper.text()).toContain('Fill in the award details below.');
+  });
 
   it('shows validation errors on empty required fields', async () => {
-    await wrapper.find('form').trigger('submit.prevent')
-    await nextTick()
+    await wrapper.find('form').trigger('submit.prevent');
+    await nextTick();
 
-    expect(wrapper.text()).toContain('Title is required.')
-    expect(wrapper.text()).toContain('Organization is required.')
-  })
+    expect(wrapper.text()).toContain('Title is required.');
+    expect(wrapper.text()).toContain('Organization is required.');
+  });
 
   it('validates invalid year', async () => {
-    await wrapper.find('#title').setValue('Best Research Paper')
-    await wrapper.find('#organization').setValue('IEEE')
-    await wrapper.find('#year').setValue('1800')
-    await wrapper.find('#recipients').setValue('1')
+    await wrapper.find('#title').setValue('Best Research Paper');
+    await wrapper.find('#organization').setValue('IEEE');
+    await wrapper.find('#year').setValue('1800');
+    await wrapper.find('#recipients').setValue('1');
 
-    await wrapper.find('form').trigger('submit.prevent')
-    await nextTick()
+    await wrapper.find('form').trigger('submit.prevent');
+    await nextTick();
 
-    expect(wrapper.text()).toContain('Invalid year.')
-  })
+    expect(wrapper.text()).toContain('Invalid year.');
+  });
 
   it('initializes form with props.initialData', async () => {
     const wrapperWithProps = mount(AwardForm, {
@@ -114,14 +113,16 @@ describe('AwardForm.vue', () => {
           recipients: ['1'],
           url: 'https://example.com',
           description: 'Existing award',
-        }
-      }
-    })
+        },
+      },
+    });
 
-    await nextTick()
+    await nextTick();
 
-    expect(wrapperWithProps.find('#title').element.value).toBe('Existing Title')
-    expect(wrapperWithProps.find('#organization').element.value).toBe('ACM')
-    expect(wrapperWithProps.find('#year').element.value).toBe('2023')
-  })
-})
+    expect(wrapperWithProps.find('#title').element.value).toBe(
+      'Existing Title'
+    );
+    expect(wrapperWithProps.find('#organization').element.value).toBe('ACM');
+    expect(wrapperWithProps.find('#year').element.value).toBe('2023');
+  });
+});

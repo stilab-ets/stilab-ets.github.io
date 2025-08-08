@@ -47,7 +47,7 @@ class AuthMiddleware {
       // Check if user is authenticated
       if (authAPI.isAuthenticated()) {
         this.state.isAuthenticated.value = true;
-        
+
         // Restore basic user info from localStorage
         const storedUserInfo = localStorage.getItem('basic_user_info');
         if (storedUserInfo) {
@@ -60,7 +60,6 @@ class AuthMiddleware {
 
         // User is authenticated, so immediately fetch their full profile.
         await this.getCurrentProfile();
-
       } else {
         await this.clearAuth();
       }
@@ -71,33 +70,39 @@ class AuthMiddleware {
     }
   }
 
-  async login(credentials: { username_or_email: string; password: string }): Promise<boolean> {
+  async login(credentials: {
+    username_or_email: string;
+    password: string;
+  }): Promise<boolean> {
     this.state.isLoading.value = true;
-    
+
     try {
       const response = await authAPI.login(credentials);
-      
-      if (response.data) {        
+
+      if (response.data) {
         this.state.isAuthenticated.value = true;
         this.state.basicUserInfo.value = {
           id: response.data.user.id,
           username: response.data.user.username,
           email: response.data.user.email,
           is_staff: response.data.user.is_staff || false,
-          is_active: response.data.user.is_active || true
+          is_active: response.data.user.is_active || true,
         };
-        
+
         // Clear any cached profile data
         this.clearProfileCache();
         try {
           await this.getCurrentProfile();
         } catch (profileError) {
-          console.warn('[AUTH MIDDLEWARE] Profile fetch failed after login, continuing with basic info:', profileError);
+          console.warn(
+            '[AUTH MIDDLEWARE] Profile fetch failed after login, continuing with basic info:',
+            profileError
+          );
         }
-        
+
         return true;
       }
-      
+
       return false;
     } catch (error) {
       return false;
@@ -108,11 +113,14 @@ class AuthMiddleware {
 
   async logout(): Promise<void> {
     this.state.isLoading.value = true;
-    
+
     try {
       await authAPI.logout();
     } catch (error) {
-      console.error('[AUTH MIDDLEWARE] Logout error (continuing anyway):', error);
+      console.error(
+        '[AUTH MIDDLEWARE] Logout error (continuing anyway):',
+        error
+      );
     } finally {
       await this.clearAuth();
       this.state.isLoading.value = false;
@@ -132,7 +140,10 @@ class AuthMiddleware {
 
     // Check cache first
     const now = Date.now();
-    if (this.profileCache && (now - this.profileCacheTime) < this.CACHE_DURATION) {
+    if (
+      this.profileCache &&
+      now - this.profileCacheTime < this.CACHE_DURATION
+    ) {
       this.state.profile.value = this.profileCache;
       return this.profileCache;
     }
@@ -145,14 +156,16 @@ class AuthMiddleware {
         this.state.profile.value = response.data;
         return response.data;
       }
-    } catch (error) {      
+    } catch (error) {
       // Only logout on auth errors (401, 403), not on 404 or other errors
       if (error instanceof Error) {
         const errorMessage = error.message.toLowerCase();
         if (errorMessage.includes('401') || errorMessage.includes('403')) {
           await this.clearAuth();
         } else {
-          console.log('[AUTH MIDDLEWARE] Profile endpoint unavailable - continuing with basic info');
+          console.log(
+            '[AUTH MIDDLEWARE] Profile endpoint unavailable - continuing with basic info'
+          );
         }
       }
     }
@@ -171,12 +184,12 @@ class AuthMiddleware {
 
   async requireAdmin(): Promise<boolean> {
     if (!this.state.isAuthenticated.value) return false;
-    
+
     // First check basic user info for staff status
     if (this.state.basicUserInfo.value?.is_staff) {
       return true;
     }
-    
+
     // Fallback to profile check
     const profile = await this.getCurrentProfile();
     return profile?.user?.is_staff === true;
@@ -206,6 +219,6 @@ export function useAuthMiddleware() {
     getCurrentProfile: authMiddleware.getCurrentProfile.bind(authMiddleware),
     refreshProfile: authMiddleware.refreshProfile.bind(authMiddleware),
     requireAuth: authMiddleware.requireAuth.bind(authMiddleware),
-    requireAdmin: authMiddleware.requireAdmin.bind(authMiddleware)
+    requireAdmin: authMiddleware.requireAdmin.bind(authMiddleware),
   };
 }

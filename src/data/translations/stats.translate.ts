@@ -1,9 +1,9 @@
 export interface StatsTranslations {
-  sectionTitle: string
-  members: string
-  publications: string
-  projects: string
-  awards: string
+  sectionTitle: string;
+  members: string;
+  publications: string;
+  projects: string;
+  awards: string;
 }
 
 type StatsTranslationDict = {
@@ -17,13 +17,13 @@ export const statsTranslations: StatsTranslationDict = {
     members: 'Membres',
     publications: 'Publications',
     projects: 'Projets',
-    awards: 'Prix'
+    awards: 'Prix',
   },
   en: {
     sectionTitle: 'Our laboratory in numbers',
     members: 'Members',
-    publications: 'Publications', 
+    publications: 'Publications',
     projects: 'Projects',
-    awards: 'Awards'
-  }
-} as const
+    awards: 'Awards',
+  },
+} as const;

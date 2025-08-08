@@ -1,6 +1,9 @@
 import { ref, computed } from 'vue';
 import { adminAPI } from '@/services/ApiFactory';
-import type { SendInvitationRequest, ValidateTokenRequest } from '@/services/AdminAPI';
+import type {
+  SendInvitationRequest,
+  ValidateTokenRequest,
+} from '@/services/AdminAPI';
 
 export interface Invitation {
   id: string;
@@ -16,22 +19,22 @@ export function useInvitations() {
   const isLoading = ref(false);
   const error = ref<string | null>(null);
 
-  const pendingInvitations = computed(() => 
-    invitations.value.filter(inv => inv.status === 'pending')
+  const pendingInvitations = computed(() =>
+    invitations.value.filter((inv) => inv.status === 'pending')
   );
 
-  const expiredInvitations = computed(() => 
-    invitations.value.filter(inv => inv.status === 'expired')
+  const expiredInvitations = computed(() =>
+    invitations.value.filter((inv) => inv.status === 'expired')
   );
 
-  const registeredInvitations = computed(() => 
-    invitations.value.filter(inv => inv.status === 'registered')
+  const registeredInvitations = computed(() =>
+    invitations.value.filter((inv) => inv.status === 'registered')
   );
 
   const fetchInvitations = async (): Promise<void> => {
     isLoading.value = true;
     error.value = null;
-    
+
     try {
       const response = await adminAPI.getInvitations();
       invitations.value = response.data;
@@ -43,10 +46,12 @@ export function useInvitations() {
     }
   };
 
-  const sendInvitation = async (invitation: SendInvitationRequest): Promise<boolean> => {
+  const sendInvitation = async (
+    invitation: SendInvitationRequest
+  ): Promise<boolean> => {
     isLoading.value = true;
     error.value = null;
-    
+
     try {
       const response = await adminAPI.sendInvitation(invitation);
       if (response.data.success) {
@@ -63,10 +68,12 @@ export function useInvitations() {
     }
   };
 
-  const validateInvitationToken = async (validation: ValidateTokenRequest): Promise<boolean> => {
+  const validateInvitationToken = async (
+    validation: ValidateTokenRequest
+  ): Promise<boolean> => {
     isLoading.value = true;
     error.value = null;
-    
+
     try {
       const response = await adminAPI.validateInvitationToken(validation);
       return response.data.valid;
@@ -79,13 +86,16 @@ export function useInvitations() {
     }
   };
 
-  const updateInvitation = async (id: string, updates: Partial<Invitation>): Promise<boolean> => {
+  const updateInvitation = async (
+    id: string,
+    updates: Partial<Invitation>
+  ): Promise<boolean> => {
     isLoading.value = true;
     error.value = null;
-    
+
     try {
       await adminAPI.updateInvitation(id, updates);
-      const index = invitations.value.findIndex(inv => inv.id === id);
+      const index = invitations.value.findIndex((inv) => inv.id === id);
       if (index !== -1) {
         invitations.value[index] = { ...invitations.value[index], ...updates };
       }
@@ -102,10 +112,10 @@ export function useInvitations() {
   const deleteInvitation = async (id: string): Promise<boolean> => {
     isLoading.value = true;
     error.value = null;
-    
+
     try {
       await adminAPI.deleteInvitation(id);
-      invitations.value = invitations.value.filter(inv => inv.id !== id);
+      invitations.value = invitations.value.filter((inv) => inv.id !== id);
       return true;
     } catch (err) {
       error.value = 'Failed to delete invitation';
@@ -132,6 +142,6 @@ export function useInvitations() {
     validateInvitationToken,
     updateInvitation,
     deleteInvitation,
-    cancelInvitation
+    cancelInvitation,
   };
 }

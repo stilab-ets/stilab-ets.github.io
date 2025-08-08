@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
-import VacancyForm from '@/components/vacancies/VacancyForm.vue'
-import { nextTick, ref } from 'vue'
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { mount } from '@vue/test-utils';
+import VacancyForm from '@/components/vacancies/VacancyForm.vue';
+import { nextTick, ref } from 'vue';
 
 // Mock useLanguage composable with full translation structure
 vi.mock('@/composables/useLanguage', () => ({
@@ -79,50 +79,50 @@ vi.mock('@/composables/useLanguage', () => ({
             timeline: 'Timeline',
             compensation: 'Compensation',
           },
-        }
-      }
+        },
+      },
     }),
   }),
-}))
+}));
 
 // Mock UI components
 vi.mock('@/components/ui/Card.vue', () => ({
-  default: { template: '<div><slot /></div>' }
-}))
+  default: { template: '<div><slot /></div>' },
+}));
 vi.mock('@/components/ui/Button.vue', () => ({
-  default: { template: '<button><slot /></button>' }
-}))
+  default: { template: '<button><slot /></button>' },
+}));
 
 describe('VacancyForm.vue', () => {
-  let wrapper: ReturnType<typeof mount>
+  let wrapper: ReturnType<typeof mount>;
 
   beforeEach(() => {
-    wrapper = mount(VacancyForm)
-  })
+    wrapper = mount(VacancyForm);
+  });
 
   it('renders form title and subtitle correctly for creation mode', () => {
-    expect(wrapper.text()).toContain('Create Vacancy')
-    expect(wrapper.text()).toContain('Fill in the vacancy details.')
-  })
+    expect(wrapper.text()).toContain('Create Vacancy');
+    expect(wrapper.text()).toContain('Fill in the vacancy details.');
+  });
 
   it('renders form title correctly for editing mode', async () => {
-    await wrapper.setProps({ isEditing: true })
-    expect(wrapper.text()).toContain('Edit Vacancy')
-  })
+    await wrapper.setProps({ isEditing: true });
+    expect(wrapper.text()).toContain('Edit Vacancy');
+  });
 
   it('shows validation errors when submitting empty form', async () => {
-    await wrapper.find('form').trigger('submit.prevent')
-    await nextTick()
+    await wrapper.find('form').trigger('submit.prevent');
+    await nextTick();
 
-    const text = wrapper.text()
-    expect(text).toContain('Title is required')
-    expect(text).toContain('Type is required')
-    expect(text).toContain('Supervisor is required')
-    expect(text).toContain('Domain is required')
-    expect(text).toContain('Description is required')
-    expect(text).toContain('Duration is required')
-    expect(text).toContain('Start date is required')
-    expect(text).toContain('Deadline is required')
-    expect(text).toContain('Apply URL is required')
-  })
-})
+    const text = wrapper.text();
+    expect(text).toContain('Title is required');
+    expect(text).toContain('Type is required');
+    expect(text).toContain('Supervisor is required');
+    expect(text).toContain('Domain is required');
+    expect(text).toContain('Description is required');
+    expect(text).toContain('Duration is required');
+    expect(text).toContain('Start date is required');
+    expect(text).toContain('Deadline is required');
+    expect(text).toContain('Apply URL is required');
+  });
+});

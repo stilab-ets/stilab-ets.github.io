@@ -1,105 +1,108 @@
 export interface ProjectFormTranslations {
-  titleEdit: string
-  titleCreate: string
-  subtitle: string
+  titleEdit: string;
+  titleCreate: string;
+  subtitle: string;
   sections: {
-    objectives: any
-    type: string
-    basic: string
-    supervision: string
-    requirements: string
-    timeline: string
-    additional: string
-  }
+    objectives: any;
+    type: string;
+    basic: string;
+    supervision: string;
+    requirements: string;
+    timeline: string;
+    additional: string;
+  };
   form: {
-    type: any
-    cosupervisor: any
-    abstract: any
-    abstractPlaceholder: string | undefined
-    projectType: string
-    selectProjectType: string
-    title: string
-    titlePlaceholder: string
-    domain: string
-    selectDomain: string
-    description: string
-    descriptionPlaceholder: string
-    supervisor: string
-    selectSupervisor: string
-    coSupervisor: string
-    selectCoSupervisor: string
-    startDate: string
-    endDate: string
-    status: string
-    selectStatus: string
-    difficulty: string
-    selectDifficulty: string
-    funding: string
-    fundingPlaceholder: string
-    requirements: string
-    requirementsPlaceholder: string
-    objectives: string
-    objectivesPlaceholder: string
-    githubUrl: string
-    githubUrlPlaceholder: string
-    websiteUrl: string
-    websiteUrlPlaceholder: string
-    tags: string
-    tagsPlaceholder: string
-    cancel: string
-    create: string
-    update: string
-    submitting: string
-  }
+    type: any;
+    cosupervisor: any;
+    abstract: any;
+    abstractPlaceholder: string | undefined;
+    projectType: string;
+    selectProjectType: string;
+    title: string;
+    titlePlaceholder: string;
+    domain: string;
+    selectDomain: string;
+    description: string;
+    descriptionPlaceholder: string;
+    supervisor: string;
+    selectSupervisor: string;
+    coSupervisor: string;
+    selectCoSupervisor: string;
+    startDate: string;
+    endDate: string;
+    status: string;
+    selectStatus: string;
+    difficulty: string;
+    selectDifficulty: string;
+    funding: string;
+    fundingPlaceholder: string;
+    requirements: string;
+    requirementsPlaceholder: string;
+    objectives: string;
+    objectivesPlaceholder: string;
+    githubUrl: string;
+    githubUrlPlaceholder: string;
+    websiteUrl: string;
+    websiteUrlPlaceholder: string;
+    tags: string;
+    tagsPlaceholder: string;
+    cancel: string;
+    create: string;
+    update: string;
+    submitting: string;
+  };
   projectTypes: {
-    research: string
-    msc: string
-    industry: string
-    internal: string
-  }
+    research: string;
+    msc: string;
+    industry: string;
+    internal: string;
+  };
   domains: {
-    machineLearning: any
-    distributedSystems: any
-    blockchain: any
-    uiUx: any
-    dataScience: any
-    softwareArchitecture: string
-    artificialIntelligence: string
-    cybersecurity: string
-    devops: string
-    cloudComputing: string
-    softwareTesting: string
-    softwareMaintenance: string
-    humanComputerInteraction: string
-  }
+    machineLearning: any;
+    distributedSystems: any;
+    blockchain: any;
+    uiUx: any;
+    dataScience: any;
+    softwareArchitecture: string;
+    artificialIntelligence: string;
+    cybersecurity: string;
+    devops: string;
+    cloudComputing: string;
+    softwareTesting: string;
+    softwareMaintenance: string;
+    humanComputerInteraction: string;
+  };
   difficulties: {
-    beginner: string
-    intermediate: string
-    advanced: string
-  }
+    beginner: string;
+    intermediate: string;
+    advanced: string;
+  };
   statuses: {
-    planned: string
-    active: string
-    completed: string
-    cancelled: string
-  }
+    planned: string;
+    active: string;
+    completed: string;
+    cancelled: string;
+  };
   validation: {
-    projectTypeRequired: string
-    titleRequired: string
-    domainRequired: string
-    descriptionRequired: string
-    supervisorRequired: string
-    startDateRequired: string
-    endDateAfterStart: string
-    statusRequired: string
-    urlInvalid: string
-  }
+    projectTypeRequired: string;
+    titleRequired: string;
+    domainRequired: string;
+    descriptionRequired: string;
+    supervisorRequired: string;
+    startDateRequired: string;
+    endDateAfterStart: string;
+    statusRequired: string;
+    urlInvalid: string;
+  };
   errors: {
-    submitFailed: string
-  }
+    submitFailed: string;
+  };
 }
 
-export const projectFormTranslations: Record<'fr' | 'en', ProjectFormTranslations> = {
+export const projectFormTranslations: Record<
+  'fr' | 'en',
+  ProjectFormTranslations
+> = {
   fr: {
     titleEdit: 'Modifier le projet',
     titleCreate: 'Créer un projet',
@@ -111,7 +114,7 @@ export const projectFormTranslations: Record<'fr' | 'en', ProjectFormTranslation
       requirements: 'Exigences',
       timeline: 'Calendrier',
       additional: 'Informations supplémentaires',
-      objectives: undefined
+      objectives: undefined,
     },
     form: {
       projectType: 'Type de projet',
@@ -151,13 +154,13 @@ export const projectFormTranslations: Record<'fr' | 'en', ProjectFormTranslation
       abstract: undefined,
       abstractPlaceholder: undefined,
       type: undefined,
-      cosupervisor: undefined
+      cosupervisor: undefined,
     },
     projectTypes: {
       research: 'Projet de recherche',
       msc: 'Projet de Master',
       industry: 'Projet industriel',
-      internal: 'Projet interne'
+      internal: 'Projet interne',
     },
     domains: {
       softwareArchitecture: 'Architecture logicielle',
@@ -172,18 +175,18 @@ export const projectFormTranslations: Record<'fr' | 'en', ProjectFormTranslation
       distributedSystems: undefined,
       blockchain: undefined,
       uiUx: undefined,
-      dataScience: undefined
+      dataScience: undefined,
     },
     difficulties: {
       beginner: 'Débutant',
       intermediate: 'Intermédiaire',
-      advanced: 'Avancé'
+      advanced: 'Avancé',
     },
     statuses: {
       planned: 'Planifié',
       active: 'Actif',
       completed: 'Terminé',
-      cancelled: 'Annulé'
+      cancelled: 'Annulé',
     },
     validation: {
       projectTypeRequired: 'Le type de projet est requis',
@@ -194,11 +197,11 @@ export const projectFormTranslations: Record<'fr' | 'en', ProjectFormTranslation
       startDateRequired: 'La date de début est requise',
       endDateAfterStart: 'La date de fin doit être après le début',
       statusRequired: 'Le statut est requis',
-      urlInvalid: 'URL invalide'
+      urlInvalid: 'URL invalide',
     },
     errors: {
-      submitFailed: 'Échec de la soumission du formulaire'
-    }
+      submitFailed: 'Échec de la soumission du formulaire',
+    },
   },
   en: {
     titleEdit: 'Edit Project',
@@ -211,7 +214,7 @@ export const projectFormTranslations: Record<'fr' | 'en', ProjectFormTranslation
       requirements: 'Requirements',
       timeline: 'Timeline',
       additional: 'Additional Information',
-      objectives: undefined
+      objectives: undefined,
     },
     form: {
       projectType: 'Project Type',
@@ -251,13 +254,13 @@ export const projectFormTranslations: Record<'fr' | 'en', ProjectFormTranslation
       abstract: undefined,
       abstractPlaceholder: undefined,
       type: undefined,
-      cosupervisor: undefined
+      cosupervisor: undefined,
     },
     projectTypes: {
       research: 'Research Project',
       msc: 'Master Project',
       industry: 'Industry Project',
-      internal: 'Internal Project'
+      internal: 'Internal Project',
     },
     domains: {
       softwareArchitecture: 'Software Architecture',
@@ -272,18 +275,18 @@ export const projectFormTranslations: Record<'fr' | 'en', ProjectFormTranslation
       distributedSystems: undefined,
       blockchain: undefined,
       uiUx: undefined,
-      dataScience: undefined
+      dataScience: undefined,
     },
     difficulties: {
       beginner: 'Beginner',
       intermediate: 'Intermediate',
-      advanced: 'Advanced'
+      advanced: 'Advanced',
     },
     statuses: {
       planned: 'Planned',
       active: 'Active',
       completed: 'Completed',
-      cancelled: 'Cancelled'
+      cancelled: 'Cancelled',
     },
     validation: {
       projectTypeRequired: 'Project type is required',
@@ -294,10 +297,10 @@ export const projectFormTranslations: Record<'fr' | 'en', ProjectFormTranslation
       startDateRequired: 'Start date is required',
       endDateAfterStart: 'End date must be after start date',
       statusRequired: 'Status is required',
-      urlInvalid: 'Invalid URL'
+      urlInvalid: 'Invalid URL',
     },
     errors: {
-      submitFailed: 'Failed to submit the form'
-    }
-  }
-} as const
+      submitFailed: 'Failed to submit the form',
+    },
+  },
+} as const;
