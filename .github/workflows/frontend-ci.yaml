@@ -27,7 +27,7 @@ jobs:
         run: npm install
 
       - name: Run formatting check on changed files
-        run: npx lint-staged
+        run: npm run format:check
 
   test:
     name: Unit Tests
