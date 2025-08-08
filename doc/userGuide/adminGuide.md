@@ -12,7 +12,8 @@
     6.2. [Member Creation](#member-creation)  
     6.3. [Research Creation](#research-creation)  
     6.4. [Teaching Creation](#teaching-creation)  
-    6.5. [Event Creation](#event-creation)
+    6.5. [Event Creation](#event-creation)  
+    6.6. [Award Creation](#award-creation)
 7. [Django Dashboard](#django-dashbord)
 
 ### Dashboard Overview
@@ -107,6 +108,17 @@ Admins can use the teaching form to create courses. They can also associate a me
 Like the other forms, admins can create events by filling in the form fields. They have the ability to associate a member as a speaker for the event. They can also add a custom URL for event registration.
 
 ![admin dashboard forms event](assets/admin-dashboard_forms_event.png)
+
+#### Award Creation
+---
+
+Admins can create award entries by specifying basic information and the award details.
+
+![admin dashboard forms award](assets/admin-dashboard_forms_award-1.png)
+
+This form allows admins to associate members as Recipients by selecting them from the available list (hold the `ctrl` or `shift` key to select multiple members).
+
+![admin dashboard forms award members](assets/admin-dashboard_forms_award-2.png)
 
 ### Django Dashboard
 ---
