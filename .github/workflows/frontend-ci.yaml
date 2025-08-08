@@ -9,7 +9,7 @@ on:
 
 jobs:
   lint:
-    name: formatting
+    name: linting and formatting
     runs-on: ubuntu-latest
 
     steps:
@@ -26,6 +26,9 @@ jobs:
 
       - name: Run formatting check
         run: npm run format:check
+
+      - name: Run linting check
+        run: npm run lint
 
   test:
     name: Unit Tests
