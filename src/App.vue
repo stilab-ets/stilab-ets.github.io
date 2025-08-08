@@ -268,9 +268,9 @@ onUnmounted(() => {
         <!-- Show generic dashboard if trying to access role-specific but userRole is null -->
         <DashboardPage
           v-else-if="
-            (currentPage === 'admin-dashboard' ||
+            /*(currentPage === 'admin-dashboard' ||
               currentPage === 'professor-dashboard' ||
-              currentPage === 'student-dashboard') &&
+              currentPage === 'student-dashboard') &&*/
             userRole === null
           "
           @navigate="setCurrentPage"
