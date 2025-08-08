@@ -89,21 +89,38 @@ src/
 
 ## 5. Development Environment Setup
 
-Steps to set up the project locally.   
+Steps to set up the project locally.  
+
+### Prerequisites
+
+- Node.js v22.14.0
+- Python 3.13
+- Docker
+---
+
 Clone the project
 ```bash
 git clone https://github.com/stilab-ets/stilab-ets.github.io.git
 ```
-### Backend
+### Installation steps
 1. Install [Docker](https://www.docker.com/products/docker-desktop).
 
 
 2. From the root of the repository, create the virtual environment
 ```bash
 python -m venv .venv
+
+# If you don't want to switch the python version
+python3.13 -m venv .venv 
+```
+```bash
 .\.venv\Scripts\activate # Windows
 source .venv/bin/activate # Linux
+```
+```bash
 pip install -r requirements.txt
+```
+```bash
 pre-commit install # To install some pre-commit hooks to help with code quality
 ```
 
@@ -113,14 +130,14 @@ pre-commit install # To install some pre-commit hooks to help with code quality
 DJANGO_DEBUG=True
 DJANGO_LOG_LEVEL=DEBUG # Options are DEBUG, INFO, WARNING, ERROR and CRITICAL
 
-DB_USER=CHANGE_ME
-DB_PASSWORD=CHANGE_ME
+DB_USER=admin@admin.com
+DB_PASSWORD=admin123
 DB_HOST=db
 DB_PORT=5432
 DB_NAME=postgres
 
 EMAIL_HOST=SMTP_SERVER_HOST
-EMAIL_PORT=SMTP_SERVER_PORT
+EMAIL_PORT=8025
 EMAIL_USE_TLS=False
 EMAIL_HOST_USER=email@example.com
 EMAIL_HOST_PASSWORD=CHANGE_ME
@@ -128,58 +145,46 @@ BACKEND_URL="https://www.backend.example"
 
 VITE_API_BASE_URL=http://localhost:8000
 ```
-
-4. Use the command:
-```sh
-docker compose build
-docker compose up [--build] [-d] # --build to skip the first command, -d to run in detached mode
-```
-
-5. To run tests:
-```bash
-docker compose exec backend sh -c "export DJANGO_SETTINGS_MODULE=config.settings && pytest --cov=backend --cov-report=term --cov-fail-under=60 --cov-config=.coveragerc"
-```
-
-The database will be available at `localhost:5432` and pgAdmin at `localhost:5050`. The backend app will be available at `localhost:8000`
-
-pgAdmin login credentials:
-
-User: `admin@admin.com`  
-Password: `admin123`
-
-The mailhog server to test email delivery is available at `localhost:8025`.
-
-### Frontend
-1. Install the required dependencies:
+4. Install the frontend dependencies:
 ```sh
 npm install
 ```
 
-2. Start the application:
+5. Use the command:
 ```sh
-npm run dev
-```
-
-Or
-
-```bash
 docker compose build
-docker compose up [--build] [-d] # --build to skip the first command, -d to run in detached mode
+```
+```sh
+docker compose up # --build to skip the first command, -d to run in detached mode
+```
+The table below shows the services with their respective URL :   
+
+| Service            | URL                  |
+| ---------------- | ------------------------------------ |
+| Frontend         | http://localhost:5173/                  |
+| Backend          | http://localhost:8000/                       |
+| Database   | http://localhost:5432/        |
+| pgAdmin           | http://localhost:5050/       |
+| Mailhog server          | http://localhost:8025/           |
+
+pgAdmin login credentials:   
+User: `admin@admin.com`  
+Password: `admin123`   
+To create a connection, log in pgAdmin with those credentials, right click on Register and create a new Server.   
+Add these information to the Connection tab :    
+![pg-admin-connection](assets/pgAdminConn.png)   
+After saving, you now have established the database connection with pgAdmin.
+
+
+6. To run backend tests:
+```bash
+docker compose exec backend sh -c "export DJANGO_SETTINGS_MODULE=config.settings && pytest --cov=backend --cov-report=term --cov-fail-under=60 --cov-config=.coveragerc"
 ```
 
-The application will be available locally at http://localhost:5173/
-
-3. Run unit tests with coverage:
+7. To run frontend tests:
 ```sh
 npm run test
 ```
-
-### Prerequisites
-
-- Node.js v22.14.0
-- Python 3.13
-- Docker
----
 
 ---
 
@@ -191,9 +196,12 @@ Indications on how to import data
 
 ```bash
 docker compose exec backend python manage.py migrate
+```
+```bash
 docker compose exec backend python manage.py createsuperuser
-
-# To create new migrations 
+```
+To create new migrations 
+```bash
 docker compose exec backend python manage.py makemigrations --name migration_name 
 ```
 The Django admin will be available at `localhost:8000/admin` with the credentials created previously with the createsuperuser command
