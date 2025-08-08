@@ -8,22 +8,43 @@ on:
     workflow_dispatch:
 
 jobs:
-    test:
-        runs-on: ubuntu-latest
+  lint:
+    name: Formatting
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # To only check staged files
 
-            - name: Set up Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 18
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
 
-            - name: Install dependencies
-              run: npm install
+      - name: Install dependencies
+        run: npm install
 
-            - name: Run unit tests
-              run: npm run test
+      - name: Run formatting check on changed files
+        run: npx lint-staged
 
-            # TODO: Pipeline needs to fail if code coverage < 60%
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: lint
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run unit tests with coverage threshold of 60%
+        run: npm run test
