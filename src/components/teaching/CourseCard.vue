@@ -1,94 +1,94 @@
 <script setup lang="ts">
-import { useLanguage } from '@/composables/useLanguage'
-import Card from '@/components/ui/Card.vue'
-import Button from '@/components/ui/Button.vue'
+import { useLanguage } from '@/composables/useLanguage';
+import Card from '@/components/ui/Card.vue';
+import Button from '@/components/ui/Button.vue';
 
 interface Teacher {
-  id: string
-  first_name: string
-  last_name: string
-  role: string
-  email: string | null
-  phone?: string | null
-  biography?: string | null
-  research_domain?: string | null
-  image_url?: string | null
-  github_url?: string | null
-  linkedin_url?: string | null
-  stackoverflowUrl?: string | null
-  twitterxUrl?: string | null
-  googlescholarUrl?: string | null
-  dblpUrl?: string | null
-  personal_website?: string | null
-  status?: string | null
+  id: string;
+  first_name: string;
+  last_name: string;
+  role: string;
+  email: string | null;
+  phone?: string | null;
+  biography?: string | null;
+  research_domain?: string | null;
+  image_url?: string | null;
+  github_url?: string | null;
+  linkedin_url?: string | null;
+  stackoverflowUrl?: string | null;
+  twitterxUrl?: string | null;
+  googlescholarUrl?: string | null;
+  dblpUrl?: string | null;
+  personal_website?: string | null;
+  status?: string | null;
 }
 
 interface Course {
-  id: string
-  title: string
-  code: string
-  teacher: Teacher
-  semester: string
-  level: 'UGR' | 'GRD'
-  description: string
-  url?: string
-  year: number
+  id: string;
+  title: string;
+  code: string;
+  teacher: Teacher;
+  semester: string;
+  level: 'UGR' | 'GRD';
+  description: string;
+  url?: string;
+  year: number;
 }
 
-const props = defineProps<{ course: Course }>()
+const props = defineProps<{ course: Course }>();
 
-const { t } = useLanguage()
+const { t } = useLanguage();
 
 // Methods
 const getLevelColor = (level: Course['level']) => {
   const colors: Record<Course['level'], string> = {
     UGR: 'bg-green-100 text-green-800',
-    GRD: 'bg-blue-100 text-blue-800'
-  }
-  return colors[level] || 'bg-gray-100 text-gray-800'
-}
+    GRD: 'bg-blue-100 text-blue-800',
+  };
+  return colors[level] || 'bg-gray-100 text-gray-800';
+};
 
 type LevelCode = 'undergraduate' | 'graduate';
 
 const getLevelLabel = (level: Course['level']) => {
-  let levelCode: LevelCode | string = ''
+  let levelCode: LevelCode | string = '';
   switch (level) {
     case 'UGR':
-      levelCode = 'undergraduate'
-      break
+      levelCode = 'undergraduate';
+      break;
     case 'GRD':
-      levelCode = 'graduate'
-      break
+      levelCode = 'graduate';
+      break;
     default:
-      levelCode = level
+      levelCode = level;
   }
   if (levelCode === 'undergraduate' || levelCode === 'graduate') {
-    return t.value.teaching.levels[levelCode]
+    return t.value.teaching.levels[levelCode];
   }
-  return levelCode
-}
+  return levelCode;
+};
 
 const getSemesterLabel = (semester: string, year: number) => {
-  let semesterLabel = ''
+  let semesterLabel = '';
   switch (semester) {
     case 'F':
-      semesterLabel = t.value.teaching.semesters.fall
-      break
+      semesterLabel = t.value.teaching.semesters.fall;
+      break;
     case 'W':
-      semesterLabel = t.value.teaching.semesters.winter
-      break
+      semesterLabel = t.value.teaching.semesters.winter;
+      break;
     case 'S':
-      semesterLabel = t.value.teaching.semesters.summer
-      break
+      semesterLabel = t.value.teaching.semesters.summer;
+      break;
     default:
-      semesterLabel = semester
+      semesterLabel = semester;
   }
-  return `${semesterLabel} ${year}`
-}
+  return `${semesterLabel} ${year}`;
+};
 
 const openLink = (url: string) => {
-  window.open(url, '_blank')
-}
+  window.open(url, '_blank');
+};
 </script>
 
 <template>
@@ -104,16 +104,23 @@ const openLink = (url: string) => {
           <span
             :class="[
               'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-              getLevelColor(course.level)
+              getLevelColor(course.level),
             ]"
           >
             {{ getLevelLabel(course.level) }}
           </span>
         </div>
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ course.title }}</h3>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">
+          {{ course.title }}
+        </h3>
         <div class="flex items-center text-sm text-gray-600 space-x-4 mb-3">
           <div class="flex items-center">
-            <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              class="h-4 w-4 mr-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -124,7 +131,12 @@ const openLink = (url: string) => {
             {{ course.teacher.first_name }} {{ course.teacher.last_name }}
           </div>
           <div class="flex items-center">
-            <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              class="h-4 w-4 mr-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -146,8 +158,8 @@ const openLink = (url: string) => {
           v-if="course.url"
           variant="outline"
           size="sm"
-          @click="openLink(course.url)"
           class="hover:cursor-pointer"
+          @click="openLink(course.url)"
         >
           <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
             <path

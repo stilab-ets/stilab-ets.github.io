@@ -1,106 +1,109 @@
 export interface MemberFormTranslations {
-  titleEdit: string
-  titleCreate: string
-  subtitle: string
+  titleEdit: string;
+  titleCreate: string;
+  subtitle: string;
   sections: {
-    academic: any
-    additional: any
-    personal: string
-    professional: string
-    contact: string
-    links: string
-    research: string
-  }
+    academic: any;
+    additional: any;
+    personal: string;
+    professional: string;
+    contact: string;
+    links: string;
+    research: string;
+  };
   form: {
-    firstName: string
-    firstNamePlaceholder: string
-    lastName: string
-    lastNamePlaceholder: string
-    title: string
-    titlePlaceholder: string
-    email: string
-    emailPlaceholder: string
-    phone: string
-    phonePlaceholder: string
-    office: string
-    officePlaceholder: string
-    role: string
-    selectRole: string
-    status: string
-    selectStatus: string
-    researchDomains: string
-    researchDomainsPlaceholder: string
-    biography: string
-    biographyPlaceholder: string
-    githubUrl: string
-    githubUrlPlaceholder: string
-    linkedinUrl: string
-    linkedinUrlPlaceholder: string
-    stackoverflowUrl: string
-    stackoverflowUrlPlaceholder: string
-    twitterxUrl: string
-    twitterxUrlPlaceholder: string
-    googlescholarUrl: string
-    googlescholarUrlPlaceholder: string
-    dblpUrl: string
-    dblpUrlPlaceholder: string
-    personalWebsite: string
-    personalWebsitePlaceholder: string
-    orcidId: string
-    orcidIdPlaceholder: string
-    photo: string
-    uploadPhoto: string
-    removePhoto: string
-    joinDate: string
-    leaveDate: string
-    profilePhoto: string
-    department: string
-    departmentPlaceholder: string
-    cancel: string
-    create: string
-    update: string
-    submitting: string
-  }
+    firstName: string;
+    firstNamePlaceholder: string;
+    lastName: string;
+    lastNamePlaceholder: string;
+    title: string;
+    titlePlaceholder: string;
+    email: string;
+    emailPlaceholder: string;
+    phone: string;
+    phonePlaceholder: string;
+    office: string;
+    officePlaceholder: string;
+    role: string;
+    selectRole: string;
+    status: string;
+    selectStatus: string;
+    researchDomains: string;
+    researchDomainsPlaceholder: string;
+    biography: string;
+    biographyPlaceholder: string;
+    githubUrl: string;
+    githubUrlPlaceholder: string;
+    linkedinUrl: string;
+    linkedinUrlPlaceholder: string;
+    stackoverflowUrl: string;
+    stackoverflowUrlPlaceholder: string;
+    twitterxUrl: string;
+    twitterxUrlPlaceholder: string;
+    googlescholarUrl: string;
+    googlescholarUrlPlaceholder: string;
+    dblpUrl: string;
+    dblpUrlPlaceholder: string;
+    personalWebsite: string;
+    personalWebsitePlaceholder: string;
+    orcidId: string;
+    orcidIdPlaceholder: string;
+    photo: string;
+    uploadPhoto: string;
+    removePhoto: string;
+    joinDate: string;
+    leaveDate: string;
+    profilePhoto: string;
+    department: string;
+    departmentPlaceholder: string;
+    cancel: string;
+    create: string;
+    update: string;
+    submitting: string;
+  };
   roles: {
-    professor: string
-    researcher: string
-    postdoc: string
-    phd: string
-    master: string
-    engineer: string
-    admin: string
-    visiting: string
-  }
+    professor: string;
+    researcher: string;
+    postdoc: string;
+    phd: string;
+    master: string;
+    engineer: string;
+    admin: string;
+    visiting: string;
+  };
   statuses: {
-    active: string
-    alumni: string
-    visitor: string
-  }
+    active: string;
+    alumni: string;
+    visitor: string;
+  };
   validation: {
-    titleRequired: string
-    firstNameRequired: string
-    lastNameRequired: string
-    emailRequired: string
-    emailInvalid: string
-    phoneInvalid: string
-    roleRequired: string
-    statusRequired: string
-    urlInvalid: string
-    orcidInvalid: string
-    joinDateRequired: string
-    leaveDateAfterJoin: string
-  }
+    titleRequired: string;
+    firstNameRequired: string;
+    lastNameRequired: string;
+    emailRequired: string;
+    emailInvalid: string;
+    phoneInvalid: string;
+    roleRequired: string;
+    statusRequired: string;
+    urlInvalid: string;
+    orcidInvalid: string;
+    joinDateRequired: string;
+    leaveDateAfterJoin: string;
+  };
   errors: {
-    submitFailed: string
-    photoUploadFailed: string
-  }
+    submitFailed: string;
+    photoUploadFailed: string;
+  };
 }
 
-export const memberFormTranslations: Record<'fr' | 'en', MemberFormTranslations> = {
+export const memberFormTranslations: Record<
+  'fr' | 'en',
+  MemberFormTranslations
+> = {
   fr: {
     titleEdit: 'Modifier le membre',
     titleCreate: 'Ajouter un membre',
-    subtitle: 'Gérez les informations du membre de l\'équipe',
+    subtitle: "Gérez les informations du membre de l'équipe",
     sections: {
       personal: 'Informations personnelles',
       professional: 'Informations professionnelles',
@@ -108,7 +111,7 @@ export const memberFormTranslations: Record<'fr' | 'en', MemberFormTranslations>
       links: 'Liens externes',
       research: 'Recherche',
       academic: 'Académique',
-      additional: 'Additionnelles'
+      additional: 'Additionnelles',
     },
     form: {
       firstName: 'Prénom',
@@ -130,17 +133,20 @@ export const memberFormTranslations: Record<'fr' | 'en', MemberFormTranslations>
       researchDomains: 'Domaines de recherche',
       researchDomainsPlaceholder: 'IA, Génie logiciel, etc.',
       biography: 'Biographie',
-      biographyPlaceholder: 'Décrivez le parcours et les intérêts de recherche...',
+      biographyPlaceholder:
+        'Décrivez le parcours et les intérêts de recherche...',
       githubUrl: 'GitHub',
       githubUrlPlaceholder: 'https://github.com/username',
       linkedinUrl: 'LinkedIn',
       linkedinUrlPlaceholder: 'https://linkedin.com/in/username',
       stackoverflowUrl: 'Stack Overflow',
-      stackoverflowUrlPlaceholder: 'https://stackoverflow.com/users/userid/username',
+      stackoverflowUrlPlaceholder:
+        'https://stackoverflow.com/users/userid/username',
       twitterxUrl: 'Twitter/X',
       twitterxUrlPlaceholder: 'https://x.com/username',
       googlescholarUrl: 'Google Scholar',
-      googlescholarUrlPlaceholder: 'https://scholar.google.ca/citations?user=userid&hl=en',
+      googlescholarUrlPlaceholder:
+        'https://scholar.google.ca/citations?user=userid&hl=en',
       dblpUrl: 'DBLP',
       dblpUrlPlaceholder: 'https://dblp.org/pid/id/userid-1.html',
       personalWebsite: 'Site web personnel',
@@ -150,7 +156,7 @@ export const memberFormTranslations: Record<'fr' | 'en', MemberFormTranslations>
       photo: 'Photo',
       uploadPhoto: 'Télécharger une photo',
       removePhoto: 'Supprimer la photo',
-      joinDate: 'Date d\'arrivée',
+      joinDate: "Date d'arrivée",
       leaveDate: 'Date de départ',
       profilePhoto: 'Photo de profil',
       department: 'Département',
@@ -158,7 +164,7 @@ export const memberFormTranslations: Record<'fr' | 'en', MemberFormTranslations>
       cancel: 'Annuler',
       create: 'Créer',
       update: 'Mettre à jour',
-      submitting: 'En cours...'
+      submitting: 'En cours...',
     },
     roles: {
       professor: 'Professeur',
@@ -168,31 +174,31 @@ export const memberFormTranslations: Record<'fr' | 'en', MemberFormTranslations>
       master: 'Étudiant Master',
       engineer: 'Ingénieur de recherche',
       admin: 'Administrateur',
-      visiting: 'Chercheur invité'
+      visiting: 'Chercheur invité',
     },
     statuses: {
       active: 'Actif',
       alumni: 'Alumni',
-      visitor: 'Visiteur'
+      visitor: 'Visiteur',
     },
     validation: {
       titleRequired: 'Le titre est requis',
       firstNameRequired: 'Le prénom est requis',
       lastNameRequired: 'Le nom est requis',
-      emailRequired: 'L\'email est requis',
-      emailInvalid: 'Format d\'email invalide',
+      emailRequired: "L'email est requis",
+      emailInvalid: "Format d'email invalide",
       phoneInvalid: 'Format de téléphone invalide',
       roleRequired: 'Le rôle est requis',
       statusRequired: 'Le statut est requis',
       urlInvalid: 'URL invalide',
       orcidInvalid: 'Format ORCID invalide',
-      joinDateRequired: 'La date d\'arrivée est requise',
-      leaveDateAfterJoin: 'La date de départ doit être après l\'arrivée'
+      joinDateRequired: "La date d'arrivée est requise",
+      leaveDateAfterJoin: "La date de départ doit être après l'arrivée",
     },
     errors: {
       submitFailed: 'Échec de la soumission',
-      photoUploadFailed: 'Échec du téléchargement de la photo'
-    }
+      photoUploadFailed: 'Échec du téléchargement de la photo',
+    },
   },
   en: {
     titleEdit: 'Edit Member',
@@ -204,8 +210,8 @@ export const memberFormTranslations: Record<'fr' | 'en', MemberFormTranslations>
       contact: 'Contact',
       links: 'External Links',
       research: 'Research',
-      academic: "Academic",
-      additional: "Additionnal"
+      academic: 'Academic',
+      additional: 'Additionnal',
     },
     form: {
       firstName: 'First Name',
@@ -233,11 +239,13 @@ export const memberFormTranslations: Record<'fr' | 'en', MemberFormTranslations>
       linkedinUrl: 'LinkedIn',
       linkedinUrlPlaceholder: 'https://linkedin.com/in/username',
       stackoverflowUrl: 'Stack Overflow',
-      stackoverflowUrlPlaceholder: 'https://stackoverflow.com/users/userid/username',
+      stackoverflowUrlPlaceholder:
+        'https://stackoverflow.com/users/userid/username',
       twitterxUrl: 'Twitter/X',
       twitterxUrlPlaceholder: 'https://x.com/username',
       googlescholarUrl: 'Google Scholar',
-      googlescholarUrlPlaceholder: 'https://scholar.google.ca/citations?user=userid&hl=en',
+      googlescholarUrlPlaceholder:
+        'https://scholar.google.ca/citations?user=userid&hl=en',
       dblpUrl: 'DBLP',
       dblpUrlPlaceholder: 'https://dblp.org/pid/id/userid-1.html',
       personalWebsite: 'Personal Website',
@@ -255,7 +263,7 @@ export const memberFormTranslations: Record<'fr' | 'en', MemberFormTranslations>
       cancel: 'Cancel',
       create: 'Create',
       update: 'Update',
-      submitting: 'Submitting...'
+      submitting: 'Submitting...',
     },
     roles: {
       professor: 'Professor',
@@ -265,12 +273,12 @@ export const memberFormTranslations: Record<'fr' | 'en', MemberFormTranslations>
       master: 'Master Student',
       engineer: 'Research Engineer',
       admin: 'Administrator',
-      visiting: 'Visiting Researcher'
+      visiting: 'Visiting Researcher',
     },
     statuses: {
       active: 'Active',
       alumni: 'Alumni',
-      visitor: 'Visitor'
+      visitor: 'Visitor',
     },
     validation: {
       titleRequired: 'Title is required',
@@ -284,11 +292,11 @@ export const memberFormTranslations: Record<'fr' | 'en', MemberFormTranslations>
       urlInvalid: 'Invalid URL',
       orcidInvalid: 'Invalid ORCID format',
       joinDateRequired: 'Join date is required',
-      leaveDateAfterJoin: 'Leave date must be after join date'
+      leaveDateAfterJoin: 'Leave date must be after join date',
     },
     errors: {
       submitFailed: 'Failed to submit',
-      photoUploadFailed: 'Failed to upload photo'
-    }
-  }
-} as const
+      photoUploadFailed: 'Failed to upload photo',
+    },
+  },
+} as const;

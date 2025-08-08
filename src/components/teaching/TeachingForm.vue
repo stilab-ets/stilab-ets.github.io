@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useCourses } from '@/hooks/teaching/useCourses'
-import { useMembers } from '@/hooks/members/useMembers'
-import { useNavigation } from '@/hooks/layout/useNavigation'
-import { useLanguage } from '@/composables/useLanguage'
-import Form from '@/components/ui/Form.vue'
-import Button from '@/components/ui/Button.vue'
+import { ref, computed, onMounted } from 'vue';
+import { useCourses } from '@/hooks/teaching/useCourses';
+import { useMembers } from '@/hooks/members/useMembers';
+import { useNavigation } from '@/hooks/layout/useNavigation';
+import { useLanguage } from '@/composables/useLanguage';
+import Form from '@/components/ui/Form.vue';
+import Button from '@/components/ui/Button.vue';
 
-const { t } = useLanguage()
-const { createCourse, isLoading, error } = useCourses()
-const { members, fetchMembers } = useMembers()
-const { navigateToPage } = useNavigation()
+const { t } = useLanguage();
+const { createCourse, isLoading, error } = useCourses();
+const { members, fetchMembers } = useMembers();
+const { navigateToPage } = useNavigation();
 
-onMounted(fetchMembers)
+onMounted(fetchMembers);
 
 const formData = ref({
   title: '',
@@ -23,53 +23,52 @@ const formData = ref({
   semester: '',
   description: '',
   teacher: '', // member ID
-})
+});
 
-const isSubmitting = ref(false)
-const errors = ref<Record<string, string>>({})
-const successMessage = ref('')
+const isSubmitting = ref(false);
+const errors = ref<Record<string, string>>({});
+const successMessage = ref('');
 
-const validateURL = (url: string) =>
-  /^https?:\/\/[^\s$.?#].[^\s]*$/.test(url)
+const validateURL = (url: string) => /^https?:\/\/[^\s$.?#].[^\s]*$/.test(url);
 
 const validateForm = () => {
-  errors.value = {}
+  errors.value = {};
 
   if (!formData.value.title.trim()) {
-    errors.value.title = 'Title is required.'
+    errors.value.title = 'Title is required.';
   }
 
   if (!formData.value.code.trim()) {
-    errors.value.code = 'Code is required.'
+    errors.value.code = 'Code is required.';
   }
 
   if (!formData.value.teacher) {
-    errors.value.teacher = 'Teacher is required.'
+    errors.value.teacher = 'Teacher is required.';
   }
 
   if (formData.value.url && !validateURL(formData.value.url)) {
-    errors.value.url = 'Invalid URL format.'
+    errors.value.url = 'Invalid URL format.';
   }
 
-  return Object.keys(errors.value).length === 0
-}
+  return Object.keys(errors.value).length === 0;
+};
 
 const submitForm = async () => {
-  if (!validateForm()) return
+  if (!validateForm()) return;
 
-  isSubmitting.value = true
-  successMessage.value = ''
+  isSubmitting.value = true;
+  successMessage.value = '';
 
   try {
     const payload = {
       ...formData.value,
       teacher_id: formData.value.teacher,
-    }
+    };
 
-    const success = await createCourse(payload)
+    const success = await createCourse(payload);
 
     if (success) {
-      successMessage.value = 'Course created successfully! Redirecting...'
+      successMessage.value = 'Course created successfully! Redirecting...';
       formData.value = {
         title: '',
         code: '',
@@ -78,23 +77,23 @@ const submitForm = async () => {
         level: '',
         semester: '',
         description: '',
-        teacher: ''
-      }
-      setTimeout(() => navigateToPage('dashboard'), 2000)
+        teacher: '',
+      };
+      setTimeout(() => navigateToPage('dashboard'), 2000);
     } else {
-      errors.value.general = error.value || 'Submission failed.'
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      errors.value.general = error.value || 'Submission failed.';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   } catch (err) {
-    console.error('Error creating course:', err)
-    errors.value.general = 'Unexpected error occurred.'
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    console.error('Error creating course:', err);
+    errors.value.general = 'Unexpected error occurred.';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   } finally {
-    isSubmitting.value = false
+    isSubmitting.value = false;
   }
-}
+};
 
-const formError = computed(() => errors.value.general || error.value)
+const formError = computed(() => errors.value.general || error.value);
 </script>
 
 <template>
@@ -104,22 +103,28 @@ const formError = computed(() => errors.value.general || error.value)
     :success-message="successMessage"
     :error="formError"
   >
-    <form @submit.prevent="submitForm" class="space-y-8">
+    <form class="space-y-8" @submit.prevent="submitForm">
       <!-- Title -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Title *</label>
+        <label class="block text-sm font-medium text-gray-700 mb-1"
+          >Title *</label
+        >
         <input
           v-model="formData.title"
           type="text"
           class="w-full p-3 border rounded-lg"
           :class="{ 'border-red-500': errors.title }"
         />
-        <p v-if="errors.title" class="text-sm text-red-600">{{ errors.title }}</p>
+        <p v-if="errors.title" class="text-sm text-red-600">
+          {{ errors.title }}
+        </p>
       </div>
 
       <!-- Code -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Code *</label>
+        <label class="block text-sm font-medium text-gray-700 mb-1"
+          >Code *</label
+        >
         <input
           v-model="formData.code"
           type="text"
@@ -132,7 +137,9 @@ const formError = computed(() => errors.value.general || error.value)
       <!-- Optional Fields: URL, Year -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">URL</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >URL</label
+          >
           <input
             v-model="formData.url"
             type="url"
@@ -142,7 +149,9 @@ const formError = computed(() => errors.value.general || error.value)
           <p v-if="errors.url" class="text-sm text-red-600">{{ errors.url }}</p>
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Year</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >Year</label
+          >
           <input
             v-model.number="formData.year"
             type="number"
@@ -156,7 +165,9 @@ const formError = computed(() => errors.value.general || error.value)
       <!-- Level & Semester -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Level</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >Level</label
+          >
           <select v-model="formData.level" class="w-full p-3 border rounded-lg">
             <option value="">Select level</option>
             <option value="UGR">Undergraduate</option>
@@ -164,8 +175,13 @@ const formError = computed(() => errors.value.general || error.value)
           </select>
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Semester</label>
-          <select v-model="formData.semester" class="w-full p-3 border rounded-lg">
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >Semester</label
+          >
+          <select
+            v-model="formData.semester"
+            class="w-full p-3 border rounded-lg"
+          >
             <option value="">Select semester</option>
             <option value="F">Fall</option>
             <option value="S">Spring</option>
@@ -176,7 +192,9 @@ const formError = computed(() => errors.value.general || error.value)
 
       <!-- Description -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+        <label class="block text-sm font-medium text-gray-700 mb-1"
+          >Description</label
+        >
         <textarea
           v-model="formData.description"
           rows="4"
@@ -186,7 +204,9 @@ const formError = computed(() => errors.value.general || error.value)
 
       <!-- Teacher -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Teacher *</label>
+        <label class="block text-sm font-medium text-gray-700 mb-1"
+          >Teacher *</label
+        >
         <select
           v-model="formData.teacher"
           class="w-full p-3 border rounded-lg"
@@ -197,12 +217,18 @@ const formError = computed(() => errors.value.general || error.value)
             {{ member.first_name }} {{ member.last_name }}
           </option>
         </select>
-        <p v-if="errors.teacher" class="text-sm text-red-600">{{ errors.teacher }}</p>
+        <p v-if="errors.teacher" class="text-sm text-red-600">
+          {{ errors.teacher }}
+        </p>
       </div>
 
       <!-- Buttons -->
       <div class="flex flex-col md:flex-row justify-between gap-4 pt-6">
-        <Button type="submit" :disabled="isSubmitting || isLoading" class="w-full md:w-auto">
+        <Button
+          type="submit"
+          :disabled="isSubmitting || isLoading"
+          class="w-full md:w-auto"
+        >
           <span v-if="isSubmitting || isLoading">Submitting...</span>
           <span v-else>Create Course</span>
         </Button>

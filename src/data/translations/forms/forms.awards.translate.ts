@@ -1,99 +1,102 @@
 export interface AwardsFormTranslations {
-  titleEdit: string
-  titleCreate: string
-  subtitle: string
+  titleEdit: string;
+  titleCreate: string;
+  subtitle: string;
   sections: {
-    basic: string
-    details: string
-    recipients: string
-    recognition: string
-  }
+    basic: string;
+    details: string;
+    recipients: string;
+    recognition: string;
+  };
   form: {
-    title: string
-    titlePlaceholder: string
-    category: string
-    selectCategory: string
-    organization: string
-    organizationPlaceholder: string
-    year: string
-    recipients: string
-    selectRecipient: string
-    coRecipients: string
-    selectCoRecipients: string
-    description: string
-    descriptionPlaceholder: string
-    significance: string
-    significancePlaceholder: string
-    amount: string
-    amountPlaceholder: string
-    criteria: string
-    criteriaPlaceholder: string
-    ceremony: string
-    ceremonyPlaceholder: string
-    certificateUrl: string
-    certificateUrlPlaceholder: string
-    websiteUrl: string
-    websiteUrlPlaceholder: string
-    mediaUrl: string
-    mediaUrlPlaceholder: string
-    level: string
-    selectLevel: string
-    status: string
-    selectStatus: string
-    tags: string
-    tagsPlaceholder: string
-    notes: string
-    notesPlaceholder: string
-    featured: string
-    url: string
-    urlPlaceholder: string
-    cancel: string
-    create: string
-    update: string
-    submitting: string
-  }
+    title: string;
+    titlePlaceholder: string;
+    category: string;
+    selectCategory: string;
+    organization: string;
+    organizationPlaceholder: string;
+    year: string;
+    recipients: string;
+    selectRecipient: string;
+    coRecipients: string;
+    selectCoRecipients: string;
+    description: string;
+    descriptionPlaceholder: string;
+    significance: string;
+    significancePlaceholder: string;
+    amount: string;
+    amountPlaceholder: string;
+    criteria: string;
+    criteriaPlaceholder: string;
+    ceremony: string;
+    ceremonyPlaceholder: string;
+    certificateUrl: string;
+    certificateUrlPlaceholder: string;
+    websiteUrl: string;
+    websiteUrlPlaceholder: string;
+    mediaUrl: string;
+    mediaUrlPlaceholder: string;
+    level: string;
+    selectLevel: string;
+    status: string;
+    selectStatus: string;
+    tags: string;
+    tagsPlaceholder: string;
+    notes: string;
+    notesPlaceholder: string;
+    featured: string;
+    url: string;
+    urlPlaceholder: string;
+    cancel: string;
+    create: string;
+    update: string;
+    submitting: string;
+  };
   categories: {
-    publication: string
-    research: string
-    teaching: string
-    service: string
-    career: string
-    excellence: string
-    innovation: string
-    collaboration: string
-  }
+    publication: string;
+    research: string;
+    teaching: string;
+    service: string;
+    career: string;
+    excellence: string;
+    innovation: string;
+    collaboration: string;
+  };
   levels: {
-    international: string
-    national: string
-    regional: string
-    institutional: string
-    departmental: string
-  }
+    international: string;
+    national: string;
+    regional: string;
+    institutional: string;
+    departmental: string;
+  };
   statuses: {
-    received: string
-    nominated: string
-    pending: string
-    declined: string
-  }
+    received: string;
+    nominated: string;
+    pending: string;
+    declined: string;
+  };
   validation: {
-    titleRequired: string
-    categoryRequired: string
-    organizationRequired: string
-    yearRequired: string
-    yearInvalid: string
-    recipientRequired: string
-    descriptionRequired: string
-    amountInvalid: string
-    urlInvalid: string
-    levelRequired: string
-    statusRequired: string
-  }
+    titleRequired: string;
+    categoryRequired: string;
+    organizationRequired: string;
+    yearRequired: string;
+    yearInvalid: string;
+    recipientRequired: string;
+    descriptionRequired: string;
+    amountInvalid: string;
+    urlInvalid: string;
+    levelRequired: string;
+    statusRequired: string;
+  };
   errors: {
-    submitFailed: string
-  }
+    submitFailed: string;
+  };
 }
 
-export const awardsFormTranslations: Record<'fr' | 'en', AwardsFormTranslations> = {
+export const awardsFormTranslations: Record<
+  'fr' | 'en',
+  AwardsFormTranslations
+> = {
   fr: {
     titleEdit: 'Modifier le prix',
     titleCreate: 'Ajouter un prix',
@@ -102,7 +105,7 @@ export const awardsFormTranslations: Record<'fr' | 'en', AwardsFormTranslations>
       basic: 'Informations de base',
       details: 'Détails du prix',
       recipients: 'Lauréats',
-      recognition: 'Reconnaissance'
+      recognition: 'Reconnaissance',
     },
     form: {
       title: 'Titre du prix',
@@ -123,7 +126,7 @@ export const awardsFormTranslations: Record<'fr' | 'en', AwardsFormTranslations>
       amount: 'Montant',
       amountPlaceholder: 'Dotation financière (optionnel)',
       criteria: 'Critères',
-      criteriaPlaceholder: 'Critères d\'attribution...',
+      criteriaPlaceholder: "Critères d'attribution...",
       ceremony: 'Cérémonie',
       ceremonyPlaceholder: 'Détails de la cérémonie de remise...',
       certificateUrl: 'URL du certificat',
@@ -146,7 +149,7 @@ export const awardsFormTranslations: Record<'fr' | 'en', AwardsFormTranslations>
       cancel: 'Annuler',
       create: 'Créer',
       update: 'Mettre à jour',
-      submitting: 'En cours...'
+      submitting: 'En cours...',
     },
     categories: {
       publication: 'Publication',
@@ -156,37 +159,37 @@ export const awardsFormTranslations: Record<'fr' | 'en', AwardsFormTranslations>
       career: 'Carrière',
       excellence: 'Excellence',
       innovation: 'Innovation',
-      collaboration: 'Collaboration'
+      collaboration: 'Collaboration',
     },
     levels: {
       international: 'International',
       national: 'National',
       regional: 'Régional',
       institutional: 'Institutionnel',
-      departmental: 'Départemental'
+      departmental: 'Départemental',
     },
     statuses: {
       received: 'Reçu',
       nominated: 'Nominé',
       pending: 'En attente',
-      declined: 'Décliné'
+      declined: 'Décliné',
     },
     validation: {
       titleRequired: 'Le titre est requis',
       categoryRequired: 'La catégorie est requise',
-      organizationRequired: 'L\'organisation est requise',
-      yearRequired: 'L\'année est requise',
+      organizationRequired: "L'organisation est requise",
+      yearRequired: "L'année est requise",
       yearInvalid: 'Année invalide',
       recipientRequired: 'Le lauréat est requis',
       descriptionRequired: 'La description est requise',
       amountInvalid: 'Montant invalide',
       urlInvalid: 'URL invalide',
       levelRequired: 'Le niveau est requis',
-      statusRequired: 'Le statut est requis'
+      statusRequired: 'Le statut est requis',
     },
     errors: {
-      submitFailed: 'Échec de la soumission'
-    }
+      submitFailed: 'Échec de la soumission',
+    },
   },
   en: {
     titleEdit: 'Edit Award',
@@ -196,7 +199,7 @@ export const awardsFormTranslations: Record<'fr' | 'en', AwardsFormTranslations>
       basic: 'Basic Information',
       details: 'Award Details',
       recipients: 'Recipients',
-      recognition: 'Recognition'
+      recognition: 'Recognition',
     },
     form: {
       title: 'Award Title',
@@ -211,7 +214,8 @@ export const awardsFormTranslations: Record<'fr' | 'en', AwardsFormTranslations>
       coRecipients: 'Co-recipients',
       selectCoRecipients: 'Select co-recipients',
       description: 'Description',
-      descriptionPlaceholder: 'Description of the award and its significance...',
+      descriptionPlaceholder:
+        'Description of the award and its significance...',
       significance: 'Significance',
       significancePlaceholder: 'Impact and importance of this distinction...',
       amount: 'Amount',
@@ -240,7 +244,7 @@ export const awardsFormTranslations: Record<'fr' | 'en', AwardsFormTranslations>
       cancel: 'Cancel',
       create: 'Create',
       update: 'Update',
-      submitting: 'Submitting...'
+      submitting: 'Submitting...',
     },
     categories: {
       publication: 'Publication',
@@ -250,20 +254,20 @@ export const awardsFormTranslations: Record<'fr' | 'en', AwardsFormTranslations>
       career: 'Career',
       excellence: 'Excellence',
       innovation: 'Innovation',
-      collaboration: 'Collaboration'
+      collaboration: 'Collaboration',
     },
     levels: {
       international: 'International',
       national: 'National',
       regional: 'Regional',
       institutional: 'Institutional',
-      departmental: 'Departmental'
+      departmental: 'Departmental',
     },
     statuses: {
       received: 'Received',
       nominated: 'Nominated',
       pending: 'Pending',
-      declined: 'Declined'
+      declined: 'Declined',
     },
     validation: {
       titleRequired: 'Title is required',
@@ -276,10 +280,10 @@ export const awardsFormTranslations: Record<'fr' | 'en', AwardsFormTranslations>
       amountInvalid: 'Invalid amount',
       urlInvalid: 'Invalid URL',
       levelRequired: 'Level is required',
-      statusRequired: 'Status is required'
+      statusRequired: 'Status is required',
     },
     errors: {
-      submitFailed: 'Failed to submit'
-    }
-  }
-}
+      submitFailed: 'Failed to submit',
+    },
+  },
+};

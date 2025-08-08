@@ -23,6 +23,11 @@ export default defineConfig({
       include: ['src/components/**/*.{ts,js,vue}'],
       exclude: ['**/index.ts'],
       reporter: ['text', 'lcov'],
+      thresholds: {
+        statements: 60,
+        branches: 60,
+        lines: 60,
+      },
       all: true
     }
   }

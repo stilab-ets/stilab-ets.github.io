@@ -1,37 +1,36 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue';
 
-import { useMembers } from '@/hooks/members/useMembers'
-import { useAwards } from '@/hooks/awards/useAwards'
-import { useLanguage } from '@/composables/useLanguage'
-import { useNavigation } from '@/hooks/layout/useNavigation'
+import { useMembers } from '@/hooks/members/useMembers';
+import { useAwards } from '@/hooks/awards/useAwards';
+import { useLanguage } from '@/composables/useLanguage';
+import { useNavigation } from '@/hooks/layout/useNavigation';
 
-import Form from '@/components/ui/Form.vue'
-import Card from '@/components/ui/Card.vue'
-import Button from '@/components/ui/Button.vue'
+import Form from '@/components/ui/Form.vue';
+import Card from '@/components/ui/Card.vue';
+import Button from '@/components/ui/Button.vue';
 
-const { t } = useLanguage()
-const { createAward, isLoading, error } = useAwards()
-const { members, fetchMembers } = useMembers()
-const { navigateToPage } = useNavigation()
+const { t } = useLanguage();
+const { createAward, isLoading, error } = useAwards();
+const { members, fetchMembers } = useMembers();
+const { navigateToPage } = useNavigation();
 
-onMounted(fetchMembers)
+onMounted(fetchMembers);
 
 interface Props {
-  isEditing?: boolean
-  initialData?: Record<string, any>
+  isEditing?: boolean;
+  initialData?: Record<string, any>;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   isEditing: false,
-  initialData: () => ({})
-})
+  initialData: () => ({}),
+});
 
 const emit = defineEmits<{
-  submit: [data: Record<string, any>]
-  cancel: []
-}>()
-
+  submit: [data: Record<string, any>];
+  cancel: [];
+}>();
 
 // Form state
 const formData = ref({
@@ -40,112 +39,112 @@ const formData = ref({
   year: new Date().getFullYear().toString(),
   recipients: [] as string[],
   description: '',
-  url: ''
-})
+  url: '',
+});
 
-const errors = ref<Record<string, string>>({})
-const isSubmitting = ref(false)
-const generalError = ref('')
-const successMessage = ref('')
+const errors = ref<Record<string, string>>({});
+const isSubmitting = ref(false);
+const generalError = ref('');
+const successMessage = ref('');
 
 // Initialize form with initial data
-watch(() => props.initialData, (newData) => {
-  if (newData) {
-    Object.assign(formData.value, newData)
-  }
-}, { immediate: true })
+watch(
+  () => props.initialData,
+  (newData) => {
+    if (newData) {
+      Object.assign(formData.value, newData);
+    }
+  },
+  { immediate: true }
+);
 
 // Validation
 const validateForm = () => {
-  errors.value = {}
-  
+  errors.value = {};
+
   if (!formData.value.title.trim()) {
-    errors.value.title = t.value.forms.awards.validation.titleRequired
+    errors.value.title = t.value.forms.awards.validation.titleRequired;
   }
-  
+
   if (!formData.value.organization.trim()) {
-    errors.value.organization = t.value.forms.awards.validation.organizationRequired
+    errors.value.organization =
+      t.value.forms.awards.validation.organizationRequired;
   }
-  
+
   if (!formData.value.year) {
-    errors.value.year = t.value.forms.awards.validation.yearRequired
+    errors.value.year = t.value.forms.awards.validation.yearRequired;
   } else {
-    const year = parseInt(formData.value.year)
-    const currentYear = new Date().getFullYear()
+    const year = parseInt(formData.value.year);
+    const currentYear = new Date().getFullYear();
     if (isNaN(year) || year < 1900 || year > currentYear + 5) {
-      errors.value.year = t.value.forms.awards.validation.yearInvalid
+      errors.value.year = t.value.forms.awards.validation.yearInvalid;
     }
   }
-  
+
   if (formData.value.recipients.length == 0) {
-    errors.value.recipients = t.value.forms.awards.validation.recipientRequired
+    errors.value.recipients = t.value.forms.awards.validation.recipientRequired;
   }
-  
-  return Object.keys(errors.value).length === 0
-}
+
+  return Object.keys(errors.value).length === 0;
+};
 
 // Form submission
 const submitForm = async () => {
-  if (!validateForm()) return
-  
-  isSubmitting.value = true
-  generalError.value = ''
-  
+  if (!validateForm()) return;
+
+  isSubmitting.value = true;
+  generalError.value = '';
+
   try {
     const payload = {
       ...formData.value,
-      recipients: formData.value.recipients.map(id => ({ id })),
-    }
+      recipients: formData.value.recipients.map((id) => ({ id })),
+    };
 
-    const success = await createAward(payload)
+    const success = await createAward(payload);
 
-    
     if (success) {
-      successMessage.value = 'Award created successfully! Redirecting...'
+      successMessage.value = 'Award created successfully! Redirecting...';
 
-      formData.value = { 
+      formData.value = {
         title: '',
         organization: '',
         year: '',
         recipients: [],
         description: '',
-        url: ''
-      }
+        url: '',
+      };
 
-      setTimeout(() => navigateToPage('dashboard'), 2000)
-    }
-    else {
-      errors.value.general = error.value || 'Submission failed.'
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      setTimeout(() => navigateToPage('dashboard'), 2000);
+    } else {
+      errors.value.general = error.value || 'Submission failed.';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   } catch (error) {
-
-    errors.value.general = 'Unexpected error occurred.'
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-
+    errors.value.general = 'Unexpected error occurred.';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   } finally {
-    isSubmitting.value = false
+    isSubmitting.value = false;
   }
-}
+};
 
 const handleCancel = () => {
-  emit('cancel')
-}
+  emit('cancel');
+};
 
-const formTitle = computed(() => 
-  props.isEditing 
-    ? t.value.forms.awards.titleEdit 
+const formTitle = computed(() =>
+  props.isEditing
+    ? t.value.forms.awards.titleEdit
     : t.value.forms.awards.titleCreate
-)
+);
 
 const submitButtonText = computed(() =>
   props.isEditing
     ? t.value.forms.awards.form.update
     : t.value.forms.awards.form.create
-)
+);
 
-const formError = computed(() => errors.value.general || error.value)
-
+const formError = computed(() => errors.value.general || error.value);
 </script>
 
 <template>
@@ -155,15 +154,18 @@ const formError = computed(() => errors.value.general || error.value)
     :success-message="successMessage"
     :error="formError"
   >
-    <form @submit.prevent="submitForm" class="space-y-8">
+    <form class="space-y-8" @submit.prevent="submitForm">
       <Card>
         <h2 class="text-xl font-semibold text-gray-900 mb-6">
           {{ t.forms.awards.sections.basic }}
         </h2>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="md:col-span-2">
-            <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              for="title"
+              class="block text-sm font-medium text-gray-700 mb-2"
+            >
               {{ t.forms.awards.form.title }}
             </label>
             <input
@@ -180,7 +182,10 @@ const formError = computed(() => errors.value.general || error.value)
           </div>
 
           <div>
-            <label for="year" class="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              for="year"
+              class="block text-sm font-medium text-gray-700 mb-2"
+            >
               {{ t.forms.awards.form.year }}
             </label>
             <input
@@ -204,10 +209,13 @@ const formError = computed(() => errors.value.general || error.value)
         <h2 class="text-xl font-semibold text-gray-900 mb-6">
           {{ t.forms.awards.sections.details }}
         </h2>
-        
+
         <div class="space-y-6">
           <div>
-            <label for="organization" class="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              for="organization"
+              class="block text-sm font-medium text-gray-700 mb-2"
+            >
               {{ t.forms.awards.form.organization }}
             </label>
             <input
@@ -224,7 +232,10 @@ const formError = computed(() => errors.value.general || error.value)
           </div>
 
           <div>
-            <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              for="description"
+              class="block text-sm font-medium text-gray-700 mb-2"
+            >
               {{ t.forms.awards.form.description }}
             </label>
             <textarea
@@ -237,7 +248,10 @@ const formError = computed(() => errors.value.general || error.value)
           </div>
 
           <div>
-            <label for="url" class="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              for="url"
+              class="block text-sm font-medium text-gray-700 mb-2"
+            >
               {{ t.forms.awards.form.url }}
             </label>
             <input
@@ -274,21 +288,31 @@ const formError = computed(() => errors.value.general || error.value)
         </div>
 
         <!-- Error Display -->
-        <div v-if="generalError" class="bg-red-50 border border-red-200 rounded-lg p-4">
+        <div
+          v-if="generalError"
+          class="bg-red-50 border border-red-200 rounded-lg p-4"
+        >
           <p class="text-red-800">{{ generalError }}</p>
         </div>
 
         <!-- Form Actions -->
         <div class="flex flex-col md:flex-row justify-between gap-4 pt-6">
-          <Button type="submit" :disabled="isSubmitting || isLoading" class="w-full md:w-auto">
-              {{ isSubmitting ? t.forms.awards.form.submitting : submitButtonText }}
+          <Button
+            type="submit"
+            :disabled="isSubmitting || isLoading"
+            class="w-full md:w-auto"
+          >
+            {{
+              isSubmitting ? t.forms.awards.form.submitting : submitButtonText
+            }}
           </Button>
 
-          <Button 
-            type="button" 
-            variant="secondary" 
-            class="w-full md:w-auto" @click="navigateToPage('awards')">
-
+          <Button
+            type="button"
+            variant="secondary"
+            class="w-full md:w-auto"
+            @click="navigateToPage('awards')"
+          >
             {{ t.forms.awards.form.cancel }}
           </Button>
         </div>

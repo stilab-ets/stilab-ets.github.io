@@ -1,74 +1,78 @@
 <script setup lang="ts">
-import { useLanguage } from '@/composables/useLanguage'
-import { ref, onMounted } from 'vue'
-import { usePublications } from '@/hooks/publications/usePublications'
-import { useProjects } from '@/hooks/projects/useProjects'
-import { useMembers } from '@/hooks/members/useMembers'
-import { useAwards } from '@/hooks/awards/useAwards'
+import { useLanguage } from '@/composables/useLanguage';
+import { ref, onMounted } from 'vue';
+import { usePublications } from '@/hooks/publications/usePublications';
+import { useProjects } from '@/hooks/projects/useProjects';
+import { useMembers } from '@/hooks/members/useMembers';
+import { useAwards } from '@/hooks/awards/useAwards';
 
 // Props interface matching the data structure from App.vue
 interface StatItem {
-  value: number
-  label: string
+  value: number;
+  label: string;
 }
 
 interface Props {
   labStats: {
-    members: StatItem
-    publications: StatItem
-    projects: StatItem
-    awards: StatItem
-  }
+    members: StatItem;
+    publications: StatItem;
+    projects: StatItem;
+    awards: StatItem;
+  };
 }
 
 // Publication count
-const publicationCount = ref<number | null>(null)
-const { publications, fetchPublications } = usePublications()
+const publicationCount = ref<number | null>(null);
+const { publications, fetchPublications } = usePublications();
 onMounted(async () => {
-  await fetchPublications()
-  publicationCount.value = publications.value.length
-})
+  await fetchPublications();
+  publicationCount.value = publications.value.length;
+});
 
 // Projects count
-const projectsCount = ref<number>()
-const { projects, fetchProjects } = useProjects()
+const projectsCount = ref<number>();
+const { projects, fetchProjects } = useProjects();
 onMounted(async () => {
-  await fetchProjects()
-  projectsCount.value = projects.value.length
-})
+  await fetchProjects();
+  projectsCount.value = projects.value.length;
+});
 
 // Members count
-const membersCount = ref<number>()
-const { members, fetchMembers } = useMembers()
+const membersCount = ref<number>();
+const { members, fetchMembers } = useMembers();
 onMounted(async () => {
-  await fetchMembers()
-  membersCount.value = members.value.length
-})
+  await fetchMembers();
+  membersCount.value = members.value.length;
+});
 
 // Awards count
-const awardsCount = ref<number>()
-const { awards, fetchAwards } = useAwards()
+const awardsCount = ref<number>();
+const { awards, fetchAwards } = useAwards();
 onMounted(async () => {
-  await fetchAwards()
-  awardsCount.value = awards.value.length
-})
+  await fetchAwards();
+  awardsCount.value = awards.value.length;
+});
 
-defineProps<Props>()
+defineProps<Props>();
 
 // Access translation system for the section title
-const { t } = useLanguage()
+const { t } = useLanguage();
 </script>
 
 <template>
   <div class="bg-white py-16 sm:py-20">
     <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="max-w-6xl mx-auto">
-        <h2 class="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-8 sm:mb-12">
+        <h2
+          class="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-8 sm:mb-12"
+        >
           {{ t.stats.sectionTitle }}
         </h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
           <div class="text-center">
-            <div class="text-3xl sm:text-4xl md:text-5xl font-bold text-[#08a4d4] mb-2 sm:mb-3">
+            <div
+              class="text-3xl sm:text-4xl md:text-5xl font-bold text-[#08a4d4] mb-2 sm:mb-3"
+            >
               {{ membersCount !== null ? `${membersCount}+` : '...' }}
             </div>
             <div class="text-gray-600 text-sm sm:text-base lg:text-lg">
@@ -76,7 +80,9 @@ const { t } = useLanguage()
             </div>
           </div>
           <div class="text-center">
-            <div class="text-3xl sm:text-4xl md:text-5xl font-bold text-[#08a4d4] mb-2 sm:mb-3">
+            <div
+              class="text-3xl sm:text-4xl md:text-5xl font-bold text-[#08a4d4] mb-2 sm:mb-3"
+            >
               {{ publicationCount !== null ? `${publicationCount}+` : '...' }}
             </div>
             <div class="text-gray-600 text-sm sm:text-base lg:text-lg">
@@ -84,7 +90,9 @@ const { t } = useLanguage()
             </div>
           </div>
           <div class="text-center">
-            <div class="text-3xl sm:text-4xl md:text-5xl font-bold text-[#08a4d4] mb-2 sm:mb-3">
+            <div
+              class="text-3xl sm:text-4xl md:text-5xl font-bold text-[#08a4d4] mb-2 sm:mb-3"
+            >
               {{ projectsCount !== null ? `${projectsCount}+` : '...' }}
             </div>
             <div class="text-gray-600 text-sm sm:text-base lg:text-lg">
@@ -92,7 +100,9 @@ const { t } = useLanguage()
             </div>
           </div>
           <div class="text-center">
-            <div class="text-3xl sm:text-4xl md:text-5xl font-bold text-[#08a4d4] mb-2 sm:mb-3">
+            <div
+              class="text-3xl sm:text-4xl md:text-5xl font-bold text-[#08a4d4] mb-2 sm:mb-3"
+            >
               {{ awardsCount !== null ? `${awardsCount}+` : '...' }}
             </div>
             <div class="text-gray-600 text-sm sm:text-base lg:text-lg">

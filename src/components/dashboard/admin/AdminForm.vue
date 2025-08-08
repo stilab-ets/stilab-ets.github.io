@@ -1,19 +1,27 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useLanguage } from '@/composables/useLanguage'
-import PublicationForm from '@/components/publications/PublicationForm.vue'
-import MemberForm from '@/components/people/MemberForm.vue'
-import ResearchForm from '@/components/research/ResearchForm.vue'
-import TeachingForm from '@/components/teaching/TeachingForm.vue'
-import EventForm from '@/components/events/EventForm.vue'
-import AwardForm from '@/components/awards/AwardForm.vue'
+import { ref, computed } from 'vue';
+import { useLanguage } from '@/composables/useLanguage';
+import PublicationForm from '@/components/publications/PublicationForm.vue';
+import MemberForm from '@/components/people/MemberForm.vue';
+import ResearchForm from '@/components/research/ResearchForm.vue';
+import TeachingForm from '@/components/teaching/TeachingForm.vue';
+import EventForm from '@/components/events/EventForm.vue';
+import AwardForm from '@/components/awards/AwardForm.vue';
 
-const { t } = useLanguage()
+const { t } = useLanguage();
 
-const currentPage = ref<'form-list' | 'publication-form' | 'member-form' | 'research-form' | 'teaching-form' | 'event-form' | 'award-form'>('form-list')
+const currentPage = ref<
+  | 'form-list'
+  | 'publication-form'
+  | 'member-form'
+  | 'research-form'
+  | 'teaching-form'
+  | 'event-form'
+  | 'award-form'
+>('form-list');
 
 function setCurrentPage(page: typeof currentPage.value) {
-  currentPage.value = page
+  currentPage.value = page;
 }
 </script>
 
@@ -21,18 +29,29 @@ function setCurrentPage(page: typeof currentPage.value) {
   <div>
     <!-- List of forms to choose from -->
     <div v-if="currentPage === 'form-list'" class="space-y-4">
-      <h2 class="text-xl font-semibold mb-4">{{ t.forms.adminManagement.sections.availableForms }}</h2>
+      <h2 class="text-xl font-semibold mb-4">
+        {{ t.forms.adminManagement.sections.availableForms }}
+      </h2>
       <div class="flex flex-col space-y-3">
-        <button class="btn btn-primary" @click="setCurrentPage('publication-form')">
+        <button
+          class="btn btn-primary"
+          @click="setCurrentPage('publication-form')"
+        >
           {{ t.forms.adminManagement.form.publicationForm }}
         </button>
         <button class="btn btn-primary" @click="setCurrentPage('member-form')">
           {{ t.forms.adminManagement.form.memberForm }}
         </button>
-        <button class="btn btn-primary" @click="setCurrentPage('research-form')">
+        <button
+          class="btn btn-primary"
+          @click="setCurrentPage('research-form')"
+        >
           {{ t.forms.adminManagement.form.researchForm }}
         </button>
-        <button class="btn btn-primary" @click="setCurrentPage('teaching-form')">
+        <button
+          class="btn btn-primary"
+          @click="setCurrentPage('teaching-form')"
+        >
           {{ t.forms.adminManagement.form.teachingForm }}
         </button>
         <button class="btn btn-primary" @click="setCurrentPage('event-form')">
@@ -81,6 +100,5 @@ function setCurrentPage(page: typeof currentPage.value) {
       v-else-if="currentPage === 'award-form'"
       @navigate="setCurrentPage"
     />
-
   </div>
 </template>

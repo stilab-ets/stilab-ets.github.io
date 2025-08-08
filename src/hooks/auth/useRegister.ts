@@ -1,43 +1,43 @@
-import { ref } from 'vue'
+import { ref } from 'vue';
 
 interface RegisterData {
-  firstName: string
-  lastName: string
-  email: string
-  role: string
-  password: string
-  confirmPassword: string
-  researchDomain?: string
-  biography?: string
-  phone?: string
-  githubUrl?: string
-  linkedinUrl?: string
-  stackoverflowUrl?: string
-  twitterxUrl?: string
-  googlescholarUrl?: string
-  dblpUrl?: string
-  personalWebsite?: string
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  password: string;
+  confirmPassword: string;
+  researchDomain?: string;
+  biography?: string;
+  phone?: string;
+  githubUrl?: string;
+  linkedinUrl?: string;
+  stackoverflowUrl?: string;
+  twitterxUrl?: string;
+  googlescholarUrl?: string;
+  dblpUrl?: string;
+  personalWebsite?: string;
 }
 
 interface RegisterResponse {
-  success: boolean
-  message?: string
-  user?: any
+  success: boolean;
+  message?: string;
+  user?: any;
 }
 
 export function useRegister() {
-  const isLoading = ref(false)
-  const error = ref<string | null>(null)
-  const success = ref(false)
+  const isLoading = ref(false);
+  const error = ref<string | null>(null);
+  const success = ref(false);
 
   // Inscription avec token d'invitation
   const registerWithToken = async (
-    formData: RegisterData, 
+    formData: RegisterData,
     invitationToken: string
   ): Promise<RegisterResponse> => {
-    isLoading.value = true
-    error.value = null
-    success.value = false
+    isLoading.value = true;
+    error.value = null;
+    success.value = false;
 
     try {
       const response = await fetch('/api/register/', {
@@ -61,74 +61,74 @@ export function useRegister() {
           googlescholar_url: formData.googlescholarUrl,
           dblp_url: formData.dblpUrl,
           personal_website: formData.personalWebsite,
-          invitation_token: invitationToken
-        })
-      })
+          invitation_token: invitationToken,
+        }),
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Erreur lors de l\'inscription')
+        throw new Error(data.message || "Erreur lors de l'inscription");
       }
 
-      success.value = true
+      success.value = true;
       return {
         success: true,
         message: data.message || 'Inscription réussie',
-        user: data.user
-      }
-
+        user: data.user,
+      };
     } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Erreur lors de l\'inscription'
+      error.value =
+        err instanceof Error ? err.message : "Erreur lors de l'inscription";
       return {
         success: false,
-        message: error.value
-      }
+        message: error.value,
+      };
     } finally {
-      isLoading.value = false
+      isLoading.value = false;
     }
-  }
+  };
 
   // Validation des données du formulaire
   const validateFormData = (formData: RegisterData): string[] => {
-    const errors: string[] = []
+    const errors: string[] = [];
 
     if (!formData.firstName.trim()) {
-      errors.push('Le prénom est requis')
+      errors.push('Le prénom est requis');
     }
 
     if (!formData.lastName.trim()) {
-      errors.push('Le nom est requis')
+      errors.push('Le nom est requis');
     }
 
     if (!formData.email.trim()) {
-      errors.push('L\'email est requis')
+      errors.push("L'email est requis");
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errors.push('L\'email n\'est pas valide')
+      errors.push("L'email n'est pas valide");
     }
 
     if (!formData.role) {
-      errors.push('Le rôle est requis')
+      errors.push('Le rôle est requis');
     }
 
     if (!formData.password) {
-      errors.push('Le mot de passe est requis')
+      errors.push('Le mot de passe est requis');
     } else if (formData.password.length < 8) {
-      errors.push('Le mot de passe doit contenir au moins 8 caractères')
+      errors.push('Le mot de passe doit contenir au moins 8 caractères');
     }
 
     if (formData.password !== formData.confirmPassword) {
-      errors.push('Les mots de passe ne correspondent pas')
+      errors.push('Les mots de passe ne correspondent pas');
     }
 
-    return errors
-  }
+    return errors;
+  };
 
   // Nettoyer l'état
   const resetState = () => {
-    error.value = null
-    success.value = false
-  }
+    error.value = null;
+    success.value = false;
+  };
 
   return {
     // État
@@ -139,6 +139,6 @@ export function useRegister() {
     // Méthodes
     registerWithToken,
     validateFormData,
-    resetState
-  }
+    resetState,
+  };
 }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useLanguage } from '@/composables/useLanguage'
+import { useLanguage } from '@/composables/useLanguage';
 
-const { t } = useLanguage()
+const { t } = useLanguage();
 </script>
 
 <template>

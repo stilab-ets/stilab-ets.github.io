@@ -1,1 +1,1 @@
-export { useCourses } from './useCourses'
+export { useCourses } from './useCourses';

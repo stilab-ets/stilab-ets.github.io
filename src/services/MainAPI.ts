@@ -59,7 +59,14 @@ export interface Event {
   time?: string | null;
   speaker?: Member;
   // Additional fields expected by EventCard
-  type: 'seminar' | 'workshop' | 'conference' | 'defense' | 'meeting' | 'colloquium' | 'masterclass';
+  type:
+    | 'seminar'
+    | 'workshop'
+    | 'conference'
+    | 'defense'
+    | 'meeting'
+    | 'colloquium'
+    | 'masterclass';
   registration_url?: string | null;
   tags: string[];
   is_upcoming: boolean;
@@ -67,7 +74,7 @@ export interface Event {
   current_registrations?: number | null;
 }
 
-// Research interface matching SwaggerDoc  
+// Research interface matching SwaggerDoc
 export interface Research {
   id: string; // UUID
   title: string;
@@ -142,11 +149,16 @@ export class MainAPI extends BaseAPI {
     return this.get<Publication>(`/api/publications/${id}/`);
   }
 
-  async createPublication(data: Partial<Publication>): Promise<ApiResponse<Publication>> {
+  async createPublication(
+    data: Partial<Publication>
+  ): Promise<ApiResponse<Publication>> {
     return this.post<Publication>('/api/publications', data);
   }
 
-  async updatePublication(id: string, data: Partial<Publication>): Promise<ApiResponse<Publication>> {
+  async updatePublication(
+    id: string,
+    data: Partial<Publication>
+  ): Promise<ApiResponse<Publication>> {
     return this.put<Publication>(`/api/publications/${id}/`, data);
   }
 
@@ -167,7 +179,10 @@ export class MainAPI extends BaseAPI {
     return this.post<Member>('/api/members', data);
   }
 
-  async updateMember(id: string, data: Partial<Member>): Promise<ApiResponse<Member>> {
+  async updateMember(
+    id: string,
+    data: Partial<Member>
+  ): Promise<ApiResponse<Member>> {
     return this.put<Member>(`/api/members/${id}/`, data);
   }
 
@@ -188,7 +203,10 @@ export class MainAPI extends BaseAPI {
     return this.post<Award>('/api/awards', data);
   }
 
-  async updateAward(id: string, data: Partial<Award>): Promise<ApiResponse<Award>> {
+  async updateAward(
+    id: string,
+    data: Partial<Award>
+  ): Promise<ApiResponse<Award>> {
     return this.put<Award>(`/api/awards/${id}/`, data);
   }
 
@@ -205,11 +223,16 @@ export class MainAPI extends BaseAPI {
     return this.get<Research>(`/api/researches/${id}/`);
   }
 
-  async createResearch(data: Partial<Research>): Promise<ApiResponse<Research>> {
+  async createResearch(
+    data: Partial<Research>
+  ): Promise<ApiResponse<Research>> {
     return this.post<Research>('/api/researches', data);
   }
 
-  async updateResearch(id: string, data: Partial<Research>): Promise<ApiResponse<Research>> {
+  async updateResearch(
+    id: string,
+    data: Partial<Research>
+  ): Promise<ApiResponse<Research>> {
     return this.put<Research>(`/api/researches/${id}/`, data);
   }
 
@@ -230,7 +253,10 @@ export class MainAPI extends BaseAPI {
     return this.post<Course>('/api/courses', data);
   }
 
-  async updateCourse(id: string, data: Partial<Course>): Promise<ApiResponse<Course>> {
+  async updateCourse(
+    id: string,
+    data: Partial<Course>
+  ): Promise<ApiResponse<Course>> {
     return this.put<Course>(`/api/courses/${id}/`, data);
   }
 
@@ -251,7 +277,10 @@ export class MainAPI extends BaseAPI {
     return this.post<Event>('/api/events', data);
   }
 
-  async updateEvent(id: string, data: Partial<Event>): Promise<ApiResponse<Event>> {
+  async updateEvent(
+    id: string,
+    data: Partial<Event>
+  ): Promise<ApiResponse<Event>> {
     return this.put<Event>(`/api/events/${id}/`, data);
   }
 
@@ -272,7 +301,10 @@ export class MainAPI extends BaseAPI {
     return this.post<Project>('/api/projects', data);
   }
 
-  async updateProject(id: string, data: Partial<Project>): Promise<ApiResponse<Project>> {
+  async updateProject(
+    id: string,
+    data: Partial<Project>
+  ): Promise<ApiResponse<Project>> {
     return this.put<Project>(`/api/projects/${id}/`, data);
   }
 
@@ -280,7 +312,9 @@ export class MainAPI extends BaseAPI {
     return this.delete<void>(`/api/projects/${id}/`);
   }
 
-  async submitProjectInterest(data: ProjectInterest): Promise<ApiResponse<{ message: string }>> {
+  async submitProjectInterest(
+    data: ProjectInterest
+  ): Promise<ApiResponse<{ message: string }>> {
     return this.post<{ message: string }>('/api/project-interest/', data);
   }
 
@@ -297,7 +331,10 @@ export class MainAPI extends BaseAPI {
     return this.post<Vacancy>('/api/vacancies', data);
   }
 
-  async updateVacancy(id: string, data: Partial<Vacancy>): Promise<ApiResponse<Vacancy>> {
+  async updateVacancy(
+    id: string,
+    data: Partial<Vacancy>
+  ): Promise<ApiResponse<Vacancy>> {
     return this.put<Vacancy>(`/api/vacancies/${id}/`, data);
   }
 

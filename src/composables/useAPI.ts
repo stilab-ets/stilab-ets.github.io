@@ -23,10 +23,10 @@ export function useAPI<T = any>(): UseAPIReturn<T> {
     try {
       loading.value = true;
       error.value = null;
-      
+
       const response = await apiCall();
       data.value = response.data;
-      
+
       return response.data;
     } catch (err) {
       error.value = err as ApiError;
@@ -63,7 +63,10 @@ export function useAuth() {
   const registerState = useAPI();
   const userState = useAPI();
 
-  const login = async (credentials: { username_or_email: string; password: string }) => {
+  const login = async (credentials: {
+    username_or_email: string;
+    password: string;
+  }) => {
     return loginState.execute(() => authAPI.login(credentials));
   };
 
@@ -85,12 +88,12 @@ export function useAuth() {
     loginState,
     registerState,
     userState,
-    
+
     // Actions
     login,
     register,
     logout,
-    
+
     // Computed
     isAuthenticated,
   };

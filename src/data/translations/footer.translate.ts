@@ -1,22 +1,22 @@
 export interface FooterTranslations {
   labInfo: {
-    labName: string
-    labFullName: string
-    description: string
-  }
+    labName: string;
+    labFullName: string;
+    description: string;
+  };
   navigation: {
-    title: string
+    title: string;
     links: {
-      team: string
-      research: string
-      publications: string
-      events: string
-    }
-  }
+      team: string;
+      research: string;
+      publications: string;
+      events: string;
+    };
+  };
   contact: {
-    title: string
-  }
-  copyright: string
+    title: string;
+  };
+  copyright: string;
 }
 
 type FooterTranslationDict = {
@@ -29,7 +29,8 @@ export const footerTranslations: FooterTranslationDict = {
     labInfo: {
       labName: 'STIL',
       labFullName: 'Laboratoire de Technologie Logicielle et Intelligence',
-      description: 'Laboratoire de recherche dédié à l\'innovation en génie logiciel, intelligence artificielle et technologies de pointe.'
+      description:
+        "Laboratoire de recherche dédié à l'innovation en génie logiciel, intelligence artificielle et technologies de pointe.",
     },
     navigation: {
       title: 'Navigation',
@@ -37,19 +38,20 @@ export const footerTranslations: FooterTranslationDict = {
         team: 'Équipe',
         research: 'Recherche',
         publications: 'Publications',
-        events: 'Événements'
-      }
+        events: 'Événements',
+      },
     },
     contact: {
-      title: 'Contact'
+      title: 'Contact',
     },
-    copyright: 'Tous droits réservés.'
+    copyright: 'Tous droits réservés.',
   },
   en: {
     labInfo: {
       labName: 'STIL',
       labFullName: 'Software Technology and Intelligence Research Lab',
-      description: 'Research laboratory dedicated to innovation in software engineering, artificial intelligence and cutting-edge technologies.'
+      description:
+        'Research laboratory dedicated to innovation in software engineering, artificial intelligence and cutting-edge technologies.',
     },
     navigation: {
       title: 'Navigation',
@@ -57,12 +59,12 @@ export const footerTranslations: FooterTranslationDict = {
         team: 'Team',
         research: 'Research',
         publications: 'Publications',
-        events: 'Events'
-      }
+        events: 'Events',
+      },
     },
     contact: {
-      title: 'Contact'
+      title: 'Contact',
     },
-    copyright: 'All rights reserved.'
-  }
-} as const
+    copyright: 'All rights reserved.',
+  },
+} as const;

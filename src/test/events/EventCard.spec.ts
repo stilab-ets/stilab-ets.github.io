@@ -1,21 +1,20 @@
-import { mount } from '@vue/test-utils'
-import EventCard from '../../components/events/EventCard.vue'
-import Card from '../../components/ui/Card.vue'
-import Button from '../../components/ui/Button.vue'
-import { describe, it, expect } from 'vitest'
+import { mount } from '@vue/test-utils';
+import EventCard from '../../components/events/EventCard.vue';
+import Card from '../../components/ui/Card.vue';
+import Button from '../../components/ui/Button.vue';
+import { describe, it, expect } from 'vitest';
 
 const mockEventData = {
   id: '1',
   title: 'Test Event Title',
   speaker: {
-    id : '1',
+    id: '1',
     first_name: 'John',
     last_name: 'Doe',
     role: 'Professor',
     email: 'john.doe@example.com',
     phone: null,
     biography: null,
-    
   },
   date: '2025-06-20',
   time: '14:00',
@@ -27,8 +26,8 @@ const mockEventData = {
   capacity: 100,
   current_registrations: 50,
   domain: 'seminar' as const,
-  participants: []
-}
+  participants: [],
+};
 
 describe('EventCard.vue', () => {
   it('renders Card and Button components', () => {
@@ -38,70 +37,73 @@ describe('EventCard.vue', () => {
         isPast: false,
       },
       global: {
-        components: { Card, Button }
-      }
-    })
+        components: { Card, Button },
+      },
+    });
 
-    expect(wrapper.findComponent(Card).exists()).toBe(true)
-    expect(wrapper.findComponent(Button).exists()).toBe(true)
-  })
+    expect(wrapper.findComponent(Card).exists()).toBe(true);
+    expect(wrapper.findComponent(Button).exists()).toBe(true);
+  });
 
   it('renders event title and description', () => {
     const wrapper = mount(EventCard, {
       props: { eventData: mockEventData },
-      global: { components: { Card, Button } }
-    })
+      global: { components: { Card, Button } },
+    });
 
-    expect(wrapper.text()).toContain(mockEventData.title)
-    expect(wrapper.text()).toContain(mockEventData.description)
-  })
+    expect(wrapper.text()).toContain(mockEventData.title);
+    expect(wrapper.text()).toContain(mockEventData.description);
+  });
 
   it('renders event date in formatted form', () => {
     const wrapper = mount(EventCard, {
       props: { eventData: mockEventData },
-      global: { components: { Card, Button } }
-    })
+      global: { components: { Card, Button } },
+    });
 
     // Date formatted in French locale (ex: "vendredi 20 juin 2025")
-    const formattedDate = new Date(mockEventData.date).toLocaleDateString('fr-FR', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
-    expect(wrapper.text()).toContain(formattedDate)
-  })
+    const formattedDate = new Date(mockEventData.date).toLocaleDateString(
+      'fr-FR',
+      {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      }
+    );
+    expect(wrapper.text()).toContain(formattedDate);
+  });
 
   it('renders event type label with correct class', () => {
     const wrapper = mount(EventCard, {
       props: { eventData: mockEventData },
-      global: { components: { Card, Button } }
-    })
+      global: { components: { Card, Button } },
+    });
 
-    const typeBadge = wrapper.find('span.inline-flex')
-    expect(typeBadge.exists()).toBe(true)
-  })
+    const typeBadge = wrapper.find('span.inline-flex');
+    expect(typeBadge.exists()).toBe(true);
+  });
 
   it('renders registration button enabled if capacity not full', () => {
     const wrapper = mount(EventCard, {
       props: { eventData: mockEventData, isPast: false },
-      global: { components: { Card, Button } }
-    })
+      global: { components: { Card, Button } },
+    });
 
-    const button = wrapper.find('button')
-    expect(button.exists()).toBe(true)
-    expect(button.attributes('disabled')).toBeUndefined()
-  })
+    const button = wrapper.find('button');
+    expect(button.exists()).toBe(true);
+    expect(button.attributes('disabled')).toBeUndefined();
+  });
 
   it('disables registration button when capacity full', () => {
-    const fullCapacityEvent = { ...mockEventData, current_registrations: 100 }
+    const fullCapacityEvent = { ...mockEventData, current_registrations: 100 };
     const wrapper = mount(EventCard, {
       props: { eventData: fullCapacityEvent, isPast: false },
-      global: { components: { Card, Button } }
-    })
+      global: { components: { Card, Button } },
+    });
 
-    const button = wrapper.find('button')
-    expect(button.exists()).toBe(true)
-    expect(button.attributes('disabled')).toBeDefined()
-  })
-})
+    const button = wrapper.find('button');
+    expect(button.exists()).toBe(true);
+    expect(button.attributes('disabled')).toBeDefined();
+  });
+});

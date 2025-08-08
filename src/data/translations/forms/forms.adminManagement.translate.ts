@@ -1,300 +1,302 @@
 export interface AdminManagementFormTranslations {
-  title: string
-  titleEdit: string
-  titleCreate: string
-  subtitle: string
+  title: string;
+  titleEdit: string;
+  titleCreate: string;
+  subtitle: string;
   sections: {
-    userManagement: string
-    rolePermissions: string
-    systemSettings: string
-    security: string
-    maintenance: string
-    users: string
-    system: string
-    content: string
-    availableForms: string
-  }
+    userManagement: string;
+    rolePermissions: string;
+    systemSettings: string;
+    security: string;
+    maintenance: string;
+    users: string;
+    system: string;
+    content: string;
+    availableForms: string;
+  };
   form: {
-    labName: string
-    labDescription: string
-    contactEmail: string
-    contactPhone: string
-    address: string
-    maintenanceMode: string
-    enableRegistration: string
-    requireApproval: string
-    saving: string
-    save: string
-    cancel: string
-    publicationForm: string
-    memberForm: string
-    researchForm: string
-    teachingForm: string
-    eventForm: string
-    awardForm: string
-
-  }
+    labName: string;
+    labDescription: string;
+    contactEmail: string;
+    contactPhone: string;
+    address: string;
+    maintenanceMode: string;
+    enableRegistration: string;
+    requireApproval: string;
+    saving: string;
+    save: string;
+    cancel: string;
+    publicationForm: string;
+    memberForm: string;
+    researchForm: string;
+    teachingForm: string;
+    eventForm: string;
+    awardForm: string;
+  };
   contentManagement: {
-    title: string
-    subtitle: string
-    pendingReviews: string
-    approveContent: string
-    rejectContent: string
-    moderateComments: string
-    pendingPublications: string
-    approve: string
-    reject: string
-    pendingEvents: string
-  }
+    title: string;
+    subtitle: string;
+    pendingReviews: string;
+    approveContent: string;
+    rejectContent: string;
+    moderateComments: string;
+    pendingPublications: string;
+    approve: string;
+    reject: string;
+    pendingEvents: string;
+  };
   userManagement: {
-    title: string
-    subtitle: string
-    searchPlaceholder: string
-    allRoles: string
-    allStatuses: string
-    editUser: string
-    deleteUser: string
-    confirmDelete: string
-    deleteConfirmMessage: string
+    title: string;
+    subtitle: string;
+    searchPlaceholder: string;
+    allRoles: string;
+    allStatuses: string;
+    editUser: string;
+    deleteUser: string;
+    confirmDelete: string;
+    deleteConfirmMessage: string;
     form: {
-      firstName: string
-      firstNamePlaceholder: string
-      lastName: string
-      lastNamePlaceholder: string
-      email: string
-      emailPlaceholder: string
-      role: string
-      selectRole: string
-      status: string
-      selectStatus: string
-      department: string
-      selectDepartment: string
-      permissions: string
-      lastLogin: string
-      accountCreated: string
-      twoFactorAuth: string
-      emailVerified: string
-      passwordReset: string
-      temporaryPassword: string
-      temporaryPasswordPlaceholder: string
-      sendInvitation: string
-      revokeAccess: string
-      suspendAccount: string
-      deleteAccount: string
-    }
+      firstName: string;
+      firstNamePlaceholder: string;
+      lastName: string;
+      lastNamePlaceholder: string;
+      email: string;
+      emailPlaceholder: string;
+      role: string;
+      selectRole: string;
+      status: string;
+      selectStatus: string;
+      department: string;
+      selectDepartment: string;
+      permissions: string;
+      lastLogin: string;
+      accountCreated: string;
+      twoFactorAuth: string;
+      emailVerified: string;
+      passwordReset: string;
+      temporaryPassword: string;
+      temporaryPasswordPlaceholder: string;
+      sendInvitation: string;
+      revokeAccess: string;
+      suspendAccount: string;
+      deleteAccount: string;
+    };
     actions: {
-      addUser: string
-      editUser: string
-      deleteUser: string
-      suspendUser: string
-      activateUser: string
-      resetPassword: string
-      resendInvitation: string
-      exportUsers: string
-      importUsers: string
-    }
+      addUser: string;
+      editUser: string;
+      deleteUser: string;
+      suspendUser: string;
+      activateUser: string;
+      resetPassword: string;
+      resendInvitation: string;
+      exportUsers: string;
+      importUsers: string;
+    };
     filters: {
-      allUsers: string
-      activeUsers: string
-      suspendedUsers: string
-      pendingUsers: string
-      searchPlaceholder: string
-    }
-  }
+      allUsers: string;
+      activeUsers: string;
+      suspendedUsers: string;
+      pendingUsers: string;
+      searchPlaceholder: string;
+    };
+  };
   rolePermissions: {
-    title: string
-    subtitle: string
+    title: string;
+    subtitle: string;
     form: {
-      roleName: string
-      roleNamePlaceholder: string
-      description: string
-      descriptionPlaceholder: string
-      permissions: string
-      selectPermissions: string
-      isDefault: string
-      isActive: string
-    }
+      roleName: string;
+      roleNamePlaceholder: string;
+      description: string;
+      descriptionPlaceholder: string;
+      permissions: string;
+      selectPermissions: string;
+      isDefault: string;
+      isActive: string;
+    };
     permissions: {
-      userManagement: string
-      contentManagement: string
-      systemSettings: string
-      viewReports: string
-      managePublications: string
-      manageEvents: string
-      manageProjects: string
-      manageMembers: string
-      manageVacancies: string
-      manageAwards: string
-      moderateContent: string
-      systemMaintenance: string
-    }
+      userManagement: string;
+      contentManagement: string;
+      systemSettings: string;
+      viewReports: string;
+      managePublications: string;
+      manageEvents: string;
+      manageProjects: string;
+      manageMembers: string;
+      manageVacancies: string;
+      manageAwards: string;
+      moderateContent: string;
+      systemMaintenance: string;
+    };
     actions: {
-      createRole: string
-      editRole: string
-      deleteRole: string
-      cloneRole: string
-    }
-  }
+      createRole: string;
+      editRole: string;
+      deleteRole: string;
+      cloneRole: string;
+    };
+  };
   systemSettings: {
-    labName: any
-    labDescription: any
-    contactEmail: any
-    contactPhone: any
-    address: any
-    maintenanceMode: any
-    enableRegistration: any
-    requireApproval: any
-    title: string
-    subtitle: string
+    labName: any;
+    labDescription: any;
+    contactEmail: any;
+    contactPhone: any;
+    address: any;
+    maintenanceMode: any;
+    enableRegistration: any;
+    requireApproval: any;
+    title: string;
+    subtitle: string;
     form: {
-      siteName: string
-      siteNamePlaceholder: string
-      siteDescription: string
-      siteDescriptionPlaceholder: string
-      contactEmail: string
-      contactEmailPlaceholder: string
-      maintenanceMode: string
-      registrationOpen: string
-      requireEmailVerification: string
-      allowPublicRegistration: string
-      maxFileSize: string
-      maxFileSizePlaceholder: string
-      allowedFileTypes: string
-      allowedFileTypesPlaceholder: string
-      sessionTimeout: string
-      sessionTimeoutPlaceholder: string
-      backupFrequency: string
-      selectBackupFrequency: string
-      emailNotifications: string
-      systemNotifications: string
-    }
+      siteName: string;
+      siteNamePlaceholder: string;
+      siteDescription: string;
+      siteDescriptionPlaceholder: string;
+      contactEmail: string;
+      contactEmailPlaceholder: string;
+      maintenanceMode: string;
+      registrationOpen: string;
+      requireEmailVerification: string;
+      allowPublicRegistration: string;
+      maxFileSize: string;
+      maxFileSizePlaceholder: string;
+      allowedFileTypes: string;
+      allowedFileTypesPlaceholder: string;
+      sessionTimeout: string;
+      sessionTimeoutPlaceholder: string;
+      backupFrequency: string;
+      selectBackupFrequency: string;
+      emailNotifications: string;
+      systemNotifications: string;
+    };
     backup: {
-      title: string
-      subtitle: string
-      lastBackup: string
-      backupSize: string
-      createBackup: string
-      restoreBackup: string
-      downloadBackup: string
-      scheduleBackup: string
-    }
-  }
+      title: string;
+      subtitle: string;
+      lastBackup: string;
+      backupSize: string;
+      createBackup: string;
+      restoreBackup: string;
+      downloadBackup: string;
+      scheduleBackup: string;
+    };
+  };
   security: {
-    title: string
-    subtitle: string
+    title: string;
+    subtitle: string;
     form: {
-      enforceStrongPasswords: string
-      requireTwoFactor: string
-      passwordExpiry: string
-      passwordExpiryPlaceholder: string
-      maxLoginAttempts: string
-      maxLoginAttemptsPlaceholder: string
-      lockoutDuration: string
-      lockoutDurationPlaceholder: string
-      sessionSecurity: string
-      ipWhitelist: string
-      ipWhitelistPlaceholder: string
-      auditLogging: string
-      securityAlerts: string
-    }
+      enforceStrongPasswords: string;
+      requireTwoFactor: string;
+      passwordExpiry: string;
+      passwordExpiryPlaceholder: string;
+      maxLoginAttempts: string;
+      maxLoginAttemptsPlaceholder: string;
+      lockoutDuration: string;
+      lockoutDurationPlaceholder: string;
+      sessionSecurity: string;
+      ipWhitelist: string;
+      ipWhitelistPlaceholder: string;
+      auditLogging: string;
+      securityAlerts: string;
+    };
     logs: {
-      title: string
-      subtitle: string
+      title: string;
+      subtitle: string;
       filters: {
-        allLogs: string
-        loginAttempts: string
-        systemChanges: string
-        securityEvents: string
-        dateRange: string
-      }
-      export: string
-      clear: string
-    }
-  }
+        allLogs: string;
+        loginAttempts: string;
+        systemChanges: string;
+        securityEvents: string;
+        dateRange: string;
+      };
+      export: string;
+      clear: string;
+    };
+  };
   maintenance: {
-    title: string
-    subtitle: string
+    title: string;
+    subtitle: string;
     actions: {
-      clearCache: string
-      optimizeDatabase: string
-      checkSystemHealth: string
-      updateSystem: string
-      restartServices: string
-      runDiagnostics: string
-    }
+      clearCache: string;
+      optimizeDatabase: string;
+      checkSystemHealth: string;
+      updateSystem: string;
+      restartServices: string;
+      runDiagnostics: string;
+    };
     status: {
-      systemHealth: string
-      diskSpace: string
-      memoryUsage: string
-      cpuUsage: string
-      databaseSize: string
-      cacheSize: string
-      uptime: string
-    }
-  }
+      systemHealth: string;
+      diskSpace: string;
+      memoryUsage: string;
+      cpuUsage: string;
+      databaseSize: string;
+      cacheSize: string;
+      uptime: string;
+    };
+  };
   validation: {
-    labNameRequired: string
-    contactEmailInvalid: string
-    firstNameRequired: string
-    lastNameRequired: string
-    emailRequired: string
-    emailInvalid: string
-    roleRequired: string
-    statusRequired: string
-    roleNameRequired: string
-    descriptionRequired: string
-    permissionsRequired: string
-    siteNameRequired: string
-    contactEmailRequired: string
-    maxFileSizeInvalid: string
-    sessionTimeoutInvalid: string
-    passwordExpiryInvalid: string
-    maxLoginAttemptsInvalid: string
-    lockoutDurationInvalid: string
-  }
+    labNameRequired: string;
+    contactEmailInvalid: string;
+    firstNameRequired: string;
+    lastNameRequired: string;
+    emailRequired: string;
+    emailInvalid: string;
+    roleRequired: string;
+    statusRequired: string;
+    roleNameRequired: string;
+    descriptionRequired: string;
+    permissionsRequired: string;
+    siteNameRequired: string;
+    contactEmailRequired: string;
+    maxFileSizeInvalid: string;
+    sessionTimeoutInvalid: string;
+    passwordExpiryInvalid: string;
+    maxLoginAttemptsInvalid: string;
+    lockoutDurationInvalid: string;
+  };
   errors: {
-    updateFailed: string
-    deleteFailed: string
-    saveUserFailed: string
-    deleteUserFailed: string
-    saveRoleFailed: string
-    deleteRoleFailed: string
-    saveSettingsFailed: string
-    backupFailed: string
-    restoreFailed: string
-    clearCacheFailed: string
-    systemUpdateFailed: string
-    loadDataFailed: string
-  }
+    updateFailed: string;
+    deleteFailed: string;
+    saveUserFailed: string;
+    deleteUserFailed: string;
+    saveRoleFailed: string;
+    deleteRoleFailed: string;
+    saveSettingsFailed: string;
+    backupFailed: string;
+    restoreFailed: string;
+    clearCacheFailed: string;
+    systemUpdateFailed: string;
+    loadDataFailed: string;
+  };
   success: {
-    settingsUpdated: string
-    contentApproved: string
-    userCreated: string
-    userUpdated: string
-    userDeleted: string
-    roleCreated: string
-    roleUpdated: string
-    roleDeleted: string
-    settingsSaved: string
-    backupCreated: string
-    backupRestored: string
-    cacheCleared: string
-    systemUpdated: string
-    invitationSent: string
-    passwordReset: string
-  }
+    settingsUpdated: string;
+    contentApproved: string;
+    userCreated: string;
+    userUpdated: string;
+    userDeleted: string;
+    roleCreated: string;
+    roleUpdated: string;
+    roleDeleted: string;
+    settingsSaved: string;
+    backupCreated: string;
+    backupRestored: string;
+    cacheCleared: string;
+    systemUpdated: string;
+    invitationSent: string;
+    passwordReset: string;
+  };
   confirmations: {
-    deleteUser: string
-    deleteRole: string
-    suspendUser: string
-    resetPassword: string
-    clearCache: string
-    restoreBackup: string
-    systemUpdate: string
-  }
+    deleteUser: string;
+    deleteRole: string;
+    suspendUser: string;
+    resetPassword: string;
+    clearCache: string;
+    restoreBackup: string;
+    systemUpdate: string;
+  };
 }
 
-export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagementFormTranslations> = {
+export const adminManagementFormTranslations: Record<
+  'fr' | 'en',
+  AdminManagementFormTranslations
+> = {
   fr: {
     titleEdit: 'Gestion des administrateurs',
     titleCreate: 'Ajouter un administrateur',
@@ -319,15 +321,15 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       maintenanceMode: 'Mode maintenance',
       enableRegistration: 'Autoriser les inscriptions',
       requireApproval: 'Approbation requise',
-      saving: "Sauvegarde en cours...",
-      save: "Sauvegarder",
-      cancel: "Annuler",
-      publicationForm: "Formulaire de publication",
-      memberForm: "Formulaire de membre",
-      researchForm: "Formulaire de recherche",
+      saving: 'Sauvegarde en cours...',
+      save: 'Sauvegarder',
+      cancel: 'Annuler',
+      publicationForm: 'Formulaire de publication',
+      memberForm: 'Formulaire de membre',
+      researchForm: 'Formulaire de recherche',
       teachingForm: "Formulaire d'enseignement",
       eventForm: "Formulaire d'évenement",
-      awardForm: "Formulaire de prix"
+      awardForm: 'Formulaire de prix',
     },
     contentManagement: {
       title: 'Gestion du contenu',
@@ -336,10 +338,10 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       approveContent: 'Approuver le contenu',
       rejectContent: 'Rejeter le contenu',
       moderateComments: 'Modérer les commentaires',
-      pendingPublications: "Publication en attente",
-      approve: "Approuver",
-      reject: "Rejeter",
-      pendingEvents: "Évenement en attente"
+      pendingPublications: 'Publication en attente',
+      approve: 'Approuver',
+      reject: 'Rejeter',
+      pendingEvents: 'Évenement en attente',
     },
     userManagement: {
       title: 'Gestion des utilisateurs',
@@ -347,15 +349,16 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       searchPlaceholder: 'Rechercher un utilisateur...',
       allRoles: 'Tous les rôles',
       allStatuses: 'Tous les statuts',
-      editUser: 'Modifier l\'utilisateur',
-      deleteUser: 'Supprimer l\'utilisateur',
+      editUser: "Modifier l'utilisateur",
+      deleteUser: "Supprimer l'utilisateur",
       confirmDelete: 'Confirmer la suppression',
-      deleteConfirmMessage: 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?',
+      deleteConfirmMessage:
+        'Êtes-vous sûr de vouloir supprimer cet utilisateur ?',
       form: {
         firstName: 'Prénom',
-        firstNamePlaceholder: 'Prénom de l\'utilisateur',
+        firstNamePlaceholder: "Prénom de l'utilisateur",
         lastName: 'Nom',
-        lastNamePlaceholder: 'Nom de l\'utilisateur',
+        lastNamePlaceholder: "Nom de l'utilisateur",
         email: 'Email',
         emailPlaceholder: 'adresse@univ.fr',
         role: 'Rôle',
@@ -373,28 +376,28 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
         temporaryPassword: 'Mot de passe temporaire',
         temporaryPasswordPlaceholder: 'Générer automatiquement',
         sendInvitation: 'Envoyer une invitation',
-        revokeAccess: 'Révoquer l\'accès',
+        revokeAccess: "Révoquer l'accès",
         suspendAccount: 'Suspendre le compte',
-        deleteAccount: 'Supprimer le compte'
+        deleteAccount: 'Supprimer le compte',
       },
       actions: {
         addUser: 'Ajouter un utilisateur',
-        editUser: 'Modifier l\'utilisateur',
-        deleteUser: 'Supprimer l\'utilisateur',
-        suspendUser: 'Suspendre l\'utilisateur',
-        activateUser: 'Activer l\'utilisateur',
+        editUser: "Modifier l'utilisateur",
+        deleteUser: "Supprimer l'utilisateur",
+        suspendUser: "Suspendre l'utilisateur",
+        activateUser: "Activer l'utilisateur",
         resetPassword: 'Réinitialiser le mot de passe',
-        resendInvitation: 'Renvoyer l\'invitation',
+        resendInvitation: "Renvoyer l'invitation",
         exportUsers: 'Exporter les utilisateurs',
-        importUsers: 'Importer les utilisateurs'
+        importUsers: 'Importer les utilisateurs',
       },
       filters: {
         allUsers: 'Tous les utilisateurs',
         activeUsers: 'Utilisateurs actifs',
         suspendedUsers: 'Utilisateurs suspendus',
         pendingUsers: 'En attente',
-        searchPlaceholder: 'Rechercher un utilisateur...'
-      }
+        searchPlaceholder: 'Rechercher un utilisateur...',
+      },
     },
     rolePermissions: {
       title: 'Rôles et permissions',
@@ -407,7 +410,7 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
         permissions: 'Permissions',
         selectPermissions: 'Sélectionnez les permissions',
         isDefault: 'Rôle par défaut',
-        isActive: 'Rôle actif'
+        isActive: 'Rôle actif',
       },
       permissions: {
         userManagement: 'Gestion des utilisateurs',
@@ -418,17 +421,17 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
         manageEvents: 'Gérer les événements',
         manageProjects: 'Gérer les projets',
         manageMembers: 'Gérer les membres',
-        manageVacancies: 'Gérer les offres d\'emploi',
+        manageVacancies: "Gérer les offres d'emploi",
         manageAwards: 'Gérer les prix',
         moderateContent: 'Modérer le contenu',
-        systemMaintenance: 'Maintenance système'
+        systemMaintenance: 'Maintenance système',
       },
       actions: {
         createRole: 'Créer un rôle',
         editRole: 'Modifier le rôle',
         deleteRole: 'Supprimer le rôle',
-        cloneRole: 'Dupliquer le rôle'
-      }
+        cloneRole: 'Dupliquer le rôle',
+      },
     },
     systemSettings: {
       title: 'Paramètres système',
@@ -443,17 +446,17 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
         maintenanceMode: 'Mode maintenance',
         registrationOpen: 'Inscriptions ouvertes',
         requireEmailVerification: 'Vérification email requise',
-        allowPublicRegistration: 'Autoriser l\'inscription publique',
+        allowPublicRegistration: "Autoriser l'inscription publique",
         maxFileSize: 'Taille maximale des fichiers',
         maxFileSizePlaceholder: 'En MB',
         allowedFileTypes: 'Types de fichiers autorisés',
         allowedFileTypesPlaceholder: 'pdf,doc,jpg,png',
-        sessionTimeout: 'Délai d\'expiration de session',
+        sessionTimeout: "Délai d'expiration de session",
         sessionTimeoutPlaceholder: 'En minutes',
         backupFrequency: 'Fréquence de sauvegarde',
         selectBackupFrequency: 'Sélectionnez la fréquence',
         emailNotifications: 'Notifications par email',
-        systemNotifications: 'Notifications système'
+        systemNotifications: 'Notifications système',
       },
       backup: {
         title: 'Sauvegarde',
@@ -463,48 +466,48 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
         createBackup: 'Créer une sauvegarde',
         restoreBackup: 'Restaurer une sauvegarde',
         downloadBackup: 'Télécharger la sauvegarde',
-        scheduleBackup: 'Programmer une sauvegarde'
+        scheduleBackup: 'Programmer une sauvegarde',
       },
-      labName: "Nom du laboratoire",
-      labDescription: "Description du laboratoire",
-      contactEmail: "Email",
-      contactPhone: "Téléphone",
-      address: "Adresse",
-      maintenanceMode: "Mode maintenance",
-      enableRegistration: "Activer les inscriptions",
-      requireApproval: "Requiert une approbation"
+      labName: 'Nom du laboratoire',
+      labDescription: 'Description du laboratoire',
+      contactEmail: 'Email',
+      contactPhone: 'Téléphone',
+      address: 'Adresse',
+      maintenanceMode: 'Mode maintenance',
+      enableRegistration: 'Activer les inscriptions',
+      requireApproval: 'Requiert une approbation',
     },
     security: {
       title: 'Sécurité',
       subtitle: 'Configurez les paramètres de sécurité',
       form: {
         enforceStrongPasswords: 'Forcer des mots de passe forts',
-        requireTwoFactor: 'Exiger l\'authentification à deux facteurs',
+        requireTwoFactor: "Exiger l'authentification à deux facteurs",
         passwordExpiry: 'Expiration des mots de passe',
         passwordExpiryPlaceholder: 'En jours',
         maxLoginAttempts: 'Tentatives de connexion max',
-        maxLoginAttemptsPlaceholder: 'Nombre d\'essais',
+        maxLoginAttemptsPlaceholder: "Nombre d'essais",
         lockoutDuration: 'Durée de verrouillage',
         lockoutDurationPlaceholder: 'En minutes',
         sessionSecurity: 'Sécurité des sessions',
-        ipWhitelist: 'Liste blanche d\'IP',
+        ipWhitelist: "Liste blanche d'IP",
         ipWhitelistPlaceholder: 'IP autorisées...',
-        auditLogging: 'Journalisation d\'audit',
-        securityAlerts: 'Alertes de sécurité'
+        auditLogging: "Journalisation d'audit",
+        securityAlerts: 'Alertes de sécurité',
       },
       logs: {
         title: 'Journaux de sécurité',
-        subtitle: 'Consultez les journaux d\'activité',
+        subtitle: "Consultez les journaux d'activité",
         filters: {
           allLogs: 'Tous les journaux',
           loginAttempts: 'Tentatives de connexion',
           systemChanges: 'Modifications système',
           securityEvents: 'Événements de sécurité',
-          dateRange: 'Plage de dates'
+          dateRange: 'Plage de dates',
         },
         export: 'Exporter',
-        clear: 'Effacer'
-      }
+        clear: 'Effacer',
+      },
     },
     maintenance: {
       title: 'Maintenance',
@@ -512,10 +515,10 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       actions: {
         clearCache: 'Vider le cache',
         optimizeDatabase: 'Optimiser la base de données',
-        checkSystemHealth: 'Vérifier l\'état du système',
+        checkSystemHealth: "Vérifier l'état du système",
         updateSystem: 'Mettre à jour le système',
         restartServices: 'Redémarrer les services',
-        runDiagnostics: 'Lancer les diagnostics'
+        runDiagnostics: 'Lancer les diagnostics',
       },
       status: {
         systemHealth: 'État du système',
@@ -524,42 +527,42 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
         cpuUsage: 'Utilisation CPU',
         databaseSize: 'Taille de la base de données',
         cacheSize: 'Taille du cache',
-        uptime: 'Temps de fonctionnement'
-      }
+        uptime: 'Temps de fonctionnement',
+      },
     },
     validation: {
       labNameRequired: 'Le nom du laboratoire est requis',
-      contactEmailInvalid: 'Format d\'email de contact invalide',
+      contactEmailInvalid: "Format d'email de contact invalide",
       firstNameRequired: 'Le prénom est requis',
       lastNameRequired: 'Le nom est requis',
-      emailRequired: 'L\'email est requis',
-      emailInvalid: 'Format d\'email invalide',
+      emailRequired: "L'email est requis",
+      emailInvalid: "Format d'email invalide",
       roleRequired: 'Le rôle est requis',
       statusRequired: 'Le statut est requis',
       roleNameRequired: 'Le nom du rôle est requis',
       descriptionRequired: 'La description est requise',
       permissionsRequired: 'Au moins une permission est requise',
       siteNameRequired: 'Le nom du site est requis',
-      contactEmailRequired: 'L\'email de contact est requis',
+      contactEmailRequired: "L'email de contact est requis",
       maxFileSizeInvalid: 'Taille de fichier invalide',
-      sessionTimeoutInvalid: 'Délai d\'expiration invalide',
-      passwordExpiryInvalid: 'Délai d\'expiration invalide',
+      sessionTimeoutInvalid: "Délai d'expiration invalide",
+      passwordExpiryInvalid: "Délai d'expiration invalide",
       maxLoginAttemptsInvalid: 'Nombre de tentatives invalide',
-      lockoutDurationInvalid: 'Durée de verrouillage invalide'
+      lockoutDurationInvalid: 'Durée de verrouillage invalide',
     },
     errors: {
       updateFailed: 'Échec de la mise à jour',
       deleteFailed: 'Échec de la suppression',
-      saveUserFailed: 'Échec de l\'enregistrement de l\'utilisateur',
-      deleteUserFailed: 'Échec de la suppression de l\'utilisateur',
-      saveRoleFailed: 'Échec de l\'enregistrement du rôle',
+      saveUserFailed: "Échec de l'enregistrement de l'utilisateur",
+      deleteUserFailed: "Échec de la suppression de l'utilisateur",
+      saveRoleFailed: "Échec de l'enregistrement du rôle",
       deleteRoleFailed: 'Échec de la suppression du rôle',
-      saveSettingsFailed: 'Échec de l\'enregistrement des paramètres',
+      saveSettingsFailed: "Échec de l'enregistrement des paramètres",
       backupFailed: 'Échec de la sauvegarde',
       restoreFailed: 'Échec de la restauration',
       clearCacheFailed: 'Échec du vidage du cache',
       systemUpdateFailed: 'Échec de la mise à jour',
-      loadDataFailed: 'Échec du chargement des données'
+      loadDataFailed: 'Échec du chargement des données',
     },
     success: {
       settingsUpdated: 'Paramètres mis à jour avec succès',
@@ -576,7 +579,7 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       cacheCleared: 'Cache vidé avec succès',
       systemUpdated: 'Système mis à jour avec succès',
       invitationSent: 'Invitation envoyée avec succès',
-      passwordReset: 'Mot de passe réinitialisé avec succès'
+      passwordReset: 'Mot de passe réinitialisé avec succès',
     },
     confirmations: {
       deleteUser: 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?',
@@ -585,9 +588,9 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       resetPassword: 'Êtes-vous sûr de vouloir réinitialiser le mot de passe ?',
       clearCache: 'Êtes-vous sûr de vouloir vider le cache ?',
       restoreBackup: 'Êtes-vous sûr de vouloir restaurer cette sauvegarde ?',
-      systemUpdate: 'Êtes-vous sûr de vouloir mettre à jour le système ?'
+      systemUpdate: 'Êtes-vous sûr de vouloir mettre à jour le système ?',
     },
-    title: "Titre"
+    title: 'Titre',
   },
   en: {
     titleEdit: 'Admin Management',
@@ -613,15 +616,15 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       maintenanceMode: 'Maintenance Mode',
       enableRegistration: 'Enable Registration',
       requireApproval: 'Require Approval',
-      saving: "Saving...",
-      save: "Save",
-      cancel: "Cancel",
-      publicationForm: "Publication Form",
-      memberForm: "Member Form",
-      researchForm: "Research Form",
-      teachingForm: "Teaching Form",
-      eventForm: "Event Form",
-      awardForm: "Award Form"
+      saving: 'Saving...',
+      save: 'Save',
+      cancel: 'Cancel',
+      publicationForm: 'Publication Form',
+      memberForm: 'Member Form',
+      researchForm: 'Research Form',
+      teachingForm: 'Teaching Form',
+      eventForm: 'Event Form',
+      awardForm: 'Award Form',
     },
     contentManagement: {
       title: 'Content Management',
@@ -630,10 +633,10 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       approveContent: 'Approve Content',
       rejectContent: 'Reject Content',
       moderateComments: 'Moderate Comments',
-      pendingPublications: "Pending Publication",
-      approve: "Approve",
-      reject: "Reject",
-      pendingEvents: "Pending Event"
+      pendingPublications: 'Pending Publication',
+      approve: 'Approve',
+      reject: 'Reject',
+      pendingEvents: 'Pending Event',
     },
     userManagement: {
       title: 'User Management',
@@ -669,7 +672,7 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
         sendInvitation: 'Send Invitation',
         revokeAccess: 'Revoke Access',
         suspendAccount: 'Suspend Account',
-        deleteAccount: 'Delete Account'
+        deleteAccount: 'Delete Account',
       },
       actions: {
         addUser: 'Add User',
@@ -680,15 +683,15 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
         resetPassword: 'Reset Password',
         resendInvitation: 'Resend Invitation',
         exportUsers: 'Export Users',
-        importUsers: 'Import Users'
+        importUsers: 'Import Users',
       },
       filters: {
         allUsers: 'All Users',
         activeUsers: 'Active Users',
         suspendedUsers: 'Suspended Users',
         pendingUsers: 'Pending',
-        searchPlaceholder: 'Search users...'
-      }
+        searchPlaceholder: 'Search users...',
+      },
     },
     rolePermissions: {
       title: 'Roles & Permissions',
@@ -701,7 +704,7 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
         permissions: 'Permissions',
         selectPermissions: 'Select permissions',
         isDefault: 'Default Role',
-        isActive: 'Active Role'
+        isActive: 'Active Role',
       },
       permissions: {
         userManagement: 'User Management',
@@ -715,14 +718,14 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
         manageVacancies: 'Manage Vacancies',
         manageAwards: 'Manage Awards',
         moderateContent: 'Moderate Content',
-        systemMaintenance: 'System Maintenance'
+        systemMaintenance: 'System Maintenance',
       },
       actions: {
         createRole: 'Create Role',
         editRole: 'Edit Role',
         deleteRole: 'Delete Role',
-        cloneRole: 'Clone Role'
-      }
+        cloneRole: 'Clone Role',
+      },
     },
     systemSettings: {
       title: 'System Settings',
@@ -747,7 +750,7 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
         backupFrequency: 'Backup Frequency',
         selectBackupFrequency: 'Select frequency',
         emailNotifications: 'Email Notifications',
-        systemNotifications: 'System Notifications'
+        systemNotifications: 'System Notifications',
       },
       backup: {
         title: 'Backup',
@@ -757,16 +760,16 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
         createBackup: 'Create Backup',
         restoreBackup: 'Restore Backup',
         downloadBackup: 'Download Backup',
-        scheduleBackup: 'Schedule Backup'
+        scheduleBackup: 'Schedule Backup',
       },
-      labName: "Laboratory name",
-      labDescription: "Laboratory description",
-      contactEmail: "Email",
-      contactPhone: "Phone",
-      address: "Address",
-      maintenanceMode: "Maintenance mode",
-      enableRegistration: "Enable registration",
-      requireApproval: "Require approval"
+      labName: 'Laboratory name',
+      labDescription: 'Laboratory description',
+      contactEmail: 'Email',
+      contactPhone: 'Phone',
+      address: 'Address',
+      maintenanceMode: 'Maintenance mode',
+      enableRegistration: 'Enable registration',
+      requireApproval: 'Require approval',
     },
     security: {
       title: 'Security',
@@ -784,7 +787,7 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
         ipWhitelist: 'IP Whitelist',
         ipWhitelistPlaceholder: 'Allowed IPs...',
         auditLogging: 'Audit Logging',
-        securityAlerts: 'Security Alerts'
+        securityAlerts: 'Security Alerts',
       },
       logs: {
         title: 'Security Logs',
@@ -794,11 +797,11 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
           loginAttempts: 'Login Attempts',
           systemChanges: 'System Changes',
           securityEvents: 'Security Events',
-          dateRange: 'Date Range'
+          dateRange: 'Date Range',
         },
         export: 'Export',
-        clear: 'Clear'
-      }
+        clear: 'Clear',
+      },
     },
     maintenance: {
       title: 'Maintenance',
@@ -809,7 +812,7 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
         checkSystemHealth: 'Check System Health',
         updateSystem: 'Update System',
         restartServices: 'Restart Services',
-        runDiagnostics: 'Run Diagnostics'
+        runDiagnostics: 'Run Diagnostics',
       },
       status: {
         systemHealth: 'System Health',
@@ -818,8 +821,8 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
         cpuUsage: 'CPU Usage',
         databaseSize: 'Database Size',
         cacheSize: 'Cache Size',
-        uptime: 'Uptime'
-      }
+        uptime: 'Uptime',
+      },
     },
     validation: {
       labNameRequired: 'Laboratory name is required',
@@ -839,7 +842,7 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       sessionTimeoutInvalid: 'Invalid session timeout',
       passwordExpiryInvalid: 'Invalid password expiry',
       maxLoginAttemptsInvalid: 'Invalid login attempts',
-      lockoutDurationInvalid: 'Invalid lockout duration'
+      lockoutDurationInvalid: 'Invalid lockout duration',
     },
     errors: {
       updateFailed: 'Failed to update',
@@ -853,7 +856,7 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       restoreFailed: 'Restore failed',
       clearCacheFailed: 'Failed to clear cache',
       systemUpdateFailed: 'System update failed',
-      loadDataFailed: 'Failed to load data'
+      loadDataFailed: 'Failed to load data',
     },
     success: {
       settingsUpdated: 'Settings updated successfully',
@@ -870,7 +873,7 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       cacheCleared: 'Cache cleared successfully',
       systemUpdated: 'System updated successfully',
       invitationSent: 'Invitation sent successfully',
-      passwordReset: 'Password reset successfully'
+      passwordReset: 'Password reset successfully',
     },
     confirmations: {
       deleteUser: 'Are you sure you want to delete this user?',
@@ -879,8 +882,8 @@ export const adminManagementFormTranslations: Record<'fr' | 'en', AdminManagemen
       resetPassword: 'Are you sure you want to reset the password?',
       clearCache: 'Are you sure you want to clear the cache?',
       restoreBackup: 'Are you sure you want to restore this backup?',
-      systemUpdate: 'Are you sure you want to update the system?'
+      systemUpdate: 'Are you sure you want to update the system?',
     },
-    title: "Title"
-  }
-} as const
+    title: 'Title',
+  },
+} as const;

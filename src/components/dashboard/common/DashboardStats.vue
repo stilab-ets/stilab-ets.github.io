@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import Card from '@/components/ui/Card.vue'
+import Card from '@/components/ui/Card.vue';
 
 interface StatCard {
-  title: string
-  value: number | string
-  icon: string
-  color: string
+  title: string;
+  value: number | string;
+  icon: string;
+  color: string;
 }
 
 interface Props {
-  stats: StatCard[]
+  stats: StatCard[];
 }
 
-defineProps<Props>()
+defineProps<Props>();
 </script>
 
 <template>

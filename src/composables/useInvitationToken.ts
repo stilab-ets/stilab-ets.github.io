@@ -23,10 +23,15 @@ export function useInvitationToken() {
     const token = getTokenFromUrl();
     const urlParams = new URLSearchParams(window.location.search);
     const email = urlParams.get('email');
-    return token !== null && token.length > 0 && email !== null && email.length > 0;
+    return (
+      token !== null && token.length > 0 && email !== null && email.length > 0
+    );
   });
 
-  const validateToken = async (token: string, email: string): Promise<InvitationTokenData | null> => {
+  const validateToken = async (
+    token: string,
+    email: string
+  ): Promise<InvitationTokenData | null> => {
     isLoading.value = true;
     error.value = null;
 
@@ -34,18 +39,19 @@ export function useInvitationToken() {
       const response = await adminAPI.validateInvitationToken({ email, token });
 
       if (!response.data.valid) {
-        throw new Error('Token d\'invitation invalide ou expiré');
+        throw new Error("Token d'invitation invalide ou expiré");
       }
-      
+
       return {
         token,
         email: email,
         role: undefined,
         expiresAt: undefined,
-        isValid: response.data.valid
+        isValid: response.data.valid,
       };
     } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Erreur de validation du token';
+      error.value =
+        err instanceof Error ? err.message : 'Erreur de validation du token';
       return null;
     } finally {
       isLoading.value = false;
@@ -60,7 +66,10 @@ export function useInvitationToken() {
       const response = await adminAPI.sendInvitation({ email });
       return response.data.success;
     } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Erreur lors de l\'envoi de l\'invitation';
+      error.value =
+        err instanceof Error
+          ? err.message
+          : "Erreur lors de l'envoi de l'invitation";
       return false;
     } finally {
       isLoading.value = false;
@@ -71,7 +80,7 @@ export function useInvitationToken() {
     const token = getTokenFromUrl();
     const urlParams = new URLSearchParams(window.location.search);
     const email = urlParams.get('email');
-    
+
     if (token && email) {
       const validatedData = await validateToken(token, email);
       tokenData.value = validatedData;
@@ -80,13 +89,13 @@ export function useInvitationToken() {
 
   const isTokenValid = computed(() => {
     if (!tokenData.value) return false;
-    
+
     if (tokenData.value.expiresAt) {
       const expirationDate = new Date(tokenData.value.expiresAt);
       const now = new Date();
       return now < expirationDate && tokenData.value.isValid;
     }
-    
+
     return tokenData.value.isValid;
   });
 
@@ -99,10 +108,10 @@ export function useInvitationToken() {
 
   const getPrefilledData = () => {
     if (!tokenData.value || !isTokenValid.value) return {};
-    
+
     return {
       email: tokenData.value.email || '',
-      role: tokenData.value.role || ''
+      role: tokenData.value.role || '',
     };
   };
 
@@ -112,17 +121,17 @@ export function useInvitationToken() {
 
   const tokenError = computed(() => {
     if (!hasToken.value) {
-      return 'Un token d\'invitation et un email sont requis pour accéder à cette page.';
+      return "Un token d'invitation et un email sont requis pour accéder à cette page.";
     }
-    
+
     if (error.value) {
       return error.value;
     }
-    
+
     if (tokenData.value && !isTokenValid.value) {
-      return 'Le token d\'invitation est invalide ou a expiré.';
+      return "Le token d'invitation est invalide ou a expiré.";
     }
-    
+
     return null;
   });
 
@@ -145,6 +154,6 @@ export function useInvitationToken() {
     initializeToken,
     clearTokenFromUrl,
     getPrefilledData,
-    getTokenFromUrl
+    getTokenFromUrl,
   };
 }

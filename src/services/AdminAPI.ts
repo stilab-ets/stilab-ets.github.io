@@ -32,15 +32,28 @@ export class AdminAPI extends BaseAPI {
     return this.get<InvitationData[]>('/api/invitations');
   }
 
-  async sendInvitation(invitation: SendInvitationRequest): Promise<ApiResponse<SendInvitationResponse>> {
-    return this.post<SendInvitationResponse>('/api/send-mail-invitation', invitation);
+  async sendInvitation(
+    invitation: SendInvitationRequest
+  ): Promise<ApiResponse<SendInvitationResponse>> {
+    return this.post<SendInvitationResponse>(
+      '/api/send-mail-invitation',
+      invitation
+    );
   }
 
-  async validateInvitationToken(validation: ValidateTokenRequest): Promise<ApiResponse<ValidateTokenResponse>> {
-    return this.post<ValidateTokenResponse>('/api/validate-invitation-token', validation);
+  async validateInvitationToken(
+    validation: ValidateTokenRequest
+  ): Promise<ApiResponse<ValidateTokenResponse>> {
+    return this.post<ValidateTokenResponse>(
+      '/api/validate-invitation-token',
+      validation
+    );
   }
 
-  async updateInvitation(id: string, updates: Partial<InvitationData>): Promise<ApiResponse<InvitationData>> {
+  async updateInvitation(
+    id: string,
+    updates: Partial<InvitationData>
+  ): Promise<ApiResponse<InvitationData>> {
     return this.put<InvitationData>(`/api/invitation/${id}`, updates);
   }
 

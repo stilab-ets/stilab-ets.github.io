@@ -1,156 +1,159 @@
 export interface VacancyFormTranslations {
-  titleEdit: string
-  titleCreate: string
-  subtitle: string
+  titleEdit: string;
+  titleCreate: string;
+  subtitle: string;
   sections: {
-    basic: string
-    details: string
-    requirements: string
-    conditions: string
-    application: string
-    timeline: string
-    compensation: string
-  }
+    basic: string;
+    details: string;
+    requirements: string;
+    conditions: string;
+    application: string;
+    timeline: string;
+    compensation: string;
+  };
   form: {
-    title: string
-    titlePlaceholder: string
-    type: string
-    selectType: string
-    description: string
-    descriptionPlaceholder: string
-    responsibilities: string
-    responsibilitiesPlaceholder: string
-    requirements: string
-    requirementsPlaceholder: string
-    qualifications: string
-    qualificationsPlaceholder: string
-    supervisor: string
-    selectSupervisor: string
-    team: string
-    selectTeam: string
-    domain: string
-    selectDomain: string
-    location: string
-    locationPlaceholder: string
-    startDate: string
-    duration: string
-    durationPlaceholder: string
-    workingHours: string
-    workingHoursPlaceholder: string
-    salary: string
-    salaryPlaceholder: string
-    benefits: string
-    benefitsPlaceholder: string
-    applicationDeadline: string
-    applicationMethod: string
-    selectApplicationMethod: string
-    applyUrl: string
-    applyUrlPlaceholder: string
-    contactEmail: string
-    contactEmailPlaceholder: string
-    contactPhone: string
-    contactPhonePlaceholder: string
-    requiredDocuments: string
-    requiredDocumentsPlaceholder: string
-    status: string
-    selectStatus: string
-    priority: string
-    selectPriority: string
-    tags: string
-    tagsPlaceholder: string
-    internalNotes: string
-    internalNotesPlaceholder: string
-    published: string
-    featured: string
-    deadline: string
-    cancel: string
-    create: string
-    update: string
-    submitting: string
-  }
+    title: string;
+    titlePlaceholder: string;
+    type: string;
+    selectType: string;
+    description: string;
+    descriptionPlaceholder: string;
+    responsibilities: string;
+    responsibilitiesPlaceholder: string;
+    requirements: string;
+    requirementsPlaceholder: string;
+    qualifications: string;
+    qualificationsPlaceholder: string;
+    supervisor: string;
+    selectSupervisor: string;
+    team: string;
+    selectTeam: string;
+    domain: string;
+    selectDomain: string;
+    location: string;
+    locationPlaceholder: string;
+    startDate: string;
+    duration: string;
+    durationPlaceholder: string;
+    workingHours: string;
+    workingHoursPlaceholder: string;
+    salary: string;
+    salaryPlaceholder: string;
+    benefits: string;
+    benefitsPlaceholder: string;
+    applicationDeadline: string;
+    applicationMethod: string;
+    selectApplicationMethod: string;
+    applyUrl: string;
+    applyUrlPlaceholder: string;
+    contactEmail: string;
+    contactEmailPlaceholder: string;
+    contactPhone: string;
+    contactPhonePlaceholder: string;
+    requiredDocuments: string;
+    requiredDocumentsPlaceholder: string;
+    status: string;
+    selectStatus: string;
+    priority: string;
+    selectPriority: string;
+    tags: string;
+    tagsPlaceholder: string;
+    internalNotes: string;
+    internalNotesPlaceholder: string;
+    published: string;
+    featured: string;
+    deadline: string;
+    cancel: string;
+    create: string;
+    update: string;
+    submitting: string;
+  };
   types: {
-    phd: string
-    postdoc: string
-    researcher: string
-    engineer: string
-    intern: string
-    visiting: string
-    technician: string
-    admin: string
-  }
+    phd: string;
+    postdoc: string;
+    researcher: string;
+    engineer: string;
+    intern: string;
+    visiting: string;
+    technician: string;
+    admin: string;
+  };
   positionTypes: {
-    phd: string
-    postdoc: string
-    researcher: string
-    engineer: string
-    intern: string
-    visiting: string
-    technician: string
-    admin: string
-  }
+    phd: string;
+    postdoc: string;
+    researcher: string;
+    engineer: string;
+    intern: string;
+    visiting: string;
+    technician: string;
+    admin: string;
+  };
   domains: {
-    softwareArchitecture: string
-    artificialIntelligence: string
-    cybersecurity: string
-    devops: string
-    cloudComputing: string
-    softwareTesting: string
-    softwareMaintenance: string
-    humanComputerInteraction: string
-    distributedSystems: string
-    blockchain: string
-  }
+    softwareArchitecture: string;
+    artificialIntelligence: string;
+    cybersecurity: string;
+    devops: string;
+    cloudComputing: string;
+    softwareTesting: string;
+    softwareMaintenance: string;
+    humanComputerInteraction: string;
+    distributedSystems: string;
+    blockchain: string;
+  };
   applicationMethods: {
-    online: string
-    email: string
-    portal: string
-    inPerson: string
-  }
+    online: string;
+    email: string;
+    portal: string;
+    inPerson: string;
+  };
   statuses: {
-    draft: string
-    published: string
-    active: string
-    closed: string
-    filled: string
-    cancelled: string
-  }
+    draft: string;
+    published: string;
+    active: string;
+    closed: string;
+    filled: string;
+    cancelled: string;
+  };
   priorities: {
-    low: string
-    medium: string
-    high: string
-    urgent: string
-  }
+    low: string;
+    medium: string;
+    high: string;
+    urgent: string;
+  };
   validation: {
-    titleRequired: string
-    typeRequired: string
-    descriptionRequired: string
-    requirementsRequired: string
-    supervisorRequired: string
-    domainRequired: string
-    locationRequired: string
-    startDateRequired: string
-    durationRequired: string
-    deadlineRequired: string
-    deadlineAfterToday: string
-    applicationMethodRequired: string
-    applyUrlRequired: string
-    applyUrlInvalid: string
-    contactEmailRequired: string
-    emailInvalid: string
-    urlInvalid: string
-    phoneInvalid: string
-    statusRequired: string
-  }
+    titleRequired: string;
+    typeRequired: string;
+    descriptionRequired: string;
+    requirementsRequired: string;
+    supervisorRequired: string;
+    domainRequired: string;
+    locationRequired: string;
+    startDateRequired: string;
+    durationRequired: string;
+    deadlineRequired: string;
+    deadlineAfterToday: string;
+    applicationMethodRequired: string;
+    applyUrlRequired: string;
+    applyUrlInvalid: string;
+    contactEmailRequired: string;
+    emailInvalid: string;
+    urlInvalid: string;
+    phoneInvalid: string;
+    statusRequired: string;
+  };
   errors: {
-    submitFailed: string
-  }
+    submitFailed: string;
+  };
 }
 
-export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslations> = {
+export const vacancyFormTranslations: Record<
+  'fr' | 'en',
+  VacancyFormTranslations
+> = {
   fr: {
-    titleEdit: 'Modifier l\'offre',
-    titleCreate: 'Créer une offre d\'emploi',
-    subtitle: 'Définissez les détails de l\'offre d\'emploi',
+    titleEdit: "Modifier l'offre",
+    titleCreate: "Créer une offre d'emploi",
+    subtitle: "Définissez les détails de l'offre d'emploi",
     sections: {
       basic: 'Informations de base',
       details: 'Détails du poste',
@@ -158,11 +161,11 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       conditions: 'Conditions',
       application: 'Candidature',
       timeline: 'Planning',
-      compensation: 'Rémunération'
+      compensation: 'Rémunération',
     },
     form: {
       title: 'Titre du poste',
-      titlePlaceholder: 'Intitulé de l\'offre d\'emploi',
+      titlePlaceholder: "Intitulé de l'offre d'emploi",
       type: 'Type de poste',
       selectType: 'Sélectionnez le type',
       description: 'Description',
@@ -176,7 +179,7 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       supervisor: 'Superviseur',
       selectSupervisor: 'Sélectionnez le superviseur',
       team: 'Équipe',
-      selectTeam: 'Sélectionnez l\'équipe',
+      selectTeam: "Sélectionnez l'équipe",
       domain: 'Domaine',
       selectDomain: 'Sélectionnez le domaine',
       location: 'Lieu',
@@ -208,14 +211,14 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       tags: 'Mots-clés',
       tagsPlaceholder: 'Mots-clés pour la recherche',
       internalNotes: 'Notes internes',
-      internalNotesPlaceholder: 'Notes pour l\'équipe RH...',
+      internalNotesPlaceholder: "Notes pour l'équipe RH...",
       published: 'Publié',
       featured: 'Mise en avant',
       deadline: 'Date limite',
       cancel: 'Annuler',
       create: 'Créer',
       update: 'Mettre à jour',
-      submitting: 'En cours...'
+      submitting: 'En cours...',
     },
     types: {
       phd: 'Doctorat',
@@ -225,7 +228,7 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       intern: 'Stage',
       visiting: 'Chercheur invité',
       technician: 'Technicien',
-      admin: 'Administratif'
+      admin: 'Administratif',
     },
     positionTypes: {
       phd: 'Doctorat',
@@ -235,7 +238,7 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       intern: 'Stage',
       visiting: 'Chercheur invité',
       technician: 'Technicien',
-      admin: 'Administratif'
+      admin: 'Administratif',
     },
     domains: {
       softwareArchitecture: 'Architecture logicielle',
@@ -247,13 +250,13 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       softwareMaintenance: 'Maintenance logicielle',
       humanComputerInteraction: 'Interaction homme-machine',
       distributedSystems: 'Systèmes distribués',
-      blockchain: 'Blockchain'
+      blockchain: 'Blockchain',
     },
     applicationMethods: {
       online: 'Candidature en ligne',
       email: 'Par email',
       portal: 'Portail de recrutement',
-      inPerson: 'En personne'
+      inPerson: 'En personne',
     },
     statuses: {
       draft: 'Brouillon',
@@ -261,13 +264,13 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       active: 'Actif',
       closed: 'Fermé',
       filled: 'Pourvu',
-      cancelled: 'Annulé'
+      cancelled: 'Annulé',
     },
     priorities: {
       low: 'Faible',
       medium: 'Moyenne',
       high: 'Élevée',
-      urgent: 'Urgente'
+      urgent: 'Urgente',
     },
     validation: {
       titleRequired: 'Le titre est requis',
@@ -282,17 +285,17 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       deadlineRequired: 'La date limite est requise',
       deadlineAfterToday: 'La date limite doit être future',
       applicationMethodRequired: 'La méthode de candidature est requise',
-      applyUrlRequired: 'L\'URL de candidature est requise',
+      applyUrlRequired: "L'URL de candidature est requise",
       applyUrlInvalid: 'URL de candidature invalide',
-      contactEmailRequired: 'L\'email de contact est requis',
-      emailInvalid: 'Format d\'email invalide',
+      contactEmailRequired: "L'email de contact est requis",
+      emailInvalid: "Format d'email invalide",
       urlInvalid: 'URL invalide',
       phoneInvalid: 'Format de téléphone invalide',
-      statusRequired: 'Le statut est requis'
+      statusRequired: 'Le statut est requis',
     },
     errors: {
-      submitFailed: 'Échec de la soumission'
-    }
+      submitFailed: 'Échec de la soumission',
+    },
   },
   en: {
     titleEdit: 'Edit Job Offer',
@@ -305,7 +308,7 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       conditions: 'Conditions',
       application: 'Application',
       timeline: 'Timeline',
-      compensation: 'Compensation'
+      compensation: 'Compensation',
     },
     form: {
       title: 'Position Title',
@@ -362,7 +365,7 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       cancel: 'Cancel',
       create: 'Create',
       update: 'Update',
-      submitting: 'Submitting...'
+      submitting: 'Submitting...',
     },
     types: {
       phd: 'PhD',
@@ -372,7 +375,7 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       intern: 'Internship',
       visiting: 'Visiting Researcher',
       technician: 'Technician',
-      admin: 'Administrative'
+      admin: 'Administrative',
     },
     positionTypes: {
       phd: 'PhD',
@@ -382,7 +385,7 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       intern: 'Internship',
       visiting: 'Visiting Researcher',
       technician: 'Technician',
-      admin: 'Administrative'
+      admin: 'Administrative',
     },
     domains: {
       softwareArchitecture: 'Software Architecture',
@@ -394,13 +397,13 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       softwareMaintenance: 'Software Maintenance',
       humanComputerInteraction: 'Human-Computer Interaction',
       distributedSystems: 'Distributed Systems',
-      blockchain: 'Blockchain'
+      blockchain: 'Blockchain',
     },
     applicationMethods: {
       online: 'Online Application',
       email: 'By Email',
       portal: 'Recruitment Portal',
-      inPerson: 'In Person'
+      inPerson: 'In Person',
     },
     statuses: {
       draft: 'Draft',
@@ -408,13 +411,13 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       active: 'Active',
       closed: 'Closed',
       filled: 'Filled',
-      cancelled: 'Cancelled'
+      cancelled: 'Cancelled',
     },
     priorities: {
       low: 'Low',
       medium: 'Medium',
       high: 'High',
-      urgent: 'Urgent'
+      urgent: 'Urgent',
     },
     validation: {
       titleRequired: 'Title is required',
@@ -435,10 +438,10 @@ export const vacancyFormTranslations: Record<'fr' | 'en', VacancyFormTranslation
       emailInvalid: 'Invalid email format',
       urlInvalid: 'Invalid URL',
       phoneInvalid: 'Invalid phone format',
-      statusRequired: 'Status is required'
+      statusRequired: 'Status is required',
     },
     errors: {
-      submitFailed: 'Failed to submit'
-    }
-  }
-} as const
+      submitFailed: 'Failed to submit',
+    },
+  },
+} as const;

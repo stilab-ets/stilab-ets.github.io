@@ -10,7 +10,8 @@ export class ApiFactory {
   private baseURL: string;
 
   private constructor(baseURL?: string) {
-    this.baseURL = baseURL || import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+    this.baseURL =
+      baseURL || import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
     this.authAPI = new AuthAPI(this.baseURL);
     this.mainAPI = new MainAPI(this.baseURL);
     this.adminAPI = new AdminAPI(this.baseURL);

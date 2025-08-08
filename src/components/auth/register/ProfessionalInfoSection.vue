@@ -1,31 +1,31 @@
 <script setup lang="ts">
-import { useLanguage } from '@/composables/useLanguage'
+import { useLanguage } from '@/composables/useLanguage';
 
 interface ProfessionalData {
-  role: string
-  researchDomain: string
-  biography: string
+  role: string;
+  researchDomain: string;
+  biography: string;
 }
 
 const props = defineProps<{
-  modelValue: ProfessionalData
-  errors: string[]
-  roleDisabled?: boolean
-}>()
+  modelValue: ProfessionalData;
+  errors: string[];
+  roleDisabled?: boolean;
+}>();
 
 const emit = defineEmits<{
-  'update:modelValue': [value: ProfessionalData]
-}>()
+  'update:modelValue': [value: ProfessionalData];
+}>();
 
-const { t } = useLanguage()
+const { t } = useLanguage();
 
 // Update specific field while preserving others
 const updateField = (field: keyof ProfessionalData, value: string) => {
   emit('update:modelValue', {
     ...props.modelValue,
-    [field]: value
-  })
-}
+    [field]: value,
+  });
+};
 </script>
 
 <template>
@@ -45,18 +45,24 @@ const updateField = (field: keyof ProfessionalData, value: string) => {
       <select
         id="role"
         :value="modelValue.role"
-        @change="updateField('role', ($event.target as HTMLSelectElement).value)"
         required
         :disabled="roleDisabled"
         class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         :class="{
           'bg-gray-100 text-gray-500': roleDisabled,
-          'border-red-500': errors.some(error => error.includes('role') || error.includes('rôle'))
+          'border-red-500': errors.some(
+            (error) => error.includes('role') || error.includes('rôle')
+          ),
         }"
+        @change="
+          updateField('role', ($event.target as HTMLSelectElement).value)
+        "
       >
         <option value="">{{ t.auth.register.form.selectRole }}</option>
         <option value="professor">{{ t.auth.register.roles.professor }}</option>
-        <option value="researcher">{{ t.auth.register.roles.researcher }}</option>
+        <option value="researcher">
+          {{ t.auth.register.roles.researcher }}
+        </option>
         <option value="postdoc">{{ t.auth.register.roles.postdoc }}</option>
         <option value="phd">{{ t.auth.register.roles.phd }}</option>
         <option value="master">{{ t.auth.register.roles.master }}</option>
@@ -66,16 +72,24 @@ const updateField = (field: keyof ProfessionalData, value: string) => {
 
     <!-- Research Domain -->
     <div>
-      <label for="researchDomain" class="block text-sm font-medium text-gray-700">
+      <label
+        for="researchDomain"
+        class="block text-sm font-medium text-gray-700"
+      >
         {{ t.auth.register.form.researchDomain }}
       </label>
       <input
         id="researchDomain"
         :value="modelValue.researchDomain"
-        @input="updateField('researchDomain', ($event.target as HTMLInputElement).value)"
         type="text"
         :placeholder="t.auth.register.form.researchDomainPlaceholder"
         class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+        @input="
+          updateField(
+            'researchDomain',
+            ($event.target as HTMLInputElement).value
+          )
+        "
       />
     </div>
 
@@ -87,15 +101,20 @@ const updateField = (field: keyof ProfessionalData, value: string) => {
       <textarea
         id="biography"
         :value="modelValue.biography"
-        @input="updateField('biography', ($event.target as HTMLTextAreaElement).value)"
         rows="4"
         :placeholder="t.auth.register.form.biographyPlaceholder"
         class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+        @input="
+          updateField('biography', ($event.target as HTMLTextAreaElement).value)
+        "
       ></textarea>
     </div>
 
     <!-- Validation Errors -->
-    <div v-if="errors.length > 0" class="bg-red-50 border border-red-200 rounded-md p-3">
+    <div
+      v-if="errors.length > 0"
+      class="bg-red-50 border border-red-200 rounded-md p-3"
+    >
       <ul class="text-sm text-red-600 space-y-1">
         <li v-for="error in errors" :key="error">{{ error }}</li>
       </ul>

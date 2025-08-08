@@ -1,113 +1,116 @@
 export interface TeachingFormTranslations {
-  titleEdit: string
-  titleCreate: string
-  subtitle: string
+  titleEdit: string;
+  titleCreate: string;
+  subtitle: string;
   sections: {
-    basic: string
-    content: string
-    logistics: string
-    assessment: string
-    resources: string
-  }
+    basic: string;
+    content: string;
+    logistics: string;
+    assessment: string;
+    resources: string;
+  };
   form: {
-    title: string
-    titlePlaceholder: string
-    code: string
-    codePlaceholder: string
-    instructor: string
-    selectInstructor: string
-    coInstructors: string
-    selectCoInstructors: string
-    semester: string
-    selectSemester: string
-    semesterPlaceholder: string
-    level: string
-    selectLevel: string
-    credits: string
-    creditsPlaceholder: string
-    language: string
-    selectLanguage: string
-    description: string
-    descriptionPlaceholder: string
-    objectives: string
-    objectivesPlaceholder: string
-    prerequisites: string
-    prerequisitesPlaceholder: string
-    topics: string
-    topicsPlaceholder: string
-    schedule: string
-    schedulePlaceholder: string
-    location: string
-    locationPlaceholder: string
-    capacity: string
-    capacityPlaceholder: string
-    assessmentMethods: string
-    assessmentMethodsPlaceholder: string
-    gradingScale: string
-    gradingScalePlaceholder: string
-    syllabusUrl: string
-    syllabusUrlPlaceholder: string
-    moodleUrl: string
-    moodleUrlPlaceholder: string
-    githubUrl: string
-    githubUrlPlaceholder: string
-    materials: string
-    materialsPlaceholder: string
-    textbooks: string
-    textbooksPlaceholder: string
-    status: string
-    selectStatus: string
-    enrollmentOpen: string
-    cancel: string
-    create: string
-    update: string
-    submitting: string
-  }
+    title: string;
+    titlePlaceholder: string;
+    code: string;
+    codePlaceholder: string;
+    instructor: string;
+    selectInstructor: string;
+    coInstructors: string;
+    selectCoInstructors: string;
+    semester: string;
+    selectSemester: string;
+    semesterPlaceholder: string;
+    level: string;
+    selectLevel: string;
+    credits: string;
+    creditsPlaceholder: string;
+    language: string;
+    selectLanguage: string;
+    description: string;
+    descriptionPlaceholder: string;
+    objectives: string;
+    objectivesPlaceholder: string;
+    prerequisites: string;
+    prerequisitesPlaceholder: string;
+    topics: string;
+    topicsPlaceholder: string;
+    schedule: string;
+    schedulePlaceholder: string;
+    location: string;
+    locationPlaceholder: string;
+    capacity: string;
+    capacityPlaceholder: string;
+    assessmentMethods: string;
+    assessmentMethodsPlaceholder: string;
+    gradingScale: string;
+    gradingScalePlaceholder: string;
+    syllabusUrl: string;
+    syllabusUrlPlaceholder: string;
+    moodleUrl: string;
+    moodleUrlPlaceholder: string;
+    githubUrl: string;
+    githubUrlPlaceholder: string;
+    materials: string;
+    materialsPlaceholder: string;
+    textbooks: string;
+    textbooksPlaceholder: string;
+    status: string;
+    selectStatus: string;
+    enrollmentOpen: string;
+    cancel: string;
+    create: string;
+    update: string;
+    submitting: string;
+  };
   levels: {
-    undergraduate: string
-    graduate: string
-    phd: string
-    continuing: string
-  }
+    undergraduate: string;
+    graduate: string;
+    phd: string;
+    continuing: string;
+  };
   semesters: {
-    fall: string
-    spring: string
-    summer: string
-    winter: string
-  }
+    fall: string;
+    spring: string;
+    summer: string;
+    winter: string;
+  };
   languages: {
-    french: string
-    english: string
-    bilingual: string
-  }
+    french: string;
+    english: string;
+    bilingual: string;
+  };
   statuses: {
-    draft: string
-    published: string
-    active: string
-    completed: string
-    cancelled: string
-  }
+    draft: string;
+    published: string;
+    active: string;
+    completed: string;
+    cancelled: string;
+  };
   validation: {
-    titleRequired: string
-    codeRequired: string
-    instructorRequired: string
-    semesterRequired: string
-    levelRequired: string
-    creditsRequired: string
-    creditsInvalid: string
-    languageRequired: string
-    descriptionRequired: string
-    objectivesRequired: string
-    capacityInvalid: string
-    urlInvalid: string
-    statusRequired: string
-  }
+    titleRequired: string;
+    codeRequired: string;
+    instructorRequired: string;
+    semesterRequired: string;
+    levelRequired: string;
+    creditsRequired: string;
+    creditsInvalid: string;
+    languageRequired: string;
+    descriptionRequired: string;
+    objectivesRequired: string;
+    capacityInvalid: string;
+    urlInvalid: string;
+    statusRequired: string;
+  };
   errors: {
-    submitFailed: string
-  }
+    submitFailed: string;
+  };
 }
 
-export const teachingFormTranslations: Record<'fr' | 'en', TeachingFormTranslations> = {
+export const teachingFormTranslations: Record<
+  'fr' | 'en',
+  TeachingFormTranslations
+> = {
   fr: {
     titleEdit: 'Modifier le cours',
     titleCreate: 'Créer un cours',
@@ -117,7 +120,7 @@ export const teachingFormTranslations: Record<'fr' | 'en', TeachingFormTranslati
       content: 'Contenu du cours',
       logistics: 'Logistique',
       assessment: 'Évaluation',
-      resources: 'Ressources'
+      resources: 'Ressources',
     },
     form: {
       title: 'Titre',
@@ -125,7 +128,7 @@ export const teachingFormTranslations: Record<'fr' | 'en', TeachingFormTranslati
       code: 'Code du cours',
       codePlaceholder: 'CS-101, MATH-201...',
       instructor: 'Enseignant',
-      selectInstructor: 'Sélectionnez l\'enseignant',
+      selectInstructor: "Sélectionnez l'enseignant",
       coInstructors: 'Co-enseignants',
       selectCoInstructors: 'Sélectionnez les co-enseignants',
       semester: 'Semestre',
@@ -140,7 +143,7 @@ export const teachingFormTranslations: Record<'fr' | 'en', TeachingFormTranslati
       description: 'Description',
       descriptionPlaceholder: 'Description générale du cours...',
       objectives: 'Objectifs pédagogiques',
-      objectivesPlaceholder: 'Objectifs d\'apprentissage...',
+      objectivesPlaceholder: "Objectifs d'apprentissage...",
       prerequisites: 'Prérequis',
       prerequisitesPlaceholder: 'Cours ou compétences requis...',
       topics: 'Sujets abordés',
@@ -150,8 +153,8 @@ export const teachingFormTranslations: Record<'fr' | 'en', TeachingFormTranslati
       location: 'Lieu',
       locationPlaceholder: 'Amphithéâtre A, Salle 101...',
       capacity: 'Capacité',
-      capacityPlaceholder: 'Nombre maximum d\'étudiants',
-      assessmentMethods: 'Méthodes d\'évaluation',
+      capacityPlaceholder: "Nombre maximum d'étudiants",
+      assessmentMethods: "Méthodes d'évaluation",
       assessmentMethodsPlaceholder: 'Examens, projets, participation...',
       gradingScale: 'Barème de notation',
       gradingScalePlaceholder: 'A-F, 0-20, Pass/Fail...',
@@ -171,36 +174,36 @@ export const teachingFormTranslations: Record<'fr' | 'en', TeachingFormTranslati
       cancel: 'Annuler',
       create: 'Créer',
       update: 'Mettre à jour',
-      submitting: 'En cours...'
+      submitting: 'En cours...',
     },
     levels: {
       undergraduate: 'Licence',
       graduate: 'Master',
       phd: 'Doctorat',
-      continuing: 'Formation continue'
+      continuing: 'Formation continue',
     },
     semesters: {
       fall: 'Automne',
       spring: 'Printemps',
       summer: 'Été',
-      winter: 'Hiver'
+      winter: 'Hiver',
     },
     languages: {
       french: 'Français',
       english: 'Anglais',
-      bilingual: 'Bilingue'
+      bilingual: 'Bilingue',
     },
     statuses: {
       draft: 'Brouillon',
       published: 'Publié',
       active: 'Actif',
       completed: 'Terminé',
-      cancelled: 'Annulé'
+      cancelled: 'Annulé',
     },
     validation: {
       titleRequired: 'Le titre est requis',
       codeRequired: 'Le code du cours est requis',
-      instructorRequired: 'L\'enseignant est requis',
+      instructorRequired: "L'enseignant est requis",
       semesterRequired: 'Le semestre est requis',
       levelRequired: 'Le niveau est requis',
       creditsRequired: 'Les crédits sont requis',
@@ -210,11 +213,11 @@ export const teachingFormTranslations: Record<'fr' | 'en', TeachingFormTranslati
       objectivesRequired: 'Les objectifs sont requis',
       capacityInvalid: 'Capacité invalide',
       urlInvalid: 'URL invalide',
-      statusRequired: 'Le statut est requis'
+      statusRequired: 'Le statut est requis',
     },
     errors: {
-      submitFailed: 'Échec de la soumission'
-    }
+      submitFailed: 'Échec de la soumission',
+    },
   },
   en: {
     titleEdit: 'Edit Course',
@@ -225,7 +228,7 @@ export const teachingFormTranslations: Record<'fr' | 'en', TeachingFormTranslati
       content: 'Course Content',
       logistics: 'Logistics',
       assessment: 'Assessment',
-      resources: 'Resources'
+      resources: 'Resources',
     },
     form: {
       title: 'Title',
@@ -279,31 +282,31 @@ export const teachingFormTranslations: Record<'fr' | 'en', TeachingFormTranslati
       cancel: 'Cancel',
       create: 'Create',
       update: 'Update',
-      submitting: 'Submitting...'
+      submitting: 'Submitting...',
     },
     levels: {
       undergraduate: 'Undergraduate',
       graduate: 'Graduate',
       phd: 'PhD',
-      continuing: 'Continuing Education'
+      continuing: 'Continuing Education',
     },
     semesters: {
       fall: 'Fall',
       spring: 'Spring',
       summer: 'Summer',
-      winter: 'Winter'
+      winter: 'Winter',
     },
     languages: {
       french: 'French',
       english: 'English',
-      bilingual: 'Bilingual'
+      bilingual: 'Bilingual',
     },
     statuses: {
       draft: 'Draft',
       published: 'Published',
       active: 'Active',
       completed: 'Completed',
-      cancelled: 'Cancelled'
+      cancelled: 'Cancelled',
     },
     validation: {
       titleRequired: 'Title is required',
@@ -318,10 +321,10 @@ export const teachingFormTranslations: Record<'fr' | 'en', TeachingFormTranslati
       objectivesRequired: 'Objectives are required',
       capacityInvalid: 'Invalid capacity',
       urlInvalid: 'Invalid URL',
-      statusRequired: 'Status is required'
+      statusRequired: 'Status is required',
     },
     errors: {
-      submitFailed: 'Failed to submit'
-    }
-  }
-} as const
+      submitFailed: 'Failed to submit',
+    },
+  },
+} as const;

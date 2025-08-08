@@ -1,89 +1,89 @@
 export interface AuthTranslations {
-  signIn: string
-  logout: string
+  signIn: string;
+  logout: string;
   login: {
-    title: string
-    subtitle: string
+    title: string;
+    subtitle: string;
     form: {
-      email: string
-      emailPlaceholder: string
-      password: string
-      passwordPlaceholder: string
-      rememberMe: string
-      forgotPassword: string
-      submit: string
-      submitting: string
-    }
+      email: string;
+      emailPlaceholder: string;
+      password: string;
+      passwordPlaceholder: string;
+      rememberMe: string;
+      forgotPassword: string;
+      submit: string;
+      submitting: string;
+    };
     validation: {
-      emailRequired: string
-      emailInvalid: string
-      passwordRequired: string
-      passwordMinLength: string
-    }
+      emailRequired: string;
+      emailInvalid: string;
+      passwordRequired: string;
+      passwordMinLength: string;
+    };
     errors: {
-      loginFailed: string
-    }
-  }
+      loginFailed: string;
+    };
+  };
   register: {
-    title: string
-    subtitle: string
-    invitationNote: string
+    title: string;
+    subtitle: string;
+    invitationNote: string;
     sections: {
-      personal: string
-      professional: string
-      links: string
-      security: string
-    }
+      personal: string;
+      professional: string;
+      links: string;
+      security: string;
+    };
     form: {
-      firstNamePlaceholder: string | undefined
-      lastNamePlaceholder: string | undefined
-      emailPlaceholder: string | undefined
-      roles: any
-      passwordPlaceholder: string | undefined
-      confirmPasswordPlaceholder: string | undefined
-      firstName: string
-      lastName: string
-      email: string
-      phone: string
-      role: string
-      selectRole: string
-      researchDomain: string
-      researchDomainPlaceholder: string
-      biography: string
-      biographyPlaceholder: string
-      githubUrl: string
-      linkedinUrl: string
-      stackoverflowUrl: string
-      twitterxUrl: string
-      googlescholarUrl: string
-      dblpUrl: string
-      personalWebsite: string
-      password: string
-      confirmPassword: string
-      submit: string
-      submitting: string
-    }
+      firstNamePlaceholder: string | undefined;
+      lastNamePlaceholder: string | undefined;
+      emailPlaceholder: string | undefined;
+      roles: any;
+      passwordPlaceholder: string | undefined;
+      confirmPasswordPlaceholder: string | undefined;
+      firstName: string;
+      lastName: string;
+      email: string;
+      phone: string;
+      role: string;
+      selectRole: string;
+      researchDomain: string;
+      researchDomainPlaceholder: string;
+      biography: string;
+      biographyPlaceholder: string;
+      githubUrl: string;
+      linkedinUrl: string;
+      stackoverflowUrl: string;
+      twitterxUrl: string;
+      googlescholarUrl: string;
+      dblpUrl: string;
+      personalWebsite: string;
+      password: string;
+      confirmPassword: string;
+      submit: string;
+      submitting: string;
+    };
     roles: {
-      [x: string]: any
-      professor: string
-      phd: string
-      master: string
-    }
+      [x: string]: any;
+      professor: string;
+      phd: string;
+      master: string;
+    };
     validation: {
-      firstNameRequired: string
-      lastNameRequired: string
-      emailRequired: string
-      emailInvalid: string
-      roleRequired: string
-      passwordRequired: string
-      passwordMinLength: string
-      passwordMismatch: string
-    }
+      firstNameRequired: string;
+      lastNameRequired: string;
+      emailRequired: string;
+      emailInvalid: string;
+      roleRequired: string;
+      passwordRequired: string;
+      passwordMinLength: string;
+      passwordMismatch: string;
+    };
     errors: {
-      registrationFailed: string
-    },
-    successRegistrationMessage: string
-  }
+      registrationFailed: string;
+    };
+    successRegistrationMessage: string;
+  };
 }
 
 type AuthTranslationDict = {
@@ -104,27 +104,28 @@ export const authTranslations: AuthTranslationDict = {
         rememberMe: 'Remember me',
         forgotPassword: 'Forgot your password?',
         submit: 'Sign in',
-        submitting: 'Signing in...'
+        submitting: 'Signing in...',
       },
       validation: {
         emailRequired: 'Email is required',
         emailInvalid: 'Please enter a valid email address',
         passwordRequired: 'Password is required',
-        passwordMinLength: 'Password must be at least 6 characters'
+        passwordMinLength: 'Password must be at least 6 characters',
       },
       errors: {
-        loginFailed: 'Invalid email or password. Please try again.'
-      }
+        loginFailed: 'Invalid email or password. Please try again.',
+      },
     },
     register: {
       title: 'Join STIL Lab',
       subtitle: 'Create your researcher profile',
-      invitationNote: 'Registration is by invitation only. Please ensure you have received an invitation email.',
+      invitationNote:
+        'Registration is by invitation only. Please ensure you have received an invitation email.',
       sections: {
         personal: 'Personal Information',
         professional: 'Professional Information',
         links: 'External Links',
-        security: 'Security'
+        security: 'Security',
       },
       form: {
         firstName: 'First Name',
@@ -134,9 +135,11 @@ export const authTranslations: AuthTranslationDict = {
         role: 'Role',
         selectRole: 'Select your role',
         researchDomain: 'Research Domain',
-        researchDomainPlaceholder: 'e.g., Machine Learning, Software Engineering',
+        researchDomainPlaceholder:
+          'e.g., Machine Learning, Software Engineering',
         biography: 'Biography',
-        biographyPlaceholder: 'Tell us about your research interests and background...',
+        biographyPlaceholder:
+          'Tell us about your research interests and background...',
         githubUrl: 'GitHub URL',
         linkedinUrl: 'LinkedIn URL',
         stackoverflowUrl: 'Stack Overflow URL',
@@ -153,12 +156,12 @@ export const authTranslations: AuthTranslationDict = {
         emailPlaceholder: 'Email',
         roles: 'Roles',
         passwordPlaceholder: 'Password',
-        confirmPasswordPlaceholder: 'Confirm Password'
+        confirmPasswordPlaceholder: 'Confirm Password',
       },
       roles: {
         professor: 'PRO',
         phd: 'PHD',
-        master: 'MSC'
+        master: 'MSC',
       },
       validation: {
         firstNameRequired: 'First name is required',
@@ -168,15 +171,16 @@ export const authTranslations: AuthTranslationDict = {
         roleRequired: 'Please select a role',
         passwordRequired: 'Password is required',
         passwordMinLength: 'Password must be at least 8 characters',
-        passwordMismatch: 'Passwords do not match'
+        passwordMismatch: 'Passwords do not match',
       },
       errors: {
-        registrationFailed: 'Registration failed. Please try again.'
+        registrationFailed: 'Registration failed. Please try again.',
       },
-      successRegistrationMessage: 'Registration successful! You can now log in with your new account.'
+      successRegistrationMessage:
+        'Registration successful! You can now log in with your new account.',
     },
-    logout: "Logout",
-    signIn: "SignIn"
+    logout: 'Logout',
+    signIn: 'SignIn',
   },
   fr: {
     login: {
@@ -190,27 +194,29 @@ export const authTranslations: AuthTranslationDict = {
         rememberMe: 'Se souvenir de moi',
         forgotPassword: 'Mot de passe oublié ?',
         submit: 'Se connecter',
-        submitting: 'Connexion...'
+        submitting: 'Connexion...',
       },
       validation: {
-        emailRequired: 'L\'email est requis',
+        emailRequired: "L'email est requis",
         emailInvalid: 'Veuillez entrer une adresse email valide',
         passwordRequired: 'Le mot de passe est requis',
-        passwordMinLength: 'Le mot de passe doit contenir au moins 6 caractères'
+        passwordMinLength:
+          'Le mot de passe doit contenir au moins 6 caractères',
       },
       errors: {
-        loginFailed: 'Email ou mot de passe invalide. Veuillez réessayer.'
-      }
+        loginFailed: 'Email ou mot de passe invalide. Veuillez réessayer.',
+      },
     },
     register: {
       title: 'Rejoindre le Laboratoire STIL',
       subtitle: 'Créez votre profil de chercheur',
-      invitationNote: 'L\'inscription se fait uniquement sur invitation. Assurez-vous d\'avoir reçu un email d\'invitation.',
+      invitationNote:
+        "L'inscription se fait uniquement sur invitation. Assurez-vous d'avoir reçu un email d'invitation.",
       sections: {
         personal: 'Informations personnelles',
         professional: 'Informations professionnelles',
         links: 'Liens externes',
-        security: 'Sécurité'
+        security: 'Sécurité',
       },
       form: {
         firstName: 'Prénom',
@@ -220,9 +226,11 @@ export const authTranslations: AuthTranslationDict = {
         role: 'Rôle',
         selectRole: 'Sélectionnez votre rôle',
         researchDomain: 'Domaine de recherche',
-        researchDomainPlaceholder: 'ex. Apprentissage automatique, Génie logiciel',
+        researchDomainPlaceholder:
+          'ex. Apprentissage automatique, Génie logiciel',
         biography: 'Biographie',
-        biographyPlaceholder: 'Parlez-nous de vos intérêts de recherche et votre parcours...',
+        biographyPlaceholder:
+          'Parlez-nous de vos intérêts de recherche et votre parcours...',
         githubUrl: 'URL GitHub',
         linkedinUrl: 'URL LinkedIn',
         stackoverflowUrl: 'URL Stack Overflow',
@@ -239,29 +247,31 @@ export const authTranslations: AuthTranslationDict = {
         emailPlaceholder: 'Email',
         roles: 'Rôle',
         passwordPlaceholder: 'Mot de passe',
-        confirmPasswordPlaceholder: 'Confirmer le mot de passe'
+        confirmPasswordPlaceholder: 'Confirmer le mot de passe',
       },
       roles: {
         professor: 'PRO',
         phd: 'PHD',
-        master: 'MSC'
+        master: 'MSC',
       },
       validation: {
         firstNameRequired: 'Le prénom est requis',
         lastNameRequired: 'Le nom est requis',
-        emailRequired: 'L\'email est requis',
+        emailRequired: "L'email est requis",
         emailInvalid: 'Veuillez entrer une adresse email valide',
         roleRequired: 'Veuillez sélectionner un rôle',
         passwordRequired: 'Le mot de passe est requis',
-        passwordMinLength: 'Le mot de passe doit contenir au moins 8 caractères',
-        passwordMismatch: 'Les mots de passe ne correspondent pas'
+        passwordMinLength:
+          'Le mot de passe doit contenir au moins 8 caractères',
+        passwordMismatch: 'Les mots de passe ne correspondent pas',
       },
       errors: {
-        registrationFailed: 'L\'inscription a échoué. Veuillez réessayer.'
+        registrationFailed: "L'inscription a échoué. Veuillez réessayer.",
       },
-      successRegistrationMessage: 'Inscription réussie ! Vous pouvez maintenant vous connecter avec votre nouveau compte.'
+      successRegistrationMessage:
+        'Inscription réussie ! Vous pouvez maintenant vous connecter avec votre nouveau compte.',
     },
-    logout: "Déconnection",
-    signIn: "Connexion"
-  }
-} as const
+    logout: 'Déconnection',
+    signIn: 'Connexion',
+  },
+} as const;

@@ -1,31 +1,31 @@
-import { ref, reactive, computed } from 'vue'
-import { useLanguage } from '@/composables/useLanguage'
-import type { Project } from '@/services/MainAPI'
+import { ref, reactive, computed } from 'vue';
+import { useLanguage } from '@/composables/useLanguage';
+import type { Project } from '@/services/MainAPI';
 
 interface ProjectFormData {
-  projectType: 'research' | 'msc'
-  title: string
-  domain: string
-  difficulty: string
-  status: string
-  abstract: string
-  supervisor: string
-  coSupervisor: string
-  requirements: string[]
-  startDate: string
-  endDate: string
-  funding: string
-  githubUrl: string
-  websiteUrl: string
+  projectType: 'research' | 'msc';
+  title: string;
+  domain: string;
+  difficulty: string;
+  status: string;
+  abstract: string;
+  supervisor: string;
+  coSupervisor: string;
+  requirements: string[];
+  startDate: string;
+  endDate: string;
+  funding: string;
+  githubUrl: string;
+  websiteUrl: string;
 }
 
 interface ProjectFormErrors {
-  [key: string]: string
+  [key: string]: string;
 }
 
 export function useProjectForm(initialData?: Partial<Project>) {
-  const { t: translations } = useLanguage()
-  const t = computed(() => translations.value.forms.project)
+  const { t: translations } = useLanguage();
+  const t = computed(() => translations.value.forms.project);
 
   const form = reactive<ProjectFormData>({
     projectType: 'msc',
@@ -42,77 +42,77 @@ export function useProjectForm(initialData?: Partial<Project>) {
     funding: '',
     githubUrl: '',
     websiteUrl: '',
-    ...initialData
-  })
+    ...initialData,
+  });
 
-  const errors = ref<ProjectFormErrors>({})
-  const generalError = ref<string>('')
-  const isSubmitting = ref(false)
-  const newRequirement = ref('')
+  const errors = ref<ProjectFormErrors>({});
+  const generalError = ref<string>('');
+  const isSubmitting = ref(false);
+  const newRequirement = ref('');
 
   const validateForm = (): boolean => {
-    errors.value = {}
-    
+    errors.value = {};
+
     if (!form.title.trim()) {
-      errors.value.title = t.value.validation.titleRequired
+      errors.value.title = t.value.validation.titleRequired;
     }
-    
+
     if (!form.domain) {
-      errors.value.domain = t.value.validation.domainRequired
+      errors.value.domain = t.value.validation.domainRequired;
     }
-    
+
     if (!form.abstract.trim()) {
-      errors.value.abstract = t.value.validation.descriptionRequired
+      errors.value.abstract = t.value.validation.descriptionRequired;
     }
-    
+
     if (!form.supervisor) {
-      errors.value.supervisor = t.value.validation.supervisorRequired
+      errors.value.supervisor = t.value.validation.supervisorRequired;
     }
-    
+
     if (!form.startDate) {
-      errors.value.startDate = t.value.validation.startDateRequired
+      errors.value.startDate = t.value.validation.startDateRequired;
     }
-    
+
     if (form.endDate && form.startDate) {
-      const startDate = new Date(form.startDate)
-      const endDate = new Date(form.endDate)
-      
+      const startDate = new Date(form.startDate);
+      const endDate = new Date(form.endDate);
+
       if (endDate <= startDate) {
-        errors.value.endDate = t.value.validation.endDateAfterStart
+        errors.value.endDate = t.value.validation.endDateAfterStart;
       }
     }
 
     if (form.githubUrl && !isValidUrl(form.githubUrl)) {
-      errors.value.githubUrl = t.value.validation.urlInvalid
+      errors.value.githubUrl = t.value.validation.urlInvalid;
     }
 
     if (form.websiteUrl && !isValidUrl(form.websiteUrl)) {
-      errors.value.websiteUrl = t.value.validation.urlInvalid
+      errors.value.websiteUrl = t.value.validation.urlInvalid;
     }
-    
-    return Object.keys(errors.value).length === 0
-  }
+
+    return Object.keys(errors.value).length === 0;
+  };
 
   const isValidUrl = (urlString: string): boolean => {
     try {
-      new URL(urlString)
-      return true
+      new URL(urlString);
+      return true;
     } catch {
-      return false
+      return false;
     }
-  }
+  };
 
   const addRequirement = () => {
-    const req = newRequirement.value.trim()
+    const req = newRequirement.value.trim();
     if (req && !form.requirements.includes(req)) {
-      form.requirements.push(req)
-      newRequirement.value = ''
+      form.requirements.push(req);
+      newRequirement.value = '';
     }
-  }
+  };
 
   const removeRequirement = (index: number) => {
-    form.requirements.splice(index, 1)
-  }
+    form.requirements.splice(index, 1);
+  };
 
   const resetForm = () => {
     Object.assign(form, {
@@ -129,11 +129,11 @@ export function useProjectForm(initialData?: Partial<Project>) {
       endDate: '',
       funding: '',
       githubUrl: '',
-      websiteUrl: ''
-    })
-    errors.value = {}
-    generalError.value = ''
-  }
+      websiteUrl: '',
+    });
+    errors.value = {};
+    generalError.value = '';
+  };
 
   const prepareSubmissionData = (): Partial<Project> => {
     return {
@@ -147,8 +147,8 @@ export function useProjectForm(initialData?: Partial<Project>) {
       requirements: form.requirements,
       proposed_date: form.startDate,
       // Map form fields to API fields as needed
-    }
-  }
+    };
+  };
 
   return {
     form,
@@ -162,7 +162,11 @@ export function useProjectForm(initialData?: Partial<Project>) {
     removeRequirement,
     resetForm,
     prepareSubmissionData,
-    setSubmitting: (value: boolean) => { isSubmitting.value = value },
-    setGeneralError: (error: string) => { generalError.value = error }
-  }
+    setSubmitting: (value: boolean) => {
+      isSubmitting.value = value;
+    },
+    setGeneralError: (error: string) => {
+      generalError.value = error;
+    },
+  };
 }

@@ -1,7 +1,7 @@
-import { mount } from '@vue/test-utils'
-import { describe, it, expect, vi } from 'vitest'
-import { ref } from 'vue'
-import VacanciesPage from '../../components/vacancies/VacanciesPage.vue'
+import { mount } from '@vue/test-utils';
+import { describe, it, expect, vi } from 'vitest';
+import { ref } from 'vue';
+import VacanciesPage from '../../components/vacancies/VacanciesPage.vue';
 
 // Mock useVacancies composable with example vacancy data
 vi.mock('@/hooks/vacancies/useVacancies', () => {
@@ -38,8 +38,8 @@ vi.mock('@/hooks/vacancies/useVacancies', () => {
       uniqueSupervisors: ref(['John Doe']),
       clearError: vi.fn(),
     }),
-  }
-})
+  };
+});
 
 // Mock useLanguage composable with all needed translation keys
 vi.mock('@/composables/useLanguage', () => {
@@ -78,11 +78,7 @@ vi.mock('@/composables/useLanguage', () => {
           },
           infoBox: {
             whyJoinUs: 'Why Join Us?',
-            benefits: [
-              'Great team',
-              'Career growth',
-              'Flexible hours',
-            ],
+            benefits: ['Great team', 'Career growth', 'Flexible hours'],
           },
           vacancyCard: {
             urgent: 'Urgent',
@@ -98,37 +94,37 @@ vi.mock('@/composables/useLanguage', () => {
         },
       }),
     }),
-  }
-})
+  };
+});
 
 describe('VacanciesPage.vue', () => {
   it('renders the PageHeader component', () => {
-    const wrapper = mount(VacanciesPage)
-    const header = wrapper.findComponent({ name: 'PageHeader' })
-    expect(header.exists()).toBe(true)
-  })
+    const wrapper = mount(VacanciesPage);
+    const header = wrapper.findComponent({ name: 'PageHeader' });
+    expect(header.exists()).toBe(true);
+  });
 
   it('renders the VacanciesInfoBanner component', () => {
-    const wrapper = mount(VacanciesPage)
-    const banner = wrapper.findComponent({ name: 'VacanciesInfoBanner' })
-    expect(banner.exists()).toBe(true)
-  })
+    const wrapper = mount(VacanciesPage);
+    const banner = wrapper.findComponent({ name: 'VacanciesInfoBanner' });
+    expect(banner.exists()).toBe(true);
+  });
 
   it('renders the SearchAndFilters component', () => {
-    const wrapper = mount(VacanciesPage)
-    const filters = wrapper.findComponent({ name: 'SearchAndFilters' })
-    expect(filters.exists()).toBe(true)
-  })
+    const wrapper = mount(VacanciesPage);
+    const filters = wrapper.findComponent({ name: 'SearchAndFilters' });
+    expect(filters.exists()).toBe(true);
+  });
 
   it('renders at least one VacancyCard when data is present', () => {
-    const wrapper = mount(VacanciesPage)
-    const cards = wrapper.findAllComponents({ name: 'VacancyCard' })
-    expect(cards.length).toBeGreaterThan(0)
-  })
+    const wrapper = mount(VacanciesPage);
+    const cards = wrapper.findAllComponents({ name: 'VacancyCard' });
+    expect(cards.length).toBeGreaterThan(0);
+  });
 
   it('does not render EmptyState when there are vacancies', () => {
-    const wrapper = mount(VacanciesPage)
-    const emptyState = wrapper.findComponent({ name: 'EmptyState' })
-    expect(emptyState.exists()).toBe(false)
-  })
-})
+    const wrapper = mount(VacanciesPage);
+    const emptyState = wrapper.findComponent({ name: 'EmptyState' });
+    expect(emptyState.exists()).toBe(false);
+  });
+});

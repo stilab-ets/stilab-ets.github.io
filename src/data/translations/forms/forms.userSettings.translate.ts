@@ -1,126 +1,129 @@
 export interface UserSettingsFormTranslations {
-  title: string
-  subtitle: string
+  title: string;
+  subtitle: string;
   sections: {
-    security: any
-    profile: string
-    account: string
-    privacy: string
-    notifications: string
-    preferences: string
-  }
+    security: any;
+    profile: string;
+    account: string;
+    privacy: string;
+    notifications: string;
+    preferences: string;
+  };
   form: {
-    office: any
-    researchDomains: any
-    profilePhoto: any
-    notifications: any
-    browserNotifications: any
-    firstName: string
-    firstNamePlaceholder: string
-    lastName: string
-    lastNamePlaceholder: string
-    email: string
-    emailPlaceholder: string
-    phone: string
-    phonePlaceholder: string
-    title: string
-    titlePlaceholder: string
-    biography: string
-    biographyPlaceholder: string
-    photo: string
-    uploadPhoto: string
-    removePhoto: string
-    currentPassword: string
-    currentPasswordPlaceholder: string
-    newPassword: string
-    newPasswordPlaceholder: string
-    confirmPassword: string
-    confirmPasswordPlaceholder: string
-    language: string
-    selectLanguage: string
-    timezone: string
-    selectTimezone: string
-    theme: string
-    selectTheme: string
-    profileVisibility: string
-    selectProfileVisibility: string
-    emailVisibility: string
-    phoneVisibility: string
-    researchInterests: string
-    researchInterestsPlaceholder: string
-    githubUrl: string
-    githubUrlPlaceholder: string
-    linkedinUrl: string
-    linkedinUrlPlaceholder: string
-    stackoverflowUrl: string
-    stackoverflowUrlPlaceholder: string
-    twitterxUrl: string
-    twitterxUrlPlaceholder: string
-    googlescholarUrl: string
-    googlescholarUrlPlaceholder: string
-    dblpUrl: string
-    dblpUrlPlaceholder: string
-    personalWebsite: string
-    personalWebsitePlaceholder: string
-    orcidId: string
-    orcidIdPlaceholder: string
-    emailNotifications: string
-    pushNotifications: string
-    weeklyDigest: string
-    eventReminders: string
-    publicationAlerts: string
-    save: string
-    cancel: string
-    saving: string
-    deleteAccount: string
-    confirmDelete: string
-  }
+    office: any;
+    researchDomains: any;
+    profilePhoto: any;
+    notifications: any;
+    browserNotifications: any;
+    firstName: string;
+    firstNamePlaceholder: string;
+    lastName: string;
+    lastNamePlaceholder: string;
+    email: string;
+    emailPlaceholder: string;
+    phone: string;
+    phonePlaceholder: string;
+    title: string;
+    titlePlaceholder: string;
+    biography: string;
+    biographyPlaceholder: string;
+    photo: string;
+    uploadPhoto: string;
+    removePhoto: string;
+    currentPassword: string;
+    currentPasswordPlaceholder: string;
+    newPassword: string;
+    newPasswordPlaceholder: string;
+    confirmPassword: string;
+    confirmPasswordPlaceholder: string;
+    language: string;
+    selectLanguage: string;
+    timezone: string;
+    selectTimezone: string;
+    theme: string;
+    selectTheme: string;
+    profileVisibility: string;
+    selectProfileVisibility: string;
+    emailVisibility: string;
+    phoneVisibility: string;
+    researchInterests: string;
+    researchInterestsPlaceholder: string;
+    githubUrl: string;
+    githubUrlPlaceholder: string;
+    linkedinUrl: string;
+    linkedinUrlPlaceholder: string;
+    stackoverflowUrl: string;
+    stackoverflowUrlPlaceholder: string;
+    twitterxUrl: string;
+    twitterxUrlPlaceholder: string;
+    googlescholarUrl: string;
+    googlescholarUrlPlaceholder: string;
+    dblpUrl: string;
+    dblpUrlPlaceholder: string;
+    personalWebsite: string;
+    personalWebsitePlaceholder: string;
+    orcidId: string;
+    orcidIdPlaceholder: string;
+    emailNotifications: string;
+    pushNotifications: string;
+    weeklyDigest: string;
+    eventReminders: string;
+    publicationAlerts: string;
+    save: string;
+    cancel: string;
+    saving: string;
+    deleteAccount: string;
+    confirmDelete: string;
+  };
   languages: {
-    french: string
-    english: string
-  }
+    french: string;
+    english: string;
+  };
   themes: {
-    light: string
-    dark: string
-    system: string
-  }
+    light: string;
+    dark: string;
+    system: string;
+  };
   visibilityOptions: {
-    public: string
-    members: string
-    private: string
-  }
+    public: string;
+    members: string;
+    private: string;
+  };
   notifications: {
-    all: string
-    important: string
-    none: string
-  }
+    all: string;
+    important: string;
+    none: string;
+  };
   validation: {
-    firstNameRequired: string
-    lastNameRequired: string
-    emailRequired: string
-    emailInvalid: string
-    phoneInvalid: string
-    currentPasswordRequired: string
-    newPasswordMinLength: string
-    passwordMismatch: string
-    urlInvalid: string
-    orcidInvalid: string
-  }
+    firstNameRequired: string;
+    lastNameRequired: string;
+    emailRequired: string;
+    emailInvalid: string;
+    phoneInvalid: string;
+    currentPasswordRequired: string;
+    newPasswordMinLength: string;
+    passwordMismatch: string;
+    urlInvalid: string;
+    orcidInvalid: string;
+  };
   errors: {
-    updateFailed: string
-    saveFailed: string
-    photoUploadFailed: string
-    passwordChangeFailed: string
-    deleteAccountFailed: string
-  }
+    updateFailed: string;
+    saveFailed: string;
+    photoUploadFailed: string;
+    passwordChangeFailed: string;
+    deleteAccountFailed: string;
+  };
   success: {
-    profileUpdated: string
-    passwordChanged: string
-    accountDeleted: string
-  }
+    profileUpdated: string;
+    passwordChanged: string;
+    accountDeleted: string;
+  };
 }
 
-export const userSettingsFormTranslations: Record<'fr' | 'en', UserSettingsFormTranslations> = {
+export const userSettingsFormTranslations: Record<
+  'fr' | 'en',
+  UserSettingsFormTranslations
+> = {
   fr: {
     title: 'Paramètres du compte',
     subtitle: 'Gérez vos informations personnelles et préférences',
@@ -130,7 +133,7 @@ export const userSettingsFormTranslations: Record<'fr' | 'en', UserSettingsFormT
       privacy: 'Confidentialité',
       notifications: 'Notifications',
       preferences: 'Préférences',
-      security: "Sécurité"
+      security: 'Sécurité',
     },
     form: {
       firstName: 'Prénom',
@@ -162,20 +165,22 @@ export const userSettingsFormTranslations: Record<'fr' | 'en', UserSettingsFormT
       selectTheme: 'Sélectionnez un thème',
       profileVisibility: 'Visibilité du profil',
       selectProfileVisibility: 'Qui peut voir votre profil',
-      emailVisibility: 'Visibilité de l\'email',
+      emailVisibility: "Visibilité de l'email",
       phoneVisibility: 'Visibilité du téléphone',
       researchInterests: 'Intérêts de recherche',
-      researchInterestsPlaceholder: 'Vos domaines d\'intérêt...',
+      researchInterestsPlaceholder: "Vos domaines d'intérêt...",
       githubUrl: 'GitHub',
       githubUrlPlaceholder: 'https://github.com/username',
       linkedinUrl: 'LinkedIn',
       linkedinUrlPlaceholder: 'https://linkedin.com/in/username',
       stackoverflowUrl: 'Stack Overflow',
-      stackoverflowUrlPlaceholder: 'https://stackoverflow.com/users/userid/username',
+      stackoverflowUrlPlaceholder:
+        'https://stackoverflow.com/users/userid/username',
       twitterxUrl: 'Twitter/X',
       twitterxUrlPlaceholder: 'https://x.com/username',
       googlescholarUrl: 'Google Scholar',
-      googlescholarUrlPlaceholder: 'https://scholar.google.ca/citations?user=userid&hl=en',
+      googlescholarUrlPlaceholder:
+        'https://scholar.google.ca/citations?user=userid&hl=en',
       dblpUrl: 'DBLP',
       dblpUrlPlaceholder: 'https://dblp.org/pid/id/userid-1.html',
       personalWebsite: 'Site web personnel',
@@ -185,62 +190,63 @@ export const userSettingsFormTranslations: Record<'fr' | 'en', UserSettingsFormT
       emailNotifications: 'Notifications par email',
       pushNotifications: 'Notifications push',
       weeklyDigest: 'Résumé hebdomadaire',
-      eventReminders: 'Rappels d\'événements',
+      eventReminders: "Rappels d'événements",
       publicationAlerts: 'Alertes de publications',
       save: 'Enregistrer',
       cancel: 'Annuler',
       saving: 'Enregistrement...',
       deleteAccount: 'Supprimer le compte',
       confirmDelete: 'Confirmer la suppression',
-      office: "Bureau",
-      researchDomains: "Domaine de recherche",
-      profilePhoto: "Photo de profil",
-      notifications: "Notifications",
-      browserNotifications: "Notification du navigateur"
+      office: 'Bureau',
+      researchDomains: 'Domaine de recherche',
+      profilePhoto: 'Photo de profil',
+      notifications: 'Notifications',
+      browserNotifications: 'Notification du navigateur',
     },
     languages: {
       french: 'Français',
-      english: 'Anglais'
+      english: 'Anglais',
     },
     themes: {
       light: 'Clair',
       dark: 'Sombre',
-      system: 'Système'
+      system: 'Système',
     },
     visibilityOptions: {
       public: 'Public',
       members: 'Membres uniquement',
-      private: 'Privé'
+      private: 'Privé',
     },
     notifications: {
       all: 'Toutes',
       important: 'Importantes uniquement',
-      none: 'Aucune'
+      none: 'Aucune',
     },
     validation: {
       firstNameRequired: 'Le prénom est requis',
       lastNameRequired: 'Le nom est requis',
-      emailRequired: 'L\'email est requis',
-      emailInvalid: 'Format d\'email invalide',
+      emailRequired: "L'email est requis",
+      emailInvalid: "Format d'email invalide",
       phoneInvalid: 'Format de téléphone invalide',
       currentPasswordRequired: 'Le mot de passe actuel est requis',
-      newPasswordMinLength: 'Le nouveau mot de passe doit contenir au moins 8 caractères',
+      newPasswordMinLength:
+        'Le nouveau mot de passe doit contenir au moins 8 caractères',
       passwordMismatch: 'Les mots de passe ne correspondent pas',
       urlInvalid: 'URL invalide',
-      orcidInvalid: 'Format ORCID invalide'
+      orcidInvalid: 'Format ORCID invalide',
     },
     errors: {
-      saveFailed: 'Échec de l\'enregistrement',
+      saveFailed: "Échec de l'enregistrement",
       photoUploadFailed: 'Échec du téléchargement de la photo',
       passwordChangeFailed: 'Échec du changement de mot de passe',
       deleteAccountFailed: 'Échec de la suppression du compte',
-      updateFailed: "Échec de la mise à jour"
+      updateFailed: 'Échec de la mise à jour',
     },
     success: {
       profileUpdated: 'Profil mis à jour avec succès',
       passwordChanged: 'Mot de passe modifié avec succès',
-      accountDeleted: 'Compte supprimé avec succès'
-    }
+      accountDeleted: 'Compte supprimé avec succès',
+    },
   },
   en: {
     title: 'Account Settings',
@@ -251,7 +257,7 @@ export const userSettingsFormTranslations: Record<'fr' | 'en', UserSettingsFormT
       privacy: 'Privacy',
       notifications: 'Notifications',
       preferences: 'Preferences',
-      security: "Security"
+      security: 'Security',
     },
     form: {
       firstName: 'First Name',
@@ -292,11 +298,13 @@ export const userSettingsFormTranslations: Record<'fr' | 'en', UserSettingsFormT
       linkedinUrl: 'LinkedIn',
       linkedinUrlPlaceholder: 'https://linkedin.com/in/username',
       stackoverflowUrl: 'Stack Overflow',
-      stackoverflowUrlPlaceholder: 'https://stackoverflow.com/users/userid/username',
+      stackoverflowUrlPlaceholder:
+        'https://stackoverflow.com/users/userid/username',
       twitterxUrl: 'Twitter/X',
       twitterxUrlPlaceholder: 'https://x.com/username',
       googlescholarUrl: 'Google Scholar',
-      googlescholarUrlPlaceholder: 'https://scholar.google.ca/citations?user=userid&hl=en',
+      googlescholarUrlPlaceholder:
+        'https://scholar.google.ca/citations?user=userid&hl=en',
       dblpUrl: 'DBLP',
       dblpUrlPlaceholder: 'https://dblp.org/pid/id/userid-1.html',
       personalWebsite: 'Personal Website',
@@ -313,30 +321,30 @@ export const userSettingsFormTranslations: Record<'fr' | 'en', UserSettingsFormT
       saving: 'Saving...',
       deleteAccount: 'Delete Account',
       confirmDelete: 'Confirm Deletion',
-      office: "Office",
-      researchDomains: "Research domains",
-      profilePhoto: "Profile picture",
-      notifications: "Notifications",
-      browserNotifications: "Browser notifications"
+      office: 'Office',
+      researchDomains: 'Research domains',
+      profilePhoto: 'Profile picture',
+      notifications: 'Notifications',
+      browserNotifications: 'Browser notifications',
     },
     languages: {
       french: 'French',
-      english: 'English'
+      english: 'English',
     },
     themes: {
       light: 'Light',
       dark: 'Dark',
-      system: 'System'
+      system: 'System',
     },
     visibilityOptions: {
       public: 'Public',
       members: 'Members Only',
-      private: 'Private'
+      private: 'Private',
     },
     notifications: {
       all: 'All',
       important: 'Important Only',
-      none: 'None'
+      none: 'None',
     },
     validation: {
       firstNameRequired: 'First name is required',
@@ -348,19 +356,19 @@ export const userSettingsFormTranslations: Record<'fr' | 'en', UserSettingsFormT
       newPasswordMinLength: 'New password must be at least 8 characters',
       passwordMismatch: 'Passwords do not match',
       urlInvalid: 'Invalid URL',
-      orcidInvalid: 'Invalid ORCID format'
+      orcidInvalid: 'Invalid ORCID format',
     },
     errors: {
       saveFailed: 'Failed to save',
       photoUploadFailed: 'Failed to upload photo',
       passwordChangeFailed: 'Failed to change password',
       deleteAccountFailed: 'Failed to delete account',
-      updateFailed: "Failed to update"
+      updateFailed: 'Failed to update',
     },
     success: {
       profileUpdated: 'Profile updated successfully',
       passwordChanged: 'Password changed successfully',
-      accountDeleted: 'Account deleted successfully'
-    }
-  }
-} as const
+      accountDeleted: 'Account deleted successfully',
+    },
+  },
+} as const;

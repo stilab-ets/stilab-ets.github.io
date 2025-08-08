@@ -1,52 +1,55 @@
 <script setup lang="ts">
-import LogoButton from './header/LogoButton.vue'
-import NavItems from './header/NavItems.vue'
-import MobileMenuToggle from './header/MobileMenuToggle.vue'
-import LanguageToggle from './header/LanguageToggle.vue'
-import UserProfile from './header/UserProfile.vue'
-import { useNavigation, useMobileNavigation } from '@/hooks/layout/useNavigation'
-import type { User } from '@/services/AuthAPI'
+import LogoButton from './header/LogoButton.vue';
+import NavItems from './header/NavItems.vue';
+import MobileMenuToggle from './header/MobileMenuToggle.vue';
+import LanguageToggle from './header/LanguageToggle.vue';
+import UserProfile from './header/UserProfile.vue';
+import {
+  useNavigation,
+  useMobileNavigation,
+} from '@/hooks/layout/useNavigation';
+import type { User } from '@/services/AuthAPI';
 
 interface LocalizedNavItem {
-  id: string
-  label: string
-  icon: string
+  id: string;
+  label: string;
+  icon: string;
 }
 
 const props = defineProps<{
-  currentPage: string
-  navigationItems: LocalizedNavItem[]
-  currentLanguage: string
-  user?: User | null
-}>()
+  currentPage: string;
+  navigationItems: LocalizedNavItem[];
+  currentLanguage: string;
+  user?: User | null;
+}>();
 
 const emit = defineEmits<{
-  (e: 'setCurrentPage', page: string): void
-  (e: 'languageChanged', language: string): void
-  (e: 'userLogout'): void
-}>()
+  (e: 'setCurrentPage', page: string): void;
+  (e: 'languageChanged', language: string): void;
+  (e: 'userLogout'): void;
+}>();
 
-const { navigateToPage } = useNavigation()
-const { mobileMenuOpen, toggleMobileMenu } = useMobileNavigation()
+const { navigateToPage } = useNavigation();
+const { mobileMenuOpen, toggleMobileMenu } = useMobileNavigation();
 
 const setCurrentPage = (page: string) => {
-  navigateToPage(page)
-  emit('setCurrentPage', page)
-  mobileMenuOpen.value = false
-}
+  navigateToPage(page);
+  emit('setCurrentPage', page);
+  mobileMenuOpen.value = false;
+};
 
 const handleLanguageChange = (language: string) => {
-  emit('languageChanged', language)
-}
+  emit('languageChanged', language);
+};
 
 const handleUserNavigation = (page: string) => {
-  setCurrentPage(page)
-}
+  setCurrentPage(page);
+};
 
 const handleUserLogout = () => {
-  emit('userLogout')
-  mobileMenuOpen.value = false
-}
+  emit('userLogout');
+  mobileMenuOpen.value = false;
+};
 </script>
 
 <template>
@@ -56,19 +59,21 @@ const handleUserLogout = () => {
       <div class="flex">
         <LogoButton @navigate="setCurrentPage" />
       </div>
-     
+
       <!-- Center section: Main navigation and right utilities -->
-      <div class="flex w-full justify-between items-center xl:justify-center xl:w-11/12 py-3">
+      <div
+        class="flex w-full justify-between items-center xl:justify-center xl:w-11/12 py-3"
+      >
         <!-- Main navigation items - centered on larger screens -->
         <div class="flex">
           <NavItems
             :items="navigationItems"
-            :currentPage="currentPage"
+            :current-page="currentPage"
             @navigate="setCurrentPage"
           />
         </div>
       </div>
-      
+
       <!-- Right section: User profile, Language toggle and mobile menu -->
       <div class="flex justify-end items-center space-x-2">
         <!-- Language toggle - visible on desktop only -->
@@ -77,7 +82,7 @@ const handleUserLogout = () => {
           :current-language="currentLanguage"
           @language-changed="handleLanguageChange"
         />
-        
+
         <!-- User Profile - visible on desktop only -->
         <UserProfile
           class="hidden xl:flex"
@@ -85,16 +90,19 @@ const handleUserLogout = () => {
           @navigate="handleUserNavigation"
           @logout="handleUserLogout"
         />
-         
+
         <!-- Mobile menu toggle - only visible on smaller screens -->
         <div class="xl:hidden">
           <MobileMenuToggle :open="mobileMenuOpen" @toggle="toggleMobileMenu" />
         </div>
       </div>
     </div>
-   
+
     <!-- Mobile navigation dropdown -->
-    <div v-if="mobileMenuOpen" class="xl:hidden bg-white border-t border-gray-200">
+    <div
+      v-if="mobileMenuOpen"
+      class="xl:hidden bg-white border-t border-gray-200"
+    >
       <!-- User Profile Mobile -->
       <UserProfile
         :user="user"
@@ -104,16 +112,16 @@ const handleUserLogout = () => {
       />
 
       <div class="w-full flex justify-center">
-        <div class="border border-gray-200 w-5/6 items-center"/>
+        <div class="border border-gray-200 w-5/6 items-center" />
       </div>
       <!-- Navigation Items -->
       <NavItems
         :items="navigationItems"
-        :currentPage="currentPage"
-        isMobile
+        :current-page="currentPage"
+        is-mobile
         @navigate="setCurrentPage"
       />
-      
+
       <!-- Language Toggle Mobile -->
       <LanguageToggle
         :current-language="currentLanguage"

@@ -1,22 +1,18 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useAdminDashboard } from '@/hooks/dashboard/useAdminDashboard'
-import { useLanguage } from '@/composables/useLanguage'
-import { Users, Activity, UserPlus } from 'lucide-vue-next'
-import Card from '@/components/ui/Card.vue'
-import Button from '@/components/ui/Button.vue'
+import { computed } from 'vue';
+import { useAdminDashboard } from '@/hooks/dashboard/useAdminDashboard';
+import { useLanguage } from '@/composables/useLanguage';
+import { Users, Activity, UserPlus } from 'lucide-vue-next';
+import Card from '@/components/ui/Card.vue';
+import Button from '@/components/ui/Button.vue';
 
-const { t } = useLanguage()
-const {
-  recentUsers,
-  recentContent,
-  quickActions,
-  invitations
-} = useAdminDashboard()
+const { t } = useLanguage();
+const { recentUsers, recentContent, quickActions, invitations } =
+  useAdminDashboard();
 
-const pendingInvitations = computed(() => 
-  invitations.value.filter(inv => inv.status === 'pending')
-)
+const pendingInvitations = computed(() =>
+  invitations.value.filter((inv) => inv.status === 'pending')
+);
 </script>
 
 <template>
@@ -27,8 +23,8 @@ const pendingInvitations = computed(() =>
         {{ t.dashboard.admin.overview.quickActions }}
       </h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card 
-          v-for="action in quickActions" 
+        <Card
+          v-for="action in quickActions"
           :key="action.title"
           class="p-4 hover:shadow-md transition-shadow cursor-pointer"
           @click="action.action"
@@ -38,8 +34,12 @@ const pendingInvitations = computed(() =>
               <component :is="action.icon" class="h-5 w-5 text-white" />
             </div>
             <div>
-              <h3 class="text-sm font-medium text-gray-900">{{ action.title }}</h3>
-              <p class="text-xs text-gray-500">{{ action.description }}</p>
+              <h3 class="text-sm font-medium text-gray-900">
+                {{ action.title }}
+              </h3>
+              <p class="text-xs text-gray-500">
+                {{ action.description }}
+              </p>
             </div>
           </div>
         </Card>
@@ -61,12 +61,14 @@ const pendingInvitations = computed(() =>
               </Button>
             </div>
             <div class="space-y-3">
-              <div 
-                v-for="user in recentUsers.slice(0, 5)" 
+              <div
+                v-for="user in recentUsers.slice(0, 5)"
                 :key="user.id"
                 class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg"
               >
-                <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                <div
+                  class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center"
+                >
                   <span class="text-white text-xs font-semibold">
                     {{ user.initials }}
                   </span>
@@ -75,20 +77,30 @@ const pendingInvitations = computed(() =>
                   <p class="text-sm font-medium text-gray-900 truncate">
                     {{ user.name }}
                   </p>
-                  <p class="text-xs text-gray-500">{{ user.email }}</p>
+                  <p class="text-xs text-gray-500">
+                    {{ user.email }}
+                  </p>
                 </div>
                 <div class="text-right">
-                  <span :class="[
-                    'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
-                    user.role === 'admin' ? 'bg-red-100 text-red-800' :
-                    user.role === 'professor' ? 'bg-blue-100 text-blue-800' :
-                    'bg-green-100 text-green-800'
-                  ]">
-                    {{ t.dashboard.admin.overview.roles[
+                  <span
+                    :class="[
+                      'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
+                      user.role === 'admin'
+                        ? 'bg-red-100 text-red-800'
+                        : user.role === 'professor'
+                          ? 'bg-blue-100 text-blue-800'
+                          : 'bg-green-100 text-green-800',
+                    ]"
+                  >
+                    {{
+                      t.dashboard.admin.overview.roles[
                         user.role as keyof typeof t.dashboard.admin.overview.roles
-                    ] }}
+                      ]
+                    }}
                   </span>
-                  <p class="text-xs text-gray-500 mt-1">{{ user.joined }}</p>
+                  <p class="text-xs text-gray-500 mt-1">
+                    {{ user.joined }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -110,8 +122,8 @@ const pendingInvitations = computed(() =>
               </Button>
             </div>
             <div class="space-y-3">
-              <div 
-                v-for="invitation in pendingInvitations.slice(0, 5)" 
+              <div
+                v-for="invitation in pendingInvitations.slice(0, 5)"
                 :key="invitation.id"
                 class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
               >
@@ -120,21 +132,30 @@ const pendingInvitations = computed(() =>
                     {{ invitation.email }}
                   </p>
                   <p class="text-xs text-gray-500">
-                    {{ t.dashboard.admin.overview.invitationDetails }} {{ 
-                        t.dashboard.admin.overview.roles[
-                            invitation.role as keyof typeof t.dashboard.admin.overview.roles
-                        ] }} • {{ t.dashboard.admin.overview.sent }} {{ 
-                        new Date(invitation.sentAt).toLocaleDateString() 
+                    {{ t.dashboard.admin.overview.invitationDetails }}
+                    {{
+                      t.dashboard.admin.overview.roles[
+                        invitation.role as keyof typeof t.dashboard.admin.overview.roles
+                      ]
                     }}
+                    • {{ t.dashboard.admin.overview.sent }}
+                    {{ new Date(invitation.sentAt).toLocaleDateString() }}
                   </p>
                 </div>
-                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                <span
+                  class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800"
+                >
                   {{ t.dashboard.admin.invitations.status.pending }}
                 </span>
               </div>
-              <div v-if="pendingInvitations.length === 0" class="text-center py-4 text-gray-500">
+              <div
+                v-if="pendingInvitations.length === 0"
+                class="text-center py-4 text-gray-500"
+              >
                 <UserPlus class="h-8 w-8 mx-auto mb-2 text-gray-400" />
-                <p class="text-sm">{{ t.dashboard.admin.overview.noPendingInvitations }}</p>
+                <p class="text-sm">
+                  {{ t.dashboard.admin.overview.noPendingInvitations }}
+                </p>
               </div>
             </div>
           </div>
@@ -156,18 +177,23 @@ const pendingInvitations = computed(() =>
             </Button>
           </div>
           <div class="space-y-3">
-            <div 
-              v-for="item in recentContent.slice(0, 8)" 
+            <div
+              v-for="item in recentContent.slice(0, 8)"
               :key="item.id"
               class="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg"
             >
-              <div :class="[
-                'p-2 rounded-md',
-                item.type === 'publication' ? 'bg-blue-100 text-blue-600' :
-                item.type === 'event' ? 'bg-green-100 text-green-600' :
-                item.type === 'project' ? 'bg-purple-100 text-purple-600' :
-                'bg-gray-100 text-gray-600'
-              ]">
+              <div
+                :class="[
+                  'p-2 rounded-md',
+                  item.type === 'publication'
+                    ? 'bg-blue-100 text-blue-600'
+                    : item.type === 'event'
+                      ? 'bg-green-100 text-green-600'
+                      : item.type === 'project'
+                        ? 'bg-purple-100 text-purple-600'
+                        : 'bg-gray-100 text-gray-600',
+                ]"
+              >
                 <component :is="item.icon" class="h-4 w-4" />
               </div>
               <div class="flex-1 min-w-0">
@@ -175,18 +201,25 @@ const pendingInvitations = computed(() =>
                   {{ item.title }}
                 </p>
                 <p class="text-xs text-gray-500">
-                  {{ t.dashboard.admin.overview.byAuthor }} {{ item.author }} • {{ item.timestamp }}
+                  {{ t.dashboard.admin.overview.byAuthor }} {{ item.author }} •
+                  {{ item.timestamp }}
                 </p>
               </div>
-              <span :class="[
-                'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
-                item.status === 'published' ? 'bg-green-100 text-green-800' :
-                item.status === 'draft' ? 'bg-yellow-100 text-yellow-800' :
-                'bg-gray-100 text-gray-800'
-              ]">
-                {{ t.dashboard.admin.overview.contentStatus[
+              <span
+                :class="[
+                  'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
+                  item.status === 'published'
+                    ? 'bg-green-100 text-green-800'
+                    : item.status === 'draft'
+                      ? 'bg-yellow-100 text-yellow-800'
+                      : 'bg-gray-100 text-gray-800',
+                ]"
+              >
+                {{
+                  t.dashboard.admin.overview.contentStatus[
                     item.status as keyof typeof t.dashboard.admin.overview.contentStatus
-                ] }}
+                  ]
+                }}
               </span>
             </div>
           </div>

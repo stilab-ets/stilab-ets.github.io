@@ -1,18 +1,18 @@
 export interface CommonTranslations {
-  mustBeLogged: string
-  loginHere: string
-  successMessage: string
-  cancel: string
-  settings: string
-  loading: string
-  error: string
-  backToTop: string
-  readMore: string
-  contact: string
-  email: string
-  phone: string
-  address: string
-  retry: string
+  mustBeLogged: string;
+  loginHere: string;
+  successMessage: string;
+  cancel: string;
+  settings: string;
+  loading: string;
+  error: string;
+  backToTop: string;
+  readMore: string;
+  contact: string;
+  email: string;
+  phone: string;
+  address: string;
+  retry: string;
 }
 
 type CommonTranslationDict = {
@@ -31,11 +31,11 @@ export const commonTranslations: CommonTranslationDict = {
     phone: 'Téléphone',
     address: 'Adresse',
     retry: 'Réessayer',
-    settings: "Paramètres",
-    cancel: "Annuler",
-    mustBeLogged: "Vous devez être connecté pour accéder à ce formulaire",
-    loginHere: "Connectez-vous ici",
-    successMessage: "Succès"
+    settings: 'Paramètres',
+    cancel: 'Annuler',
+    mustBeLogged: 'Vous devez être connecté pour accéder à ce formulaire',
+    loginHere: 'Connectez-vous ici',
+    successMessage: 'Succès',
   },
   en: {
     loading: 'Loading...',
@@ -47,10 +47,10 @@ export const commonTranslations: CommonTranslationDict = {
     phone: 'Phone',
     address: 'Address',
     retry: 'Retry',
-    settings: "Settings",
-    cancel: "Cancel",
-    mustBeLogged: "Must be logged in to acces this form",
-    loginHere: "Login here",
-    successMessage: "Succes"
-  }
-} as const
+    settings: 'Settings',
+    cancel: 'Cancel',
+    mustBeLogged: 'Must be logged in to acces this form',
+    loginHere: 'Login here',
+    successMessage: 'Succes',
+  },
+} as const;
