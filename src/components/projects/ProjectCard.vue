@@ -192,16 +192,16 @@ const showInterest = () => {
         <Button
           v-if="project.status === 'available'"
           size="sm"
-          @click="showInterest"
           class="hover:cursor-pointer"
+          @click="showInterest"
         >
           {{ t.projects.projectCard.expressInterest }}
         </Button>
         <Button
           variant="outline"
           size="sm"
-          @click="contactSupervisor"
           class="hover:cursor-pointer"
+          @click="contactSupervisor"
         >
           <svg
             class="h-3 w-3 mr-1"

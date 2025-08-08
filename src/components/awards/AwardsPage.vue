@@ -302,8 +302,8 @@ const updateFilter = (filterId: string, value: string) => {
           <div class="ml-3">
             <p class="text-sm text-red-700">{{ error }}</p>
             <button
-              @click="fetchAwards"
               class="mt-2 text-sm bg-red-100 hover:bg-red-200 text-red-800 px-3 py-1 rounded transition-colors"
+              @click="fetchAwards"
             >
               {{ t.common?.retry || 'Retry' }}
             </button>

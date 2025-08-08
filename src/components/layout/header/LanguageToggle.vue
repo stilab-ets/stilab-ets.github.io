@@ -43,7 +43,6 @@ const handleMobileLanguageChange = (languageCode: string) => {
         <button
           v-for="language in availableLanguages"
           :key="language.code"
-          @click="handleMobileLanguageChange(language.code)"
           :class="[
             'flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:cursor-pointer',
             language.code === currentLanguage
@@ -51,6 +50,7 @@ const handleMobileLanguageChange = (languageCode: string) => {
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200',
           ]"
           :aria-label="language.ariaLabel"
+          @click="handleMobileLanguageChange(language.code)"
         >
           <span class="text-base" aria-hidden="true">{{ language.flag }}</span>
           <span v-if="showLabels" class="uppercase tracking-wide">{{
@@ -64,11 +64,11 @@ const handleMobileLanguageChange = (languageCode: string) => {
   <!-- Desktop Layout: Dropdown -->
   <div v-else class="relative" @blur="closeDropdown">
     <button
-      @click="toggleDropdown"
       class="flex items-center space-x-2 px-3 py-2 hover:cursor-pointer text-gray-700 hover:text-[#08a4d4] transition-colors duration-200 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#08a4d4] focus:ring-opacity-50"
       :aria-label="currentLang.ariaLabel"
       :aria-expanded="isDropdownOpen"
       aria-haspopup="true"
+      @click="toggleDropdown"
     >
       <span class="text-lg" aria-hidden="true">{{ currentLang.flag }}</span>
       <span class="text-sm font-medium uppercase tracking-wide">{{
@@ -109,10 +109,10 @@ const handleMobileLanguageChange = (languageCode: string) => {
         <button
           v-for="language in otherLanguages"
           :key="language.code"
-          @click="selectLanguage(language.code)"
           class="flex items-center space-x-3 w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 hover:text-[#08a4d4] transition-colors duration-150 hover:cursor-pointer"
           role="menuitem"
           :aria-label="language.ariaLabel"
+          @click="selectLanguage(language.code)"
         >
           <span class="text-lg" aria-hidden="true">{{ language.flag }}</span>
           <span class="text-sm font-medium">{{ language.label }}</span>

@@ -287,8 +287,8 @@ onUnmounted(() => {
               }}
             </p>
             <button
-              @click="setCurrentPage('home')"
               class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              @click="setCurrentPage('home')"
             >
               Retour à l'Accueil
             </button>
@@ -305,8 +305,8 @@ onUnmounted(() => {
               The page you're looking for doesn't exist.
             </p>
             <button
-              @click="setCurrentPage('home')"
               class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              @click="setCurrentPage('home')"
             >
               Go Home
             </button>

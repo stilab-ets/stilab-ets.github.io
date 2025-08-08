@@ -172,7 +172,7 @@ const submitButtonText = computed(() =>
       <p class="text-lg text-gray-600 mt-2">{{ t.forms.vacancy.subtitle }}</p>
     </div>
 
-    <form @submit.prevent="handleSubmit" class="space-y-8">
+    <form class="space-y-8" @submit.prevent="handleSubmit">
       <!-- Basic Information -->
       <Card>
         <h2 class="text-xl font-semibold text-gray-900 mb-6">
@@ -477,8 +477,8 @@ const submitButtonText = computed(() =>
               {{ tag }}
               <button
                 type="button"
-                @click="removeTag(index)"
                 class="ml-2 text-blue-600 hover:text-blue-800"
+                @click="removeTag(index)"
               >
                 ×
               </button>
@@ -490,14 +490,14 @@ const submitButtonText = computed(() =>
               v-model="newTag"
               type="text"
               :placeholder="t.forms.vacancy.form.tagsPlaceholder"
-              @keydown="handleTagKeydown"
               class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              @keydown="handleTagKeydown"
             />
             <Button
               type="button"
               variant="secondary"
-              @click="addTag"
               :disabled="!newTag.trim()"
+              @click="addTag"
             >
               Add
             </Button>
@@ -518,8 +518,8 @@ const submitButtonText = computed(() =>
         <Button
           type="button"
           variant="secondary"
-          @click="handleCancel"
           :disabled="isSubmitting"
+          @click="handleCancel"
         >
           {{ t.forms.vacancy.form.cancel }}
         </Button>

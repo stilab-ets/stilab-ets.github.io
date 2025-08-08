@@ -244,8 +244,8 @@ const handleError = (): void => {
             <h3 class="text-sm font-medium text-red-800">{{ error }}</h3>
             <div class="mt-2">
               <button
-                @click="handleError"
                 class="text-sm bg-red-100 hover:bg-red-200 text-red-800 px-3 py-1 rounded transition-colors"
+                @click="handleError"
               >
                 {{ t.common.retry }}
               </button>
@@ -280,8 +280,8 @@ const handleError = (): void => {
           <EventCard
             v-for="event in currentEvents"
             :key="event.id"
-            :eventData="event"
-            :isPast="viewMode === 'past'"
+            :event-data="event"
+            :is-past="viewMode === 'past'"
           />
         </div>
 

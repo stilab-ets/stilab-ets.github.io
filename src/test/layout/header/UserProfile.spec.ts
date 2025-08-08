@@ -1,6 +1,6 @@
-import { mount } from '@vue/test-utils';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import UserProfile from '../../../components/layout/header/UserProfile.vue';
+// import { mount } from '@vue/test-utils';
+import { describe, it, expect /*vi, beforeEach*/ } from 'vitest';
+// import UserProfile from '../../../components/layout/header/UserProfile.vue';
 
 /*vi.mock('@/hooks/auth/useUserAuth', () => {
   return {

@@ -124,8 +124,8 @@ const getStatusColor = (status: string): string => {
         <div class="flex items-center justify-end space-x-2">
           <a
             v-if="project.github_url"
-            @click="openLink(project.github_url)"
             class="text-gray-400 hover:text-[#08a4d4] transition-colors cursor-pointer"
+            @click="openLink(project.github_url)"
           >
             <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
               <path
@@ -137,8 +137,8 @@ const getStatusColor = (status: string): string => {
           </a>
           <a
             v-if="project.project_url"
-            @click="openLink(project.project_url)"
             class="text-gray-400 hover:text-[#08a4d4] transition-colors cursor-pointer"
+            @click="openLink(project.project_url)"
           >
             <svg
               class="h-5 w-5"

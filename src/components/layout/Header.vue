@@ -68,7 +68,7 @@ const handleUserLogout = () => {
         <div class="flex">
           <NavItems
             :items="navigationItems"
-            :currentPage="currentPage"
+            :current-page="currentPage"
             @navigate="setCurrentPage"
           />
         </div>
@@ -117,8 +117,8 @@ const handleUserLogout = () => {
       <!-- Navigation Items -->
       <NavItems
         :items="navigationItems"
-        :currentPage="currentPage"
-        isMobile
+        :current-page="currentPage"
+        is-mobile
         @navigate="setCurrentPage"
       />
 

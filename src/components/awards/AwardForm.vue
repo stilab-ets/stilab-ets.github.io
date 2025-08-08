@@ -154,7 +154,7 @@ const formError = computed(() => errors.value.general || error.value);
     :success-message="successMessage"
     :error="formError"
   >
-    <form @submit.prevent="submitForm" class="space-y-8">
+    <form class="space-y-8" @submit.prevent="submitForm">
       <Card>
         <h2 class="text-xl font-semibold text-gray-900 mb-6">
           {{ t.forms.awards.sections.basic }}

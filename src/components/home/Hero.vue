@@ -78,8 +78,8 @@ const navigateToPage = (page: string) => {
               class="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
             >
               <button
-                @click="navigateToPage('research')"
                 class="inline-flex items-center justify-center px-8 py-4 text-base font-medium text-white bg-[#08a4d4] hover:bg-blue-600 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1 hover:cursor-pointer"
+                @click="navigateToPage('research')"
               >
                 {{ t.hero.cta.research }}
                 <svg
@@ -98,8 +98,8 @@ const navigateToPage = (page: string) => {
               </button>
 
               <button
-                @click="navigateToPage('people')"
                 class="inline-flex items-center justify-center px-8 py-4 text-base font-medium text-[#08a4d4] bg-white hover:bg-gray-50 border-2 border-[#08a4d4] rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1 hover:cursor-pointer"
+                @click="navigateToPage('people')"
               >
                 {{ t.hero.cta.team }}
                 <svg

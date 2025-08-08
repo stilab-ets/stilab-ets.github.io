@@ -114,13 +114,13 @@ const handleDelete = (id: number) => {
         <button
           v-for="status in statuses"
           :key="status"
-          @click="filterStatus = status"
           :class="[
             'px-3 py-1 text-sm font-medium rounded-md transition-colors',
             filterStatus === status
               ? 'bg-blue-100 text-blue-700 border border-blue-200'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200',
           ]"
+          @click="filterStatus = status"
         >
           {{ t.filters[status] }}
         </button>
@@ -239,25 +239,25 @@ const handleDelete = (id: number) => {
               >
                 <Button
                   v-if="invitation.status === 'pending'"
-                  @click="handleCancel(invitation.id)"
                   variant="secondary"
                   size="sm"
+                  @click="handleCancel(invitation.id)"
                 >
                   {{ t.actions.cancel }}
                 </Button>
                 <Button
                   v-if="invitation.status === 'expired'"
-                  @click="handleResend(invitation.email)"
                   variant="primary"
                   size="sm"
+                  @click="handleResend(invitation.email)"
                 >
                   {{ t.actions.resend }}
                 </Button>
                 <Button
                   v-if="['expired', 'canceled'].includes(invitation.status)"
-                  @click="handleDelete(invitation.id)"
                   variant="secondary"
                   size="sm"
+                  @click="handleDelete(invitation.id)"
                 >
                   {{ t.actions.delete }}
                 </Button>
@@ -303,25 +303,25 @@ const handleDelete = (id: number) => {
           <div class="flex space-x-2 mt-3">
             <Button
               v-if="invitation.status === 'pending'"
-              @click="handleCancel(invitation.id)"
               variant="secondary"
               size="sm"
+              @click="handleCancel(invitation.id)"
             >
               {{ t.actions.cancel }}
             </Button>
             <Button
               v-if="invitation.status === 'expired'"
-              @click="handleResend(invitation.email)"
               variant="primary"
               size="sm"
+              @click="handleResend(invitation.email)"
             >
               {{ t.actions.resend }}
             </Button>
             <Button
               v-if="['expired', 'canceled'].includes(invitation.status)"
-              @click="handleDelete(invitation.id)"
               variant="secondary"
               size="sm"
+              @click="handleDelete(invitation.id)"
             >
               {{ t.actions.delete }}
             </Button>

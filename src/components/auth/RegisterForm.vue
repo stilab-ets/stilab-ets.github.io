@@ -242,8 +242,8 @@ onMounted(() => {
         <!-- Registration form -->
         <form
           v-if="canAccessRegister && !tokenLoading"
-          @submit.prevent="handleSubmit"
           class="space-y-8"
+          @submit.prevent="handleSubmit"
         >
           <!-- Personal Information Section -->
           <PersonalInfoSection

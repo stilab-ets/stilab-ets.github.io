@@ -106,7 +106,7 @@ const formError = computed(() => errors.value.general || error.value);
     :success-message="successMessage"
     :error="formError"
   >
-    <form @submit.prevent="submitForm" class="space-y-8">
+    <form class="space-y-8" @submit.prevent="submitForm">
       <!-- Title -->
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1"

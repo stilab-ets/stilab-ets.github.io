@@ -149,9 +149,9 @@ onMounted(async () => {
                 {{ t.refresh.lastUpdated }}: {{ formatLastUpdated }}
               </div>
               <Button
-                @click="refreshData"
                 variant="secondary"
                 :disabled="isLoading"
+                @click="refreshData"
               >
                 <svg
                   v-if="isLoading"
@@ -195,7 +195,7 @@ onMounted(async () => {
       </div>
 
       <!-- Navigation Tabs -->
-      <InvitationNavigationTabs v-model:activeTab="activeTab" />
+      <InvitationNavigationTabs v-model:active-tab="activeTab" />
 
       <!-- Content Container -->
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -226,8 +226,8 @@ onMounted(async () => {
               </div>
               <div class="ml-auto pl-3">
                 <button
-                  @click="clearError"
                   class="inline-flex text-red-400 hover:text-red-600"
+                  @click="clearError"
                 >
                   <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                     <path

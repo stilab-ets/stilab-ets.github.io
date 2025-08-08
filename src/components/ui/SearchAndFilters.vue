@@ -67,14 +67,14 @@ defineEmits<Emits>();
             id="search"
             :value="searchQuery"
             :placeholder="searchPlaceholder"
+            type="text"
+            class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-[#08a4d4] focus:border-[#08a4d4]"
             @input="
               $emit(
                 'update:searchQuery',
                 ($event.target as HTMLInputElement).value
               )
             "
-            type="text"
-            class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-[#08a4d4] focus:border-[#08a4d4]"
           />
         </div>
       </div>
@@ -90,6 +90,7 @@ defineEmits<Emits>();
         <select
           :id="`${filter.id}-filter`"
           :value="filter.value"
+          class="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] hover:cursor-pointer"
           @change="
             $emit(
               'updateFilter',
@@ -97,7 +98,6 @@ defineEmits<Emits>();
               ($event.target as HTMLSelectElement).value
             )
           "
-          class="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] hover:cursor-pointer"
         >
           <option
             v-for="option in filter.options"

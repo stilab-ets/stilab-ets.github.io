@@ -70,24 +70,24 @@ const setActiveForm = (form: 'single' | 'bulk') => {
     <div class="flex items-center justify-center">
       <div class="flex bg-gray-100 rounded-lg p-1">
         <button
-          @click="setActiveForm('single')"
           :class="[
             'px-4 py-2 text-sm font-medium rounded-md transition-colors',
             activeForm === 'single'
               ? 'bg-white text-gray-900 shadow-sm'
               : 'text-gray-500 hover:text-gray-700',
           ]"
+          @click="setActiveForm('single')"
         >
           Single Invitation
         </button>
         <button
-          @click="setActiveForm('bulk')"
           :class="[
             'px-4 py-2 text-sm font-medium rounded-md transition-colors',
             activeForm === 'bulk'
               ? 'bg-white text-gray-900 shadow-sm'
               : 'text-gray-500 hover:text-gray-700',
           ]"
+          @click="setActiveForm('bulk')"
         >
           Bulk Invitations
         </button>

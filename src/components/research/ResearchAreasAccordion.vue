@@ -52,8 +52,8 @@ const toggleAccordion = (domainName: string) => {
       >
         <!-- Accordion Header -->
         <button
-          @click="toggleAccordion(domain.name)"
           class="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#08a4d4] focus:ring-inset hover:cursor-pointer"
+          @click="toggleAccordion(domain.name)"
         >
           <div class="flex items-center">
             <span class="text-2xl mr-3">{{ domain.icon }}</span>

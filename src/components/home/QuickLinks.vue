@@ -58,11 +58,11 @@ const quickLinks = computed(() => [
           <button
             v-for="link in quickLinks"
             :key="link.page"
-            @click="setCurrentPage(link.page)"
             :class="[
               'rounded-xl p-6 sm:p-8 text-left transition-colors group hover:cursor-pointer',
               link.bgColor,
             ]"
+            @click="setCurrentPage(link.page)"
           >
             <div
               class="text-3xl sm:text-4xl mb-4 sm:mb-6 group-hover:scale-110 transition-transform"

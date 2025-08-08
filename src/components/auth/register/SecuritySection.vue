@@ -60,9 +60,6 @@ const togglePasswordVisibility = (field: 'password' | 'confirmPassword') => {
         <input
           id="password"
           :value="modelValue.password"
-          @input="
-            updateField('password', ($event.target as HTMLInputElement).value)
-          "
           :type="showPassword ? 'text' : 'password'"
           required
           minlength="8"
@@ -73,12 +70,15 @@ const togglePasswordVisibility = (field: 'password' | 'confirmPassword') => {
                 error.includes('password') || error.includes('mot de passe')
             ),
           }"
+          @input="
+            updateField('password', ($event.target as HTMLInputElement).value)
+          "
         />
         <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
           <button
             type="button"
-            @click="togglePasswordVisibility('password')"
             class="text-gray-400 hover:text-gray-600 focus:outline-none"
+            @click="togglePasswordVisibility('password')"
           >
             <svg
               v-if="showPassword"
@@ -133,12 +133,6 @@ const togglePasswordVisibility = (field: 'password' | 'confirmPassword') => {
         <input
           id="confirmPassword"
           :value="modelValue.confirmPassword"
-          @input="
-            updateField(
-              'confirmPassword',
-              ($event.target as HTMLInputElement).value
-            )
-          "
           :type="showConfirmPassword ? 'text' : 'password'"
           required
           minlength="8"
@@ -151,12 +145,18 @@ const togglePasswordVisibility = (field: 'password' | 'confirmPassword') => {
                 error.includes('match')
             ),
           }"
+          @input="
+            updateField(
+              'confirmPassword',
+              ($event.target as HTMLInputElement).value
+            )
+          "
         />
         <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
           <button
             type="button"
-            @click="togglePasswordVisibility('confirmPassword')"
             class="text-gray-400 hover:text-gray-600 focus:outline-none"
+            @click="togglePasswordVisibility('confirmPassword')"
           >
             <svg
               v-if="showConfirmPassword"

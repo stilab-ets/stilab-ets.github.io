@@ -102,16 +102,16 @@ const copyBibtex = async () => {
         </div>
 
         <!-- Authors -->
-        <div class="mb-3" v-if="authors.length > 0">
+        <div v-if="authors.length > 0" class="mb-3">
           <p class="text-sm text-gray-600">
             <span class="font-medium"
               >{{ t.publications.publicationCard.authors }}:</span
             >
             <span v-for="(author, index) in authors" :key="author">
               <button
-                @click="filterByAuthor(author)"
                 class="text-[#08a4d4] hover:underline"
                 type="button"
+                @click="filterByAuthor(author)"
               >
                 {{ author }}
               </button>
@@ -140,9 +140,9 @@ const copyBibtex = async () => {
         <!-- BibTeX Controls -->
         <div class="mb-4 flex items-center space-x-4">
           <button
-            @click="toggleBibtex"
             class="text-sm text-[#08a4d4] hover:underline"
             type="button"
+            @click="toggleBibtex"
           >
             {{
               showBibtex
@@ -153,9 +153,9 @@ const copyBibtex = async () => {
 
           <button
             v-if="showBibtex"
-            @click="copyBibtex"
             class="text-sm text-[#08a4d4] hover:underline"
             type="button"
+            @click="copyBibtex"
           >
             📋
             {{
@@ -180,8 +180,8 @@ const copyBibtex = async () => {
           v-if="publication.url"
           variant="outline"
           size="sm"
-          @click="openLink(publication.url)"
           class="hover:cursor-pointer"
+          @click="openLink(publication.url)"
         >
           🔗 {{ t.publications.links.doi }}
         </Button>

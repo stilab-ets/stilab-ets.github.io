@@ -128,11 +128,11 @@ const handleSubmit = async () => {
             }}</label>
             <input
               id="username_or_email"
+              v-model="form.username_or_email"
               name="username_or_email"
               type="text"
               autocomplete="username_or_email"
               required
-              v-model="form.username_or_email"
               class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] focus:z-10 sm:text-sm"
               :class="{ 'border-red-500': errors.username_or_email }"
               :placeholder="t.form.emailPlaceholder"
@@ -148,11 +148,11 @@ const handleSubmit = async () => {
             <label for="password" class="sr-only">{{ t.form.password }}</label>
             <input
               id="password"
+              v-model="form.password"
               name="password"
               type="password"
               autocomplete="current-password"
               required
-              v-model="form.password"
               class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] focus:z-10 sm:text-sm"
               :class="{ 'border-red-500': errors.password }"
               :placeholder="t.form.passwordPlaceholder"
@@ -167,9 +167,9 @@ const handleSubmit = async () => {
           <div class="flex items-center">
             <input
               id="remember-me"
+              v-model="form.rememberMe"
               name="remember-me"
               type="checkbox"
-              v-model="form.rememberMe"
               class="h-4 w-4 text-[#08a4d4] focus:ring-[#08a4d4] border-gray-300 rounded"
             />
             <label for="remember-me" class="ml-2 block text-sm text-gray-900">

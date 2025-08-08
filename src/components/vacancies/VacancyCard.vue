@@ -283,8 +283,8 @@ const applyToVacancy = () => {
         <Button
           variant="outline"
           size="sm"
-          @click="shareVacancy"
           class="hover:cursor-pointer"
+          @click="shareVacancy"
         >
           <svg
             class="h-4 w-4 mr-1"
@@ -301,7 +301,7 @@ const applyToVacancy = () => {
           </svg>
           {{ t.vacancies.vacancyCard.share }}
         </Button>
-        <Button @click="applyToVacancy" class="hover:cursor-pointer">
+        <Button class="hover:cursor-pointer" @click="applyToVacancy">
           {{ t.vacancies.vacancyCard.apply }}
           <svg
             class="ml-2 h-4 w-4"

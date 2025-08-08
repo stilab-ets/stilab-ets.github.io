@@ -63,14 +63,14 @@ const getResultsText = (count: number) => {
             id="search"
             :value="searchQuery"
             :placeholder="t.person.search.placeholder"
+            type="text"
+            class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-[#08a4d4] focus:border-[#08a4d4]"
             @input="
               $emit(
                 'update:searchQuery',
                 ($event.target as HTMLInputElement).value
               )
             "
-            type="text"
-            class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-[#08a4d4] focus:border-[#08a4d4]"
           />
         </div>
       </div>
@@ -86,13 +86,13 @@ const getResultsText = (count: number) => {
         <select
           id="domain-filter"
           :value="selectedDomain"
+          class="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] hover:cursor-pointer"
           @change="
             $emit(
               'update:selectedDomain',
               ($event.target as HTMLSelectElement).value
             )
           "
-          class="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] hover:cursor-pointer"
         >
           <option value="">{{ t.person.search.allDomains }}</option>
           <option
@@ -116,13 +116,13 @@ const getResultsText = (count: number) => {
         <select
           id="status-filter"
           :value="selectedStatus"
+          class="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] hover:cursor-pointer"
           @change="
             $emit(
               'update:selectedStatus',
               ($event.target as HTMLSelectElement).value
             )
           "
-          class="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] hover:cursor-pointer"
         >
           <option value="">{{ t.person.search.allStatuses }}</option>
           <option value="active">{{ t.person.search.active }}</option>

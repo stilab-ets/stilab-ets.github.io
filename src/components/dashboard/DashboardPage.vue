@@ -99,7 +99,7 @@ const handleLoginRedirect = () => {
             {{ t.dashboard.errors.accessDenied.description }}
           </p>
           <div class="mt-6">
-            <Button @click="handleLoginRedirect" class="w-full">
+            <Button class="w-full" @click="handleLoginRedirect">
               {{ t.auth.signIn }}
             </Button>
           </div>
@@ -140,13 +140,13 @@ const handleLoginRedirect = () => {
             {{ t.dashboard.errors.accessRestricted.description }}
           </p>
           <div class="mt-6 space-y-2">
-            <Button @click="handleLoginRedirect" class="w-full">
+            <Button class="w-full" @click="handleLoginRedirect">
               {{ t.auth.signIn }}
             </Button>
             <Button
-              @click="emit('navigate', 'home')"
               variant="outline"
               class="w-full"
+              @click="emit('navigate', 'home')"
             >
               {{ t.navigation.home }}
             </Button>

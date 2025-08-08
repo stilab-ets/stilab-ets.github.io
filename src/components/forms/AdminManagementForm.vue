@@ -214,37 +214,37 @@ const rejectContent = (contentId: string, type: string) => {
       <nav class="flex space-x-8">
         <button
           type="button"
-          @click="activeSection = 'users'"
           :class="[
             'py-2 px-1 border-b-2 font-medium text-sm',
             activeSection === 'users'
               ? 'border-blue-500 text-blue-600'
               : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
           ]"
+          @click="activeSection = 'users'"
         >
           {{ t.forms.adminManagement.sections.users }}
         </button>
         <button
           type="button"
-          @click="activeSection = 'system'"
           :class="[
             'py-2 px-1 border-b-2 font-medium text-sm',
             activeSection === 'system'
               ? 'border-blue-500 text-blue-600'
               : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
           ]"
+          @click="activeSection = 'system'"
         >
           {{ t.forms.adminManagement.sections.system }}
         </button>
         <button
           type="button"
-          @click="activeSection = 'content'"
           :class="[
             'py-2 px-1 border-b-2 font-medium text-sm',
             activeSection === 'content'
               ? 'border-blue-500 text-blue-600'
               : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
           ]"
+          @click="activeSection = 'content'"
         >
           {{ t.forms.adminManagement.sections.content }}
         </button>
@@ -367,8 +367,8 @@ const rejectContent = (contentId: string, type: string) => {
                   <Button
                     variant="secondary"
                     size="sm"
-                    @click="confirmDeleteUser(user)"
                     class="text-red-600 hover:text-red-900"
+                    @click="confirmDeleteUser(user)"
                   >
                     {{ t.forms.adminManagement.userManagement.deleteUser }}
                   </Button>
@@ -382,7 +382,7 @@ const rejectContent = (contentId: string, type: string) => {
 
     <!-- System Settings Section -->
     <div v-if="activeSection === 'system'">
-      <form @submit.prevent="handleSubmit" class="space-y-8">
+      <form class="space-y-8" @submit.prevent="handleSubmit">
         <Card>
           <h2 class="text-xl font-semibold text-gray-900 mb-6">
             {{ t.forms.adminManagement.sections.system }}
@@ -569,16 +569,16 @@ const rejectContent = (contentId: string, type: string) => {
               <Button
                 variant="secondary"
                 size="sm"
-                @click="approveContent(publication.id, 'publication')"
                 class="text-green-600 hover:text-green-800"
+                @click="approveContent(publication.id, 'publication')"
               >
                 {{ t.forms.adminManagement.contentManagement.approve }}
               </Button>
               <Button
                 variant="secondary"
                 size="sm"
-                @click="rejectContent(publication.id, 'publication')"
                 class="text-red-600 hover:text-red-800"
+                @click="rejectContent(publication.id, 'publication')"
               >
                 {{ t.forms.adminManagement.contentManagement.reject }}
               </Button>
@@ -616,16 +616,16 @@ const rejectContent = (contentId: string, type: string) => {
               <Button
                 variant="secondary"
                 size="sm"
-                @click="approveContent(event.id, 'event')"
                 class="text-green-600 hover:text-green-800"
+                @click="approveContent(event.id, 'event')"
               >
                 {{ t.forms.adminManagement.contentManagement.approve }}
               </Button>
               <Button
                 variant="secondary"
                 size="sm"
-                @click="rejectContent(event.id, 'event')"
                 class="text-red-600 hover:text-red-800"
+                @click="rejectContent(event.id, 'event')"
               >
                 {{ t.forms.adminManagement.contentManagement.reject }}
               </Button>
@@ -673,8 +673,8 @@ const rejectContent = (contentId: string, type: string) => {
               {{ t.forms.adminManagement.form.cancel }}
             </Button>
             <Button
-              @click="deleteUser"
               class="bg-red-600 hover:bg-red-700 text-white"
+              @click="deleteUser"
             >
               {{ t.forms.adminManagement.userManagement.deleteUser }}
             </Button>

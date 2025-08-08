@@ -21,8 +21,8 @@ const updateSort = (value: string) => {
       <select
         id="sort"
         :value="sortBy"
-        @change="updateSort(($event.target as HTMLSelectElement).value)"
         class="px-3 py-1 border border-gray-300 bg-white rounded-md text-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] hover:cursor-pointer"
+        @change="updateSort(($event.target as HTMLSelectElement).value)"
       >
         <option value="year-desc">{{ t.publications.sorting.yearDesc }}</option>
         <option value="year-asc">{{ t.publications.sorting.yearAsc }}</option>

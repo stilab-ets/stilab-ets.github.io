@@ -353,8 +353,8 @@ const getRoleColor = (role: string) => {
             {{ t.dashboard.admin.invitations.sendInvitationModal.title }}
           </h3>
           <button
-            @click="showInviteForm = false"
             class="text-gray-400 hover:text-gray-600"
+            @click="showInviteForm = false"
           >
             <X class="h-5 w-5" />
           </button>
@@ -407,8 +407,8 @@ const getRoleColor = (role: string) => {
             {{ t.common.cancel }}
           </Button>
           <Button
-            @click="handleSendInvitation"
             :disabled="!newInvitation.email || isLoading"
+            @click="handleSendInvitation"
           >
             <Mail class="h-4 w-4 mr-2" />
             {{

@@ -55,8 +55,8 @@ const handleLoginFailed = (error: string) => {
         <!-- Back to home -->
         <div class="mt-4 text-center">
           <button
-            @click="emit('setCurrentPage', 'home')"
             class="text-sm text-gray-500 hover:cursor-pointer hover:text-gray-700 transition-colors duration-200"
+            @click="emit('setCurrentPage', 'home')"
           >
             ← Back to home
           </button>

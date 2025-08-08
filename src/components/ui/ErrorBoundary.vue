@@ -55,11 +55,11 @@ const reload = () => {
                 Error {{ error.status ? `(${error.status})` : '' }}
               </h4>
               <button
+                class="text-gray-400 hover:text-gray-600 transition-colors"
+                aria-label="Dismiss error"
                 @click="
                   removeError(errors.length - visibleErrors.length + index)
                 "
-                class="text-gray-400 hover:text-gray-600 transition-colors"
-                aria-label="Dismiss error"
               >
                 <X class="h-4 w-4" />
               </button>
@@ -80,8 +80,8 @@ const reload = () => {
           class="mt-3 flex space-x-2"
         >
           <button
-            @click="reload"
             class="inline-flex items-center space-x-1 text-xs text-blue-600 hover:text-blue-800 transition-colors"
+            @click="reload"
           >
             <RefreshCw class="h-3 w-3" />
             <span>Reload Page</span>
@@ -92,8 +92,8 @@ const reload = () => {
       <!-- Clear all button when multiple errors -->
       <div v-if="visibleErrors.length > 1" class="text-center">
         <button
-          @click="clearErrors"
           class="text-xs text-gray-500 hover:text-gray-700 transition-colors"
+          @click="clearErrors"
         >
           Clear All ({{ errors.length }})
         </button>

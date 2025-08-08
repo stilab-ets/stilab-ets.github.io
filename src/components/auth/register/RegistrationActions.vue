@@ -68,8 +68,8 @@ const handleCancel = () => {
       <Button
         type="button"
         variant="secondary"
-        @click="handleCancel"
         :disabled="isSubmitting"
+        @click="handleCancel"
       >
         Cancel
       </Button>
@@ -77,9 +77,9 @@ const handleCancel = () => {
       <Button
         type="submit"
         variant="primary"
-        @click="handleSubmit"
         :disabled="!isFormValid || isSubmitting"
         class="min-w-[120px]"
+        @click="handleSubmit"
       >
         <div v-if="isSubmitting" class="flex items-center">
           <svg

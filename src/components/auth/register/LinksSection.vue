@@ -66,12 +66,12 @@ const updateField = (field: keyof LinksData, value: string) => {
         <input
           id="githubUrl"
           :value="modelValue.githubUrl"
-          @input="
-            updateField('githubUrl', ($event.target as HTMLInputElement).value)
-          "
           type="url"
           placeholder="https://github.com/username"
           class="pl-10 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          @input="
+            updateField('githubUrl', ($event.target as HTMLInputElement).value)
+          "
         />
       </div>
     </div>
@@ -98,15 +98,15 @@ const updateField = (field: keyof LinksData, value: string) => {
         <input
           id="linkedinUrl"
           :value="modelValue.linkedinUrl"
+          type="url"
+          placeholder="https://linkedin.com/in/username"
+          class="pl-10 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           @input="
             updateField(
               'linkedinUrl',
               ($event.target as HTMLInputElement).value
             )
           "
-          type="url"
-          placeholder="https://linkedin.com/in/username"
-          class="pl-10 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
     </div>
@@ -141,15 +141,15 @@ const updateField = (field: keyof LinksData, value: string) => {
         <input
           id="stackoverflowUrl"
           :value="modelValue.stackoverflowUrl"
+          type="url"
+          placeholder="https://stackoverflow.com/users/userid/username"
+          class="pl-10 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           @input="
             updateField(
               'stackoverflowUrl',
               ($event.target as HTMLInputElement).value
             )
           "
-          type="url"
-          placeholder="https://stackoverflow.com/users/userid/username"
-          class="pl-10 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
     </div>
@@ -176,15 +176,15 @@ const updateField = (field: keyof LinksData, value: string) => {
         <input
           id="twitterxUrl"
           :value="modelValue.twitterxUrl"
+          type="url"
+          placeholder="https://x.com/username"
+          class="pl-10 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           @input="
             updateField(
               'twitterxUrl',
               ($event.target as HTMLInputElement).value
             )
           "
-          type="url"
-          placeholder="https://x.com/username"
-          class="pl-10 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
     </div>
@@ -218,15 +218,15 @@ const updateField = (field: keyof LinksData, value: string) => {
         <input
           id="googlescholarUrl"
           :value="modelValue.googlescholarUrl"
+          type="url"
+          placeholder="https://scholar.google.ca/citations?user=userid&hl=en"
+          class="pl-10 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           @input="
             updateField(
               'googlescholarUrl',
               ($event.target as HTMLInputElement).value
             )
           "
-          type="url"
-          placeholder="https://scholar.google.ca/citations?user=userid&hl=en"
-          class="pl-10 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
     </div>
@@ -253,12 +253,12 @@ const updateField = (field: keyof LinksData, value: string) => {
         <input
           id="dblpUrl"
           :value="modelValue.dblpUrl"
-          @input="
-            updateField('dblpUrl', ($event.target as HTMLInputElement).value)
-          "
           type="url"
           placeholder="https://dblp.org/pid/id/userid-1.html"
           class="pl-10 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          @input="
+            updateField('dblpUrl', ($event.target as HTMLInputElement).value)
+          "
         />
       </div>
     </div>
@@ -292,15 +292,15 @@ const updateField = (field: keyof LinksData, value: string) => {
         <input
           id="personalWebsite"
           :value="modelValue.personalWebsite"
+          type="url"
+          placeholder="https://your-website.com"
+          class="pl-10 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           @input="
             updateField(
               'personalWebsite',
               ($event.target as HTMLInputElement).value
             )
           "
-          type="url"
-          placeholder="https://your-website.com"
-          class="pl-10 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
     </div>

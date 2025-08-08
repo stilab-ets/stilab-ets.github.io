@@ -203,7 +203,7 @@ const roles = [
       </div>
 
       <!-- Form -->
-      <form @submit.prevent="handleBulkSubmit" class="space-y-4">
+      <form class="space-y-4" @submit.prevent="handleBulkSubmit">
         <!-- Role Selection -->
         <div>
           <label for="bulkRole" class="block text-sm font-medium text-gray-700">

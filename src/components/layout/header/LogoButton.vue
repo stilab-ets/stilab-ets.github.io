@@ -9,8 +9,8 @@ const onClick = () => emit('navigate', 'home');
 
 <template>
   <button
-    @click="onClick"
     class="flex items-center cursor-pointer hover:opacity-80 transition-opacity"
+    @click="onClick"
   >
     <div
       class="w-12 h-12 mr-2 sm:w-18 sm:h-18 rounded-lg flex items-center justify-center"

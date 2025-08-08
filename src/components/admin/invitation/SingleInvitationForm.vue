@@ -130,7 +130,7 @@ const roles = [
       </div>
 
       <!-- Form -->
-      <form @submit.prevent="handleSubmit" class="space-y-4">
+      <form class="space-y-4" @submit.prevent="handleSubmit">
         <!-- Email Input -->
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700">

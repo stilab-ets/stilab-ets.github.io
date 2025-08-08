@@ -61,8 +61,8 @@ const submitInterest = () => {
         <Button
           variant="ghost"
           size="sm"
-          @click="closeModal"
           class="hover:cursor-pointer"
+          @click="closeModal"
         >
           <svg
             class="h-6 w-6"
@@ -95,7 +95,7 @@ const submitInterest = () => {
           <p class="text-sm text-red-600">{{ submitError }}</p>
         </div>
 
-        <form @submit.prevent="submitInterest" class="space-y-4">
+        <form class="space-y-4" @submit.prevent="submitInterest">
           <div>
             <label
               for="student-name"
@@ -106,17 +106,17 @@ const submitInterest = () => {
             <input
               id="student-name"
               :value="formData.name"
+              type="text"
+              required
+              :disabled="submitting"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] disabled:bg-gray-50 disabled:text-gray-500"
+              :placeholder="t.projects.interestModal.fullNamePlaceholder"
               @input="
                 updateFormField(
                   'name',
                   ($event.target as HTMLInputElement).value
                 )
               "
-              type="text"
-              required
-              :disabled="submitting"
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] disabled:bg-gray-50 disabled:text-gray-500"
-              :placeholder="t.projects.interestModal.fullNamePlaceholder"
             />
           </div>
 
@@ -130,17 +130,17 @@ const submitInterest = () => {
             <input
               id="student-email"
               :value="formData.email"
+              type="email"
+              required
+              :disabled="submitting"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] disabled:bg-gray-50 disabled:text-gray-500"
+              :placeholder="t.projects.interestModal.emailPlaceholder"
               @input="
                 updateFormField(
                   'email',
                   ($event.target as HTMLInputElement).value
                 )
               "
-              type="email"
-              required
-              :disabled="submitting"
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] disabled:bg-gray-50 disabled:text-gray-500"
-              :placeholder="t.projects.interestModal.emailPlaceholder"
             />
           </div>
 
@@ -154,15 +154,15 @@ const submitInterest = () => {
             <select
               id="student-level"
               :value="formData.level"
+              required
+              :disabled="submitting"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] disabled:bg-gray-50 disabled:text-gray-500"
               @change="
                 updateFormField(
                   'level',
                   ($event.target as HTMLSelectElement).value
                 )
               "
-              required
-              :disabled="submitting"
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] disabled:bg-gray-50 disabled:text-gray-500"
             >
               <option value="">
                 {{ t.projects.interestModal.selectLevel }}
@@ -182,17 +182,17 @@ const submitInterest = () => {
             <textarea
               id="motivation"
               :value="formData.motivation"
+              rows="4"
+              required
+              :disabled="submitting"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] disabled:bg-gray-50 disabled:text-gray-500"
+              :placeholder="t.projects.interestModal.motivationPlaceholder"
               @input="
                 updateFormField(
                   'motivation',
                   ($event.target as HTMLTextAreaElement).value
                 )
               "
-              rows="4"
-              required
-              :disabled="submitting"
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#08a4d4] focus:border-[#08a4d4] disabled:bg-gray-50 disabled:text-gray-500"
-              :placeholder="t.projects.interestModal.motivationPlaceholder"
             ></textarea>
           </div>
 
@@ -200,9 +200,9 @@ const submitInterest = () => {
             <Button
               type="button"
               variant="outline"
-              @click="closeModal"
               :disabled="submitting"
               class="hover:cursor-pointer"
+              @click="closeModal"
             >
               {{ t.projects.interestModal.cancel }}
             </Button>

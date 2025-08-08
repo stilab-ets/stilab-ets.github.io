@@ -17,9 +17,9 @@ const handleNavigation = (page: string) => {
       <ul class="space-y-3">
         <li v-for="link in navigationLinks" :key="link.id">
           <button
-            @click="handleNavigation(link.page)"
             class="text-gray-300 hover:text-white hover:cursor-pointer transition-colors text-left focus:outline-none focus:text-white"
             :aria-label="`Aller à la section ${link.label}`"
+            @click="handleNavigation(link.page)"
           >
             {{ link.label }}
           </button>

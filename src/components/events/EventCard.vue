@@ -152,8 +152,8 @@ const openRegistrationLink = (): void => {
           {{ eventData.title }}
         </h3>
         <div
-          class="flex items-center text-sm text-gray-600 space-x-4"
           v-if="eventData.date"
+          class="flex items-center text-sm text-gray-600 space-x-4"
         >
           <div class="flex items-center">
             <svg
@@ -279,8 +279,8 @@ const openRegistrationLink = (): void => {
       <Button
         :variant="isCapacityFull ? 'secondary' : 'primary'"
         :disabled="isCapacityFull"
-        @click="openRegistrationLink"
         class="w-full"
+        @click="openRegistrationLink"
       >
         <template v-if="isCapacityFull">
           {{ getTranslation('events.eventCard.capacityFull', 'Capacity Full') }}

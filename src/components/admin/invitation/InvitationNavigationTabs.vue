@@ -87,9 +87,9 @@ const getIconSvg = (iconType: string) => {
         <button
           v-for="tab in tabs"
           :key="tab.id"
-          @click="setActiveTab(tab.id)"
           :class="getTabClasses(tab.id)"
           :aria-current="activeTab === tab.id ? 'page' : undefined"
+          @click="setActiveTab(tab.id)"
         >
           <!-- Tab icon -->
           <svg

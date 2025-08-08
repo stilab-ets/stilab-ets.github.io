@@ -186,7 +186,7 @@ const submitButtonText = computed(() => {
     </div>
 
     <!-- Form Content -->
-    <form @submit.prevent="handleSubmit" class="p-6">
+    <form class="p-6" @submit.prevent="handleSubmit">
       <div class="space-y-8">
         <!-- Project Type -->
         <Card>
@@ -228,8 +228,8 @@ const submitButtonText = computed(() => {
               </label>
               <input
                 id="title"
-                type="text"
                 v-model="form.title"
+                type="text"
                 required
                 class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 :class="{ 'border-red-500': errors.title }"
@@ -368,8 +368,8 @@ const submitButtonText = computed(() => {
                 {{ req }}
                 <button
                   type="button"
-                  @click="removeRequirement(index)"
                   class="ml-1.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-green-400 hover:bg-green-200 hover:text-green-500 focus:outline-none focus:bg-green-500 focus:text-white"
+                  @click="removeRequirement(index)"
                 >
                   ×
                 </button>
@@ -378,14 +378,14 @@ const submitButtonText = computed(() => {
             <div class="flex">
               <input
                 v-model="newRequirement"
-                @keydown.enter.prevent="addRequirement"
                 class="block w-full px-3 py-2 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 :placeholder="t.form.requirementsPlaceholder"
+                @keydown.enter.prevent="addRequirement"
               />
               <button
                 type="button"
-                @click="addRequirement"
                 class="px-3 py-2 border border-l-0 border-gray-300 rounded-r-md bg-gray-50 text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                @click="addRequirement"
               >
                 +
               </button>
@@ -412,8 +412,8 @@ const submitButtonText = computed(() => {
                 {{ obj }}
                 <button
                   type="button"
-                  @click="removeObjective(index)"
                   class="ml-1.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-blue-400 hover:bg-blue-200 hover:text-blue-500 focus:outline-none focus:bg-blue-500 focus:text-white"
+                  @click="removeObjective(index)"
                 >
                   ×
                 </button>
@@ -422,14 +422,14 @@ const submitButtonText = computed(() => {
             <div class="flex">
               <input
                 v-model="newObjective"
-                @keydown.enter.prevent="addObjective"
                 class="block w-full px-3 py-2 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 :placeholder="t.form.objectivesPlaceholder"
+                @keydown.enter.prevent="addObjective"
               />
               <button
                 type="button"
-                @click="addObjective"
                 class="px-3 py-2 border border-l-0 border-gray-300 rounded-r-md bg-gray-50 text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                @click="addObjective"
               >
                 +
               </button>
@@ -453,8 +453,8 @@ const submitButtonText = computed(() => {
               </label>
               <input
                 id="startDate"
-                type="date"
                 v-model="form.startDate"
+                type="date"
                 required
                 class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 :class="{ 'border-red-500': errors.startDate }"
@@ -473,8 +473,8 @@ const submitButtonText = computed(() => {
               </label>
               <input
                 id="endDate"
-                type="date"
                 v-model="form.endDate"
+                type="date"
                 class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 :class="{ 'border-red-500': errors.endDate }"
               />
@@ -498,8 +498,8 @@ const submitButtonText = computed(() => {
           <Button
             type="button"
             variant="secondary"
-            @click="handleCancel"
             :disabled="isSubmitting"
+            @click="handleCancel"
           >
             {{ t.form.cancel }}
           </Button>

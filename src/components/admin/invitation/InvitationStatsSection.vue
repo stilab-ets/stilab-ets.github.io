@@ -175,7 +175,7 @@ const percentages = computed(() => {
     </div>
 
     <!-- Visual progress bars -->
-    <Card class="p-6" v-if="!isLoading && stats.total > 0">
+    <Card v-if="!isLoading && stats.total > 0" class="p-6">
       <h4 class="text-lg font-medium text-gray-900 mb-4">
         Invitation Distribution
       </h4>

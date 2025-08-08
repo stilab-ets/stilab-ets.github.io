@@ -176,44 +176,44 @@ const handleCancel = () => {
       <nav class="flex space-x-8">
         <button
           type="button"
-          @click="activeSection = 'profile'"
           :class="[
             'py-2 px-1 border-b-2 font-medium text-sm',
             activeSection === 'profile'
               ? 'border-blue-500 text-blue-600'
               : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
           ]"
+          @click="activeSection = 'profile'"
         >
           {{ t.forms.userSettings.sections.profile }}
         </button>
         <button
           type="button"
-          @click="activeSection = 'preferences'"
           :class="[
             'py-2 px-1 border-b-2 font-medium text-sm',
             activeSection === 'preferences'
               ? 'border-blue-500 text-blue-600'
               : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
           ]"
+          @click="activeSection = 'preferences'"
         >
           {{ t.forms.userSettings.sections.preferences }}
         </button>
         <button
           type="button"
-          @click="activeSection = 'security'"
           :class="[
             'py-2 px-1 border-b-2 font-medium text-sm',
             activeSection === 'security'
               ? 'border-blue-500 text-blue-600'
               : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
           ]"
+          @click="activeSection = 'security'"
         >
           {{ t.forms.userSettings.sections.security }}
         </button>
       </nav>
     </div>
 
-    <form @submit.prevent="handleSubmit" class="space-y-8">
+    <form class="space-y-8" @submit.prevent="handleSubmit">
       <!-- Profile Section -->
       <div v-if="activeSection === 'profile'">
         <Card>
@@ -455,8 +455,8 @@ const handleCancel = () => {
                 id="profilePhoto"
                 type="file"
                 accept="image/*"
-                @change="handleFileUpload"
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                @change="handleFileUpload"
               />
             </div>
           </div>
@@ -628,8 +628,8 @@ const handleCancel = () => {
         <Button
           type="button"
           variant="secondary"
-          @click="handleCancel"
           :disabled="isSubmitting"
+          @click="handleCancel"
         >
           {{ t.forms.userSettings.form.cancel || 'Cancel' }}
         </Button>

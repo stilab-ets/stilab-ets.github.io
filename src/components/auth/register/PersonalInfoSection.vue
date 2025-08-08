@@ -47,9 +47,6 @@ const updateField = (field: keyof PersonalData, value: string) => {
         <input
           id="firstName"
           :value="modelValue.firstName"
-          @input="
-            updateField('firstName', ($event.target as HTMLInputElement).value)
-          "
           type="text"
           required
           class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -59,6 +56,9 @@ const updateField = (field: keyof PersonalData, value: string) => {
                 error.includes('first name') || error.includes('prénom')
             ),
           }"
+          @input="
+            updateField('firstName', ($event.target as HTMLInputElement).value)
+          "
         />
       </div>
 
@@ -70,9 +70,6 @@ const updateField = (field: keyof PersonalData, value: string) => {
         <input
           id="lastName"
           :value="modelValue.lastName"
-          @input="
-            updateField('lastName', ($event.target as HTMLInputElement).value)
-          "
           type="text"
           required
           class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -81,6 +78,9 @@ const updateField = (field: keyof PersonalData, value: string) => {
               (error) => error.includes('last name') || error.includes('nom')
             ),
           }"
+          @input="
+            updateField('lastName', ($event.target as HTMLInputElement).value)
+          "
         />
       </div>
     </div>
@@ -94,7 +94,6 @@ const updateField = (field: keyof PersonalData, value: string) => {
       <input
         id="email"
         :value="modelValue.email"
-        @input="updateField('email', ($event.target as HTMLInputElement).value)"
         type="email"
         required
         :disabled="emailDisabled"
@@ -103,6 +102,7 @@ const updateField = (field: keyof PersonalData, value: string) => {
           'bg-gray-100 text-gray-500': emailDisabled,
           'border-red-500': errors.some((error) => error.includes('email')),
         }"
+        @input="updateField('email', ($event.target as HTMLInputElement).value)"
       />
     </div>
 
@@ -114,9 +114,9 @@ const updateField = (field: keyof PersonalData, value: string) => {
       <input
         id="phone"
         :value="modelValue.phone"
-        @input="updateField('phone', ($event.target as HTMLInputElement).value)"
         type="tel"
         class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+        @input="updateField('phone', ($event.target as HTMLInputElement).value)"
       />
     </div>
 

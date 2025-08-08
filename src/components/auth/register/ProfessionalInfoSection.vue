@@ -45,9 +45,6 @@ const updateField = (field: keyof ProfessionalData, value: string) => {
       <select
         id="role"
         :value="modelValue.role"
-        @change="
-          updateField('role', ($event.target as HTMLSelectElement).value)
-        "
         required
         :disabled="roleDisabled"
         class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -57,6 +54,9 @@ const updateField = (field: keyof ProfessionalData, value: string) => {
             (error) => error.includes('role') || error.includes('rôle')
           ),
         }"
+        @change="
+          updateField('role', ($event.target as HTMLSelectElement).value)
+        "
       >
         <option value="">{{ t.auth.register.form.selectRole }}</option>
         <option value="professor">{{ t.auth.register.roles.professor }}</option>
@@ -81,15 +81,15 @@ const updateField = (field: keyof ProfessionalData, value: string) => {
       <input
         id="researchDomain"
         :value="modelValue.researchDomain"
+        type="text"
+        :placeholder="t.auth.register.form.researchDomainPlaceholder"
+        class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         @input="
           updateField(
             'researchDomain',
             ($event.target as HTMLInputElement).value
           )
         "
-        type="text"
-        :placeholder="t.auth.register.form.researchDomainPlaceholder"
-        class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
       />
     </div>
 
@@ -101,12 +101,12 @@ const updateField = (field: keyof ProfessionalData, value: string) => {
       <textarea
         id="biography"
         :value="modelValue.biography"
-        @input="
-          updateField('biography', ($event.target as HTMLTextAreaElement).value)
-        "
         rows="4"
         :placeholder="t.auth.register.form.biographyPlaceholder"
         class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+        @input="
+          updateField('biography', ($event.target as HTMLTextAreaElement).value)
+        "
       ></textarea>
     </div>
 

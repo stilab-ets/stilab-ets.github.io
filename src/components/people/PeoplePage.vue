@@ -102,7 +102,7 @@ onMounted(() => {
           {{ t.common.error }}
         </h3>
         <p class="text-gray-600 mb-4">{{ error }}</p>
-        <button @click="fetchMembers" class="btn btn-primary">
+        <button class="btn btn-primary" @click="fetchMembers">
           {{ t.common.retry }}
         </button>
       </div>

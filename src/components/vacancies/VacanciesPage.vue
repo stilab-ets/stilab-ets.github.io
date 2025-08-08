@@ -203,8 +203,8 @@ const retryFetch = () => {
             <h3 class="text-sm font-medium text-red-800">{{ error }}</h3>
             <div class="mt-2">
               <button
-                @click="retryFetch"
                 class="text-sm bg-red-100 hover:bg-red-200 text-red-800 px-3 py-1 rounded transition-colors"
+                @click="retryFetch"
               >
                 {{ t.common.retry }}
               </button>

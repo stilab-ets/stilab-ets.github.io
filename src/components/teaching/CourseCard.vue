@@ -158,8 +158,8 @@ const openLink = (url: string) => {
           v-if="course.url"
           variant="outline"
           size="sm"
-          @click="openLink(course.url)"
           class="hover:cursor-pointer"
+          @click="openLink(course.url)"
         >
           <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
             <path

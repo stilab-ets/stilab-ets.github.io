@@ -240,8 +240,8 @@ const formError = computed(() => errors.value.general || error.value);
       </p>
 
       <button
-        @click="showBibtexImport = !showBibtexImport"
         class="mb-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        @click="showBibtexImport = !showBibtexImport"
       >
         {{ showBibtexImport ? 'Hide Import' : 'Show Import' }}
       </button>
@@ -256,9 +256,9 @@ const formError = computed(() => errors.value.general || error.value);
           ></textarea>
         </div>
         <button
-          @click="parseBibtex"
           :disabled="!bibtexText.trim()"
           class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+          @click="parseBibtex"
         >
           {{ t.forms.publication.bibtexImport.parse }}
         </button>
@@ -266,7 +266,7 @@ const formError = computed(() => errors.value.general || error.value);
     </div>
 
     <!-- Publication Form -->
-    <form @submit.prevent="submitForm" class="space-y-6">
+    <form class="space-y-6" @submit.prevent="submitForm">
       <!-- Entry Type (required) -->
       <div>
         <label
@@ -319,9 +319,9 @@ const formError = computed(() => errors.value.general || error.value);
           />
           <button
             type="button"
-            @click="generateCitekey"
             class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
             :disabled="!formData.author || !formData.year"
+            @click="generateCitekey"
           >
             Generate
           </button>

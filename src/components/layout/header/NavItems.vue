@@ -30,7 +30,6 @@ const handleClick = (id: string) => {
     <button
       v-for="item in props.items"
       :key="item.id"
-      @click="handleClick(item.id)"
       :class="[
         props.isMobile
           ? 'block w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-colors cursor-pointer'
@@ -39,6 +38,7 @@ const handleClick = (id: string) => {
           ? 'bg-[#08a4d4] text-white'
           : 'text-gray-700 hover:bg-gray-100 hover:text-[#08a4d4]',
       ]"
+      @click="handleClick(item.id)"
     >
       <span>{{ item.label }}</span>
     </button>

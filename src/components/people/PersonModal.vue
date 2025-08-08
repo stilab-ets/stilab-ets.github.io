@@ -59,7 +59,7 @@ const getStatusLabel = (isActive: boolean) => {
             </p>
           </div>
         </div>
-        <button @click="closeModal" class="p-2 hover:bg-gray-200 rounded-md">
+        <button class="p-2 hover:bg-gray-200 rounded-md" @click="closeModal">
           <svg
             class="h-6 w-6"
             fill="none"

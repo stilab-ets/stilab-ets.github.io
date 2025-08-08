@@ -76,8 +76,8 @@ const redirectToLogin = () => {
             <div class="ml-3 text-sm text-yellow-700">
               <span>{{ t.common.mustBeLogged }}. &nbsp;</span>
               <button
-                @click="redirectToLogin"
                 class="font-medium underline hover:text-yellow-600 hover:cursor-pointer"
+                @click="redirectToLogin"
               >
                 {{ t.common.loginHere }}
               </button>
