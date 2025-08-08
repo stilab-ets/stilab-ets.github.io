@@ -9,7 +9,7 @@ on:
 
 jobs:
   lint:
-    name: Formatting
+    name: formatting
     runs-on: ubuntu-latest
 
     steps:
@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run formatting check on changed files
+      - name: Run formatting check
         run: npm run format:check
 
   test:
