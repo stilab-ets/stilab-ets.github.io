@@ -1,0 +1,33 @@
+@startuml
+
+skinparam shadowing false
+skinparam dpi 160
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor Black
+}
+
+' External actor
+actor "User" as User
+
+' Frontend & Web server
+rectangle "Frontend SPA\n(Vue.js + TypeScript + Vite + Tailwind)" as Front
+node "Web Server" as WebSrv
+rectangle "Backend API\n(Django)" as API
+database "Database\n(PostgreSQL)" as DB
+cloud "Email Provider" as Email
+
+' Flows
+User --> Front : Views, forms, filters
+Front --> WebSrv : HTTP(S) static assets
+Front --> API : JSON API requests\n(GET, POST, PUT, DELETE)
+API --> DB : SQL CRUD via ORM
+API --> Front : JSON API responses
+API --> Email : Email payload (templates + recipients)
+Email --> User : Email (confirmation, notifications)
+
+' Optional: static files via web server
+WebSrv --> Front : Static files (HTML/CSS/JS)\nCacheable
+
+@enduml
+
