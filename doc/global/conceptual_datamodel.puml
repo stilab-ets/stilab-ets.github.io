@@ -1,0 +1,120 @@
+@startuml
+' --- Conceptual Data Model (CDM) ---
+hide circle
+skinparam linetype ortho
+skinparam class {
+  BackgroundColor White
+  BorderColor #444
+}
+
+' =======================
+' Entities (conceptual)
+' =======================
+entity "User" as User {
+  Username <<identifier>>
+  Email
+  IsActive
+  IsStaff
+  IsSuperuser
+  DateJoined
+}
+
+entity "Member" as Member {
+  Email <<identifier>>
+  FirstName
+  LastName
+  Role
+  Phone
+  Biography
+  ResearchDomain
+  ImageUrl
+  GithubUrl
+  LinkedinUrl
+  StackOverflowUrl
+  TwitterXUrl
+  GoogleScholarUrl
+  DblpUrl
+  PersonalWebsite
+  Status
+}
+
+entity "Research Project" as ResearchProject {
+  Title
+  Description
+  StartDate
+  EndDate
+  GithubUrl
+  ProjectUrl
+  ' NOTE: In practice you’ll want a stable business key (e.g., ProjectCode) marked as <<identifier>>
+}
+
+entity "Publication" as Publication {
+  CiteKey <<identifier>>
+  EntryType
+  Title
+  Journal
+  BookTitle
+  Publisher
+  Year
+  Volume
+  Number
+  Pages
+  Url
+  IsApproved
+}
+
+entity "Author" as Author {
+  FirstName
+  LastName
+  ' (FirstName, LastName) act as a conceptual composite identifier here
+}
+
+entity "Event" as Event {
+  Title
+  Domain
+  Date
+  Description
+}
+
+entity "Award" as Award {
+  Title
+  Organization
+  Year
+  Url
+  ' (Title, Organization, Year) are treated as a conceptual composite identifier
+}
+
+entity "Course" as Course {
+  Code <<identifier>>
+  Title
+  Url
+  Year
+  Level
+  Semester
+  Description
+}
+
+User ||--o{ Member : "manages"
+
+' Position hint: put ResearchProject to the left of Member
+Member -[hidden]left-> ResearchProject
+Member -[hidden]left-> Course 
+Member -[hidden]left-> Publication 
+Member -[hidden]left-> Event 
+Member -[hidden]left-> Award 
+
+' Now the real relationships
+Member ||--|{ ResearchProject : "leads"
+Member }o--o{ ResearchProject : "participates in"
+
+
+Member ||--|{ Course : "teaches"
+
+Author }o--o{ Publication : "writes / appears in"
+
+Member }o--o{ Event : "attends"
+
+Member }o--o{ Award : "receives"
+
+@enduml
+

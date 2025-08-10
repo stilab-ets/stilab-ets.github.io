@@ -1,0 +1,60 @@
+@startuml
+
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam dpi 160
+
+' Actor
+actor "User" as User
+
+' Runtime groupings
+node "Web Server" as WebSrv {
+  component "Backend API\nDjango + DRF" as API
+}
+
+node "Client (Web Browser)" as Client {
+  component "Frontend SPA\nVue.js + TypeScript + Tailwind + Vite" as Front
+}
+
+database "Database\n(PostgreSQL)" as DB
+
+' CI/CD & Containerization (out-of-band at runtime)
+cloud "CI/CD\nGitHub Actions\n(/.github/workflows)" as CICD
+node "Containerization\nDocker / docker-compose.yml" as Docker
+
+' Main runtime links
+User --> Front : HTTP(S)
+Front --> WebSrv : HTTP(S) Requests\n(static + API)
+WebSrv --> API 
+API --> DB : Django ORM\n(SQL)
+
+' Build/Deploy integrations
+CICD --> Front : Build / Test\n(frontend)
+CICD --> API : Build / Test\n(backend)
+CICD --> Docker : Build images\n& Push/Deploy
+
+' Local/server orchestration
+Docker -[hidden]down- WebSrv
+Docker -[hidden]down- API
+Docker -[hidden]down- DB
+Docker ..> WebSrv 
+Docker ..> API
+Docker ..> DB
+
+' Location notes
+note right of Front
+Path: /src
+Tech: Vue.js, TypeScript, Vite, Tailwind
+end note
+
+note right of API
+Path: /backend
+Tech: Django, Python, DRF
+end note
+
+note bottom of Docker
+Files: docker-compose.yml
+/src/DOCKERFILE, /backend/DOCKERFILE
+end note
+@enduml
+
