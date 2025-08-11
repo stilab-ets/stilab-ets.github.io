@@ -1,0 +1,19 @@
+@startuml
+!define RECTANGLE class
+
+title "Diagramme d'architecture de l'environnement de développement local"
+
+rectangle "Docker" {
+  
+  component "frontend" as FE #lightblue
+  component "backend" as BE #lightgreen
+  component "mailhog" as MH #yellow
+  component "postgres" as PG #orange
+  component "pgadmin" as PA #pink
+
+  FE --> BE : Communication via API
+  BE --> PG : Connexion à la base de données
+  BE --> MH : Envoi de courriels
+  PA --> PG : Interface de gestion BD
+}
+@enduml
