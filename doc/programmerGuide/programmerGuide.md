@@ -142,6 +142,7 @@ EMAIL_USE_TLS=False
 EMAIL_HOST_USER=email@example.com
 EMAIL_HOST_PASSWORD=CHANGE_ME
 BACKEND_URL="https://www.backend.example"
+FRONTEND_URL="http://localhost:5173"
 
 VITE_API_BASE_URL=http://localhost:8000
 ```

@@ -122,6 +122,16 @@ entity Course {
   description: TEXT
 }
 
+entity Invitation {
+  primary_key(id): UUID
+  email: VARCHAR
+  role: VARCHAR
+  token: VARCHAR
+  sent_at: DATE
+  expires_at: DATE
+  status: VARCHAR
+}
+
 User ||--o{ Member : owns >
 ResearchProject ||--o{ ProjectParticipant : has >
 Member ||--o{ ProjectParticipant : participates >

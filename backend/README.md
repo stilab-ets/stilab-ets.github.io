@@ -18,11 +18,19 @@ pre-commit install # To install some pre-commit hooks to help with code quality
 DJANGO_DEBUG=True
 DJANGO_LOG_LEVEL=DEBUG # Options are DEBUG, INFO, WARNING, ERROR and CRITICAL
 
-DB_USER=CHANGE_ME
-DB_PASSWORD=CHANGE_ME
+DB_USER=admin@admin.com
+DB_PASSWORD=admin123
 DB_HOST=db
 DB_PORT=5432
 DB_NAME=postgres
+
+EMAIL_HOST=SMTP_SERVER_HOST
+EMAIL_PORT=8025
+EMAIL_USE_TLS=False
+EMAIL_HOST_USER=email@example.com
+EMAIL_HOST_PASSWORD=CHANGE_ME
+BACKEND_URL="https://www.backend.example"
+FRONTEND_URL="http://localhost:5173"
 ```
 
 3. Start the containers:
