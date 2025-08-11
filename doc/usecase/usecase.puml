@@ -41,6 +41,13 @@ Membre --> CU07
 
 Visiteur --> CU07
 
-CU06 ..|> CU05 : <<extend>>
+' Authentification obligatoire avant gestion
+CU01 ..> CU05 : <<include>>
+CU02 ..> CU05 : <<include>>
+CU03 ..> CU05 : <<include>>
+CU04 ..> CU05 : <<include>>
+CU06 ..> CU05 : <<include>>
+CU08 ..> CU05 : <<include>>
+CU09 ..> CU05 : <<include>>
 
 @enduml
