@@ -25,6 +25,7 @@ from backend.views.auth_views import LoginView, RegisterView
 from backend.views.awards_view import AwardsView
 from backend.views.courses_view import CoursesView
 from backend.views.events_view import EventsView
+from backend.views.invitation_views import InvitationAPIView, SendMailInvitationView, ValidateInvitationTokenView
 from backend.views.member_view import MemberView
 from backend.views.profile_views import ProfileView
 from backend.views.publication_views import PublicationListAPI
@@ -64,4 +65,8 @@ urlpatterns = [
     ),
     path("api/courses", CoursesView.as_view(), name="courses"),
     path("api/events", EventsView.as_view(), name="events"),
+    path("api/validate-invitation-token", ValidateInvitationTokenView.as_view()),
+    path("api/send-mail-invitation", SendMailInvitationView.as_view()),
+    path("api/invitations", InvitationAPIView.as_view()),
+    path("api/invitation/<int:id>", InvitationAPIView.as_view()),
 ]
