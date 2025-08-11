@@ -1,0 +1,11 @@
+Hello,
+
+You have been invited to join our platform.
+
+Click the link below to complete your registration:
+{{ register_url }}
+
+This link will expire soon, so please register promptly.
+
+Thank you,
+The STIL Team
