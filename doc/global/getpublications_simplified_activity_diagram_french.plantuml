@@ -1,0 +1,32 @@
+@startuml
+
+title "Diagramme d'activités simplifié de la commande GetPublications"
+
+start
+
+:Prendre la liste des membres dans la base de données;
+
+while (Pour chaque membre)
+    :Prendre la liste de publications via OpenAlex;
+    
+    while (Pour chaque publication)
+      if (publication existe déjà ET approuvée ?) then (non)
+        if (option "fast" OU bloqué par Google Scholar ?) then (oui)
+          :Utiliser OpenAlex;
+          :Reconstruire BibTeX;
+        else
+          :Utiliser Scholarly;
+        endif
+
+        :Sauvegarder la publication dans la base de données;
+      endif
+    endwhile
+endwhile
+
+if (Au moins une publication créée ou modifiée) then (oui)
+  :Envoyer un courriel aux administrateurs;
+endif
+
+
+stop
+@enduml
