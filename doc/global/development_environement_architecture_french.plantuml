@@ -1,7 +1,7 @@
 @startuml
 !define RECTANGLE class
 
-title "Environnement de développement local"
+title "Diagramme d'architecture de l'environnement de développement local"
 
 rectangle "Docker" {
   
